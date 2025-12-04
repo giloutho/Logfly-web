@@ -15,10 +15,11 @@
       </router-view>
     </v-main>
     
+    <!-- Pas de footer pour l'instant
     <v-footer class="app-footer">
       ©  Paragliding App
     </v-footer>
-
+    -->
   </v-app>
 </template>
 
