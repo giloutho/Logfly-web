@@ -35,12 +35,24 @@
             <v-list-item-title>{{ $gettext('External track') }}</v-list-item-title>
           </v-list-item>          
         </v-list>
+      </v-menu>      
+      <v-menu offset-y>
+        <template v-slot:activator="{ props }">
+          <v-btn text v-bind="props">
+            <!-- <v-icon left>mdi-chart-line</v-icon> -->
+            {{ $gettext('Statistics') }}
+            <v-icon right>mdi-menu-down</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item :to="{ name: 'synthese-annee' }">
+            <v-list-item-title>{{ $gettext('Annual summary') }}</v-list-item-title>
+          </v-list-item>
+          <v-list-item :to="{ name: 'synthese-globale' }">
+            <v-list-item-title>{{ $gettext('Global summary') }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
       </v-menu>
-      
-      <v-btn text :to="{ name: 'stat-base' }">
-        <!-- <v-icon left>mdi-chart-line</v-icon> -->
-        {{ $gettext('Statistics') }}
-      </v-btn>
       
       <v-btn text :to="{ name: 'routing-base' }">
        <!-- <v-icon left>mdi-map</v-icon>  -->

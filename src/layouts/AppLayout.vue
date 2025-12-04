@@ -1,3 +1,13 @@
+<style>
+.app-container,
+.content-area,
+v-main {
+  height: 100vh !important;
+  min-height: 100vh !important;
+  width: 100vw !important;
+  box-sizing: border-box;
+}
+</style>
 <template>
   <v-app class="app-container">
     

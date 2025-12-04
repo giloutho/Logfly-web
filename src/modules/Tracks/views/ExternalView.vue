@@ -1,8 +1,9 @@
 <template>
   <!-- Affiche le composant d'analyse si les données sont prêtes -->
-  <div v-if="analysisResult" class="fullmap-container">
-    <TrackAnalysis 
-      :analysis-data="analysisResult" 
+  <div v-if="analysisTrack" class="fullmap-container">
+    <FullmapTrack 
+      :decoded-track="decodedTrack"
+      :analysis-track="analysisTrack" 
       @close="closeAnalysisView" 
     />
   </div>
@@ -39,7 +40,6 @@
 import { ref } from "vue";
 import { useGettext } from "vue3-gettext";
 
-import TrackAnalysis from '@/components/TrackAnalysis.vue';
 import FullmapTrack from '@/components/FullmapTrack.vue';
 
 const { $gettext } = useGettext();
@@ -51,7 +51,8 @@ const fileName = ref('');
 const fileInput = ref(null);
 const fileContent = ref(null);
 const fileError = ref('');
-const analysisResult = ref(null);
+const decodedTrack = ref(null)
+const analysisTrack = ref(null);
 
 function triggerFileInput() {
   fileInput.value.click();
@@ -66,7 +67,8 @@ function handleFileSelect(event) {
 }
 
 function closeAnalysisView() {
-  analysisResult.value = null;
+  analysisTrack.value = null;
+  decodedTrack.value = null;
   fileName.value = '';
   fileContent.value = null;
   fileError.value = '';
@@ -94,14 +96,15 @@ function validateFile(file) {
         }
         const decodedIgc = await igcDecoding(fileContent.value)
         if (decodedIgc.success && decodedIgc.data.fixes && decodedIgc.data.fixes.length > 0) {
-          console.log('decodedIgc ok, analyze start');
+          decodedTrack.value = decodedIgc.data
           const analyzeIgc = await IgcAnalyze(decodedIgc.data.fixes);
           if (!analyzeIgc.success) {
             console.log(analyzeIgc.message)
             fileError.value = analyzeIgc.message;
             fileContent.value = null;
           } else {
-            analysisResult.value = analyzeIgc.anaTrack;
+            console.log('analyzeIgc.anaTrack', analyzeIgc.anaTrack.bestGain)
+            analysisTrack.value = analyzeIgc.anaTrack;
           }
         } else {
           console.log(decodedIgc.message)
@@ -120,10 +123,13 @@ function validateFile(file) {
 
 <style scoped>
 .fullmap-container {
-  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
   height: 100vh;
-  display: flex;
-  flex-direction: column;
+  z-index: 1000;
+  background: white;
 }
 .external-view {
   padding: 20px;
