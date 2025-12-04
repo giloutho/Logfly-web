@@ -10,6 +10,7 @@ import 'vuetify/styles'; // Importe les styles de base
 import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
+import '@mdi/font/css/materialdesignicons.css'; // Importe la police d'icônes MDI
 import { mdi } from 'vuetify/iconsets/mdi'; // Pour les icônes Material Design
 
 // Imports pour vue3-gettext
