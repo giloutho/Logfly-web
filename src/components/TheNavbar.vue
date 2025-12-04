@@ -8,8 +8,8 @@
     <v-toolbar-title>
       <router-link :to="{ name: 'home' }" class="app-title-link"> 
       <!-- <router-link :to="{ name: 'logbook-view' }" class="app-title-link">  -->      
-        <v-icon left>mdi-airplane-takeoff</v-icon>
-        Logfly 7
+        <img src="@/assets/Logo7_32.png" alt="Logo Logfly" style="vertical-align: middle; margin-right: 8px; height: 32px;" />
+        Logfly
       </router-link>
     </v-toolbar-title>
 
@@ -19,9 +19,9 @@
       <v-menu offset-y>
         <template v-slot:activator="{ props }">
           <v-btn text v-bind="props">
-            <v-icon left>mdi-map-marker-path</v-icon>
+            <!-- <v-icon left>mdi-map-marker-path</v-icon>. -->
             {{ $gettext('Flights & Tracks') }}
-            <v-icon right>mdi-menu-down</v-icon>
+            <!-- <v-icon right>mdi-menu-down</v-icon> -->
           </v-btn>
         </template>
         <v-list>
@@ -38,27 +38,27 @@
       </v-menu>
       
       <v-btn text :to="{ name: 'stat-base' }">
-        <v-icon left>mdi-chart-line</v-icon>
+        <!-- <v-icon left>mdi-chart-line</v-icon> -->
         {{ $gettext('Statistics') }}
       </v-btn>
       
       <v-btn text :to="{ name: 'routing-base' }">
-        <v-icon left>mdi-map</v-icon>
+       <!-- <v-icon left>mdi-map</v-icon>  -->
         {{ $gettext('Routing') }}
       </v-btn>
       
       <v-btn text :to="{ name: 'files-base' }">
-        <v-icon left>mdi-folder-settings</v-icon>
+       <!-- <v-icon left>mdi-folder-settings</v-icon> -->
         {{ $gettext('Sites') }}
       </v-btn>
       
       <v-btn text :to="{ name: 'equip-base' }">
-        <v-icon left>mdi-sail-boat</v-icon>
+       <!-- <v-icon left>mdi-sail-boat</v-icon>. -->
         {{ $gettext('Equipment') }}
       </v-btn>
       
       <v-btn text :to="{ name: 'settings-base' }">
-        <v-icon left>mdi-cog</v-icon>
+       <!-- <v-icon left>mdi-cog</v-icon>. -->
         {{ $gettext('Settings & Utilities') }}
       </v-btn>
     </div>
