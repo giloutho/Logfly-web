@@ -1,18 +1,9 @@
 <template>
   <v-app class="app-container">
     
-    <TheNavbar /> <v-main class="content-area">
-      <router-view v-slot="{ Component }">
-        <Suspense>
-          <component :is="Component" />
-          <template #fallback>
-            <div class="loading-full-page">
-              <v-progress-circular indeterminate color="primary"></v-progress-circular>
-              <p>Chargement du module, veuillez patienter...</p>
-            </div>
-          </template>
-        </Suspense>
-      </router-view>
+    <TheNavbar />
+    <v-main class="content-area">
+      <router-view />
     </v-main>
     
     <!-- Pas de footer pour l'instant
