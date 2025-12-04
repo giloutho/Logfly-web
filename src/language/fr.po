@@ -1,0 +1,193 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.6\n"
+
+#: src/components/TheNavbar.vue:23
+msgid "Flights & Tracks"
+msgstr "Vols & Traces"
+
+#: src/components/TheNavbar.vue:29 src/components/TheWelcome.vue:21
+msgid "Logbook"
+msgstr "Carnet"
+
+#: src/components/TheNavbar.vue:32
+msgid "Import tracks"
+msgstr ""
+
+#: src/components/TheNavbar.vue:35 src/modules/Tracks/views/ExternalView.vue:4
+msgid "External track"
+msgstr ""
+
+#: src/components/TheNavbar.vue:42
+msgid "Statistics"
+msgstr ""
+
+#: src/components/TheNavbar.vue:47
+msgid "Routing"
+msgstr ""
+
+#: src/components/TheNavbar.vue:52
+msgid "Sites"
+msgstr ""
+
+#: src/components/TheNavbar.vue:57
+msgid "Equipment"
+msgstr ""
+
+#: src/components/TheNavbar.vue:62
+msgid "Settings & Utilities"
+msgstr ""
+
+#: src/components/TheWelcome.vue:17
+msgid "Traces & Vols"
+msgstr ""
+
+#: src/components/TheWelcome.vue:19
+msgid "Gérez et analysez tous vos vols. Accédez à votre carnet de vols, importez de nouvelles traces ou examinez des fichiers externes."
+msgstr ""
+
+#: src/components/TheWelcome.vue:22
+msgid "Import GPS tracks"
+msgstr ""
+
+#: src/components/TheWelcome.vue:23
+msgid "Review an external GPS track"
+msgstr ""
+
+#: src/components/TheWelcome.vue:31
+msgid "Tooling"
+msgstr ""
+
+#: src/components/TheWelcome.vue:33
+msgid "This project is served and bundled with"
+msgstr ""
+
+#: src/components/TheWelcome.vue:35
+msgid "recommended IDE setup is"
+msgstr ""
+
+#: src/components/TheWelcome.vue:41
+msgid "Vitest"
+msgstr ""
+
+#: src/components/TheWelcome.vue:43
+msgid "Cypress"
+msgstr ""
+
+#: src/components/TheWelcome.vue:45
+msgid "Playwright"
+msgstr ""
+
+#: src/components/TheWelcome.vue:49
+msgid "More instructions are available in"
+msgstr ""
+
+#: src/components/TheWelcome.vue:58
+msgid "Ecosystem"
+msgstr ""
+
+#: src/components/TheWelcome.vue:60
+msgid "Get official tools and libraries for your project:"
+msgstr ""
+
+#: src/components/TheWelcome.vue:74
+msgid "Community"
+msgstr ""
+
+#: src/components/TheWelcome.vue:76
+msgid "Got stuck? Ask your question on"
+msgstr ""
+
+#: src/components/TheWelcome.vue:80
+msgid "StackOverflow"
+msgstr ""
+
+#: src/components/TheWelcome.vue:81
+msgid "You should also follow the official"
+msgstr ""
+
+#: src/components/TheWelcome.vue:83
+msgid "Bluesky account or the"
+msgstr ""
+
+#: src/components/TheWelcome.vue:85
+msgid "X account for latest news in the Vue world."
+msgstr ""
+
+#: src/components/TheWelcome.vue:92
+msgid "Support Vue"
+msgstr ""
+
+#: src/components/TheWelcome.vue:94
+msgid "As an independent project, Vue relies on community backing for its sustainability. You can help"
+msgstr ""
+
+#: src/components/TheWelcome.vue:96
+msgid "becoming a sponsor"
+msgstr ""
+
+#: src/modules/Tracks/views/ExternalView.vue:5
+msgid "Analyze a track file without importing it into your logbook"
+msgstr ""
+
+#: src/modules/Tracks/views/ExternalView.vue:10
+msgid "Drag and drop your file here"
+msgstr ""
+
+#: src/modules/Tracks/views/ExternalView.vue:10
+msgid "or click to select"
+msgstr ""
+
+#: src/modules/Tracks/views/ExternalView.vue:16
+msgid "Analyse de :"
+msgstr ""
+
+#: src/modules/Tracks/views/ExternalView.vue:17
+msgid "Les détails de l'analyse de la trace apparaîtront ici..."
+msgstr ""
+
+#: src/modules/Tracks/views/ImportView.vue:4
+msgid "Importer des Traces GPS"
+msgstr ""
+
+#: src/modules/Tracks/views/ImportView.vue:5
+msgid "Sélectionnez un ou plusieurs fichiers de trace (IGC, GPX, etc.) depuis votre ordinateur pour les ajouter à votre carnet de vols."
+msgstr ""
+
+#: src/modules/Tracks/views/ImportView.vue:10
+msgid "Glissez et déposez vos fichiers ici, ou cliquez pour sélectionner."
+msgstr ""
+
+#: src/modules/Tracks/views/ImportView.vue:16
+msgid "Fichiers à importer :"
+msgstr ""
+
+#: src/modules/Tracks/views/ImportView.vue:20
+msgid "Lancer l'importation"
+msgstr ""
+
+#: src/modules/Tracks/views/LogbookView.vue:10
+msgid "Voir la Synthèse Annuelle (Module Stat)"
+msgstr ""
+
+#: src/modules/Tracks/views/LogbookView.vue:15
+msgid "Importer Traces GPS"
+msgstr ""
+
+#: src/modules/Tracks/views/LogbookView.vue:16
+msgid "Examiner Trace Extérieure"
+msgstr ""
+
+#: src/modules/Tracks/views/LogbookView.vue:20
+msgid "Liste détaillée de tous les vols enregistrés..."
+msgstr ""

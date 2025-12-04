@@ -1,0 +1,122 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: logfly-web\n"
+"POT-Creation-Date: 2025-12-03 22:16+0000\n"
+"PO-Revision-Date: 2025-12-03 22:16+0000\n"
+"Last-Translator: Your Name <you@example.com>\n"
+"Language-Team: French <your-team@example.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr\n"
+
+msgid "Paragliding Log"
+msgstr "Log de Parapente"
+
+msgid "Vols & Traces"
+msgstr "Vols & Traces"
+
+msgid "Carnet de vols"
+msgstr "Carnet de vols"
+
+msgid "Importer des traces"
+msgstr "Importer des traces"
+
+msgid "Trace externe"
+msgstr "Trace externe"
+
+msgid "Statistiques"
+msgstr "Statistiques"
+
+msgid "Navigation"
+msgstr "Navigation"
+
+msgid "Sites & Fichiers"
+msgstr "Sites & Fichiers"
+
+msgid "Matériel"
+msgstr "Matériel"
+
+msgid "Préférences"
+msgstr "Préférences"
+
+msgid "Traces & Vols"
+msgstr "Traces & Vols"
+
+msgid "Gérez et analysez tous vos vols. Accédez à votre carnet de vols, importez de nouvelles traces ou examinez des fichiers externes."
+msgstr "Gérez et analysez tous vos vols. Accédez à votre carnet de vols, importez de nouvelles traces ou examinez des fichiers externes."
+
+msgid "Importer des traces GPS"
+msgstr "Importer des traces GPS"
+
+msgid "Examiner une trace externe"
+msgstr "Examiner une trace externe"
+
+msgid "Tooling"
+msgstr "Outils de développement"
+
+msgid "This project is served and bundled with Vite. The recommended IDE setup is VSCode + Vue - Official. If you need to test your components and web pages, check out Vitest and Cypress / Playwright."
+msgstr "Ce projet est servi et packagé avec Vite. La configuration IDE recommandée est VSCode + Vue - Officiel. Si vous avez besoin de tester vos composants et pages web, consultez Vitest et Cypress / Playwright."
+
+msgid "More instructions are available in README.md."
+msgstr "Plus d'instructions sont disponibles dans README.md."
+
+msgid "Ecosystem"
+msgstr "Écosystème"
+
+msgid "Get official tools and libraries for your project: Pinia, Vue Router, Vue Test Utils, and Vue Dev Tools. If you need more resources, we suggest paying Awesome Vue a visit."
+msgstr "Obtenez les outils et bibliothèques officiels pour votre projet : Pinia, Vue Router, Vue Test Utils et Vue Dev Tools. Si vous avez besoin de plus de ressources, nous vous suggérons de visiter Awesome Vue."
+
+msgid "Community"
+msgstr "Communauté"
+
+msgid "Got stuck? Ask your question on Vue Land (our official Discord server), or StackOverflow. You should also follow the official @vuejs.org Bluesky account or the @vuejs X account for latest news in the Vue world."
+msgstr "Bloqué ? Posez votre question sur Vue Land (notre serveur Discord officiel), ou StackOverflow. Vous devriez également suivre le compte officiel @vuejs.org Bluesky ou le compte @vuejs X pour les dernières nouvelles du monde Vue."
+
+msgid "Support Vue"
+msgstr "Soutenir Vue"
+
+msgid "As an independent project, Vue relies on community backing for its sustainability. You can help us by becoming a sponsor."
+msgstr "En tant que projet indépendant, Vue dépend du soutien de la communauté pour sa durabilité. Vous pouvez nous aider en devenant un sponsor."
+
+msgid "Carnet de Vols du Pilote"
+msgstr "Carnet de Vols du Pilote"
+
+msgid "📊 Voir la Synthèse Annuelle (Module Stat)"
+msgstr "📊 Voir la Synthèse Annuelle (Module Stat)"
+
+msgid "Importer Traces GPS"
+msgstr "Importer Traces GPS"
+
+msgid "Examiner Trace Extérieure"
+msgstr "Examiner Trace Extérieure"
+
+msgid "Liste détaillée de tous les vols enregistrés..."
+msgstr "Liste détaillée de tous les vols enregistrés..."
+
+msgid "Sélectionnez un ou plusieurs fichiers de trace (IGC, GPX, etc.) depuis votre ordinateur pour les ajouter à votre carnet de vols."
+msgstr "Sélectionnez un ou plusieurs fichiers de trace (IGC, GPX, etc.) depuis votre ordinateur pour les ajouter à votre carnet de vols."
+
+msgid "Glissez et déposez vos fichiers ici, ou cliquez pour sélectionner."
+msgstr "Glissez et déposez vos fichiers ici, ou cliquez pour sélectionner."
+
+msgid "Fichiers à importer :"
+msgstr "Fichiers à importer :"
+
+msgid "Lancer l'importation"
+msgstr "Lancer l'importation"
+
+msgid "Examiner une Trace Externe"
+msgstr "Examiner une Trace Externe"
+
+msgid "Analysez un fichier de trace sans l'importer dans votre carnet de vols. Utile pour visualiser rapidement un vol."
+msgstr "Analysez un fichier de trace sans l'importer dans votre carnet de vols. Utile pour visualiser rapidement un vol."
+
+msgid "Analyse de :"
+msgstr "Analyse de :"
+
+msgid "Les détails de l'analyse de la trace apparaîtront ici..."
+msgstr "Les détails de l'analyse de la trace apparaîtront ici..."

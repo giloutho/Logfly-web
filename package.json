@@ -1,0 +1,37 @@
+{
+  "name": "logfly-web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "gettext:extract": "vue-gettext-extract",
+    "gettext:compile": "vue-gettext-compile"
+  },
+  "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "@photostructure/tz-lookup": "^11.3.0",
+    "@turf/bbox": "^7.3.1",
+    "array-smooth": "^1.0.0",
+    "iana-tz-data": "^2019.1.0",
+    "igc-parser": "^2.0.0",
+    "pinia": "^3.0.4",
+    "vue": "^3.5.25",
+    "vue-router": "^4.6.3",
+    "vue3-gettext": "^4.0.0-beta.1",
+    "vuetify": "^3.11.0-beta.1",
+    "zoned-date-time": "^1.1.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.2",
+    "sass-embedded": "^1.93.3",
+    "vite": "^7.2.4",
+    "vite-plugin-vue-devtools": "^8.0.5",
+    "vite-plugin-vuetify": "^2.1.2"
+  }
+}
