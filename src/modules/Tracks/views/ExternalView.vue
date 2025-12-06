@@ -135,10 +135,12 @@ function validateFile(file) {
   padding: 20px;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 }
 .external-view-content {
   max-width: 800px;
   width: 100%;
+  text-align: center;
 }
 .drop-zone {
   border: 2px dashed #ccc;
