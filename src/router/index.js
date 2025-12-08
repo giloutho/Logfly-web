@@ -59,6 +59,11 @@ const routes = [
       component: () => import(/* webpackChunkName: "module-routing" */ '../modules/Routing/RoutingLayout.vue'),
       children: [
         {
+          path: 'waypoints',
+          name: 'waypoints-view',
+          component: () => import('../modules/Routing/views/WaypointView.vue'),
+        },
+        {
           path: 'airspaces',
           name: 'airspaces-view',
           component: () => import('../modules/Routing/views/AirspacesView.vue'),
