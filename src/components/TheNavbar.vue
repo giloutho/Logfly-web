@@ -53,11 +53,24 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      
-      <v-btn text :to="{ name: 'routing-base' }">
-       <!-- <v-icon left>mdi-map</v-icon>  -->
-        {{ $gettext('Routing') }}
-      </v-btn>
+
+      <v-menu offset-y>
+        <template v-slot:activator="{ props }">
+          <v-btn text v-bind="props">
+            <!-- <v-icon left>mdi-chart-line</v-icon> -->
+            {{ $gettext('Routing') }}
+            <v-icon right>mdi-menu-down</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item :to="{ name: 'waypoints-view' }">
+            <v-list-item-title>{{ $gettext('Waypoints') }}</v-list-item-title>
+          </v-list-item>
+          <v-list-item :to="{ name: 'airspaces-view' }">
+            <v-list-item-title>{{ $gettext('Airspaces') }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>      
       
       <v-btn text :to="{ name: 'files-base' }">
        <!-- <v-icon left>mdi-folder-settings</v-icon> -->
