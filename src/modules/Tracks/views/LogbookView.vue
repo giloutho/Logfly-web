@@ -1,7 +1,8 @@
 <template>
-  <OpenLogbook @db-opened="onDbOpened" />
-  <div v-if="dbOpened" class="global-logbook">
+  <OpenLogbook v-if="!databaseStore.hasOpenDatabase" />
+  <div v-else class="global-logbook">
     <div class="left-panel">
+      <p>Base de données : {{ databaseStore.dbName }}</p>
       <p>1/2 largeur écran disponible</p>
     </div>
     <div class="right-panel">
@@ -21,14 +22,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import OpenLogbook from '@/components/OpenLogbook.vue';
+import { useDatabaseStore } from '@/stores/database';
 
-const dbOpened = ref(false);
-
-function onDbOpened(success) {
-  dbOpened.value = !!success;
-}
+const databaseStore = useDatabaseStore();
 </script>
 
 <style scoped>
