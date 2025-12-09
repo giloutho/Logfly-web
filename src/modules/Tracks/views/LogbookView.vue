@@ -7,22 +7,61 @@
     </div>
     <div class="right-panel">
       <div class="top-block">
-        <p>1/12 hauteur écran disponible</p>
+        <v-text-field
+          v-model="search"
+          :label="$gettext('Search')"
+          prepend-inner-icon="mdi-magnify"
+          single-line
+          hide-details
+          clearable
+          density="compact"
+          variant="outlined"
+        ></v-text-field>
       </div>
-      <div class="table-block">
+      <div class="table-block">        
         <v-data-table
           v-model="selectedItems"
           :headers="headers"
           :items="flights"
+          :search="search"
           item-value="V_ID"
-          show-select
-          single-select
           density="compact"
           class="flights-table"
+          v-model:page="page"
+          v-model:items-per-page="itemsPerPage"
           @update:model-value="onSelectionChange"
+          @update:current-items="onFilteredItemsUpdate"
         >
-          <template v-slot:item.Photo="{ item }">
-            <v-icon v-if="item.Photo === 'Yes'" size="small" color="primary">mdi-camera</v-icon>
+          <template v-slot:item="{ item, index, props }">
+            <tr
+              v-bind="props"
+              :class="{'selected-row': selectedItems.includes(item.V_ID)}"
+              @click="selectedItems = [item.V_ID]; onSelectionChange([item.V_ID])"
+              style="cursor:pointer;"
+            >
+              <td class="col-photo">
+                <v-icon v-if="item.Photo === 'Yes'" size="small" color="primary">mdi-camera</v-icon>
+              </td>
+              <td class="col-tag">{{ item.V_Tag }}</td>
+              <td class="col-day">{{ item.Day }}</td>
+              <td class="col-hour">{{ item.Hour }}</td>
+              <td class="col-duree">{{ item.Duree }}</td>
+              <td class="col-site">{{ item.V_Site }}</td>
+              <td class="col-engin">{{ item.V_Engin }}</td>
+            </tr>
+          </template>
+          <!-- A voir si on garde ce mode de pagination Voir la doc 
+              https://vuetifyjs.com/en/components/data-tables/data-and-display/#external-pagination
+          -->
+          <template v-slot:bottom>
+            <div class="custom-pagination">
+              <v-pagination
+                v-model="page"
+                :length="pageCount"
+                :total-visible="7"
+                size="small"
+              ></v-pagination>
+            </div>
           </template>
         </v-data-table>
       </div>
@@ -35,21 +74,47 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
+import { useGettext } from "vue3-gettext";
 import OpenLogbook from '@/components/OpenLogbook.vue';
 import { useDatabaseStore } from '@/stores/database';
 
 const databaseStore = useDatabaseStore();
+const { $gettext } = useGettext();
 
 const flights = ref([]);
 const selectedItems = ref([]);
+const page = ref(1);
+const itemsPerPage = ref(8);
+const search = ref('');
+const filteredCount = ref(0);
+
+const pageCount = computed(() => {
+  return Math.ceil(flights.value.length / itemsPerPage.value);
+});
+
+// @update:current-items retourne uniquement les items de la page actuelle. 
+// Pour obtenir tous les items filtrés (toutes pages confondues), 
+// il faut utiliser un computed qui applique manuellement 
+// le filtre de recherche sur flights.value.
+const filteredFlights = computed(() => {
+  if (!search.value) return flights.value;
+  
+  const searchLower = search.value.toLowerCase();
+  return flights.value.filter(flight => {
+    return Object.values(flight).some(value => {
+      if (value === null || value === undefined) return false;
+      return String(value).toLowerCase().includes(searchLower);
+    });
+  });
+});
 
 const headers = [
-  { title: '', key: 'Photo', sortable: false, width: '50px' },
-  { title: 'Tag', key: 'V_Tag', width: '80px' },
-  { title: 'Date', key: 'Day', width: '100px' },
-  { title: 'Heure', key: 'Hour', width: '80px' },
-  { title: 'Durée', key: 'Duree', width: '80px' },
+  { title: '', key: 'Photo', sortable: false},
+  { title: 'Tag', key: 'V_Tag'},
+  { title: 'Date', key: 'Day' },
+  { title: 'Heure', key: 'Hour' },
+  { title: 'Durée', key: 'Duree' },
   { title: 'Site', key: 'V_Site' },
   { title: 'Engin', key: 'V_Engin' },
 ];
@@ -75,11 +140,9 @@ function loadFlights() {
       return obj;
     });
 
-    // Sélectionner la première ligne par défaut
-    if (flights.value.length > 0) {
-      selectedItems.value = [flights.value[0].V_ID];
-      console.log('Première ligne sélectionnée, ID:', flights.value[0].V_ID);
-    }
+    // Sélectionner la première ligne de la première page
+    selectFirstVisibleRow();
+    
   } else {
     console.error('Erreur lors du chargement des vols:', result.message);
   }
@@ -91,12 +154,40 @@ function onSelectionChange(newSelection) {
   }
 }
 
+function onFilteredItemsUpdate(items) {
+  // items contient uniquement les items de la page actuelle
+  // Pour obtenir tous les items filtrés, utiliser filteredFlights.value
+  filteredCount.value = filteredFlights.value.length;
+  console.log('Nombre total de lignes filtrées:', filteredFlights.value.length);
+  console.log('Duree:', filteredFlights.value[0]?.V_Duree);
+ // console.log('Items de la page actuelle:', items.length);  uniquement la page affichée
+}
+
+function selectFirstVisibleRow() {
+  // Calculer l'index de début de page
+  const start = (page.value - 1) * itemsPerPage.value;
+  const visibleRows = flights.value.slice(start, start + itemsPerPage.value);
+  if (visibleRows.length > 0) {
+    selectedItems.value = [visibleRows[0].V_ID];
+    onSelectionChange([visibleRows[0].V_ID]);
+  }
+}
+
 // Charger les vols quand la DB est ouverte
 watch(() => databaseStore.hasOpenDatabase, (isOpen) => {
   if (isOpen) {
     loadFlights();
   }
 }, { immediate: true });
+
+// Sélectionner la première ligne affichée à chaque changement de page ou d'items-per-page
+watch([page, itemsPerPage], () => {
+  if (flights.value.length > 0) {
+    selectFirstVisibleRow();
+  }
+});
+
+
 </script>
 
 <style scoped>
@@ -144,6 +235,7 @@ watch(() => databaseStore.hasOpenDatabase, (isOpen) => {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  padding: 10px 20px;
 }
 
 .table-block {
@@ -159,6 +251,37 @@ watch(() => databaseStore.hasOpenDatabase, (isOpen) => {
 .flights-table {
   width: 100%;
   height: 100%;
+}
+
+.flights-table tr {
+  font-size: 0.85em;
+  height: 16px;
+}
+
+.flights-table td {
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+}
+
+.col-photo   { width: 7% !important; }
+.col-tag     { width: 2% !important; }
+.col-day     { width: 17% !important; }
+.col-hour    { width: 7% !important; }
+.col-duree   { width: 8% !important; }
+.col-site    { width: 30% !important; }
+.col-engin   { width: 24% !important; }
+
+.selected-row {
+  background-color: #606eeb !important;
+  color: white;
+}
+
+.custom-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .bottom-block {
