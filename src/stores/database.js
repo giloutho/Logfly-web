@@ -65,6 +65,13 @@ export const useDatabaseStore = defineStore('database', () => {
     error.value = ''
   }
 
+  function query(sql) {
+    if (!db.value) {
+      return { success: false, message: 'No database open', data: [] }
+    }
+    return executeQuery(db.value, sql)
+  }
+
   return {
     // État
     db,
@@ -76,6 +83,7 @@ export const useDatabaseStore = defineStore('database', () => {
     // Actions
     loadDatabase,
     closeDatabaseStore,
-    clearError
+    clearError,
+    query
   }
 })
