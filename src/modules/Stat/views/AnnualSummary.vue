@@ -27,6 +27,8 @@ import { useGettext } from "vue3-gettext";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+const emit = defineEmits(['close']);
+
 const { $gettext } = useGettext();
 
 const latitude = 45.863;
@@ -41,6 +43,10 @@ onMounted(() => {
     attribution: '© OpenStreetMap contributors'
   }).addTo(map);
 });
+
+function close() {
+  emit('close');
+}
 </script>
 
 <style scoped>
