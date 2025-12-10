@@ -69,8 +69,10 @@
         </v-data-table>
       </div>
       <div class="bottom-block">
-        <p>1/2 largeur écran disponible</p>
-        <p>5/12 hauteur écran disponible</p>
+        <LogbookDetails v-if="dataFlight" :trackData="dataFlight" />
+        <div v-else class="no-track-message">
+          <p>Sélectionnez un vol pour afficher les détails</p>
+        </div>
       </div>
     </div>
   </div>
@@ -81,6 +83,7 @@ import { ref, computed, watch } from 'vue';
 import { useGettext } from "vue3-gettext";
 import OpenLogbook from '@/components/OpenLogbook.vue';
 import LittleMapView from '@/components/LittleMapView.vue';
+import LogbookDetails from '@/components/LogbookDetails.vue';
 import { useDatabaseStore } from '@/stores/database';
 import { igcDecoding } from '@/js/igc/igc-decoder.js';
 import { IgcAnalyze } from '@/js/igc/igc-analyzer.js';
@@ -96,6 +99,7 @@ const search = ref('');
 const filteredCount = ref(0);
 const decodedTrack = ref(null)
 const analysisTrack = ref(null);
+const dataFlight = ref(null);
 
 const pageCount = computed(() => {
   return Math.ceil(flights.value.length / itemsPerPage.value);
@@ -166,8 +170,8 @@ function onFilteredItemsUpdate(items) {
   // items contient uniquement les items de la page actuelle
   // Pour obtenir tous les items filtrés, utiliser filteredFlights.value
   filteredCount.value = filteredFlights.value.length;
-  console.log('Nombre total de lignes filtrées:', filteredFlights.value.length);
-  console.log('Duree:', filteredFlights.value[0]?.V_Duree);
+//  console.log('Nombre total de lignes filtrées:', filteredFlights.value.length);
+//  console.log('Duree:', filteredFlights.value[0]?.V_Duree);
  // console.log('Items de la page actuelle:', items.length);  uniquement la page affichée
 }
 
@@ -197,13 +201,14 @@ watch([page, itemsPerPage], () => {
 
 async function readIgcFromDb(flightId) {
   // Fonction fictive pour lire et analyser le contenu IGC
-  console.log('Lecture IGC pour le vol ID:', flightId);
   if (!databaseStore.hasOpenDatabase) return;
-  const reqSQL =`SELECT V_IGC, V_LatDeco, V_LongDeco, V_AltDeco, V_Site FROM Vol WHERE V_ID = ${flightId}`;
+  const reqSQL =`SELECT V_IGC, strftime('%d-%m-%Y',V_date) AS Day, V_Site, V_Engin, V_Commentaire, V_sDuree FROM Vol WHERE V_ID = ${flightId}`;
   const result = databaseStore.query(reqSQL);
 
   if (result.success && result.data && result.data[0]) {
     const strIgc = result.data[0].values[0][0];
+    const flightDay = result.data[0].values[0][1];
+    const flightSite = result.data[0].values[0][5];
     const decodedIgc = await igcDecoding(strIgc)
     if (decodedIgc.success && decodedIgc.data.fixes && decodedIgc.data.fixes.length > 0) {
       decodedTrack.value = decodedIgc.data
@@ -213,9 +218,15 @@ async function readIgcFromDb(flightId) {
         fileError.value = analyzeIgc.message;
         fileContent.value = null;
       } else {
-        console.log('analyzeIgc.anaTrack.bestGain', analyzeIgc.anaTrack.bestGain, 'm')
-        console.log('GeoJson ',decodedTrack.value.GeoJSON)
-        analysisTrack.value = analyzeIgc.anaTrack;
+        dataFlight.value = {
+          day: result.data[0].values[0][1],
+          site: result.data[0].values[0][2],
+          glider: result.data[0].values[0][3],
+          comment: result.data[0].values[0][4],
+          duration: result.data[0].values[0][5],
+          anaTrack: analyzeIgc.anaTrack,
+          decodedIgc: decodedTrack.value
+        }
       }
     }    
   } else {
@@ -315,7 +326,7 @@ async function readIgcFromDb(flightId) {
 .col-engin   { width: 24% !important; }
 
 .selected-row {
-  background-color: #606eeb !important;
+  background-color: #1867C0!important;
   color: white;
 }
 
@@ -330,14 +341,10 @@ async function readIgcFromDb(flightId) {
 .bottom-block {
   width: 100%;
   height: 41.67%;
-  background: #f0f0f0;
   border: 2px solid #333;
   border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 @media (max-width: 900px) {
