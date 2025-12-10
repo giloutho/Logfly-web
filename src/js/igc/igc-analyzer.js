@@ -15,7 +15,7 @@ export async function IgcAnalyze(trackFixes) {
         const anaTrack = new IGCAnalyzer();
         try {
             const computeResult = anaTrack.compute(trackFixes);
-            console.log('IGC Analyze completed : ', anaTrack.bestGain);
+            //console.log('IGC Analyze completed : ', anaTrack.bestGain);
             return { 
                 success: computeResult.success === true, // booléen
                 anaTrack // l'objet complet
