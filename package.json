@@ -20,6 +20,7 @@
     "array-smooth": "^1.0.0",
     "iana-tz-data": "^2019.1.0",
     "igc-parser": "^2.0.0",
+    "igc-xc-score": "^1.8.0",
     "leaflet": "^1.9.4",
     "pinia": "^3.0.4",
     "sql.js": "^1.13.0",
