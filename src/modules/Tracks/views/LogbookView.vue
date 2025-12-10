@@ -78,6 +78,8 @@ import { ref, computed, watch } from 'vue';
 import { useGettext } from "vue3-gettext";
 import OpenLogbook from '@/components/OpenLogbook.vue';
 import { useDatabaseStore } from '@/stores/database';
+import { igcDecoding } from '@/js/igc/igc-decoder.js';
+import { IgcAnalyze } from '@/js/igc/igc-analyzer.js';
 
 const databaseStore = useDatabaseStore();
 const { $gettext } = useGettext();
@@ -88,6 +90,8 @@ const page = ref(1);
 const itemsPerPage = ref(8);
 const search = ref('');
 const filteredCount = ref(0);
+const decodedTrack = ref(null)
+const analysisTrack = ref(null);
 
 const pageCount = computed(() => {
   return Math.ceil(flights.value.length / itemsPerPage.value);
@@ -150,7 +154,7 @@ function loadFlights() {
 
 function onSelectionChange(newSelection) {
   if (newSelection && newSelection.length > 0) {
-    console.log('ID sélectionné:', newSelection[0]);
+    const readIgc = readIgcFromDb(newSelection[0]);
   }
 }
 
@@ -186,6 +190,34 @@ watch([page, itemsPerPage], () => {
     selectFirstVisibleRow();
   }
 });
+
+async function readIgcFromDb(flightId) {
+  // Fonction fictive pour lire et analyser le contenu IGC
+  console.log('Lecture IGC pour le vol ID:', flightId);
+  if (!databaseStore.hasOpenDatabase) return;
+  const reqSQL =`SELECT V_IGC, V_LatDeco, V_LongDeco, V_AltDeco, V_Site FROM Vol WHERE V_ID = ${flightId}`;
+  const result = databaseStore.query(reqSQL);
+
+  if (result.success && result.data && result.data[0]) {
+    const strIgc = result.data[0].values[0][0];
+    const decodedIgc = await igcDecoding(strIgc)
+    if (decodedIgc.success && decodedIgc.data.fixes && decodedIgc.data.fixes.length > 0) {
+      decodedTrack.value = decodedIgc.data
+      const analyzeIgc = await IgcAnalyze(decodedIgc.data.fixes);
+      if (!analyzeIgc.success) {
+        console.log(analyzeIgc.message)
+        fileError.value = analyzeIgc.message;
+        fileContent.value = null;
+      } else {
+        console.log('analyzeIgc.anaTrack.bestGain', analyzeIgc.anaTrack.bestGain, 'm')
+        analysisTrack.value = analyzeIgc.anaTrack;
+      }
+    }    
+  } else {
+    console.error('Erreur lors du chargement des vols:', result.message);
+  }
+
+}
 
 
 </script>
