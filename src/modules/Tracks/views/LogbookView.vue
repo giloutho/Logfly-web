@@ -2,8 +2,11 @@
   <OpenLogbook v-if="!databaseStore.hasOpenDatabase" />
   <div v-else class="global-logbook">
     <div class="left-panel">
-      <p>Base de données : {{ databaseStore.dbName }}</p>
-      <p>1/2 largeur écran disponible</p>
+      <LittleMapView v-if="decodedTrack && decodedTrack.GeoJSON" :geoJson="decodedTrack.GeoJSON" />
+      <div v-else class="no-track-message">
+        <p>Base de données : {{ databaseStore.dbName }}</p>
+        <p>Sélectionnez un vol pour afficher la trace</p>
+      </div>
     </div>
     <div class="right-panel">
       <div class="top-block">
@@ -77,6 +80,7 @@
 import { ref, computed, watch } from 'vue';
 import { useGettext } from "vue3-gettext";
 import OpenLogbook from '@/components/OpenLogbook.vue';
+import LittleMapView from '@/components/LittleMapView.vue';
 import { useDatabaseStore } from '@/stores/database';
 import { igcDecoding } from '@/js/igc/igc-decoder.js';
 import { IgcAnalyze } from '@/js/igc/igc-analyzer.js';
@@ -210,6 +214,7 @@ async function readIgcFromDb(flightId) {
         fileContent.value = null;
       } else {
         console.log('analyzeIgc.anaTrack.bestGain', analyzeIgc.anaTrack.bestGain, 'm')
+        console.log('GeoJson ',decodedTrack.value.GeoJSON)
         analysisTrack.value = analyzeIgc.anaTrack;
       }
     }    
@@ -242,12 +247,18 @@ async function readIgcFromDb(flightId) {
 }
 
 .left-panel {
-  background: lightgreen;
+  background: #f0f0f0;
   border: 2px solid #333;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+
+.no-track-message {
+  text-align: center;
+  padding: 20px;
 }
 
 .right-panel {
