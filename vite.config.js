@@ -13,10 +13,7 @@ export default defineConfig({
         vuetify({
             // Configuration pour s'assurer que le tree-shaking est optimal
             autoImport: true, // Importer automatiquement les composants utilisés
-            styles: {
-              // Inclut le style SASS de Vuetify (très important)
-              configFile: 'src/settings.scss', // Optionnel, si vous voulez personnaliser
-            },
+            styles: true,
           }),
       ],
   build: {
