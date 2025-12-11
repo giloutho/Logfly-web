@@ -1,4 +1,7 @@
 <template>
+    <v-snackbar v-model="snackbar" :timeout="2000" color="success">
+      {{ snackbarMessage }}
+    </v-snackbar>
   <OpenLogbook v-if="!databaseStore.hasOpenDatabase" />
   <div v-else class="global-logbook">
     <div class="left-panel">
@@ -80,6 +83,7 @@
           v-if="dataFlight" 
           :trackData="dataFlight" 
           @update:scoreJson="scoreJson = $event"
+          @update:comment="onCommentUpdate"
         />
         <div v-else class="no-track-message">
           <p>Sélectionnez un vol pour afficher les détails</p>
@@ -90,6 +94,7 @@
 </template>
 
 <script setup>
+
 import { ref, computed, watch } from 'vue';
 import { useGettext } from "vue3-gettext";
 import OpenLogbook from '@/components/OpenLogbook.vue';
@@ -112,6 +117,8 @@ const decodedTrack = ref(null)
 const analysisTrack = ref(null);
 const dataFlight = ref(null);
 const scoreJson = ref(null);
+const snackbar = ref(false);
+const snackbarMessage = ref('');
 
 const pageCount = computed(() => {
   return Math.ceil(flights.value.length / itemsPerPage.value);
@@ -211,6 +218,33 @@ watch([page, itemsPerPage], () => {
   }
 });
 
+// Met à jour le commentaire en base, dans flights, et dans dataFlight
+function onCommentUpdate({ id, comment }) {
+  // Recherche l'ID du vol sélectionné
+  const flightId = id || null;
+  if (!flightId) return;
+  // Mise à jour en base
+  const req = `UPDATE Vol SET V_Commentaire = '${comment}' WHERE V_ID = ${flightId}`;
+  const result = databaseStore.query(req);
+  if (!result.success) {
+    console.error('Erreur lors de la mise à jour du commentaire:', result.message);
+    snackbarMessage.value = 'Erreur lors de la mise à jour du commentaire';
+    snackbar.value = true;
+    return;
+  }
+  // Mise à jour dans flights
+  const idx = flights.value.findIndex(f => f.V_ID === flightId);
+  if (idx !== -1) {
+    flights.value[idx].V_Commentaire = comment;
+  }
+  // Mise à jour dans dataFlight
+  if (dataFlight.value) {
+    dataFlight.value.comment = comment;
+  }
+  snackbarMessage.value = comment ? 'Commentaire enregistré' : 'Commentaire supprimé';
+  snackbar.value = true;
+}
+
 async function readIgcFromDb(flightId) {
   // Fonction fictive pour lire et analyser le contenu IGC
   if (!databaseStore.hasOpenDatabase) return;
@@ -231,6 +265,7 @@ async function readIgcFromDb(flightId) {
         fileContent.value = null;
       } else {
         dataFlight.value = {
+          dbId: flightId,
           day: result.data[0].values[0][1],
           site: result.data[0].values[0][2],
           glider: result.data[0].values[0][3],

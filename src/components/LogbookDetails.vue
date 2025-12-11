@@ -88,6 +88,10 @@
             variant="outlined"
             density="compact"
           ></v-textarea>
+          <div class="comment-btn-row">
+            <v-btn color="error" density="compact" class="mr-2" @click="onDeleteComment">Supprimer</v-btn>
+            <v-btn color="primary" density="compact" @click="onValidateComment">Valider</v-btn>
+          </div>
         </v-card-text>
       </v-window-item>
 
@@ -125,7 +129,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['update:scoreJson']);
+const emit = defineEmits(['update:scoreJson', 'update:comment']);
 
 const tab = ref('about'); // Onglet "About" sélectionné par défaut
 const isComputingScore = ref(false);
@@ -139,6 +143,20 @@ watch(() => props.trackData, (newVal) => {
   scoreLabel.value = '';
   commentText.value = newVal?.comment || '';
 });
+
+function onDeleteComment() {
+  commentText.value = '';
+  onValidateComment();
+}
+
+function onValidateComment() {
+  // On émet l'ID du vol et le commentaire courant
+  console.log('Emitting comment update:', props.trackData?.dbId || null)
+  emit('update:comment', {
+    id: props.trackData?.dbId || null,
+    comment: commentText.value
+  });
+}
 
 const timeTakeOff = computed(() => {
     const feature = props.trackData?.decodedIgc?.GeoJSON?.features[0];
@@ -297,6 +315,13 @@ function formatDuration(seconds) {
   display: flex;
   gap: 16px;
   margin-top: 10px;
+}
+
+.comment-btn-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+  justify-content: flex-end;
 }
 
 .compute-btn {
