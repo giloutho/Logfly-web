@@ -56,9 +56,20 @@
               <span class="info-bold">Vario mini :</span> <span>{{ trackData?.decodedIgc.stat.maxsink || '' }}m/s</span>
             </div>
             <div class="about-row info-row">
-              <span class="info-bold">Score :</span> <span>{{ trackData?.score || '75 km ajouter points et bouton si null' }}</span>
-              <v-btn color="success" density="compact" class="ml-4">Compute</v-btn>
+              <span class="info-bold">Score :</span> <span>{{ trackDate }} {{ trackFixes.length }}</span>
+              <button 
+                class="compute-btn" 
+                @click="showScoreDialog = true"
+                :disabled="isComputingScore"
+              >
+                {{ isComputingScore ? 'Computing...' : 'Compute' }}
+              </button>
             </div>
+            <ScoreDialog
+              v-model="showScoreDialog"
+              :scores="scores"
+              @select="onScoreSelected"
+            />
             <div class="about-row btn-row">
               <v-btn color="primary" density="compact" class="mr-2">Add photo</v-btn>
               <v-btn color="error" density="compact">Remove photo</v-btn>
@@ -101,6 +112,9 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useGettext } from "vue3-gettext";
+import { igcScoring } from '@/js/igc/igc-scoring';
+import ScoreDialog from '@/components/ScoreDialog.vue';
 
 const props = defineProps({
   trackData: {
@@ -110,6 +124,17 @@ const props = defineProps({
 });
 
 const tab = ref('about'); // Onglet "About" sélectionné par défaut
+const isComputingScore = ref(false);
+const showScoreDialog = ref(false);
+const scores = [
+  'FFVL',
+  'XContest',
+  'FAI',
+  'FAI-Cylinders',
+  'FAI-OAR',
+  'FAI-OAR2',
+  'XCLeague'
+];
 
 const timeTakeOff = computed(() => {
     const feature = props.trackData?.decodedIgc?.GeoJSON?.features[0];
@@ -128,6 +153,54 @@ const timeLanding = computed(() => {
     const dateLanding = new Date(feature.properties.coordTimes[feature.properties.coordTimes.length - 1])
     return dateLanding.getUTCHours().toString().padStart(2, '0') + ':' + dateLanding.getUTCMinutes().toString().padStart(2, '0');
 });
+
+const trackFixes = computed(() => {
+  return props.trackData?.decodedIgc?.fixes|| [];
+}); 
+
+const trackDate = computed(() => {
+    return props.trackData?.decodedIgc?.info?.date || '';
+});
+
+function onScoreSelected(league) {
+  computeScore(league);
+}
+
+async function computeScore(league) {
+  if (isComputingScore.value) return; // Évite les clics multiples
+  
+  if (!trackFixes.value || trackFixes.value.length === 0) {
+    console.warn('Pas de fixes disponibles pour le calcul du score');
+    return;
+  }
+  
+  if (!trackDate.value) {
+    console.warn('Pas de date disponible pour le calcul du score');
+    return;
+  }
+
+  isComputingScore.value = true;
+  
+  try {
+    const result = await igcScoring({
+      date: trackDate.value,
+      fixes: trackFixes.value,
+      league: league
+    });
+    
+    if (result.success) {
+      console.log('Score calculé:', result.geojson);
+      // Traiter le résultat ici (affichage, mise à jour d'état, etc.)
+      return result.geojson;
+    } else {
+      console.error('Erreur scoring:', result.message);
+    }
+  } catch (error) {
+    console.error('Erreur lors du calcul du score:', error);
+  } finally {
+    isComputingScore.value = false;
+  }
+}
 
 function formatDuration(seconds) {
   if (!seconds) return 'N/A';
@@ -216,5 +289,28 @@ function formatDuration(seconds) {
   display: flex;
   gap: 16px;
   margin-top: 10px;
+}
+
+.compute-btn {
+  padding: 6px 16px;
+  margin-left: 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  transition: background-color 0.2s;
+}
+
+.compute-btn:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.compute-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
 </style>

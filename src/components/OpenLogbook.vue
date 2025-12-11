@@ -12,8 +12,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn text @click="openDialog = false">{{ $gettext('Cancel') }}</v-btn>
-          <v-btn text @click="loadDatabase" :disabled="!selectedFile">{{ $gettext('Open') }}</v-btn>
+          <v-btn variant="text" @click="openDialog = false">{{ $gettext('Cancel') }}</v-btn>
+          <v-btn variant="text" @click="loadDatabase" :disabled="!selectedFile">{{ $gettext('Open') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

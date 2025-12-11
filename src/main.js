@@ -40,8 +40,32 @@ const gettext = createGettext({
   silent: true,   // pour éviter les warnings
 });
 
+// Gestionnaire d'erreur global du navigateur pour masquer l'erreur Vuetify ripple
+//  Cette erreur est apparue lors de l'import de igc-xc-score
+// toutes les tentatives de correction dans le code de Vuetify ou dans le code de l'application ont échoué
+window.addEventListener('error', (event) => {
+  if (event.message && event.message.includes("Cannot set properties of undefined (setting 'isHiding')")) {
+    event.preventDefault();
+    event.stopPropagation();
+    return false;
+  }
+}, true);
+
+// Gestionnaire d'erreur global pour masquer l'erreur Vuetify ripple
+const app = createApp(App);
+
+app.config.errorHandler = (err, instance, info) => {
+  // Ignore l'erreur spécifique du ripple Vuetify
+  if (err.message && err.message.includes("Cannot set properties of undefined (setting 'isHiding')")) {
+    return; // Masque cette erreur
+  }
+  // Log les autres erreurs
+  console.error('Error:', err);
+  console.error('Info:', info);
+};
+
 // 3. Montage de l'application
-createApp(App)
+app
   .use(router)
   .use(vuetify) // ⬅️ Enregistrement du plugin Vuetify
   .use(createPinia())

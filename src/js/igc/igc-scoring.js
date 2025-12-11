@@ -1,8 +1,18 @@
-import { scoringRules, solver } from 'igc-xc-score'
 const miniIgcPoints = 5
 
+// Cache pour éviter les réimports multiples
+let scoringModule = null;
 
-export async function igcScoring(argsScoring) { 
+async function getScoringModule() {
+  if (!scoringModule) {
+    scoringModule = await import('igc-xc-score');
+  }
+  return scoringModule;
+}
+
+export async function igcScoring(argsScoring) {
+    // Import dynamique pour éviter les effets de bord au chargement du module
+    const { scoringRules, solver } = await getScoringModule(); 
     /*
     * argsScoring contiendra 
     * const date = issue de IGCparser 
@@ -41,6 +51,8 @@ export async function igcScoring(argsScoring) {
 }
 
 async function scoring(argsScoring) {
+    // Import dynamique pour éviter les effets de bord au chargement du module
+    const { scoringRules, solver } = await getScoringModule();
     const { date, fixes, league } = argsScoring;
 
     let scoringGeoJSON = {}
