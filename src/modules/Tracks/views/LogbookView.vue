@@ -84,6 +84,7 @@
           :trackData="dataFlight" 
           @update:scoreJson="scoreJson = $event"
           @update:comment="onCommentUpdate"
+          @update:glider="onGliderUpdate"
         />
         <div v-else class="no-track-message">
           <p>Sélectionnez un vol pour afficher les détails</p>
@@ -242,6 +243,30 @@ function onCommentUpdate({ id, comment }) {
     dataFlight.value.comment = comment;
   }
   snackbarMessage.value = comment ? 'Commentaire enregistré' : 'Commentaire supprimé';
+  snackbar.value = true;
+}
+
+// Met à jour la voile (V_Engin) en base, dans flights, et dans dataFlight
+function onGliderUpdate({ id, glider }) {
+  const flightId = id || dataFlight.value?.decodedIgc?.info?.id || selectedItems.value[0];
+  if (!flightId) return;
+  const req = `UPDATE Vol SET V_Engin = '${glider}' WHERE V_ID = ${flightId}`;
+  const result = databaseStore.query(req);
+  if (!result.success) {
+    snackbarMessage.value = 'Erreur lors de la mise à jour de la voile';
+    snackbar.value = true;
+    return;
+  }
+  // Mise à jour dans flights
+  const idx = flights.value.findIndex(f => f.V_ID === flightId);
+  if (idx !== -1) {
+    flights.value[idx].V_Engin = glider;
+  }
+  // Mise à jour dans dataFlight
+  if (dataFlight.value) {
+    dataFlight.value.glider = glider;
+  }
+  snackbarMessage.value = 'Voile modifiée';
   snackbar.value = true;
 }
 

@@ -97,7 +97,25 @@
 
       <v-window-item value="modify">
         <v-card-text>
-          Options de modification...
+          <div class="modify-btn-row">
+            <div class="modify-line">
+              <v-btn color="primary" density="compact" class="mr-2" @click="showGliderDialog = true">Modifier la voile</v-btn>
+                        <GliderDialog
+                          v-model="showGliderDialog"
+                          :gliderList="gliderList"
+                          :currentGlider="trackData?.glider"
+                          @save="onGliderSave"
+                        />
+              <v-btn color="primary" density="compact">Change site</v-btn>
+            </div>
+            <div class="modify-line">
+              <v-btn color="error" density="compact">Supprimer</v-btn>
+            </div>
+            <div class="modify-line">
+              <v-btn color="warning" density="compact" class="mr-2">Editer/Dupliquer</v-btn>
+              <v-btn color="secondary" density="compact">Fusionner les vols</v-btn>
+            </div>
+          </div>
         </v-card-text>
       </v-window-item>
 
@@ -117,6 +135,34 @@
 </template>
 
 <script setup>
+import GliderDialog from '@/components/GliderDialog.vue';
+import { useDatabaseStore } from '@/stores/database';
+const showGliderDialog = ref(false);
+const gliderList = ref([]);
+
+const databaseStore = useDatabaseStore();
+
+function loadGliderList() {
+  const reqSQL = "SELECT DISTINCT V_Engin FROM Vol WHERE V_Engin IS NOT NULL AND V_Engin != '' ORDER BY upper(V_Engin)";
+  const result = databaseStore.query(reqSQL);
+  if (result.success && result.data && result.data[0]) {
+    const values = result.data[0].values;
+    gliderList.value = values.map(row => row[0]);
+  } else {
+    gliderList.value = [];
+  }
+}
+
+// Charger la liste des voiles à l'ouverture du dialog
+watch(showGliderDialog, (val) => { if (val) loadGliderList(); });
+
+function onGliderSave(newGlider) {
+  // Remonte la valeur au parent (LogbookView) pour traitement
+  emit('update:glider', {
+    id: props.trackData?.dbId || null,
+    glider: newGlider
+  });
+}
 import { ref, computed, watch } from 'vue';
 import { useGettext } from "vue3-gettext";
 import { igcScoring } from '@/js/igc/igc-scoring';
@@ -129,7 +175,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['update:scoreJson', 'update:comment']);
+const emit = defineEmits(['update:scoreJson', 'update:comment', 'update:glider']);
 
 const tab = ref('about'); // Onglet "About" sélectionné par défaut
 const isComputingScore = ref(false);
@@ -315,6 +361,18 @@ function formatDuration(seconds) {
   display: flex;
   gap: 16px;
   margin-top: 10px;
+}
+
+.modify-btn-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+.modify-line {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
 }
 
 .comment-btn-row {
