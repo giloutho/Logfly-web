@@ -122,9 +122,12 @@ const props = defineProps({
   }
 });
 
+const emit = defineEmits(['update:scoreJson']);
+
 const tab = ref('about'); // Onglet "About" sélectionné par défaut
 const isComputingScore = ref(false);
 const showScoreDialog = ref(false);
+const scoreJson = ref(null);
 
 const timeTakeOff = computed(() => {
     const feature = props.trackData?.decodedIgc?.GeoJSON?.features[0];
@@ -158,29 +161,25 @@ function onScoreSelected(league) {
 
 async function computeScore(league) {
   if (isComputingScore.value) return; // Évite les clics multiples
-  
   if (!trackFixes.value || trackFixes.value.length === 0) {
     console.warn('Pas de fixes disponibles pour le calcul du score');
     return;
   }
-  
   if (!trackDate.value) {
     console.warn('Pas de date disponible pour le calcul du score');
     return;
   }
-
   isComputingScore.value = true;
-  
   try {
     const result = await igcScoring({
       date: trackDate.value,
       fixes: trackFixes.value,
       league: league
     });
-    
     if (result.success) {
-      console.log('Score calculé:', result.geojson);
-      // Traiter le résultat ici (affichage, mise à jour d'état, etc.)
+      scoreJson.value = result.geojson;
+      // Informer le parent (LogbookView)du nouveau score calculé
+      emit('update:scoreJson', result.geojson);
       return result.geojson;
     } else {
       console.error('Erreur scoring:', result.message);
@@ -304,3 +303,4 @@ function formatDuration(seconds) {
   cursor: not-allowed;
 }
 </style>
+

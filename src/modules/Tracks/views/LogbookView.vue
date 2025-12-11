@@ -2,7 +2,11 @@
   <OpenLogbook v-if="!databaseStore.hasOpenDatabase" />
   <div v-else class="global-logbook">
     <div class="left-panel">
-      <LittleMapView v-if="decodedTrack && decodedTrack.GeoJSON" :geoJson="decodedTrack.GeoJSON" />
+      <LittleMapView 
+        v-if="decodedTrack && decodedTrack.GeoJSON" 
+        :geoJson="decodedTrack.GeoJSON" 
+        :scoreJson="scoreJson"
+      />
       <div v-else class="no-track-message">
         <p>Base de données : {{ databaseStore.dbName }}</p>
         <p>Sélectionnez un vol pour afficher la trace</p>
@@ -69,7 +73,11 @@
         </v-data-table>
       </div>
       <div class="bottom-block">
-        <LogbookDetails v-if="dataFlight" :trackData="dataFlight" />
+        <LogbookDetails 
+          v-if="dataFlight" 
+          :trackData="dataFlight" 
+          @update:scoreJson="scoreJson = $event"
+        />
         <div v-else class="no-track-message">
           <p>Sélectionnez un vol pour afficher les détails</p>
         </div>
@@ -100,6 +108,7 @@ const filteredCount = ref(0);
 const decodedTrack = ref(null)
 const analysisTrack = ref(null);
 const dataFlight = ref(null);
+const scoreJson = ref(null);
 
 const pageCount = computed(() => {
   return Math.ceil(flights.value.length / itemsPerPage.value);
