@@ -28,18 +28,25 @@
 </template>
 
 <script setup>
+
 import { ref, watch } from 'vue';
 
 const props = defineProps({
   modelValue: {
     type: Boolean,
     default: false
-  },
-  scores: {
-    type: Array,
-    required: true
   }
 });
+
+const scores = [
+  'FFVL',
+  'XContest',
+  'FAI',
+  'FAI-Cylinders',
+  'FAI-OAR',
+  'FAI-OAR2',
+  'XCLeague'
+];
 
 const emit = defineEmits(['update:modelValue', 'select']);
 

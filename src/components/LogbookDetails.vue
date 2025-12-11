@@ -67,7 +67,6 @@
             </div>
             <ScoreDialog
               v-model="showScoreDialog"
-              :scores="scores"
               @select="onScoreSelected"
             />
             <div class="about-row btn-row">
@@ -126,15 +125,6 @@ const props = defineProps({
 const tab = ref('about'); // Onglet "About" sélectionné par défaut
 const isComputingScore = ref(false);
 const showScoreDialog = ref(false);
-const scores = [
-  'FFVL',
-  'XContest',
-  'FAI',
-  'FAI-Cylinders',
-  'FAI-OAR',
-  'FAI-OAR2',
-  'XCLeague'
-];
 
 const timeTakeOff = computed(() => {
     const feature = props.trackData?.decodedIgc?.GeoJSON?.features[0];
