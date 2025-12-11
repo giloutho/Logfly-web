@@ -42,7 +42,10 @@
           <template v-slot:item="{ item, index, props }">
             <tr
               v-bind="props"
-              :class="{'selected-row': selectedItems.includes(item.V_ID)}"
+              :class="{
+                'selected-row': selectedItems.includes(item.V_ID),
+                'has-comment': item.V_Commentaire
+              }"
               @click="selectedItems = [item.V_ID]; onSelectionChange([item.V_ID])"
               style="cursor:pointer;"
             >
@@ -337,6 +340,11 @@ async function readIgcFromDb(flightId) {
 .selected-row {
   background-color: #1867C0!important;
   color: white;
+}
+
+.has-comment {
+  color: #fbb104 !important; /* bleu Vuetify, à ajuster si besoin */
+  font-weight: 600;
 }
 
 .custom-pagination {

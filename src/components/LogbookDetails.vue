@@ -6,7 +6,7 @@
         {{ trackData.site }} {{ trackData.day }}
       </v-chip>
     </v-card-title>
-    <v-tabs v-model="tab" bg-color="primary">
+    <v-tabs v-model="tab" color="primary" class="bg-grey-lighten-4">
       <v-tab value="about">
         <v-icon class="mr-2">mdi-information-outline</v-icon>
         About
@@ -55,15 +55,17 @@
               <span class="info-bold">Vario max :</span> <span>{{ trackData?.decodedIgc.stat.maxclimb || '' }}m/s</span>
               <span class="info-bold">Vario mini :</span> <span>{{ trackData?.decodedIgc.stat.maxsink || '' }}m/s</span>
             </div>
-            <div class="about-row info-row">
-              <span class="info-bold">Score :</span> <span>{{ trackDate }} {{ trackFixes.length }}</span>
-              <button 
-                class="compute-btn" 
+            <div class="about-row info-row">              
+              <v-btn
+                color="success"
+                density="compact"
                 @click="showScoreDialog = true"
                 :disabled="isComputingScore"
+                class="ml-2"
               >
-                {{ isComputingScore ? 'Computing...' : 'Compute' }}
-              </button>
+                {{ isComputingScore ? 'Computing...' : 'Scoring' }}
+              </v-btn>
+              <span class="info-bold">{{ scoreLabel }}</span>
             </div>
             <ScoreDialog
               v-model="showScoreDialog"
@@ -80,6 +82,7 @@
       <v-window-item value="comment">
         <v-card-text>
           <v-textarea
+            v-model="commentText"
             label="Ajouter un commentaire"
             rows="5"
             variant="outlined"
@@ -110,7 +113,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useGettext } from "vue3-gettext";
 import { igcScoring } from '@/js/igc/igc-scoring';
 import ScoreDialog from '@/components/ScoreDialog.vue';
@@ -128,6 +131,14 @@ const tab = ref('about'); // Onglet "About" sélectionné par défaut
 const isComputingScore = ref(false);
 const showScoreDialog = ref(false);
 const scoreJson = ref(null);
+const scoreLabel = ref('');
+const commentText = ref('');
+
+// Met à jour le commentaire affiché à chaque changement de vol
+watch(() => props.trackData, (newVal) => {
+  scoreLabel.value = '';
+  commentText.value = newVal?.comment || '';
+});
 
 const timeTakeOff = computed(() => {
     const feature = props.trackData?.decodedIgc?.GeoJSON?.features[0];
@@ -177,17 +188,25 @@ async function computeScore(league) {
       league: league
     });
     if (result.success) {
-      scoreJson.value = result.geojson;
-      // Informer le parent (LogbookView)du nouveau score calculé
-      emit('update:scoreJson', result.geojson);
-      return result.geojson;
+        scoreJson.value = result.geojson;
+        const strScore = JSON.parse(JSON.stringify(result.geojson))
+        const sc_league = strScore.league
+        const sc_best = strScore.score+' pts'
+        const sc_course = strScore.course
+        const sc_distance = strScore.distance+' km'
+        const sc_multi = strScore.multiplier
+        // Score computed: League=FFVL, Score=34.64 pts, Course=Triangle plat, Distance=28.87 km, Multiplier=1.2
+        scoreLabel.value = `${sc_league} : ${sc_course} Distance ${sc_distance}   Score ${sc_best} Coeff =${sc_multi}`;        
+        // Informer le parent (LogbookView)du nouveau score calculé
+        emit('update:scoreJson', result.geojson);
+        return result.geojson;
     } else {
-      console.error('Erreur scoring:', result.message);
+        console.error('Erreur scoring:', result.message);
     }
   } catch (error) {
-    console.error('Erreur lors du calcul du score:', error);
+        console.error('Erreur lors du calcul du score:', error);
   } finally {
-    isComputingScore.value = false;
+        isComputingScore.value = false;
   }
 }
 
