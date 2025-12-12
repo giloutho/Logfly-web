@@ -244,6 +244,8 @@ function onCommentUpdate({ id, comment }) {
   }
   snackbarMessage.value = comment ? 'Commentaire enregistré' : 'Commentaire supprimé';
   snackbar.value = true;
+  // Signale au parent qu'une modification a eu lieu
+  emit('db-updated');
 }
 
 // Met à jour la voile (V_Engin) en base, dans flights, et dans dataFlight
@@ -268,6 +270,8 @@ function onGliderUpdate({ id, glider }) {
   }
   snackbarMessage.value = 'Voile modifiée';
   snackbar.value = true;
+  // Signale au parent qu'une modification a eu lieu
+  emit('db-updated');
 }
 
 async function readIgcFromDb(flightId) {
@@ -307,6 +311,8 @@ async function readIgcFromDb(flightId) {
 
 }
 
+
+const emit = defineEmits(['db-updated']);
 
 </script>
 

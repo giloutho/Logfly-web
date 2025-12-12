@@ -37,6 +37,9 @@ function onFileChange(event) {
   selectedFile.value = event.target.files[0]
 }
 
+
+const emit = defineEmits(['db-opened']);
+
 async function loadDatabase() {
   if (!selectedFile.value) return;
 
@@ -45,6 +48,7 @@ async function loadDatabase() {
   const result = await databaseStore.loadDatabase(selectedFile.value)
   
   if (result.success) {
+    emit('db-opened', selectedFile.value.path || selectedFile.value.name || '');
     openDialog.value = false
     selectedFile.value = null
   }
