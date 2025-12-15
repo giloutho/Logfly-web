@@ -1,23 +1,31 @@
 <template>
-  <div class="open-logbook">
-    <v-btn color="primary" @click="openDialog = true">{{ $gettext('Open logbook') }}</v-btn>
-    <v-dialog v-model="openDialog" max-width="500">
-      <v-card>
-        <v-card-title>{{ $gettext('Select a .db file') }}</v-card-title>
-        <v-card-text>
-          <input type="file" accept=".db" @change="onFileChange" />
-          <v-alert v-if="error" type="warning" title="Error" closable @click:close="databaseStore.clearError()">
-            {{ error }}
-          </v-alert>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn variant="text" @click="openDialog = false">{{ $gettext('Cancel') }}</v-btn>
-          <v-btn variant="text" @click="loadDatabase" :disabled="!selectedFile">{{ $gettext('Open') }}</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </div>
+  <v-dialog v-model="dialog" persistent max-width="600">
+    <v-card>
+      <v-card-title class="text-h5 bg-primary">
+        {{ $gettext('Open Logbook') }}
+      </v-card-title>
+      <v-card-text class="pt-6">
+        <div class="text-center mb-4">
+          <v-icon size="64" color="primary">mdi-database-outline</v-icon>
+        </div>
+        <p class="text-center mb-4">
+          {{ $gettext('Aucune base de données n\'est actuellement ouverte.') }}<br>
+          {{ $gettext('Veuillez sélectionner un fichier de base de données pour continuer.') }}
+        </p>
+        <v-alert v-if="error" type="error" closable @click:close="error = ''" class="mb-4">
+          {{ error }}
+        </v-alert>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn color="primary" variant="elevated" @click="openFileDialog" size="large">
+          <v-icon start>mdi-folder-open</v-icon>
+          {{ $gettext('Open logbook') }}
+        </v-btn>
+        <v-spacer />
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -25,44 +33,72 @@ import { ref, computed } from 'vue';
 import { useGettext } from "vue3-gettext";
 import { useDatabaseStore } from '@/stores/database'
 
+const props = defineProps({
+  show: {
+    type: Boolean,
+    default: false
+  }
+});
+
 const databaseStore = useDatabaseStore()
-const openDialog = ref(false)
-const selectedFile = ref(null)
+const error = ref('')
 
 const { $gettext } = useGettext();
 
-const error = computed(() => databaseStore.error)
+const emit = defineEmits(['db-opened', 'file-handle']);
 
-function onFileChange(event) {
-  selectedFile.value = event.target.files[0]
-}
+// La modale s'affiche si show est true ET que la base n'est pas ouverte
+const dialog = computed(() => props.show && !databaseStore.hasOpenDatabase);
 
-
-const emit = defineEmits(['db-opened']);
-
-async function loadDatabase() {
-  if (!selectedFile.value) return;
-
-  databaseStore.clearError()
-  
-  const result = await databaseStore.loadDatabase(selectedFile.value)
-  
-  if (result.success) {
-    emit('db-opened', selectedFile.value.path || selectedFile.value.name || '');
-    openDialog.value = false
-    selectedFile.value = null
+async function openFileDialog() {
+  // Vérifier si l'API File System Access est disponible
+  if (!('showOpenFilePicker' in window)) {
+    error.value = 'File System Access API non supportée par ce navigateur. Utilisez Chrome, Edge ou Opera.';
+    showError.value = true;
+    return;
   }
-}   
+
+  try {
+    databaseStore.clearError();
+    
+    // Ouvrir le sélecteur de fichiers
+    const [fileHandle] = await window.showOpenFilePicker({
+      types: [
+        {
+          description: 'SQLite Database',
+          accept: {
+            'application/x-sqlite3': ['.db', '.sqlite', '.sqlite3']
+          }
+        }
+      ],
+      multiple: false
+    });
+
+    // Obtenir le fichier depuis le handle
+    const file = await fileHandle.getFile();
+    
+    // Charger la base de données
+    const result = await databaseStore.loadDatabase(file);
+    
+    if (result.success) {
+      // Émettre le nom du fichier et le handle pour une réutilisation ultérieure
+      emit('db-opened', file.name);
+      emit('file-handle', fileHandle);
+      // La modale se fermera automatiquement car hasOpenDatabase devient true
+    } else {
+      error.value = databaseStore.error;
+    }
+  } catch (err) {
+    // L'utilisateur a annulé ou une erreur s'est produite
+    if (err.name !== 'AbortError') {
+      error.value = `Erreur lors de l'ouverture du fichier: ${err.message}`;
+      console.error('Erreur showOpenFilePicker:', err);
+    }
+  }
+}
 
 </script>
 
 <style scoped>
-.open-logbook {
-  padding: 2rem;
-  text-align: center;
-}
-h1 {
-  color: #1976d2;
-  margin-bottom: 1rem;
-}
+/* Styles de la modale gérés par Vuetify */
 </style>
