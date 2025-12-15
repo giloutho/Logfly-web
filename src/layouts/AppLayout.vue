@@ -20,6 +20,7 @@
       <router-view @db-updated="onDbUpdated" />
     </v-main>
     
+    
     <!-- Pas de footer pour l'instant     -->
     <v-footer class="app-footer">
       ©  Paragliding App
@@ -30,7 +31,7 @@
       :isDirty="isDirty"
       @save="onSave"
     />
-    <OpenLogbook @db-opened="onDbOpened" />
+    <OpenLogbook @db-opened="onDbOpened" @file-handle="onFileHandle" />
     <!-- Snackbar supprimé -->
   </v-app>
 </template>
@@ -47,27 +48,62 @@
   const databaseStore = useDatabaseStore();
   const dbPath = computed(() => databaseStore.dbName || '');
   const isDirty = ref(false); // Passe à true dès qu'une modif DB est faite
+  const fileHandle = ref(null); // Stocke le handle du fichier pour la sauvegarde
   
   function onDbUpdated() {
     isDirty.value = true;
   }
   // Snackbar supprimé
 
-
-  function onSave() {
-    // Utilise le nom du fichier ouvert depuis le store, sinon un nom par défaut
-    const filename = databaseStore.dbName || 'carnet.db';
+  async function onSave() {
     try {
-      saveDatabase(databaseStore.db, filename);
-      isDirty.value = false;
-      // La couleur du bouton passera à success via la prop isDirty
+      if ('showSaveFilePicker' in window) {
+        // Utiliser showSaveFilePicker pour demander confirmation
+        const options = {
+          suggestedName: databaseStore.dbName || 'carnet.db',
+          types: [
+            {
+              description: 'SQLite Database',
+              accept: {
+                'application/x-sqlite3': ['.db', '.sqlite', '.sqlite3']
+              }
+            }
+          ]
+        };
+        
+        // Si on a un handle existant, essayer de l'utiliser comme point de départ
+        if (fileHandle.value) {
+          options.startIn = fileHandle.value;
+        }
+        
+        const handle = await window.showSaveFilePicker(options);
+        const writable = await handle.createWritable();
+        const data = databaseStore.db.export();
+        await writable.write(data);
+        await writable.close();
+        
+        // Mettre à jour le handle pour les prochaines sauvegardes
+        fileHandle.value = handle;
+        isDirty.value = false;
+      } else {
+        // Fallback : téléchargement classique si l'API n'est pas disponible
+        const filename = databaseStore.dbName || 'carnet.db';
+        saveDatabase(databaseStore.db, filename);
+        isDirty.value = false;
+      }
     } catch (e) {
-      // Optionnel : afficher une erreur dans la console
-      console.error('Erreur lors de la sauvegarde :', e.message);
+      // L'utilisateur a annulé
+      if (e.name !== 'AbortError') {
+        console.error('Erreur lors de la sauvegarde :', e.message);
+      }
     }
   }
 
-function onDbOpened(name) {
-  // La mutation du store s'occupe déjà de dbName, rien à faire ici
-}
+  function onDbOpened(name) {
+    // La mutation du store s'occupe déjà de dbName, rien à faire ici
+  }
+
+  function onFileHandle(handle) {
+    fileHandle.value = handle;
+  }
 </script>
