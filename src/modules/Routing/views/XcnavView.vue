@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Airspace management coming soon...</h1>
+    <h1>XC Nav management coming soon...</h1>
   </div>
 </template>
 
