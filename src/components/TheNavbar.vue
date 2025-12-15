@@ -1,10 +1,5 @@
 <template>
-  <v-app-bar 
-    color="primary" 
-    dark 
-    app 
-    flat
-  >
+  <v-app-bar color="primary" dark app flat translate="no">
     <v-toolbar-title>
       <router-link :to="{ name: 'home' }" class="app-title-link"> 
       <!-- <router-link :to="{ name: 'logbook-view' }" class="app-title-link">  -->      
@@ -16,7 +11,7 @@
     <v-spacer></v-spacer>
 
     <div class="d-none d-sm-flex">
-      <v-menu offset-y>
+      <v-menu offset-y translate="no">
         <template v-slot:activator="{ props }">
           <v-btn text v-bind="props">
             <!-- <v-icon left>mdi-map-marker-path</v-icon>. -->
@@ -36,7 +31,7 @@
           </v-list-item>          
         </v-list>
       </v-menu>      
-      <v-menu offset-y>
+      <v-menu offset-y translate="no">
         <template v-slot:activator="{ props }">
           <v-btn text v-bind="props">
             <!-- <v-icon left>mdi-chart-line</v-icon> -->
@@ -54,7 +49,7 @@
         </v-list>
       </v-menu>
 
-      <v-menu offset-y>
+      <v-menu offset-y translate="no">
         <template v-slot:activator="{ props }">
           <v-btn text v-bind="props">
             <!-- <v-icon left>mdi-chart-line</v-icon> -->
@@ -68,24 +63,55 @@
           </v-list-item>
           <v-list-item :to="{ name: 'airspaces-view' }">
             <v-list-item-title>{{ $gettext('Airspaces') }}</v-list-item-title>
+          </v-list-item>       
+          <v-list-item :to="{ name: 'xcnav-view' }">
+            <v-list-item-title>{{ $gettext('XC Nav') }}</v-list-item-title>
+          </v-list-item>          
+        </v-list>
+      </v-menu>    
+      
+      <v-menu offset-y translate="no">
+        <template v-slot:activator="{ props }">
+          <v-btn text v-bind="props">
+            {{ $gettext('Sites') }}
+            <v-icon right>mdi-menu-down</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item :to="{ name: 'sites-view' }">
+            <v-list-item-title>{{ $gettext('Sites') }}</v-list-item-title>
+          </v-list-item>
+          <v-list-item :to="{ name: 'pgearth-view' }">
+            <v-list-item-title>{{ $gettext('Paragliding Earth') }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>      
-      
-      <v-btn text :to="{ name: 'files-base' }">
-       <!-- <v-icon left>mdi-folder-settings</v-icon> -->
-        {{ $gettext('Sites') }}
-      </v-btn>
       
       <v-btn text :to="{ name: 'equip-base' }">
        <!-- <v-icon left>mdi-sail-boat</v-icon>. -->
         {{ $gettext('Equipment') }}
       </v-btn>
       
-      <v-btn text :to="{ name: 'settings-base' }">
-       <!-- <v-icon left>mdi-cog</v-icon>. -->
-        {{ $gettext('Settings & Utilities') }}
-      </v-btn>
+      <v-menu offset-y translate="no">
+        <template v-slot:activator="{ props }">
+          <v-btn text v-bind="props">
+            <!-- <v-icon left>mdi-map-marker-path</v-icon>. -->
+            {{ $gettext('Settings & Utilities') }}
+            <v-icon right>mdi-menu-down</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item :to="{ name: 'settings-view' }">
+            <v-list-item-title>{{ $gettext('Settings') }}</v-list-item-title>
+          </v-list-item>
+          <v-list-item :to="{ name: 'support-view' }">
+            <v-list-item-title>{{ $gettext('Support') }}</v-list-item-title>
+          </v-list-item>
+          <v-list-item :to="{ name: 'utils-view' }">
+            <v-list-item-title>{{ $gettext('Utilities') }}</v-list-item-title>
+          </v-list-item>          
+        </v-list>
+      </v-menu>        
     </div>
 
     <v-app-bar-nav-icon class="d-sm-none"></v-app-bar-nav-icon>

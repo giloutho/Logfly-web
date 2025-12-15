@@ -1,5 +1,5 @@
 <template>
-  <v-card class="details-card">
+  <v-card class="details-card" translate="no">
     <v-card-title class="d-flex justify-space-between align-center">
       <span>Flight Details</span>
       <v-chip color="primary" class="ml-auto" label>
