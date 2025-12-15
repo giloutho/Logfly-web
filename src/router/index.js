@@ -2,6 +2,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 //import HomeView from '../views/HomeView.vue'
 
 const routes = [
+  // Redirection explicite pour index.html
+  {
+    path: '/index.html',
+    redirect: { name: 'home' }
+  },
     // Route de Base initiale
     {
       path: '/',
@@ -67,8 +72,12 @@ const routes = [
           path: 'airspaces',
           name: 'airspaces-view',
           component: () => import('../modules/Routing/views/AirspacesView.vue'),
-        },
-        // ... Route pour l'Élaboration de Route
+        },      
+        {
+          path: 'xcnav',
+          name: 'xcnav-view',
+          component: () => import('../modules/Routing/views/XcnavView.vue'),
+        },        
       ],
     },
 
@@ -77,7 +86,18 @@ const routes = [
       path: '/files',
       name: 'files-base',
       component: () => import(/* webpackChunkName: "module-files" */ '../modules/Files/FilesLayout.vue'),
-      // ... routes enfants pour Sites et Waypoints
+      children: [
+        {
+          path: 'sites',
+          name: 'sites-view',
+          component: () => import('../modules/Files/views/SitesView.vue'),
+        },
+        {
+          path: 'pgearth',
+          name: 'pgearth-view',
+          component: () => import('../modules/Files/views/PgearthView.vue'),
+        },              
+      ],
     },
 
     // 📦 MODULE MATERIEL (10) - Bundle 'module-materiel'
@@ -93,7 +113,23 @@ const routes = [
       path: '/settings',
       name: 'settings-base',
       component: () => import(/* webpackChunkName: "module-settings" */ '../modules/Settings/SettingsLayout.vue'),
-      // ... routes enfants pour préférences et support
+      children: [
+        {
+          path: 'settings',
+          name: 'settings-view',
+          component: () => import('../modules/Settings/views/SettingsView.vue'),
+        },
+        {
+          path: 'support',
+          name: 'support-view',
+          component: () => import('../modules/Settings/views/SupportView.vue'),
+        },      
+        {
+          path: 'utils',
+          name: 'utils-view',
+          component: () => import('../modules/Settings/views/UtilsView.vue'),
+        },        
+      ],
     },    
   ];
 
