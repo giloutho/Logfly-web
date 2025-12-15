@@ -1,5 +1,6 @@
 <template>
-  <v-card flat class="annual-card">
+  <OpenLogbook :show="true" />
+  <v-card v-if="databaseStore.hasOpenDatabase" flat class="annual-card">
     <v-app-bar color="white" flat class="toolbar-app-bar">
       <v-spacer></v-spacer>
         <v-btn class="toolbar-btn">{{ $gettext('Year') }}</v-btn>
@@ -24,9 +25,12 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useGettext } from "vue3-gettext";
+import OpenLogbook from '@/components/OpenLogbook.vue';
+import { useDatabaseStore } from '@/stores/database';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+const databaseStore = useDatabaseStore();
 const emit = defineEmits(['close']);
 
 const { $gettext } = useGettext();

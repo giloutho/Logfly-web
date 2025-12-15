@@ -1,5 +1,6 @@
 <template>
-  <div class="global-summary">
+  <OpenLogbook :show="true" />
+  <div v-if="databaseStore.hasOpenDatabase" class="global-summary">
     <div class="left-panel">
       <p>1/2 largeur écran disponible</p>
     </div>
@@ -18,6 +19,13 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import OpenLogbook from '@/components/OpenLogbook.vue';
+import { useDatabaseStore } from '@/stores/database';
+
+const databaseStore = useDatabaseStore();
+</script>
 
 <style scoped>
 .global-summary {

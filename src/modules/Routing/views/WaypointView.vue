@@ -1,28 +1,15 @@
 <template>
   <div class="logbook-view">
     <header class="logbook-header">
-      <h1>Carnet de Vols du Pilote</h1>
-      
+      <h1>Waypoints management</h1>    
+    </header>
+    <br/><br/>
       <button 
         @click="goToAnnualStats" 
         class="btn-primary"
       >
-        📊 {{ $gettext('Voir la Synthèse Annuelle (Module Stat)') }}
-      </button>
-    </header>
-
-    <div class="logbook-controls">
-      <button @click="showImport">{{ $gettext('Importer Traces GPS') }}</button>
-      <button @click="showExternalTrace">{{ $gettext('Examiner Trace Extérieure') }}</button>
-    </div>
-
-    <section class="logbook-content">
-      <p>{{ $gettext('Liste détaillée de tous les vols enregistrés...') }}</p>
-      <ul>
-        <li>Vol du 2025-10-25 - Site: Annecy - Durée: 3h45</li>
-        <li>Vol du 2025-09-01 - Site: Saint Hilaire - Durée: 1h12</li>
-      </ul>
-    </section>
+        📊 {{ $gettext('Test d\'accès direct') }}
+      </button>    
   </div>
 </template>
 

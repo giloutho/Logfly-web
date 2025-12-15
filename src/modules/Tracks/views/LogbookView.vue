@@ -2,8 +2,8 @@
     <v-snackbar v-model="snackbar" :timeout="2000" color="success">
       {{ snackbarMessage }}
     </v-snackbar>
-  <OpenLogbook v-if="!databaseStore.hasOpenDatabase" />
-  <div v-else class="global-logbook">
+  <OpenLogbook :show="true" />
+  <div v-if="databaseStore.hasOpenDatabase" class="global-logbook">
     <div class="left-panel">
       <LittleMapView 
         v-if="decodedTrack && decodedTrack.GeoJSON" 

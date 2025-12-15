@@ -1,30 +1,18 @@
 <template>
-  <div class="import-view">
+  <OpenLogbook :show="true" />
+  <div v-if="databaseStore.hasOpenDatabase" class="import-view">
     <header>
-      <h1>{{ $gettext('Importer des Traces GPS') }}</h1>
-      <p>{{ $gettext('Sélectionnez un ou plusieurs fichiers de trace (IGC, GPX, etc.) depuis votre ordinateur pour les ajouter à votre carnet de vols.') }}</p>
-    </header>
-    
-    <section class="import-area">
-      <div class="drop-zone" @click="triggerFileInput">
-        <p>{{ $gettext('Glissez et déposez vos fichiers ici, ou cliquez pour sélectionner.') }}</p>
-        <input type="file" multiple @change="handleFileUpload" ref="fileInput" hidden />
-      </div>
-    </section>
-
-    <section class="file-list" v-if="files.length > 0">
-      <h2>{{ $gettext('Fichiers à importer :') }}</h2>
-      <ul>
-        <li v-for="file in files" :key="file.name">{{ file.name }} ({{ (file.size / 1024).toFixed(2) }} KB)</li>
-      </ul>
-      <v-btn color="primary">{{ $gettext('Lancer l\'importation') }}</v-btn>
-    </section>
+      <h1>{{ $gettext('Importer des Traces GPS') }}</h1>      
+    </header>    
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import OpenLogbook from '@/components/OpenLogbook.vue';
+import { useDatabaseStore } from '@/stores/database';
 
+const databaseStore = useDatabaseStore();
 const files = ref([]);
 const fileInput = ref(null);
 
