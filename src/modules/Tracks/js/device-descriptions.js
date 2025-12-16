@@ -11,6 +11,7 @@ export function getDeviceDescriptions($gettext) {
     const validate = $gettext('Validate and click Import');
     const serialMsg = [
         $gettext('The browser cannot read this type of GPS directly'),
+        $gettext('There are two solutions')+' :',
         $gettext('- Install the LogflyGPS import software. It will update the logbook directly'),
         $gettext('- use the manufacturer software to download the flight logs.'),
         $gettext('. Then import the downloaded files with the "Import from Folder" option'),
@@ -113,10 +114,14 @@ export function getDeviceDescriptions($gettext) {
     'Flytec 6020/30': serialMsg,
     'Flytec 6015': serialMsg,
     'Digifly': serialMsg,
-    'Dossier': [$gettext('Select a folder containing track files (IGC or GPX)')],
+    'Dossier': [
+        $gettext('Select a folder containing track files (IGC or GPX)'),
+        validate
+    ],
     'Syride PCTools': [
         $gettext('Select the folder defined by Sys PC Tools'),
         $gettext('By default, Sys-PC-Tool create a folder in user.home directory called "parapente"'),
+        validate
     ],
     'Vol sans trace': [$gettext('Créez une entrée de vol manuel sans fichier de trace associé.')]
   };
