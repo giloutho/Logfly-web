@@ -92,12 +92,129 @@
                     block
                     size="large"
                     prepend-icon="mdi-airplane-off"
-                    @click="openImportDialog('Vol sans trace', 'notrace')"
+                    @click="openImportDialog($gettext('Flight without GPS'), 'notrace')"
                   >
-                    Vol sans trace
+                    {{ $gettext('Flight without GPS') }}
                   </v-btn>
                 </v-col>
               </v-row>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <!-- Table des vols scannés -->
+    <v-container v-if="showFlightTable" fluid class="mt-10px">
+      <v-row>
+        <v-col cols="12">
+          <v-card>
+            <v-card-title class="d-flex justify-space-between align-center">
+              <div>
+                <span><b>{{ currentDevice }}</b> : {{ filteredFlights.length }} {{ $gettext('tracks decoded') }}</span>
+                <v-checkbox
+                  v-model="showAllFlights"
+                  label="Afficher tous les vols"
+                  hide-details
+                  density="compact"
+                  class="mt-2"
+                />
+              </div>
+              <div>
+                <v-btn
+                  color="success"
+                  @click="importSelectedFlights"
+                  :disabled="!hasSelectedFlights"
+                  class="mr-2"
+                >
+                  <v-icon start>mdi-database-import</v-icon>
+                  Importer ({{ selectedFlightsCount }})
+                </v-btn>
+                <v-btn
+                  color="grey"
+                  variant="text"
+                  @click="closeFlightTable"
+                >
+                  Fermer
+                </v-btn>
+              </div>
+            </v-card-title>
+            <v-card-text>
+              <v-data-table
+                :headers="flightTableHeaders"
+                :items="filteredFlights"
+                :items-per-page="6"
+                class="elevation-1"
+              >
+                <!-- Checkbox to-store -->
+                <template v-slot:item.toStore="{ item }">
+                  <v-checkbox
+                    v-model="item.toStore"
+                    hide-details
+                    :disabled="!item.isValid || item.existsInDB"
+                  />
+                </template>
+
+                <!-- Date -->
+                <template v-slot:item.date="{ item }">
+                  <span :class="{ 'text-grey': !item.isValid }">
+                    {{ item.date || '-' }}
+                  </span>
+                </template>
+
+                <!-- Heure décollage -->
+                <template v-slot:item.takeoffTime="{ item }">
+                  <span :class="{ 'text-grey': !item.isValid }">
+                    {{ item.takeoffTime || '-' }}
+                  </span>
+                </template>
+
+                <!-- Nom du fichier -->
+                <template v-slot:item.fileName="{ item }">
+                  <v-tooltip :text="item.filePath || item.fileName">
+                    <template v-slot:activator="{ props }">
+                      <span v-bind="props" :class="{ 'text-grey': !item.isValid }">
+                        {{ item.fileName }}
+                      </span>
+                    </template>
+                  </v-tooltip>
+                  <v-chip
+                    v-if="item.existsInDB"
+                    size="x-small"
+                    color="warning"
+                    class="ml-2"
+                  >
+                    {{ $gettext('Already in the logbook') }}
+                  </v-chip>
+                  <v-chip
+                    v-if="!item.isValid"
+                    size="x-small"
+                    color="error"
+                    class="ml-2"
+                  >
+                    {{ $gettext('Invalid') }}
+                  </v-chip>
+                </template>
+
+                <!-- Nom pilote -->
+                <template v-slot:item.pilotName="{ item }">
+                  <span :class="{ 'text-grey': !item.isValid }">
+                    {{ item.pilotName || '-' }}
+                  </span>
+                </template>
+
+                <!-- Bouton Map -->
+                <template v-slot:item.actions="{ item }">
+                  <v-btn
+                    icon="mdi-map"
+                    size="small"
+                    variant="text"
+                    color="primary"
+                    @click="showFlightOnMap(item)"
+                    :disabled="!item.isValid"
+                  />
+                </template>
+              </v-data-table>
             </v-card-text>
           </v-card>
         </v-col>
@@ -160,8 +277,9 @@
             variant="elevated"
             @click="startImport"
             :disabled="!selectedDirectory && importType !== 'serial'"
+            :loading="isScanning"
           >
-            {{ $gettext('Importer') }}
+            {{ isScanning ? 'Scan en cours...' : $gettext('Importer') }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -170,10 +288,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useGettext } from 'vue3-gettext';
 import OpenLogbook from '@/components/OpenLogbook.vue';
 import { useDatabaseStore } from '@/stores/database';
+import { parseIGC, checkFlightExists } from '../js/igc-parser';
+import { scanDirectoryForIGC, processIGCFiles } from '../js/directory-scanner';
+import { getDeviceDescriptions } from '../js/device-descriptions';
+
+// Déclarer les événements que ce composant peut émettre
+defineEmits(['dbUpdated']);
 
 const { $gettext } = useGettext();
 const databaseStore = useDatabaseStore();
@@ -213,49 +337,44 @@ const importDialog = ref(false);
 const selectedDevice = ref('');
 const importType = ref(''); // 'usb', 'serial', 'folder', 'notrace'
 const selectedDirectory = ref('');
+const selectedDirectoryHandle = ref(null);
 const error = ref('');
+const isScanning = ref(false);
+const scannedFlights = ref([]);
+const showFlightTable = ref(false);
+const showAllFlights = ref(true);
+const currentDevice = ref('');
 
-// Descriptions des appareils
-const deviceDescriptions = {
-  'XCTracer': [
-    $gettext('Plug in the XCTracer and briefly press the button'),
-    $gettext('Click Select and choose the drive containing'),
-    $gettext('a XC**.txt file and files in igc format'),
-    $gettext('Validate and click Import')
-  ],
-  'Skytraax 2': [
-    'Importez les traces depuis votre Skytraax 2.',
-    'Sélectionnez le dossier des traces sur l\'appareil.'
-  ],
-  'Skytraax 3/4/5': [
-    'Importez les traces depuis votre Skytraax 3, 4 ou 5.',
-    'Sélectionnez le dossier des traces.'
-  ],
-  'Syride Usb': ['Importez les traces depuis votre Syride connecté en USB.'],
-  'Oudie': [
-    'Importez les traces depuis votre Oudie.',
-    'Sélectionnez le dossier IGC.'
-  ],
-  'CPilot': ['Importez les traces depuis votre CPilot.'],
-  'Element': ['Importez les traces depuis votre Element.'],
-  'Connect': ['Importez les traces depuis votre Connect.'],
-  'Reversale': ['Importez les traces depuis votre Reversale.'],
-  'Skydrop': ['Importez les traces depuis votre Skydrop.'],
-  'Varduino': ['Importez les traces depuis votre Varduino.'],
-  'Flynet': ['Importez les traces depuis votre Flynet.'],
-  'Sensbox': ['Importez les traces depuis votre Sensbox.'],
-  'Flymaster SD': [
-    'Connexion série avec Flymaster SD.',
-    'Assurez-vous que l\'appareil est connecté.'
-  ],
-  'Flymaster Old': ['Connexion série avec ancien modèle Flymaster.'],
-  'Flytec 6020/30': ['Connexion série avec Flytec 6020 ou 6030.'],
-  'Flytec 6015': ['Connexion série avec Flytec 6015.'],
-  'Digifly': ['Connexion série avec Digifly.'],
-  'Dossier': ['Sélectionnez un dossier contenant des fichiers de traces (IGC, GPX, etc.).'],
-  'Syride PCTools': ['Importez depuis un dossier de traces Syride PCTools.'],
-  'Vol sans trace': ['Créez une entrée de vol manuel sans fichier de trace associé.']
-};
+// Headers de la table des vols
+const flightTableHeaders = [
+  { title: '', key: 'toStore', sortable: false, width: '50px' },
+  { title: 'Date', key: 'date', sortable: true },
+  { title: 'Heure', key: 'takeoffTime', sortable: true },
+  { title: 'Fichier', key: 'fileName', sortable: true },
+  { title: 'Pilote', key: 'pilotName', sortable: true },
+  { title: 'Actions', key: 'actions', sortable: false, align: 'center', width: '100px' }
+];
+
+// Computed pour les vols sélectionnés
+const selectedFlightsCount = computed(() => {
+  return scannedFlights.value.filter(f => f.toStore).length;
+});
+
+const hasSelectedFlights = computed(() => {
+  return selectedFlightsCount.value > 0;
+});
+
+// Computed pour filtrer les vols affichés
+const filteredFlights = computed(() => {
+  if (showAllFlights.value) {
+    return scannedFlights.value;
+  }
+  // Afficher uniquement les vols à incorporer (toStore = true)
+  return scannedFlights.value.filter(f => f.toStore);
+});
+
+// Descriptions des appareils (utilise $gettext pour l'internationalisation)
+const deviceDescriptions = getDeviceDescriptions($gettext);
 
 function openImportDialog(device, type) {
   selectedDevice.value = device;
@@ -273,16 +392,17 @@ function closeImportDialog() {
 }
 
 function getDeviceDescription() {
-  return deviceDescriptions[selectedDevice.value] || ['Sélectionnez un dossier pour importer les traces.'];
+  return deviceDescriptions[selectedDevice.value] || [$gettext('Not yet available')];
 }
 
 async function selectDirectory() {
   try {
     if ('showDirectoryPicker' in window) {
       // API moderne File System Access
-      const directoryHandle = await window.showDirectoryPicker();
+      const directoryHandle = await window.showDirectoryPicker({ mode: 'read' });
       selectedDirectory.value = directoryHandle.name;
-      // TODO: Stocker le handle pour traitement ultérieur
+      selectedDirectoryHandle.value = directoryHandle;
+      error.value = '';
     } else {
       // Fallback pour navigateurs non supportés
       error.value = 'L\'API File System Access n\'est pas supportée par ce navigateur. Veuillez utiliser Chrome, Edge ou Opera.';
@@ -295,19 +415,118 @@ async function selectDirectory() {
   }
 }
 
-function startImport() {
-  // TODO: Implémenter la logique d'importation
-  console.log('Import depuis:', selectedDevice.value, 'Type:', importType.value);
-  if (selectedDirectory.value) {
-    console.log('Dossier sélectionné:', selectedDirectory.value);
+async function startImport() {
+  if (!selectedDirectoryHandle.value) {
+    error.value = $gettext('No directory selected');
+    return;
   }
-  closeImportDialog();
+
+  isScanning.value = true;
+  error.value = '';
+  
+  try {
+    // 1. Scanner le répertoire pour trouver tous les fichiers IGC
+    const igcFiles = await scanDirectoryForIGC(selectedDirectoryHandle.value);
+    
+    if (igcFiles.length === 0) {
+      error.value = $gettext('No tracks in this folder');
+      isScanning.value = false;
+      return;
+    }
+
+    // 2. Traiter chaque fichier (parser + vérifier existence)
+    const db = databaseStore.db;
+    scannedFlights.value = await processIGCFiles(igcFiles, parseIGC, checkFlightExists, db);
+    
+    // 3. Mémoriser le device et fermer le dialog
+    currentDevice.value = selectedDevice.value;
+    closeImportDialog();
+    showFlightTable.value = true;
+    
+  } catch (err) {
+    error.value = `Erreur lors du scan: ${err.message}`;
+    console.error('Erreur startImport:', err);
+  } finally {
+    isScanning.value = false;
+  }
+}
+
+function closeFlightTable() {
+  showFlightTable.value = false;
+  scannedFlights.value = [];
+  showAllFlights.value = true;
+  currentDevice.value = '';
+}
+
+function showFlightOnMap(flight) {
+  // TODO: Ouvrir une modal avec une carte affichant la trace
+  console.log('Afficher le vol sur la carte:', flight);
+  alert(`Affichage carte pour ${flight.fileName}\nDate: ${flight.date}\nHeure: ${flight.takeoffTime}`);
+}
+
+async function importSelectedFlights() {
+  const flightsToImport = scannedFlights.value.filter(f => f.toStore);
+  
+  if (flightsToImport.length === 0) {
+    return;
+  }
+
+  try {
+    const db = databaseStore.db;
+    let importedCount = 0;
+
+    for (const flight of flightsToImport) {
+      try {
+        // Insérer le vol dans la base de données
+        // TODO: Adapter les champs selon votre schéma de base de données
+        const stmt = db.prepare(`
+          INSERT INTO Vol (
+            V_Date, V_Heure, V_Engin, V_Duree, V_sDuree, V_Vitesse,
+            V_AltDeco, V_Commentaire, V_IGC
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `);
+        
+        stmt.run([
+          flight.date,
+          flight.takeoffTime,
+          flight.gliderType || '',
+          0, // Durée à calculer
+          '', // Durée formatée
+          0, // Vitesse à calculer
+          0, // Altitude décollage
+          flight.site || '',
+          flight.rawContent
+        ]);
+        
+        stmt.free();
+        importedCount++;
+      } catch (err) {
+        console.error(`Erreur import ${flight.fileName}:`, err);
+      }
+    }
+
+    // Marquer la base comme modifiée
+    databaseStore.markAsDirty();
+
+    // Afficher un message de succès
+    alert(`${importedCount} vol(s) importé(s) avec succès`);
+    
+    // Fermer la table
+    closeFlightTable();
+
+  } catch (err) {
+    console.error('Erreur lors de l\'import:', err);
+    alert(`Erreur lors de l'import: ${err.message}`);
+  }
 }
 </script>
 
 <style scoped>
 .import-view {
-
   min-height: 80vh;
+}
+
+.mt-10px {
+  margin-top: 5px !important;
 }
 </style>
