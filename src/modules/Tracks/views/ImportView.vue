@@ -250,17 +250,8 @@
           </div>
 
           <div v-else class="text-center">
-            <p class="text-body-1 mb-4">
-              {{ $gettext('Connexion série à implémenter') }}
-            </p>
-            <v-btn
-              color="secondary"
-              size="large"
-              prepend-icon="mdi-connection"
-              disabled
-            >
-              {{ $gettext('Connexion Serial') }}
-            </v-btn>
+            <!-- Si importType = 'serial', on ne montre rien ici -->
+            <!-- (Bloc supprimé comme demandé) -->
           </div>
 
           <v-alert v-if="error" type="error" class="mt-4">
@@ -276,7 +267,7 @@
             color="primary"
             variant="elevated"
             @click="startImport"
-            :disabled="!selectedDirectory && importType !== 'serial'"
+            :disabled="importType === 'serial' || (!selectedDirectory && importType !== 'serial')"
             :loading="isScanning"
           >
             {{ isScanning ? 'Scan en cours...' : $gettext('Importer') }}
