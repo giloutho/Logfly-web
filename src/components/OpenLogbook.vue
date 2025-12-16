@@ -1,26 +1,27 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="600">
-    <v-card>
+    <v-card  class="mx-auto" max-width="600">
       <v-card-title class="text-h5 bg-primary">
-        {{ $gettext('Open Logbook') }}
+        {{ $gettext('Logbook') }}
       </v-card-title>
       <v-card-text class="pt-6">
-        <div class="text-center mb-4">
-          <v-icon size="64" color="primary">mdi-database-outline</v-icon>
+        <div class="text-center mb-0">
+          <v-icon size="32" color="primary">mdi-note-text-outline</v-icon>
         </div>
         <p class="text-center mb-4">
-          {{ $gettext('Aucune base de données n\'est actuellement ouverte.') }}<br>
-          {{ $gettext('Veuillez sélectionner un fichier de base de données pour continuer.') }}
+            {{ $gettext('No logbook open') }},
+            {{ $gettext('Select a logbook (file with .db extension)') }}<br>
+            {{ $gettext('In older versions, logbook is in Documents/logfly folder') }}
         </p>
         <v-alert v-if="error" type="error" closable @click:close="error = ''" class="mb-4">
           {{ error }}
         </v-alert>
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions class="pb-8">
         <v-spacer />
         <v-btn color="primary" variant="elevated" @click="openFileDialog" size="large">
           <v-icon start>mdi-folder-open</v-icon>
-          {{ $gettext('Open logbook') }}
+          {{ $gettext('Select') }}
         </v-btn>
         <v-spacer />
       </v-card-actions>

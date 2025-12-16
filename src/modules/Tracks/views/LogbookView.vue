@@ -105,6 +105,9 @@ import { useDatabaseStore } from '@/stores/database';
 import { igcDecoding } from '@/js/igc/igc-decoder.js';
 import { IgcAnalyze } from '@/js/igc/igc-analyzer.js';
 
+// Déclarer les événements que ce composant peut émettre
+const emit = defineEmits(['db-updated']);
+
 const databaseStore = useDatabaseStore();
 const { $gettext } = useGettext();
 
@@ -310,9 +313,6 @@ async function readIgcFromDb(flightId) {
   }
 
 }
-
-
-const emit = defineEmits(['db-updated']);
 
 </script>
 

@@ -7,13 +7,14 @@
         {{ dbPath || 'Aucune base ouverte' }}
       </v-chip>
       <v-btn
+        v-if="databaseStore.hasOpenDatabase"
         :color="isDirty ? 'error' : 'success'"
         density="compact"
         @click="$emit('save')"
         class="footer-save-btn"
       >
         <v-icon start>{{ isDirty ? 'mdi-alert-outline' : 'mdi-check-bold' }}</v-icon>
-        Sauvegarde
+        {{ isDirty ? $gettext('To be saved') : $gettext('Saved') }}
       </v-btn>
     </div>
   </div>
@@ -21,7 +22,11 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue';
+import { useGettext } from 'vue3-gettext';
 import { useDatabaseStore } from '@/stores/database';
+
+const { $gettext } = useGettext();
+const databaseStore = useDatabaseStore();
 
 const props = defineProps({
   version: {

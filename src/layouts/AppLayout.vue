@@ -40,7 +40,7 @@
   import TheNavbar from '@/components/TheNavbar.vue' 
   import TheFooter from '@/components/TheFooter.vue' 
   import OpenLogbook from '@/components/OpenLogbook.vue';
-  import { ref, computed } from 'vue';
+  import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
   import { useDatabaseStore } from '@/stores/database';
   import { saveDatabase } from '@/js/database/sql-manager.js';
 
@@ -53,6 +53,27 @@
   function onDbUpdated() {
     isDirty.value = true;
   }
+
+  // Gestionnaire d'événement beforeunload pour prévenir la fermeture sans sauvegarde
+  function handleBeforeUnload(event) {
+    if (isDirty.value) {
+      // Message personnalisé (la plupart des navigateurs affichent leur propre message)
+      const message = 'Des modifications non sauvegardées seront perdues. Voulez-vous vraiment quitter ?';
+      event.preventDefault();
+      event.returnValue = message; // Standard pour la plupart des navigateurs
+      return message; // Pour les anciens navigateurs
+    }
+  }
+
+  // Ajouter l'écouteur au montage du composant
+  onMounted(() => {
+    window.addEventListener('beforeunload', handleBeforeUnload);
+  });
+
+  // Retirer l'écouteur au démontage du composant
+  onBeforeUnmount(() => {
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+  });
   // Snackbar supprimé
 
   async function onSave() {
