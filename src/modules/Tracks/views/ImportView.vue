@@ -286,6 +286,7 @@ import { useDatabaseStore } from '@/stores/database';
 import { parseIGC, checkFlightExists } from '../js/igc-parser';
 import { scanDirectoryForIGC, processIGCFiles } from '../js/directory-scanner';
 import { getDeviceDescriptions } from '../js/device-descriptions';
+import { searchSiteInDb } from '../js/flight-add';
 
 // Déclarer les événements que ce composant peut émettre
 defineEmits(['dbUpdated']);
@@ -451,8 +452,9 @@ function closeFlightTable() {
 
 function showFlightOnMap(flight) {
   // TODO: Ouvrir une modal avec une carte affichant la trace
-  console.log('Afficher le vol sur la carte:', flight);
-  alert(`Affichage carte pour ${flight.fileName}\nDate: ${flight.date}\nHeure: ${flight.takeoffTime}`);
+  //console.log('Afficher le vol sur la carte:', flight.firstLatitude);
+  //alert(`Affichage carte pour ${flight.fileName}\nDate: ${flight.date}\nHeure: ${flight.takeoffTime}`);
+  searchSiteInDb(flight.firstLatitude, flight.firstLongitude);
 }
 
 async function importSelectedFlights() {
