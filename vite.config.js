@@ -7,7 +7,7 @@ import vuetify from 'vite-plugin-vuetify'; // ⬅️ Le plugin pour le tree-shak
 
 // https://vite.dev/config/
 export default defineConfig({
-//  base: '/logfly/',
+    base: '/',
     server: {
       proxy: {
         '/api-paragliding': {
