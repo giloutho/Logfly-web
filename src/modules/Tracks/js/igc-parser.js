@@ -18,8 +18,10 @@ export function parseIGC(content, fileName) {
     date: null,
     takeoffTime: null,
     pilotName: null,
-    firstPoint: null,
-    lastPoint: null,
+    firstLatitude: null,
+    firstLongitude: null,
+    lastLatitude: null,
+    lastLongitude: null,
     rawContent: content,
     isValid: false
   };
@@ -58,6 +60,8 @@ export function parseIGC(content, fileName) {
         firstBRecord = trimmedLine;
         const firstFixe = parseBLine(trimmedLine);
         const timestamp = Date.parse(`${flight.date}T${firstFixe.time}Z`);
+        flight.firstLatitude = firstFixe.latitude;
+        flight.firstLongitude = firstFixe.longitude;
         let offsetUTC = computeOffsetUTC(firstFixe.latitude, firstFixe.longitude, timestamp);
         if (offsetUTC === undefined || offsetUTC === null) {
             offsetUTC = 0;
