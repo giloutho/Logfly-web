@@ -1,8 +1,9 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="600">
     <v-card  class="mx-auto" max-width="600">
-      <v-card-title class="text-h5 bg-primary">
-        {{ $gettext('Logbook') }}
+      <v-card-title class="text-h5 bg-primary d-flex justify-space-between align-center">
+        <span>{{ $gettext('Logbook') }}</span>
+        <v-btn icon="mdi-close" variant="text" @click="closeDialog" size="medium" />
       </v-card-title>
       <v-card-text class="pt-6">
         <div class="text-center mb-0">
@@ -33,6 +34,7 @@
 import { ref, computed } from 'vue';
 import { useGettext } from "vue3-gettext";
 import { useDatabaseStore } from '@/stores/database'
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
   show: {
@@ -42,14 +44,21 @@ const props = defineProps({
 });
 
 const databaseStore = useDatabaseStore()
+const router = useRouter();
 const error = ref('')
 
 const { $gettext } = useGettext();
 
-const emit = defineEmits(['db-opened', 'file-handle']);
+const emit = defineEmits(['db-opened', 'file-handle', 'close']);
 
 // La modale s'affiche si show est true ET que la base n'est pas ouverte
 const dialog = computed(() => props.show && !databaseStore.hasOpenDatabase);
+
+function closeDialog() {
+  emit('close');
+  // Naviguer vers la page d'accueil
+  router.push({ name: 'home' });
+}
 
 async function openFileDialog() {
   // Vérifier si l'API File System Access est disponible

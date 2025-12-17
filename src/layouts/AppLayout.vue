@@ -31,7 +31,7 @@
       :isDirty="isDirty"
       @save="onSave"
     />
-    <OpenLogbook @db-opened="onDbOpened" @file-handle="onFileHandle" />
+    <OpenLogbook @db-opened="onDbOpened" @file-handle="onFileHandle" @close="onCloseLogbook" />
     <!-- Snackbar supprimé -->
   </v-app>
 </template>
@@ -42,10 +42,12 @@
   import OpenLogbook from '@/components/OpenLogbook.vue';
   import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
   import { useDatabaseStore } from '@/stores/database';
+  import { useRouter } from 'vue-router';
   import { saveDatabase } from '@/js/database/sql-manager.js';
 
   const appVersion = '1.0.0'; // À remplacer par la vraie version
   const databaseStore = useDatabaseStore();
+  const router = useRouter();
   const dbPath = computed(() => databaseStore.dbName || '');
   const isDirty = ref(false); // Passe à true dès qu'une modif DB est faite
   const fileHandle = ref(null); // Stocke le handle du fichier pour la sauvegarde
@@ -126,5 +128,10 @@
 
   function onFileHandle(handle) {
     fileHandle.value = handle;
+  }
+
+  function onCloseLogbook() {
+    // Naviguer vers la page d'accueil (TheWelcome)
+    router.push({ name: 'home' });
   }
 </script>

@@ -6,7 +6,7 @@ let SQL = null
 export async function initSqlite() {
   if (!SQL) {
     SQL = await initSqlJs({
-      locateFile: file => `/logfly/${file}`
+      locateFile: file => `${import.meta.env.BASE_URL}${file}`
     })
   }
   return SQL
