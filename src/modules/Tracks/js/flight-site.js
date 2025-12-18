@@ -2,11 +2,28 @@ import { useDatabaseStore } from '@/stores/database';
 import {distance} from '@/js/geo/trigo.js';
 import { callPgearthAPI } from '@/js/api-access.js';
 
-export function searchSiteInDb(pLat, pLong) {
-    const site = addNewSite(pLat, pLong, 0,'');
+const databaseStore = useDatabaseStore();
+
+const siteInfo = {
+    siteName: '',
+    siteCountry: ''
 }
 
-export function searchSiteInDbOk(pLat, pLong) {
+export async function searchSite(pLat, pLong, pAlt) {  
+    let searchSite = await searchSiteInDb(pLat, pLong);
+    if (searchSite.siteName != null && searchSite.siteName != '') {
+        siteInfo.siteName = searchSite.siteName;
+        siteInfo.siteCountry = searchSite.siteCountry;      
+    } else {
+        console.log('No site found in DB, adding new site ...');
+        await addNewSite(pLat, pLong, pAlt, 'To rename');
+    }    
+    //const site = addNewSite(pLat, pLong, 0,'');
+    // const blanckIdx = searchIdxBlankSite('To rename');
+    // console.log('Index for blank site:', blanckIdx);
+}
+
+async function searchSiteInDb(pLat, pLong) {
     const databaseStore = useDatabaseStore();
     if (!databaseStore.hasOpenDatabase) {
         console.warn('Database is not open. Cannot search for site.');
@@ -26,7 +43,10 @@ export function searchSiteInDbOk(pLat, pLong) {
     const sLongMax = (arrLong + 0.01).toFixed(4).toString();
     // In old versions, search is limited to launching sites, but this information can be absent
     // landing sites are excluded
-    let selectedSite = null
+    const siteInDb = {
+        siteName: null,
+        siteCountry: ''
+    }
     try {
         const req = `SELECT S_ID,S_Nom,S_Latitude,S_Longitude,S_Alti,S_Localite,S_Pays FROM Site WHERE S_Latitude >'${sLatMin}' AND S_Latitude < '${sLatMax}' AND S_Longitude > '${sLongMin}' AND S_Longitude < '${sLongMax}' AND S_Type <> 'A' `;
         const result = databaseStore.query(req);
@@ -48,8 +68,10 @@ export function searchSiteInDbOk(pLat, pLong) {
                 // console.log(`Distance to site ${site.S_Nom}: ${Math.round(distSite)} m`);
                 if (distSite < distMini)  {
                     distMini = distSite;
-                    selectedSite = site.S_Nom+'*'+site.S_Pays;  // since V3, we add the country
-                    console.log(`Site trouvé dans la base : ${selectedSite} à ${Math.round(distMini)} m`);
+                    siteInDb.siteName = site.S_Nom;
+                    siteInDb.siteCountry = site.S_Pays;                 
+                   // selectedSite = site.S_Nom+'*'+site.S_Pays;  // since V3, we add the country
+                    console.log(`Site in db : ${siteInDb.siteName} à ${Math.round(distMini)} m`);
                 }    
             }
         } else {
@@ -59,7 +81,7 @@ export function searchSiteInDbOk(pLat, pLong) {
         console.error('Erreur lors de l\'exécution de searchSiteInDb :', err);
     }
 
-    return selectedSite;
+    return siteInDb
 }  
 
 export async function addNewSite(lat, lng, alt, strRename) {
@@ -104,3 +126,32 @@ async function callPgearth(lat, lng) {
         return { success: false, message: err.message };
     }
 } 
+
+function searchIdxBlankSite(strRename) {
+    // The name of an unknown site is : Site No XX to rename
+    // We search last index XX
+    const lastStr = strRename;
+    const siteArg = 'Site No%';
+    let blanckIdx = {
+        newSiteIdx : '',
+        siteName :'Unknown site'
+    } 
+    try {
+        const reqSQL = `SELECT Count(S_ID) as count FROM Site WHERE S_Nom LIKE '${siteArg}'`;
+        const result = databaseStore.query(reqSQL);
+        if (result.success && result.data && result.data[0]) {
+            const lastIdx = parseInt(Object.values(result.data[0].values[0]));            
+            if(lastIdx === 0) {
+                blanckIdx.newSiteIdx = 1;
+                blanckIdx.siteName = `Site No ${blanckIdx.newSiteIdx} (${lastStr})`;
+            } else {
+                blanckIdx.newSiteIdx = lastIdx + 1;
+                blanckIdx.siteName = `Site No ${blanckIdx.newSiteIdx} (${lastStr})`;
+            }
+        }    
+    } catch (error) {
+        console.error('Error on searchIdxBlankSite :', error);
+    }   
+
+    return blanckIdx        
+}

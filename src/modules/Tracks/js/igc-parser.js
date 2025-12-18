@@ -1,27 +1,32 @@
 /**
- * Parser pour entête fichiers IGC
+ * Parser for IGC file basic information extraction
+ * If IGCParser is used, the parsing time is doubled.
  */
-
 import {computeOffsetUTC} from '@/js/geo/offset-utc.js'
 
 /**
- * Parse un fichier IGC et extrait les informations principales
- * @param {string} content - Contenu du fichier IGC
- * @param {string} fileName - Nom du fichier
- * @returns {Object} Objet contenant les informations du vol
+ * Parse an IGC file and extract the main information
+ * @param {string} content - Content of the IGC file
+ * @param {string} fileName - Name of the file
+ * @returns {Object} Object containing flight information
  */
 export function parseIGC(content, fileName) {
+
   const lines = content.split('\n');
   
   const flight = {
     fileName: fileName,
     date: null,
     takeoffTime: null,
+    sqlDateTime: null,
+    offsetUTC: null,
     pilotName: null,
+    gliderType: null, 
     firstLatitude: null,
     firstLongitude: null,
-    lastLatitude: null,
-    lastLongitude: null,
+    firstAltGPS: null,
+    duration: null, // Duration in seconds
+    durationStr: null, // Duration formatted hh:mm:ss
     rawContent: content,
     isValid: false
   };
@@ -40,21 +45,30 @@ export function parseIGC(content, fileName) {
         const day = dateStr.substring(0, 2);
         const month = dateStr.substring(2, 4);
         const year = dateStr.substring(4, 6);
-        // Convertir en format YYYY-MM-DD (assume 20xx pour l'année)
+        // Convert to format YYYY-MM-DD (assume 20xx for the year)
         flight.date = `20${year}-${month}-${day}`;
       }
     }
     
-    // Nom du pilote (HFPLTPILOT: ou HFPLTPILOTINCHARGE:)
+    // Pilot name (HFPLTPILOT: or HFPLTPILOTINCHARGE:)
     if (trimmedLine.startsWith('HFPLT')) {
       const pilotMatch = trimmedLine.match(/HFPLT.*?:(.*)/);
       if (pilotMatch) {
         flight.pilotName = pilotMatch[1].trim();
       }
     }
+
+    // Glider type (HFGTYGLIDERTYPE: or HFGTYGLIDERTYPE)
+    if (trimmedLine.startsWith('HFGTY')) {
+      // Examples: HFGTYGLIDERTYPE:Paraglider\n or HFGTYGLIDERTYPE:Parapente\n
+      const gliderMatch = trimmedLine.match(/HFGTY.*?:(.*)/);
+      if (gliderMatch) {
+        flight.gliderType = gliderMatch[1].trim();
+      }
+    }
     
     
-    // Premier enregistrement B (position)
+    // First B record (position)
     if (trimmedLine.startsWith('B') && trimmedLine.length >= 35) {
       if (!firstBRecord) {
         firstBRecord = trimmedLine;
@@ -62,29 +76,66 @@ export function parseIGC(content, fileName) {
         const timestamp = Date.parse(`${flight.date}T${firstFixe.time}Z`);
         flight.firstLatitude = firstFixe.latitude;
         flight.firstLongitude = firstFixe.longitude;
+        flight.firstAltGPS = firstFixe.altitude;
         let offsetUTC = computeOffsetUTC(firstFixe.latitude, firstFixe.longitude, timestamp);
         if (offsetUTC === undefined || offsetUTC === null) {
             offsetUTC = 0;
-        }        
+        }
+        flight.offsetUTC = offsetUTC;
         const launchTime =  computeLocalLaunchTime(timestamp, offsetUTC);
         flight.takeoffTime = launchTime;
-        // // Extraire l'heure du premier point (HHMMSS)
-        // const timeStr = trimmedLine.substring(1, 7);
-        // fflight.takeofTime = `${timeStr.substring(0, 2)}:${timeStr.substring(2, 4)}:${timeStr.substring(4, 6)}`;
+        flight.sqlDateTime = flight.date+' '+flight.takeoffTime;
+        flight._firstBTime = firstFixe.time; // Pour calcul durée
         flight.isValid = true;
       }
       lastBRecord = trimmedLine;
+      // Toujours mettre à jour le temps du dernier B
+      const lastFixe = parseBLine(trimmedLine);
+      flight._lastBTime = lastFixe.time;
     }
   }
 
-  // Si pas de date trouvée dans le header, essayer de l'extraire du nom de fichier
+  // If no date found in the header, try to extract it from the file name
   if (!flight.date && fileName) {
-    // Format commun: YYYY-MM-DD-XXX.igc ou similaire
+    // Common format: YYYY-MM-DD-XXX.igc or similar
     const dateMatch = fileName.match(/(\d{4})-(\d{2})-(\d{2})/);
     if (dateMatch) {
       flight.date = `${dateMatch[1]}-${dateMatch[2]}-${dateMatch[3]}`;
     }
   }
+  // Calculate flight duration if possible
+  if (flight._firstBTime && flight._lastBTime) {
+    // Times are in HHMMSS format
+    function hmsToSeconds(hms) {
+      const h = parseInt(hms.substring(0,2),10);
+      const m = parseInt(hms.substring(3,5),10);
+      const s = parseInt(hms.substring(6),10);
+      return h*3600 + m*60 + s;
+    }
+    let startSec = hmsToSeconds(flight._firstBTime);
+    let endSec = hmsToSeconds(flight._lastBTime);
+    //  If the flight passes midnight, correct
+    if (endSec < startSec) endSec += 24*3600;
+    const duration = endSec - startSec;   
+    flight.duration = duration;
+    // Format hh:mm
+    const hours = Math.floor(duration / 3600)
+    let totalSeconds = duration;
+    totalSeconds %= 3600
+    const minutes = Math.floor(totalSeconds / 60)
+    const pSduree = String(hours).padStart(2, "0")+'h'+String(minutes).padStart(2, "0")+'mn' // V_sDuree
+    // const h = Math.floor(duration/3600);
+    // const m = Math.floor((duration%3600)/60);
+    // const s = duration%60;
+    
+    // flight.durationStr = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    flight.durationStr = pSduree;
+  }
+  // Cleanup internal fields
+  delete flight._firstBTime;
+  delete flight._lastBTime;
+
+  //console.log(flight.pilotName+' Duration: '+flight.durationStr+' OffsetUTC: '+flight.offsetUTC+ ' Alt: '+flight.firstAltGPS);
 
   return flight;
 }

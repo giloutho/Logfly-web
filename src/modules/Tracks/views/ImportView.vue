@@ -169,6 +169,13 @@
                   </span>
                 </template>
 
+                <!-- Durée du vol -->
+                <template v-slot:item.durationStr="{ item }">
+                  <span :class="{ 'text-grey': !item.isValid }">
+                    {{ item.durationStr || '-' }}
+                  </span>
+                </template>                
+
                 <!-- Nom du fichier -->
                 <template v-slot:item.fileName="{ item }">
                   <v-tooltip :text="item.filePath || item.fileName">
@@ -286,7 +293,7 @@ import { useDatabaseStore } from '@/stores/database';
 import { parseIGC, checkFlightExists } from '../js/igc-parser';
 import { scanDirectoryForIGC, processIGCFiles } from '../js/directory-scanner';
 import { getDeviceDescriptions } from '../js/device-descriptions';
-import { searchSiteInDb } from '../js/flight-add';
+import { searchSite } from '../js/flight-site';
 
 // Déclarer les événements que ce composant peut émettre
 defineEmits(['dbUpdated']);
@@ -342,6 +349,7 @@ const flightTableHeaders = [
   { title: '', key: 'toStore', sortable: false, width: '50px' },
   { title: 'Date', key: 'date', sortable: true },
   { title: 'Heure', key: 'takeoffTime', sortable: true },
+  { title: 'Durée', key: 'durationStr', sortable: false },
   { title: 'Fichier', key: 'fileName', sortable: true },
   { title: 'Pilote', key: 'pilotName', sortable: true },
   { title: 'Actions', key: 'actions', sortable: false, align: 'center', width: '100px' }
@@ -454,7 +462,8 @@ function showFlightOnMap(flight) {
   // TODO: Ouvrir une modal avec une carte affichant la trace
   //console.log('Afficher le vol sur la carte:', flight.firstLatitude);
   //alert(`Affichage carte pour ${flight.fileName}\nDate: ${flight.date}\nHeure: ${flight.takeoffTime}`);
-  searchSiteInDb(flight.firstLatitude, flight.firstLongitude);
+  searchSite(flight.firstLatitude, flight.firstLongitude, flight.firstAltitude);
+  console.log('flight:', flight);
 }
 
 async function importSelectedFlights() {
