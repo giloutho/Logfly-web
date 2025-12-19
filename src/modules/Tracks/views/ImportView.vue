@@ -1,4 +1,16 @@
 <template>
+  <v-snackbar v-model="snackbar" multi-line>
+    {{ snackbarMessage }}
+    <template v-slot:actions>
+    <v-btn
+      color="red"
+      variant="text"
+      @click="snackbar = false"
+    >
+    {{$gettext('Closef')}}
+    </v-btn>
+  </template>
+  </v-snackbar>  
   <OpenLogbook :show="true" />
   <div v-if="databaseStore.hasOpenDatabase" class="import-view">
     <v-container fluid>
@@ -296,10 +308,12 @@ import { getDeviceDescriptions } from '../js/device-descriptions';
 import { searchSite } from '../js/flight-site';
 
 // Déclarer les événements que ce composant peut émettre
-defineEmits(['dbUpdated']);
+const emit = defineEmits(['db-updated']);
 
 const { $gettext } = useGettext();
 const databaseStore = useDatabaseStore();
+const snackbar = ref(false);
+const snackbarMessage = ref('');
 
 // Listes des appareils et options
 const usbDevices = [
@@ -458,12 +472,12 @@ function closeFlightTable() {
   currentDevice.value = '';
 }
 
-function showFlightOnMap(flight) {
+async function showFlightOnMap(flight) {
   // TODO: Ouvrir une modal avec une carte affichant la trace
   //console.log('Afficher le vol sur la carte:', flight.firstLatitude);
   //alert(`Affichage carte pour ${flight.fileName}\nDate: ${flight.date}\nHeure: ${flight.takeoffTime}`);
-  searchSite(flight.firstLatitude, flight.firstLongitude, flight.firstAltitude);
-  console.log('flight:', flight);
+  const flightSite = await searchSite(flight.firstLatitude, flight.firstLongitude, flight.firstAltGPS, $gettext('To rename'));
+  console.log('site:', flightSite.siteName,flightSite.siteCountry);
 }
 
 async function importSelectedFlights() {
@@ -479,40 +493,41 @@ async function importSelectedFlights() {
 
     for (const flight of flightsToImport) {
       try {
-        // Insérer le vol dans la base de données
-        // TODO: Adapter les champs selon votre schéma de base de données
-        const stmt = db.prepare(`
-          INSERT INTO Vol (
-            V_Date, V_Heure, V_Engin, V_Duree, V_sDuree, V_Vitesse,
-            V_AltDeco, V_Commentaire, V_IGC
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `);
-        
-        stmt.run([
-          flight.date,
-          flight.takeoffTime,
-          flight.gliderType || '',
-          0, // Durée à calculer
-          '', // Durée formatée
-          0, // Vitesse à calculer
-          0, // Altitude décollage
-          flight.site || '',
-          flight.rawContent
-        ]);
-        
-        stmt.free();
+        const flightSite = await searchSite(flight.firstLatitude, flight.firstLongitude, flight.firstAltGPS, $gettext('To rename'));
+        const sqltable = 'Vol';
+        const sqlparams = {
+            V_Date: flight.sqlDateTime,
+            V_Duree: flight.durationStr,
+            V_sDuree: flight.duration,
+            V_LatDeco: flight.firstLatitude,
+            V_LongDeco: flight.firstLongitude,
+            V_AltDeco: flight.firstAltGPS,
+            V_Site: flightSite.siteName,
+            V_Pays: flightSite.siteCountry,
+            V_IGC: flight.rawContent,
+            UTC: flight.offsetUTC,
+            V_Engin: flight.gliderType
+        }
+        const result = databaseStore.insert(sqltable, sqlparams);
+        if (!result.success) {
+          console.error(`Erreur insertion vol ${flight.fileName}:`, result.message);
+          continue;
+        }
         importedCount++;
+        console.log(importedCount,' Importing flight: '+sqlparams.V_Date+' '+sqlparams.V_Site);
       } catch (err) {
         console.error(`Erreur import ${flight.fileName}:`, err);
       }
     }
 
-    // Marquer la base comme modifiée
-    databaseStore.markAsDirty();
-
-    // Afficher un message de succès
-    alert(`${importedCount} vol(s) importé(s) avec succès`);
+    let msg = `${importedCount} ${$gettext('flights successfully imported')}\n`;
+    msg += $gettext('Registration of the logbook required');
+    snackbarMessage.value = msg;
+    snackbar.value = true;
     
+    // Signale au parent qu'une modification a eu lieu
+    emit('db-updated');
+
     // Fermer la table
     closeFlightTable();
 

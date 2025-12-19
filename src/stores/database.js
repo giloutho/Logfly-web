@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { readSqliteFile, openDatabase, executeQuery, closeDatabase } from '@/js/database/sql-manager.js'
+import { readSqliteFile, openDatabase, executeQuery, closeDatabase, insertIntoDatabase } from '@/js/database/sql-manager.js'
 
 export const useDatabaseStore = defineStore('database', () => {
   // État
@@ -72,6 +72,27 @@ export const useDatabaseStore = defineStore('database', () => {
     return executeQuery(db.value, sql)
   }
 
+  /*
+  * An insertion will be made with const result = databaseStore.insert(sqltable, sqlparams);
+  * sqltable is the name of the table in which we want to insert data
+  * with sqlparams an object of the type:
+  *    const sqlparams = {
+  *       S_Nom: 'Test Site',   the field names must match those in the table.
+  *       S_CP: '***',
+  *       S_Type: 'D',
+  *       S_Maj: '2025-12-18',
+  *    }; 
+  * if (result.success) {
+  *   console.log('Row inserted, ID:', result.lastInsertId);
+  * } else {
+  */
+  function insert(tableName, params) {
+    if (!db.value) {
+      return { success: false, message: 'No database open' }
+    }
+    return insertIntoDatabase(db.value, tableName, params)
+  }
+
   return {
     // État
     db,
@@ -84,6 +105,7 @@ export const useDatabaseStore = defineStore('database', () => {
     loadDatabase,
     closeDatabaseStore,
     clearError,
-    query
+    query,
+    insert
   }
 })

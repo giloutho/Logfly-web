@@ -15,12 +15,13 @@ export async function searchSite(pLat, pLong, pAlt) {
         siteInfo.siteName = searchSite.siteName;
         siteInfo.siteCountry = searchSite.siteCountry;      
     } else {
-        console.log('No site found in DB, adding new site ...');
-        await addNewSite(pLat, pLong, pAlt, 'To rename');
-    }    
-    //const site = addNewSite(pLat, pLong, 0,'');
-    // const blanckIdx = searchIdxBlankSite('To rename');
-    // console.log('Index for blank site:', blanckIdx);
+        //console.log('No site found in database, adding new site...');
+        const addSiteInDb = await addNewSite(pLat, pLong, pAlt, 'To rename');
+        siteInfo.siteName = addSiteInDb.newFlightSite.name;
+        siteInfo.siteCountry = addSiteInDb.newFlightSite.pays; 
+        //console.log('New site added:', siteInfo.siteName, siteInfo.siteCountry);
+    }  
+    return siteInfo;  
 }
 
 async function searchSiteInDb(pLat, pLong) {
@@ -29,8 +30,8 @@ async function searchSiteInDb(pLat, pLong) {
         console.warn('Database is not open. Cannot search for site.');
         return null;
     }
-    // in Logfly 5, distance mini is stored in settings but we never changed the value of 300 m
-    let distMini = 300;            
+    // Search radius in accordance with the search on PGEarth (0.5 km)
+    let distMini = 500;            
     /*
     * NOTE : under our latitudes, second decimal give a search perimeter of 1,11km. 
     * third decimal, perimeter is 222 meters ...      
@@ -65,18 +66,15 @@ async function searchSiteInDb(pLat, pLong) {
                 let carnetLat = site.S_Latitude;
                 let carnetLong = site.S_Longitude;
                 let distSite = Math.abs(distance(pLat,pLong,carnetLat,carnetLong, "K") * 1000)   
-                // console.log(`Distance to site ${site.S_Nom}: ${Math.round(distSite)} m`);
+                //console.log(`Distance to site ${site.S_Nom}: ${Math.round(distSite)} m`);
                 if (distSite < distMini)  {
                     distMini = distSite;
                     siteInDb.siteName = site.S_Nom;
                     siteInDb.siteCountry = site.S_Pays;                 
-                   // selectedSite = site.S_Nom+'*'+site.S_Pays;  // since V3, we add the country
-                    console.log(`Site in db : ${siteInDb.siteName} à ${Math.round(distMini)} m`);
+                    //console.log(`Site in db : ${siteInDb.siteName} à ${Math.round(distMini)} m`);
                 }    
             }
-        } else {
-            console.log('Aucun site trouvé dans la base ');
-        }
+        } 
     } catch (err) {
         console.error('Erreur lors de l\'exécution de searchSiteInDb :', err);
     }
@@ -85,39 +83,61 @@ async function searchSiteInDb(pLat, pLong) {
 }  
 
 export async function addNewSite(lat, lng, alt, strRename) {
-    const updateDate = new Date()
-    const sqlDate = updateDate.getFullYear()+'-'+String((updateDate.getMonth()+1)).padStart(2, '0')+'-'+String(updateDate.getDate()).padStart(2, '0')                 
-    const sqltable = 'Site';    
-    let sqlparams = {
-        S_CP : '***', // Code postal inconnu, à compléter par l'utilisateur
-        S_Type : 'D',
-        S_Maj: sqlDate
-    }            
-    // First we try to find the takeoff site with the API ParaglidingEarth
-    console.log('Recherche sur ParaglidingEarth ...');
-    const result = await callPgearth(lat, lng);    
-    if (result.success) {            
-        sqlparams.S_Nom = result.name.toUpperCase();
-        sqlparams.S_Pays = result.countryCode.toUpperCase();
-        sqlparams.S_Alti = result.takeoff_altitude;
-        sqlparams.S_Latitude = result.coordinates[1];
-        sqlparams.S_Longitude = result.coordinates[0];   
-        console.log('PGEarth :', sqlparams.S_Nom, sqlparams.S_Pays);
-    } else {
-        // Si échec de l'API ou site non trouvé, on ajoute un site générique
-        console.log('No site found on ParaglidingEarth :', result.message);
-        // sqlparams.S_Nom = 'Takeoff at '+lat.toFixed(4)+','+lng.toFixed(4);
-        // sqlparams.S_Pays = 'XX';
-        // sqlparams.S_Alti = alt;
-        // sqlparams.S_Latitude = lat;
-        // sqlparams.S_Longitude = lng;   
-    }    
+    const newFlightSite = {
+        name : 'Not defined',
+        pays : ''
+    }
+    try {
+        const updateDate = new Date()
+        const sqlDate = updateDate.getFullYear()+'-'+String((updateDate.getMonth()+1)).padStart(2, '0')+'-'+String(updateDate.getDate()).padStart(2, '0')                 
+        const sqltable = 'Site';    
+        let sqlparams = {
+            S_CP : '***', // Postcode unknown, to be completed by the user
+            S_Type : 'D',
+            S_Maj: sqlDate,
+            S_Alti : alt,
+            S_Latitude : lat,
+            S_Longitude : lng          
+        }            
+        // First we try to find the takeoff site with the API ParaglidingEarth
+        const result = await callPgearth(lat, lng);    
+        if (result.success) {            
+            sqlparams.S_Nom = result.name.toUpperCase();
+            sqlparams.S_Pays = result.countryCode.toUpperCase();
+            sqlparams.S_Alti = result.takeoff_altitude;
+            sqlparams.S_Latitude = result.coordinates[1];
+            sqlparams.S_Longitude = result.coordinates[0];   
+            //console.log('PGEarth :', sqlparams);
+        } else {
+            // No site found or error returned by the ParaglidingEarth API
+            // Search index of new blank site : (site to rename XX)
+            const blanckIdx = await searchIdxBlankSite(strRename);
+            sqlparams.S_Nom = blanckIdx.siteName;
+            sqlparams.S_Pays = '';
+            sqlparams.S_Alti = alt;
+            sqlparams.S_Latitude = lat;
+            sqlparams.S_Longitude = lng;  
+            //console.log('Blank site:', sqlparams);
+        }
+        // New site is added to the database
+        const resultInsert = databaseStore.insert(sqltable, sqlparams);
+        if (!resultInsert.success) {
+            console.error('Error inserting new site into database:', resultInsert.message);
+        }
+        //console.log('New site added with ID:', resultInsert.lastInsertId);
+        newFlightSite.name = sqlparams.S_Nom;
+        newFlightSite.pays = sqlparams.S_Pays;
+        return { newFlightSite};
+    } catch (error) {
+        console.error('Error in addNewSite :', error);
+        return { newFlightSite };        
+    }        
 }
 
 async function callPgearth(lat, lng) {
-    // sans proxy
+    // withiut proxy
     // let pgurl = 'https://www.paraglidingearth.com/api/geojson/getAroundLatLngSites.php?distance=1';
-    let pgurl = '/api-paragliding/api/geojson/getAroundLatLngSites.php?distance=1';
+    let pgurl = '/api-paragliding/api/geojson/getAroundLatLngSites.php?distance=0.5';
     pgurl += `&lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(lng)}`;
     // const url = `http://www.paraglidingearth.com/api/getAroundLatLngSites.php?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(lng)}&distance=5&limit=2`;
     try {
@@ -127,7 +147,7 @@ async function callPgearth(lat, lng) {
     }
 } 
 
-function searchIdxBlankSite(strRename) {
+async function searchIdxBlankSite(strRename) {
     // The name of an unknown site is : Site No XX to rename
     // We search last index XX
     const lastStr = strRename;
