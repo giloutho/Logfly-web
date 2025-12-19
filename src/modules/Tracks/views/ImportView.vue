@@ -1,16 +1,4 @@
 <template>
-  <v-snackbar v-model="snackbar" multi-line>
-    {{ snackbarMessage }}
-    <template v-slot:actions>
-    <v-btn
-      color="red"
-      variant="text"
-      @click="snackbar = false"
-    >
-    {{$gettext('Closef')}}
-    </v-btn>
-  </template>
-  </v-snackbar>  
   <OpenLogbook :show="true" />
   <div v-if="databaseStore.hasOpenDatabase" class="import-view">
     <v-container fluid>
@@ -312,8 +300,6 @@ const emit = defineEmits(['db-updated']);
 
 const { $gettext } = useGettext();
 const databaseStore = useDatabaseStore();
-const snackbar = ref(false);
-const snackbarMessage = ref('');
 
 // Listes des appareils et options
 const usbDevices = [
@@ -520,11 +506,6 @@ async function importSelectedFlights() {
       }
     }
 
-    let msg = `${importedCount} ${$gettext('flights successfully imported')}\n`;
-    msg += $gettext('Registration of the logbook required');
-    snackbarMessage.value = msg;
-    snackbar.value = true;
-    
     // Signale au parent qu'une modification a eu lieu
     emit('db-updated');
 

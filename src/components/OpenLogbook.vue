@@ -1,40 +1,69 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="600">
-    <v-card  class="mx-auto" max-width="600">
-      <v-card-title class="text-h5 bg-primary d-flex justify-space-between align-center">
-        <span>{{ $gettext('Logbook') }}</span>
-        <v-btn icon="mdi-close" variant="text" @click="closeDialog" size="medium" />
+ <v-dialog v-model="dialog" persistent max-width="500">
+    <v-card :loading="loading">
+      <v-card-title class="pa-4">
+        {{ $gettext('Ouverture du Journal') }}
       </v-card-title>
-      <v-card-text class="pt-6">
-        <div class="text-center mb-0">
-          <v-icon size="32" color="primary">mdi-note-text-outline</v-icon>
-        </div>
-        <p class="text-center mb-4">
-            {{ $gettext('No logbook open') }},
-            {{ $gettext('Select a logbook (file with .db extension)') }}<br>
-            {{ $gettext('In older versions, logbook is in Documents/logfly folder') }}
-        </p>
-        <v-alert v-if="error" type="error" closable @click:close="error = ''" class="mb-4">
+
+      <v-card-text>
+        <v-alert v-if="error" type="error" variant="tonal" class="mb-4">
           {{ error }}
         </v-alert>
-      </v-card-text>
-      <v-card-actions class="pb-8">
-        <v-spacer />
-        <v-btn color="primary" variant="elevated" @click="openFileDialog" size="large">
-          <v-icon start>mdi-folder-open</v-icon>
-          {{ $gettext('Select') }}
+
+        <v-btn
+          block
+          color="primary"
+          prepend-icon="mdi-folder-search"
+          @click="handlePickDirectory"
+          :disabled="loading"
+        >
+          {{ $gettext('Choisir le dossier de la base') }}
         </v-btn>
-        <v-spacer />
+
+        <v-slide-y-transition>
+          <div v-if="availableFiles.length > 0" class="mt-6">
+            <div class="text-caption mb-2">{{ $gettext('Fichiers détectés :') }}</div>
+            <v-select
+              :items="availableFiles"
+              item-title="name"
+              label="Sélectionnez votre base SQLite"
+              prepend-inner-icon="mdi-database"
+              return-object
+              variant="outlined"
+              @update:model-value="handleFileSelection"
+            ></v-select>
+          </div>
+        </v-slide-y-transition>
+
+        <v-btn
+          v-if="currentFile && availableFiles.length === 0"
+          variant="text"
+          block
+          class="mt-4"
+          @click="reconnectLastFile"
+        >
+          {{ $gettext('Réouvrir') }} {{ currentFile.name }}
+        </v-btn>
+      </v-card-text>
+
+      <v-divider></v-divider>
+
+      <v-card-actions>
+        <v-btn variant="text" @click="closeDialog">
+          {{ $gettext('Annuler') }}
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useGettext } from "vue3-gettext";
 import { useDatabaseStore } from '@/stores/database'
 import { useRouter } from 'vue-router';
+// Importation de notre nouveau service
+import * as logbookService from '@/js/database/logbookService';
 
 const props = defineProps({
   show: {
@@ -43,66 +72,87 @@ const props = defineProps({
   }
 });
 
-const databaseStore = useDatabaseStore()
+const databaseStore = useDatabaseStore();
 const router = useRouter();
-const error = ref('')
+const error = ref('');
+const loading = ref(false);
 
 const { $gettext } = useGettext();
-
-const emit = defineEmits(['db-opened', 'file-handle', 'close']);
+const emit = defineEmits(['db-opened', 'close']);
 
 // La modale s'affiche si show est true ET que la base n'est pas ouverte
 const dialog = computed(() => props.show && !databaseStore.hasOpenDatabase);
 
+// Accès aux variables réactives du service
+const { availableFiles, isReady, currentFile, dirHandle } = logbookService;
+
+onMounted(async () => {
+  // Tente de restaurer les handles au montage (IndexedDB)
+  await logbookService.initPersistence();
+});
+
 function closeDialog() {
   emit('close');
-  // Naviguer vers la page d'accueil
   router.push({ name: 'home' });
 }
 
-async function openFileDialog() {
-  // Vérifier si l'API File System Access est disponible
-  if (!('showOpenFilePicker' in window)) {
-    error.value = 'File System Access API non supportée par ce navigateur. Utilisez Chrome, Edge ou Opera.';
-    showError.value = true;
+/**
+ * Étape 1 : Ouvrir le dossier et scanner les fichiers
+ */
+async function handlePickDirectory() {
+  error.value = '';
+  if (!('showDirectoryPicker' in window)) {
+    error.value = $gettext('File System Access API non supportée. Utilisez Chrome ou Edge.');
     return;
   }
 
   try {
-    databaseStore.clearError();
-    
-    // Ouvrir le sélecteur de fichiers
-    const [fileHandle] = await window.showOpenFilePicker({
-      types: [
-        {
-          description: 'SQLite Database',
-          accept: {
-            'application/x-sqlite3': ['.db', '.sqlite', '.sqlite3']
-          }
-        }
-      ],
-      multiple: false
-    });
+    loading.value = true;
+    await logbookService.pickFolder();
+    if (availableFiles.value.length === 0) {
+      error.value = $gettext('Aucun fichier SQLite trouvé dans ce dossier.');
+    }
+  } catch (err) {
+    if (err.name !== 'AbortError') error.value = err.message;
+  } finally {
+    loading.value = false;
+  }
+}
 
-    // Obtenir le fichier depuis le handle
+/**
+ * Étape 2 : Charger le fichier sélectionné
+ */
+async function handleFileSelection(fileHandle) {
+  try {
+    loading.value = true;
     const file = await fileHandle.getFile();
-    
-    // Charger la base de données
     const result = await databaseStore.loadDatabase(file);
-    
+
     if (result.success) {
-      // Émettre le nom du fichier et le handle pour une réutilisation ultérieure
+      // Sauvegarder les handles dans IndexedDB pour la persistance et le startIn
+      await logbookService.confirmFile(fileHandle);
+      
       emit('db-opened', file.name);
-      emit('file-handle', fileHandle);
-      // La modale se fermera automatiquement car hasOpenDatabase devient true
+      // La modale se ferme via la computed 'dialog'
     } else {
       error.value = databaseStore.error;
     }
   } catch (err) {
-    // L'utilisateur a annulé ou une erreur s'est produite
-    if (err.name !== 'AbortError') {
-      error.value = `Erreur lors de l'ouverture du fichier: ${err.message}`;
-      console.error('Erreur showOpenFilePicker:', err);
+    error.value = $gettext('Erreur lors de la lecture du fichier.');
+    console.error(err);
+  } finally {
+    loading.value = false;
+  }
+}
+
+/**
+ * Cas particulier : Re-charger le dernier fichier connu (si persistence OK)
+ */
+async function reconnectLastFile() {
+  if (currentFile.value) {
+    await logbookService.reactivateAccess();
+    if (isReady.value) {
+      await handleFileSelection(currentFile.value);
     }
   }
 }

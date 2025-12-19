@@ -41,15 +41,17 @@
   import TheFooter from '@/components/TheFooter.vue' 
   import OpenLogbook from '@/components/OpenLogbook.vue';
   import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+  import { storeToRefs } from 'pinia';
   import { useDatabaseStore } from '@/stores/database';
   import { useRouter } from 'vue-router';
   import { saveDatabase } from '@/js/database/sql-manager.js';
 
   const appVersion = '1.0.0'; // À remplacer par la vraie version
   const databaseStore = useDatabaseStore();
+  // Utilisez storeToRefs pour garder la réactivité sur isDirty
+  const { isDirty } = storeToRefs(databaseStore);
   const router = useRouter();
   const dbPath = computed(() => databaseStore.dbName || '');
-  const isDirty = ref(false); // Passe à true dès qu'une modif DB est faite
   const fileHandle = ref(null); // Stocke le handle du fichier pour la sauvegarde
   
   function onDbUpdated() {
@@ -58,13 +60,13 @@
 
   // Gestionnaire d'événement beforeunload pour prévenir la fermeture sans sauvegarde
   function handleBeforeUnload(event) {
-    if (isDirty.value) {
-      // Message personnalisé (la plupart des navigateurs affichent leur propre message)
-      const message = 'Des modifications non sauvegardées seront perdues. Voulez-vous vraiment quitter ?';
-      event.preventDefault();
-      event.returnValue = message; // Standard pour la plupart des navigateurs
-      return message; // Pour les anciens navigateurs
-    }
+    // Si l'autosave a fonctionné, isDirty est déjà false ici
+      if (isDirty.value) {
+        const message = 'Des modifications non sauvegardées seront perdues...';
+        event.preventDefault();
+        event.returnValue = message;
+        return message;
+      }
   }
 
   // Ajouter l'écouteur au montage du composant

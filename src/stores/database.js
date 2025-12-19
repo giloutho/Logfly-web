@@ -8,25 +8,29 @@ export const useDatabaseStore = defineStore('database', () => {
   const isOpen = ref(false)
   const dbName = ref('')
   const error = ref('')
-
+  const isDirty = ref(false)
   // Getters
   const hasOpenDatabase = computed(() => isOpen.value && db.value !== null)
 
-  // Actions
-  async function loadDatabase(file) {
-    try {
-      error.value = ''
-      
-      // Fermer la base existante si elle existe
-      if (db.value) {
-        closeDatabase(db.value)
-      }
+// Actions privées de gestion d'état (internes au store)
+  function markAsDirty() {
+    console.log("!!! LA BASE EST DEVENUE SALE (Dirty) !!!");
+    isDirty.value = true
+  }
 
-      // Lire et ouvrir la nouvelle base
+  function markAsSaved() {
+    isDirty.value = false
+  }
+
+  // Actions publiques
+  async function loadDatabase(file) {
+  try {
+      error.value = ''
+      if (db.value) { closeDatabase(db.value) }
+
       const fileBuffer = await readSqliteFile(file)
       db.value = await openDatabase(fileBuffer)
       
-      // Vérifier la présence de la table "Vol"
       const result = executeQuery(db.value, "SELECT name FROM sqlite_master WHERE type='table' AND name='Vol'")
       
       if (result.success) {
@@ -35,9 +39,10 @@ export const useDatabaseStore = defineStore('database', () => {
           db.value = null
           throw new Error('The database does not contain a "Vol" table')
         }
-        // Succès !
         isOpen.value = true
         dbName.value = file.name
+        // Lors d'un chargement tout neuf, on est "propre"
+        markAsSaved() 
         return { success: true }
       } else {
         throw new Error(result.message || 'Error while executing the open request')
@@ -47,8 +52,29 @@ export const useDatabaseStore = defineStore('database', () => {
       isOpen.value = false
       db.value = null
       dbName.value = ''
+      markAsSaved()
       return { success: false, error: error.value }
     }
+  }
+
+  async function exportDatabase() {
+if (db.value) {
+      return db.value.export();
+    }
+    throw new Error("Base non initialisée");
+  }
+
+  function insert(tableName, params) {
+    if (!db.value) {
+      return { success: false, message: 'No database open' }
+    }
+    const result = insertIntoDatabase(db.value, tableName, params)
+    
+    // SI L'INSERTION RÉUSSIT : on marque la base comme modifiée
+    if (result.success) {
+      markAsDirty()
+    }
+    return result
   }
 
   function closeDatabaseStore() {
@@ -93,6 +119,7 @@ export const useDatabaseStore = defineStore('database', () => {
     return insertIntoDatabase(db.value, tableName, params)
   }
 
+
   return {
     // État
     db,
@@ -101,9 +128,12 @@ export const useDatabaseStore = defineStore('database', () => {
     error,
     // Getters
     hasOpenDatabase,
+    isDirty,
     // Actions
     loadDatabase,
+    exportDatabase,
     closeDatabaseStore,
+    markAsSaved,
     clearError,
     query,
     insert
