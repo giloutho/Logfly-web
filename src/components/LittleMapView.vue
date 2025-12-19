@@ -1,13 +1,41 @@
 <template>
-  <div ref="mapContainer" class="map-container"></div>
+  <div class="little-map-wrapper">
+    <div ref="mapContainer" class="map-container"></div>
+
+    <div class="map-overlay-bottom">
+      <div class="map-buttons">
+        <v-tooltip :text="$gettext('Full map')" location="top">
+          <template v-slot:activator="{ props }">
+            <v-btn v-bind="props" icon="mdi-fullscreen" size="small" color="white" class="map-btn"
+              @click="$emit('open-full-map')"></v-btn>
+          </template>
+        </v-tooltip>
+        <v-tooltip :text="$gettext('FlyXC')" location="top">
+          <template v-slot:activator="{ props }">
+            <v-btn v-bind="props" icon="mdi-earth" size="small" color="white" class="map-btn"
+              @click="$emit('open-flyxc')"></v-btn>
+          </template>
+        </v-tooltip>
+        <v-tooltip :text="$gettext('Analyze')" location="top">
+          <template v-slot:activator="{ props }">
+            <v-btn v-bind="props" icon="mdi-chart-line" size="small" color="white" class="map-btn"
+              @click="$emit('open-analyze')"></v-btn>
+          </template>
+        </v-tooltip>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { ref, onMounted, watch, onBeforeUnmount } from 'vue';
+import { useGettext } from "vue3-gettext";
 
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { baseMaps, osm } from '@/js/leaflet/tiles.js';
+
+const { $gettext } = useGettext();
 
 const props = defineProps({
   geoJson: {
@@ -19,6 +47,8 @@ const props = defineProps({
     default: null
   }
 });
+
+const emit = defineEmits(['open-full-map', 'open-flyxc', 'open-analyze']);
 
 const mapContainer = ref(null);
 let map = null;
@@ -44,7 +74,7 @@ onMounted(() => {
   if (props.geoJson) {
     displayGeoJson(props.geoJson);
   }
-  
+
   // Afficher le scoring si disponible
   if (props.scoreJson) {
     displayScoreJson(props.scoreJson);
@@ -67,16 +97,16 @@ watch(() => props.scoreJson, (newScoreJson) => {
 
 function displayGeoJson(geoJson) {
   console.log('displayGeoJson appelé');
-  
-    // Supprimer la couche précédente de la trace si elle existe
-    if (geoJsonLayer) {
-        map.removeLayer(geoJsonLayer);
-    }
-    // Supprimer la couche précédente du scoring si elle existe
-    if (scoreLayer) {
-        map.removeLayer(scoreLayer);
-        scoreLayer = null;
-    };
+
+  // Supprimer la couche précédente de la trace si elle existe
+  if (geoJsonLayer) {
+    map.removeLayer(geoJsonLayer);
+  }
+  // Supprimer la couche précédente du scoring si elle existe
+  if (scoreLayer) {
+    map.removeLayer(scoreLayer);
+    scoreLayer = null;
+  };
 
   // Ajouter la nouvelle couche GeoJSON (trace du vol)
   geoJsonLayer = L.geoJSON(geoJson, {
@@ -90,7 +120,7 @@ function displayGeoJson(geoJson) {
 
   // Adapter la vue pour afficher toute la trace et le scoring
   fitBoundsToAllLayers();
-  
+
   // Forcer un rafraîchissement
   setTimeout(() => {
     map.invalidateSize();
@@ -98,7 +128,7 @@ function displayGeoJson(geoJson) {
 }
 
 function displayScoreJson(scoreJson) {
-  
+
   // Supprimer la couche précédente du scoring si elle existe
   if (scoreLayer) {
     map.removeLayer(scoreLayer);
@@ -136,7 +166,7 @@ function displayScoreJson(scoreJson) {
     console.log('ScoreLayer ajouté avec succès');
     console.log('ScoreLayer bounds:', scoreLayer.getBounds());
     console.log('ScoreLayer getLayers():', scoreLayer.getLayers().length, 'layers');
-    
+
     // Adapter la vue pour afficher toute la trace et le scoring
     fitBoundsToAllLayers();
   } catch (error) {
@@ -148,7 +178,7 @@ function fitBoundsToAllLayers() {
   try {
     const bounds = L.latLngBounds([]);
     let hasBounds = false;
-    
+
     if (geoJsonLayer) {
       const geoBounds = geoJsonLayer.getBounds();
       if (geoBounds.isValid()) {
@@ -157,7 +187,7 @@ function fitBoundsToAllLayers() {
         console.log('GeoBounds ajoutés');
       }
     }
-    
+
     if (scoreLayer) {
       const scoreBounds = scoreLayer.getBounds();
       console.log('ScoreBounds:', scoreBounds, 'isValid:', scoreBounds.isValid());
@@ -167,9 +197,9 @@ function fitBoundsToAllLayers() {
         console.log('ScoreBounds ajoutés');
       }
     }
-    
+
     console.log('Final bounds:', bounds, 'hasBounds:', hasBounds, 'isValid:', bounds.isValid());
-    
+
     if (hasBounds && bounds.isValid()) {
       map.fitBounds(bounds, { padding: [20, 20] });
       console.log('fitBounds appliqué');
@@ -187,9 +217,44 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.map-container {
+.little-map-wrapper {
+  position: relative;
   width: 100%;
   height: 100%;
   border-radius: 10px;
+  overflow: hidden;
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+}
+
+.map-overlay-bottom {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  /* Let clicks pass through empty areas */
+}
+
+.map-buttons {
+  pointer-events: auto;
+  /* Enable clicks on buttons */
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px;
+  border-radius: 20px;
+  display: flex;
+  gap: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.map-btn {
+  background-color: #1976D2 !important;
+  /* Vuetify primary blue - or custom */
+  color: white !important;
 }
 </style>

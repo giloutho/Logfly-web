@@ -5,8 +5,8 @@
   <OpenLogbook :show="true" />
   <div v-if="databaseStore.hasOpenDatabase" class="global-logbook">
     <div class="left-panel">
-      <LittleMapView v-if="decodedTrack && decodedTrack.GeoJSON" :geoJson="decodedTrack.GeoJSON"
-        :scoreJson="scoreJson" />
+      <LittleMapView v-if="decodedTrack && decodedTrack.GeoJSON" :geoJson="decodedTrack.GeoJSON" :scoreJson="scoreJson"
+        @open-full-map="onOpenFullMap" @open-flyxc="onOpenFlyXc" @open-analyze="onOpenAnalyze" />
       <div v-else class="no-track-message">
         <p>Base de données : {{ databaseStore.dbName }}</p>
         <p>Sélectionnez un vol pour afficher la trace</p>
@@ -409,6 +409,23 @@ function onPhotoUpdate({ id, photoData }) {
   snackbarMessage.value = photoData ? 'Photo ajoutée' : 'Photo supprimée';
   snackbar.value = true;
   emit('db-updated');
+}
+
+
+function onOpenFullMap() {
+  console.log('Open Full Map requested');
+  if (dataFlight.value) {
+    console.log('Flight data available:', dataFlight.value);
+    // Future implementation of FullMapView will use dataFlight.value
+  }
+}
+
+function onOpenFlyXc() {
+  console.log('Open FlyXC requested');
+}
+
+function onOpenAnalyze() {
+  console.log('Open Analyze requested');
 }
 
 async function readIgcFromDb(flightId) {
