@@ -27,7 +27,8 @@
               'has-comment': item.V_Commentaire
             }" @click="selectedItems = [item.V_ID]; onSelectionChange([item.V_ID])" style="cursor:pointer;">
               <td class="col-photo">
-                <v-icon v-if="item.Photo === 'Yes'" size="small" color="primary">mdi-camera</v-icon>
+                <v-icon v-if="item.Photo === 'Yes'" size="small" color="primary"
+                  @click.stop="openPhoto(item)">mdi-camera</v-icon>
               </td>
               <td class="col-tag">{{ item.V_Tag }}</td>
               <td class="col-day">{{ item.Day }}</td>
@@ -65,12 +66,24 @@
       <div class="bottom-block">
         <LogbookDetails v-if="dataFlight" :trackData="dataFlight" @update:scoreJson="scoreJson = $event"
           @update:comment="onCommentUpdate" @update:glider="onGliderUpdate" @update:site="onSiteUpdate"
-          @update:delete="onFlightDelete" />
+          @update:delete="onFlightDelete" @update:photo="onPhotoUpdate" />
         <div v-else class="no-track-message">
           <p>Sélectionnez un vol pour afficher les détails</p>
         </div>
       </div>
     </div>
+
+    <v-dialog v-model="showPhotoViewer" max-width="800">
+      <v-card>
+        <v-card-title class="d-flex justify-space-between align-center">
+          <span>{{ photoTitle }}</span>
+          <v-btn icon="mdi-close" variant="text" @click="showPhotoViewer = false"></v-btn>
+        </v-card-title>
+        <v-card-text class="d-flex justify-center bg-grey-lighten-4 pa-4">
+          <img v-if="photoUrl" :src="photoUrl" style="max-width: 100%; max-height: 80vh; object-fit: contain;" />
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -103,6 +116,9 @@ const dataFlight = ref(null);
 const scoreJson = ref(null);
 const snackbar = ref(false);
 const snackbarMessage = ref('');
+const showPhotoViewer = ref(false);
+const photoUrl = ref(null);
+const photoTitle = ref('');
 
 const pageCount = computed(() => {
   return Math.ceil(flights.value.length / itemsPerPage.value);
@@ -326,12 +342,77 @@ function onFlightDelete(flightId) {
   snackbarMessage.value = 'Vol supprimé';
   snackbar.value = true;
   emit('db-updated');
+  snackbar.value = true;
+  emit('db-updated');
+}
+
+// Ouvre la photo du vol dans une modale
+async function openPhoto(item) {
+  if (!databaseStore.hasOpenDatabase) return;
+
+  const reqSQL = `SELECT V_Photos FROM Vol WHERE V_ID = ${item.V_ID}`;
+  const result = databaseStore.query(reqSQL);
+
+  if (result.success && result.data && result.data[0]) {
+    const photoData = result.data[0].values[0][0];
+    if (photoData) {
+      // photoData est une string base64 (compatibilité logfly65)
+      photoUrl.value = 'data:image/jpeg;base64,' + photoData;
+      photoTitle.value = `${item.Day} ${item.V_Site}`;
+      showPhotoViewer.value = true;
+    }
+  }
+}
+
+// Nettoyer l'URL de la photo à la fermeture
+watch(showPhotoViewer, (val) => {
+  if (!val && photoUrl.value) {
+    URL.revokeObjectURL(photoUrl.value);
+    photoUrl.value = null;
+  }
+});
+
+function onPhotoUpdate({ id, photoData }) {
+  const flightId = id || dataFlight.value?.decodedIgc?.info?.id || selectedItems.value[0];
+  if (!flightId) return;
+
+  let result;
+  if (photoData) {
+    // Update avec string base64
+    result = databaseStore.update(
+      `UPDATE Vol SET V_Photos = ? WHERE V_ID = ${flightId}`,
+      [photoData]
+    );
+  } else {
+    // Delete (set null)
+    result = databaseStore.query(`UPDATE Vol SET V_Photos = NULL WHERE V_ID = ${flightId}`);
+  }
+
+  if (!result.success) {
+    snackbarMessage.value = 'Erreur lors de la mise à jour de la photo';
+    snackbar.value = true;
+    return;
+  }
+
+  // Update lists
+  const idx = flights.value.findIndex(f => f.V_ID === flightId);
+  if (idx !== -1) {
+    flights.value[idx].Photo = photoData ? 'Yes' : null;
+  }
+
+  if (dataFlight.value && dataFlight.value.dbId === flightId) {
+    dataFlight.value.hasPhoto = !!photoData;
+  }
+
+  snackbarMessage.value = photoData ? 'Photo ajoutée' : 'Photo supprimée';
+  snackbar.value = true;
+  emit('db-updated');
 }
 
 async function readIgcFromDb(flightId) {
   // Fonction fictive pour lire et analyser le contenu IGC
   if (!databaseStore.hasOpenDatabase) return;
-  const reqSQL = `SELECT V_IGC, strftime('%d-%m-%Y',V_date) AS Day, V_Site, V_Engin, V_Commentaire, V_sDuree FROM Vol WHERE V_ID = ${flightId}`;
+  const reqSQL = `SELECT V_IGC, strftime('%d-%m-%Y',V_date) AS Day, V_Site, V_Engin, V_Commentaire, V_sDuree, CASE WHEN (V_Photos IS NOT NULL AND V_Photos !='') THEN 1 ELSE 0 END as HasPhoto FROM Vol WHERE V_ID = ${flightId}`;
   const result = databaseStore.query(reqSQL);
 
   if (result.success && result.data && result.data[0]) {
@@ -354,6 +435,7 @@ async function readIgcFromDb(flightId) {
           glider: result.data[0].values[0][3],
           comment: result.data[0].values[0][4],
           duration: result.data[0].values[0][5],
+          hasPhoto: result.data[0].values[0][6] === 1,
           anaTrack: analyzeIgc.anaTrack,
           decodedIgc: decodedTrack.value
         }

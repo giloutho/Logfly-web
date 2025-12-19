@@ -41,19 +41,19 @@ export function saveDatabase(db, filename = 'carnet.db') {
   if (!db) {
     throw new Error('Aucune base de données ouverte')
   }
-  
+
   // Exporter la base en Uint8Array
   const data = db.export()
-  
+
   // Créer un Blob pour le téléchargement
   const blob = new Blob([data], { type: 'application/x-sqlite3' })
-  
+
   // Créer un lien de téléchargement et le déclencher
   const link = document.createElement('a')
   link.href = URL.createObjectURL(blob)
   link.download = filename
   link.click()
-  
+
   // Nettoyer l'URL
   URL.revokeObjectURL(link.href)
 }
@@ -91,38 +91,69 @@ export function insertIntoDatabase(db, tableName, params) {
   if (!db) {
     return { success: false, message: 'Database not open' }
   }
-  
+
   if (!params || Object.keys(params).length === 0) {
     return { success: false, message: 'No parameters provided' }
   }
-  
+
   try {
     // Extraire les colonnes et les valeurs
     const columns = Object.keys(params)
     const values = Object.values(params)
-    
+
     // Construire la requête SQL
     const columnsStr = columns.join(', ')
     const placeholders = columns.map(() => '?').join(', ')
     const sql = `INSERT INTO ${tableName} (${columnsStr}) VALUES (${placeholders})`
-    
+
     // Préparer et exécuter la requête
     const stmt = db.prepare(sql)
     stmt.run(values)
     stmt.free()
-    
+
     // Récupérer l'ID du dernier enregistrement inséré
     const lastIdStmt = db.prepare('SELECT last_insert_rowid() as id')
     lastIdStmt.step()
     const result = lastIdStmt.getAsObject()
     const lastInsertId = result.id
     lastIdStmt.free()
-    
+
     return {
       success: true,
       lastInsertId: lastInsertId,
       changes: 1,
       message: 'Row inserted successfully'
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message,
+      error: error
+    }
+  }
+}
+
+/**
+ * Met à jour des enregistrements dans la base de données avec des paramètres
+ * @param {Object} db - Instance de la base de données SQL.js
+ * @param {string} sql - Requête SQL UPDATE avec des placeholders (?)
+ * @param {Array} params - Tableau des valeurs à injecter
+ * @returns {Object} Résultat de la mise à jour {success, changes, message}
+ */
+export function updateDatabase(db, sql, params) {
+  if (!db) {
+    return { success: false, message: 'Database not open' }
+  }
+
+  try {
+    const stmt = db.prepare(sql)
+    stmt.run(params)
+    stmt.free()
+
+    return {
+      success: true,
+      changes: db.getRowsModified(),
+      message: 'Update successful'
     }
   } catch (error) {
     return {

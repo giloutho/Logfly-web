@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { readSqliteFile, openDatabase, executeQuery, closeDatabase, insertIntoDatabase } from '@/js/database/sql-manager.js'
+import { readSqliteFile, openDatabase, executeQuery, closeDatabase, insertIntoDatabase, updateDatabase } from '@/js/database/sql-manager.js'
 
 export const useDatabaseStore = defineStore('database', () => {
   // État
@@ -12,7 +12,7 @@ export const useDatabaseStore = defineStore('database', () => {
   // Getters
   const hasOpenDatabase = computed(() => isOpen.value && db.value !== null)
 
-// Actions privées de gestion d'état (internes au store)
+  // Actions privées de gestion d'état (internes au store)
   function markAsDirty() {
     console.log("!!! LA BASE EST DEVENUE SALE (Dirty) !!!");
     isDirty.value = true
@@ -24,15 +24,15 @@ export const useDatabaseStore = defineStore('database', () => {
 
   // Actions publiques
   async function loadDatabase(file) {
-  try {
+    try {
       error.value = ''
       if (db.value) { closeDatabase(db.value) }
 
       const fileBuffer = await readSqliteFile(file)
       db.value = await openDatabase(fileBuffer)
-      
+
       const result = executeQuery(db.value, "SELECT name FROM sqlite_master WHERE type='table' AND name='Vol'")
-      
+
       if (result.success) {
         if (result.data.length === 0) {
           closeDatabase(db.value)
@@ -42,7 +42,7 @@ export const useDatabaseStore = defineStore('database', () => {
         isOpen.value = true
         dbName.value = file.name
         // Lors d'un chargement tout neuf, on est "propre"
-        markAsSaved() 
+        markAsSaved()
         return { success: true }
       } else {
         throw new Error(result.message || 'Error while executing the open request')
@@ -58,7 +58,7 @@ export const useDatabaseStore = defineStore('database', () => {
   }
 
   async function exportDatabase() {
-if (db.value) {
+    if (db.value) {
       return db.value.export();
     }
     throw new Error("Base non initialisée");
@@ -69,7 +69,7 @@ if (db.value) {
       return { success: false, message: 'No database open' }
     }
     const result = insertIntoDatabase(db.value, tableName, params)
-    
+
     // SI L'INSERTION RÉUSSIT : on marque la base comme modifiée
     if (result.success) {
       markAsDirty()
@@ -119,6 +119,18 @@ if (db.value) {
     return insertIntoDatabase(db.value, tableName, params)
   }
 
+  function update(sql, params) {
+    if (!db.value) {
+      return { success: false, message: 'No database open' }
+    }
+    const result = updateDatabase(db.value, sql, params)
+
+    if (result.success) {
+      markAsDirty()
+    }
+    return result
+  }
+
 
   return {
     // État
@@ -136,6 +148,7 @@ if (db.value) {
     markAsSaved,
     clearError,
     query,
-    insert
+    insert,
+    update
   }
 })

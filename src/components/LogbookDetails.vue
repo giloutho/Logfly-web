@@ -71,8 +71,11 @@
             </div>
             <ScoreDialog v-model="showScoreDialog" @select="onScoreSelected" />
             <div class="about-row btn-row">
-              <v-btn color="primary" density="compact" class="mr-2">{{ strAddPhoto }}</v-btn>
-              <v-btn color="error" density="compact">{{ strRemovePhoto }}</v-btn>
+              <v-btn v-if="!trackData?.hasPhoto" color="primary" density="compact" class="mr-2"
+                @click="showPhotoDialog = true">{{ strAddPhoto }}</v-btn>
+              <LogbookPhoto v-model="showPhotoDialog" @save="onPhotoSave" />
+              <v-btn v-if="trackData?.hasPhoto" color="error" density="compact" @click="onPhotoDelete">{{ strRemovePhoto
+              }}</v-btn>
             </div>
           </div>
         </v-card-text>
@@ -94,7 +97,7 @@
           <div class="modify-btn-row">
             <div class="modify-line">
               <v-btn color="primary" density="compact" class="mr-2" @click="showGliderDialog = true">{{ strChangeGlider
-                }}</v-btn>
+              }}</v-btn>
               <GliderDialog v-model="showGliderDialog" :gliderList="gliderList" :currentGlider="trackData?.glider"
                 @save="onGliderSave" />
               <v-btn color="primary" density="compact" @click="showSiteDialog = true">{{ strChangeSite }}</v-btn>
@@ -134,6 +137,7 @@ import { igcScoring } from '@/js/igc/igc-scoring';
 import ScoreDialog from '@/components/ScoreDialog.vue';
 import GliderDialog from '@/components/GliderDialog.vue';
 import ChangeSiteDialog from '@/components/ChangeSiteDialog.vue';
+import LogbookPhoto from '@/components/LogbookPhoto.vue';
 import { useDatabaseStore } from '@/stores/database';
 
 const databaseStore = useDatabaseStore();
@@ -141,6 +145,7 @@ const { $gettext } = useGettext();
 
 const showGliderDialog = ref(false);
 const showSiteDialog = ref(false);
+const showPhotoDialog = ref(false);
 const gliderList = ref([]);
 const siteList = ref([]);
 const tab = ref('about'); // Onglet "About" sélectionné par défaut
@@ -166,7 +171,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['update:scoreJson', 'update:comment', 'update:glider', 'update:site', 'update:delete']);
+const emit = defineEmits(['update:scoreJson', 'update:comment', 'update:glider', 'update:site', 'update:delete', 'update:photo']);
 
 
 function loadGliderList() {
@@ -221,6 +226,22 @@ function onSiteSave(newSite) {
     id: props.trackData?.dbId || null,
     site: newSite
   });
+}
+
+function onPhotoSave(photoBase64) {
+  emit('update:photo', {
+    id: props.trackData?.dbId || null,
+    photoData: photoBase64
+  });
+}
+
+function onPhotoDelete() {
+  if (confirm($gettext('Delete photo?'))) {
+    emit('update:photo', {
+      id: props.trackData?.dbId || null,
+      photoData: null
+    });
+  }
 }
 
 function onDeleteFlight() {
