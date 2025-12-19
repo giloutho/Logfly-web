@@ -21,7 +21,7 @@
             </v-card-text>
             <v-card-actions class="justify-end">
                 <v-btn variant="text" @click="onCancel">{{ $gettext('Cancel') }}</v-btn>
-                <v-btn color="primary" @click="onOk" :disabled="!photoBuffer">{{ $gettext('OK') }}</v-btn>
+                <v-btn color="primary" @click="onOk" :disabled="!photoBase64">{{ $gettext('OK') }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

@@ -27,8 +27,10 @@
               'has-comment': item.V_Commentaire
             }" @click="selectedItems = [item.V_ID]; onSelectionChange([item.V_ID])" style="cursor:pointer;">
               <td class="col-photo">
-                <v-icon v-if="item.Photo === 'Yes'" size="small" color="primary"
-                  @click.stop="openPhoto(item)">mdi-camera</v-icon>
+                <v-icon v-if="item.Photo === 'Yes'" size="small"
+                  :color="selectedItems.includes(item.V_ID) ? 'white' : 'primary'" @click.stop="openPhoto(item)">
+                  {{ selectedItems.includes(item.V_ID) ? 'mdi-camera-outline' : 'mdi-camera' }}
+                </v-icon>
               </td>
               <td class="col-tag">{{ item.V_Tag }}</td>
               <td class="col-day">{{ item.Day }}</td>
