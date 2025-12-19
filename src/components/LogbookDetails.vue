@@ -71,8 +71,8 @@
             </div>
             <ScoreDialog v-model="showScoreDialog" @select="onScoreSelected" />
             <div class="about-row btn-row">
-              <v-btn color="primary" density="compact" class="mr-2">{{ $gettext('Add photo') }}</v-btn>
-              <v-btn color="error" density="compact">{{ $gettext('Remove photo') }}</v-btn>
+              <v-btn color="primary" density="compact" class="mr-2">{{ strAddPhoto }}</v-btn>
+              <v-btn color="error" density="compact">{{ strRemovePhoto }}</v-btn>
             </div>
           </div>
         </v-card-text>
@@ -83,8 +83,7 @@
           <v-textarea v-model="commentText" :label="$gettext('Add a comment')" rows="5" variant="outlined"
             density="compact"></v-textarea>
           <div class="comment-btn-row">
-            <v-btn color="error" density="compact" class="mr-2" @click="onDeleteComment">{{ $gettext('Delete')
-            }}</v-btn>
+            <v-btn color="error" density="compact" class="mr-2" @click="onDeleteComment">{{ strDelete }}</v-btn>
             <v-btn color="primary" density="compact" @click="onValidateComment">{{ $gettext('OK') }}</v-btn>
           </div>
         </v-card-text>
@@ -94,21 +93,20 @@
         <v-card-text>
           <div class="modify-btn-row">
             <div class="modify-line">
-              <v-btn color="primary" density="compact" class="mr-2" @click="showGliderDialog = true">{{ $gettext('Change glider')}}
-              </v-btn>
+              <v-btn color="primary" density="compact" class="mr-2" @click="showGliderDialog = true">{{ strChangeGlider
+                }}</v-btn>
               <GliderDialog v-model="showGliderDialog" :gliderList="gliderList" :currentGlider="trackData?.glider"
                 @save="onGliderSave" />
-              <v-btn color="primary" density="compact" @click="showSiteDialog = true">{{ $gettext('Change site')
-              }}</v-btn>
+              <v-btn color="primary" density="compact" @click="showSiteDialog = true">{{ strChangeSite }}</v-btn>
               <ChangeSiteDialog v-model="showSiteDialog" :siteList="siteList" :currentSite="trackData?.site"
                 @save="onSiteSave" />
             </div>
             <div class="modify-line">
-              <v-btn color="error" density="compact">{{ $gettext('Delete') }}</v-btn>
+              <v-btn color="error" density="compact" @click="onDeleteFlight">{{ strDelete }}</v-btn>
             </div>
             <div class="modify-line">
-              <v-btn color="warning" density="compact" class="mr-2">{{ $gettext('Edit/Duplicate') }}</v-btn>
-              <v-btn color="secondary" density="compact">{{ $gettext('Merge flights') }}</v-btn>
+              <v-btn color="warning" density="compact" class="mr-2">{{ strEditDuplicate }}</v-btn>
+              <v-btn color="secondary" density="compact">{{ strMergeFlights }}</v-btn>
             </div>
           </div>
         </v-card-text>
@@ -152,6 +150,15 @@ const scoreJson = ref(null);
 const scoreLabel = ref('');
 const commentText = ref('');
 
+// Computed string resources to avoid template line-breaking issues
+const strChangeGlider = computed(() => $gettext('Change glider'));
+const strChangeSite = computed(() => $gettext('Change site'));
+const strDelete = computed(() => $gettext('Delete'));
+const strEditDuplicate = computed(() => $gettext('Edit/Duplicate'));
+const strMergeFlights = computed(() => $gettext('Merge flights'));
+const strAddPhoto = computed(() => $gettext('Add photo'));
+const strRemovePhoto = computed(() => $gettext('Remove photo'));
+
 const props = defineProps({
   trackData: {
     type: Object,
@@ -159,7 +166,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['update:scoreJson', 'update:comment', 'update:glider', 'update:site']);
+const emit = defineEmits(['update:scoreJson', 'update:comment', 'update:glider', 'update:site', 'update:delete']);
 
 
 function loadGliderList() {
@@ -214,6 +221,14 @@ function onSiteSave(newSite) {
     id: props.trackData?.dbId || null,
     site: newSite
   });
+}
+
+function onDeleteFlight() {
+  if (!props.trackData) return;
+  const { site, day } = props.trackData;
+  if (confirm(`Voulez-vous vraiment supprimer le vol de ${site} du ${day} ?`)) {
+    emit('update:delete', props.trackData.dbId);
+  }
 }
 
 

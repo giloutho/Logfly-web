@@ -42,14 +42,30 @@
           -->
           <template v-slot:bottom>
             <div class="custom-pagination">
-              <v-pagination v-model="page" :length="pageCount" :total-visible="7" size="small"></v-pagination>
+              <v-btn icon variant="text" size="small" @click="page = 1" :disabled="page <= 1">
+                <v-icon>mdi-chevron-double-left</v-icon>
+              </v-btn>
+              <v-btn icon variant="text" size="small" @click="page = Math.max(1, page - 1)" :disabled="page <= 1">
+                <v-icon>mdi-chevron-left</v-icon>
+              </v-btn>
+
+              <span class="mx-2 text-caption">Page {{ page }} / {{ pageCount }}</span>
+
+              <v-btn icon variant="text" size="small" @click="page = Math.min(pageCount, page + 1)"
+                :disabled="page >= pageCount">
+                <v-icon>mdi-chevron-right</v-icon>
+              </v-btn>
+              <v-btn icon variant="text" size="small" @click="page = pageCount" :disabled="page >= pageCount">
+                <v-icon>mdi-chevron-double-right</v-icon>
+              </v-btn>
             </div>
           </template>
         </v-data-table>
       </div>
       <div class="bottom-block">
         <LogbookDetails v-if="dataFlight" :trackData="dataFlight" @update:scoreJson="scoreJson = $event"
-          @update:comment="onCommentUpdate" @update:glider="onGliderUpdate" @update:site="onSiteUpdate" />
+          @update:comment="onCommentUpdate" @update:glider="onGliderUpdate" @update:site="onSiteUpdate"
+          @update:delete="onFlightDelete" />
         <div v-else class="no-track-message">
           <p>Sélectionnez un vol pour afficher les détails</p>
         </div>
@@ -267,6 +283,51 @@ function onSiteUpdate({ id, site }) {
   emit('db-updated');
 }
 
+// Supprime le vol
+function onFlightDelete(flightId) {
+  if (!flightId) return;
+
+  const req = `DELETE FROM Vol WHERE V_ID = ${flightId}`;
+  const result = databaseStore.query(req);
+
+  if (!result.success) {
+    snackbarMessage.value = 'Erreur lors de la suppression du vol';
+    snackbar.value = true;
+    return;
+  }
+
+  // Trouver l'index du vol supprimé
+  const index = flights.value.findIndex(f => f.V_ID === flightId);
+
+  if (index !== -1) {
+    // Supprimer de la liste locale
+    flights.value.splice(index, 1);
+
+    // Déterminer la nouvelle sélection
+    let newSelectionFnId = null;
+    if (flights.value.length > 0) {
+      // Si on a supprimé le dernier élément, on prend le précédent
+      const newIndex = index < flights.value.length ? index : index - 1;
+      if (newIndex >= 0) {
+        newSelectionFnId = flights.value[newIndex].V_ID;
+      }
+    }
+
+    if (newSelectionFnId) {
+      selectedItems.value = [newSelectionFnId];
+      onSelectionChange([newSelectionFnId]);
+    } else {
+      selectedItems.value = [];
+      dataFlight.value = null;
+      decodedTrack.value = null;
+    }
+  }
+
+  snackbarMessage.value = 'Vol supprimé';
+  snackbar.value = true;
+  emit('db-updated');
+}
+
 async function readIgcFromDb(flightId) {
   // Fonction fictive pour lire et analyser le contenu IGC
   if (!databaseStore.hasOpenDatabase) return;
@@ -457,6 +518,7 @@ async function readIgcFromDb(flightId) {
 
   .right-panel {
     gap: 2vw;
+    margin-bottom: 2vw;
   }
 }
 </style>
