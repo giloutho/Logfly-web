@@ -1,15 +1,12 @@
 <template>
-    <v-snackbar v-model="snackbar" :timeout="2000" color="success">
-      {{ snackbarMessage }}
-    </v-snackbar>
+  <v-snackbar v-model="snackbar" :timeout="2000" color="success">
+    {{ snackbarMessage }}
+  </v-snackbar>
   <OpenLogbook :show="true" />
   <div v-if="databaseStore.hasOpenDatabase" class="global-logbook">
     <div class="left-panel">
-      <LittleMapView 
-        v-if="decodedTrack && decodedTrack.GeoJSON" 
-        :geoJson="decodedTrack.GeoJSON" 
-        :scoreJson="scoreJson"
-      />
+      <LittleMapView v-if="decodedTrack && decodedTrack.GeoJSON" :geoJson="decodedTrack.GeoJSON"
+        :scoreJson="scoreJson" />
       <div v-else class="no-track-message">
         <p>Base de données : {{ databaseStore.dbName }}</p>
         <p>Sélectionnez un vol pour afficher la trace</p>
@@ -17,41 +14,18 @@
     </div>
     <div class="right-panel">
       <div class="top-block">
-        <v-text-field
-          v-model="search"
-          :label="$gettext('Search')"
-          prepend-inner-icon="mdi-magnify"
-          single-line
-          hide-details
-          clearable
-          density="compact"
-          variant="outlined"
-        ></v-text-field>
+        <v-text-field v-model="search" :label="$gettext('Search')" prepend-inner-icon="mdi-magnify" single-line
+          hide-details clearable density="compact" variant="outlined"></v-text-field>
       </div>
-      <div class="table-block">        
-        <v-data-table
-          v-model="selectedItems"
-          :headers="headers"
-          :items="flights"
-          :search="search"
-          item-value="V_ID"
-          density="compact"
-          class="flights-table"
-          v-model:page="page"
-          v-model:items-per-page="itemsPerPage"
-          @update:model-value="onSelectionChange"
-          @update:current-items="onFilteredItemsUpdate"
-        >
+      <div class="table-block">
+        <v-data-table v-model="selectedItems" :headers="headers" :items="flights" :search="search" item-value="V_ID"
+          density="compact" class="flights-table" v-model:page="page" v-model:items-per-page="itemsPerPage"
+          @update:model-value="onSelectionChange" @update:current-items="onFilteredItemsUpdate">
           <template v-slot:item="{ item, index, props }">
-            <tr
-              v-bind="props"
-              :class="{
-                'selected-row': selectedItems.includes(item.V_ID),
-                'has-comment': item.V_Commentaire
-              }"
-              @click="selectedItems = [item.V_ID]; onSelectionChange([item.V_ID])"
-              style="cursor:pointer;"
-            >
+            <tr v-bind="props" :class="{
+              'selected-row': selectedItems.includes(item.V_ID),
+              'has-comment': item.V_Commentaire
+            }" @click="selectedItems = [item.V_ID]; onSelectionChange([item.V_ID])" style="cursor:pointer;">
               <td class="col-photo">
                 <v-icon v-if="item.Photo === 'Yes'" size="small" color="primary">mdi-camera</v-icon>
               </td>
@@ -68,24 +42,14 @@
           -->
           <template v-slot:bottom>
             <div class="custom-pagination">
-              <v-pagination
-                v-model="page"
-                :length="pageCount"
-                :total-visible="7"
-                size="small"
-              ></v-pagination>
+              <v-pagination v-model="page" :length="pageCount" :total-visible="7" size="small"></v-pagination>
             </div>
           </template>
         </v-data-table>
       </div>
       <div class="bottom-block">
-        <LogbookDetails 
-          v-if="dataFlight" 
-          :trackData="dataFlight" 
-          @update:scoreJson="scoreJson = $event"
-          @update:comment="onCommentUpdate"
-          @update:glider="onGliderUpdate"
-        />
+        <LogbookDetails v-if="dataFlight" :trackData="dataFlight" @update:scoreJson="scoreJson = $event"
+          @update:comment="onCommentUpdate" @update:glider="onGliderUpdate" @update:site="onSiteUpdate" />
         <div v-else class="no-track-message">
           <p>Sélectionnez un vol pour afficher les détails</p>
         </div>
@@ -134,7 +98,7 @@ const pageCount = computed(() => {
 // le filtre de recherche sur flights.value.
 const filteredFlights = computed(() => {
   if (!search.value) return flights.value;
-  
+
   const searchLower = search.value.toLowerCase();
   return flights.value.filter(flight => {
     return Object.values(flight).some(value => {
@@ -145,8 +109,8 @@ const filteredFlights = computed(() => {
 });
 
 const headers = [
-  { title: '', key: 'Photo', sortable: false},
-  { title: 'Tag', key: 'V_Tag'},
+  { title: '', key: 'Photo', sortable: false },
+  { title: 'Tag', key: 'V_Tag' },
   { title: 'Date', key: 'Day' },
   { title: 'Heure', key: 'Hour' },
   { title: 'Durée', key: 'Duree' },
@@ -177,7 +141,7 @@ function loadFlights() {
 
     // Sélectionner la première ligne de la première page
     selectFirstVisibleRow();
-    
+
   } else {
     console.error('Erreur lors du chargement des vols:', result.message);
   }
@@ -193,9 +157,9 @@ function onFilteredItemsUpdate(items) {
   // items contient uniquement les items de la page actuelle
   // Pour obtenir tous les items filtrés, utiliser filteredFlights.value
   filteredCount.value = filteredFlights.value.length;
-//  console.log('Nombre total de lignes filtrées:', filteredFlights.value.length);
-//  console.log('Duree:', filteredFlights.value[0]?.V_Duree);
- // console.log('Items de la page actuelle:', items.length);  uniquement la page affichée
+  //  console.log('Nombre total de lignes filtrées:', filteredFlights.value.length);
+  //  console.log('Duree:', filteredFlights.value[0]?.V_Duree);
+  // console.log('Items de la page actuelle:', items.length);  uniquement la page affichée
 }
 
 function selectFirstVisibleRow() {
@@ -228,7 +192,7 @@ function onCommentUpdate({ id, comment }) {
   const flightId = id || null;
   if (!flightId) return;
   // Mise à jour en base
-  const req = `UPDATE Vol SET V_Commentaire = '${comment}' WHERE V_ID = ${flightId}`;
+  const req = `UPDATE Vol SET V_Commentaire = "${comment}" WHERE V_ID = ${flightId}`;
   const result = databaseStore.query(req);
   if (!result.success) {
     console.error('Erreur lors de la mise à jour du commentaire:', result.message);
@@ -277,10 +241,36 @@ function onGliderUpdate({ id, glider }) {
   emit('db-updated');
 }
 
+// Met à jour le site (V_Site) en base, dans flights, et dans dataFlight
+function onSiteUpdate({ id, site }) {
+  const flightId = id || dataFlight.value?.decodedIgc?.info?.id || selectedItems.value[0];
+  if (!flightId) return;
+  const req = `UPDATE Vol SET V_Site = '${site}' WHERE V_ID = ${flightId}`;
+  const result = databaseStore.query(req);
+  if (!result.success) {
+    snackbarMessage.value = 'Erreur lors de la mise à jour du site';
+    snackbar.value = true;
+    return;
+  }
+  // Mise à jour dans flights
+  const idx = flights.value.findIndex(f => f.V_ID === flightId);
+  if (idx !== -1) {
+    flights.value[idx].V_Site = site;
+  }
+  // Mise à jour dans dataFlight
+  if (dataFlight.value) {
+    dataFlight.value.site = site;
+  }
+  snackbarMessage.value = 'Site modifié';
+  snackbar.value = true;
+  // Signale au parent qu'une modification a eu lieu
+  emit('db-updated');
+}
+
 async function readIgcFromDb(flightId) {
   // Fonction fictive pour lire et analyser le contenu IGC
   if (!databaseStore.hasOpenDatabase) return;
-  const reqSQL =`SELECT V_IGC, strftime('%d-%m-%Y',V_date) AS Day, V_Site, V_Engin, V_Commentaire, V_sDuree FROM Vol WHERE V_ID = ${flightId}`;
+  const reqSQL = `SELECT V_IGC, strftime('%d-%m-%Y',V_date) AS Day, V_Site, V_Engin, V_Commentaire, V_sDuree FROM Vol WHERE V_ID = ${flightId}`;
   const result = databaseStore.query(reqSQL);
 
   if (result.success && result.data && result.data[0]) {
@@ -307,7 +297,7 @@ async function readIgcFromDb(flightId) {
           decodedIgc: decodedTrack.value
         }
       }
-    }    
+    }
   } else {
     console.error('Erreur lors du chargement des vols:', result.message);
   }
@@ -395,21 +385,42 @@ async function readIgcFromDb(flightId) {
   padding-bottom: 1px !important;
 }
 
-.col-photo   { width: 7% !important; }
-.col-tag     { width: 2% !important; }
-.col-day     { width: 17% !important; }
-.col-hour    { width: 7% !important; }
-.col-duree   { width: 8% !important; }
-.col-site    { width: 30% !important; }
-.col-engin   { width: 24% !important; }
+.col-photo {
+  width: 7% !important;
+}
+
+.col-tag {
+  width: 2% !important;
+}
+
+.col-day {
+  width: 17% !important;
+}
+
+.col-hour {
+  width: 7% !important;
+}
+
+.col-duree {
+  width: 8% !important;
+}
+
+.col-site {
+  width: 30% !important;
+}
+
+.col-engin {
+  width: 24% !important;
+}
 
 .selected-row {
-  background-color: #1867C0!important;
+  background-color: #1867C0 !important;
   color: white;
 }
 
 .has-comment {
-  color: #fbb104 !important; /* bleu Vuetify, à ajuster si besoin */
+  color: #fbb104 !important;
+  /* bleu Vuetify, à ajuster si besoin */
   font-weight: 600;
 }
 
@@ -436,12 +447,14 @@ async function readIgcFromDb(flightId) {
     height: auto;
     padding: 2vw 1vw;
   }
+
   .left-panel,
   .right-panel {
     width: 100%;
     height: auto;
     margin-bottom: 2vw;
   }
+
   .right-panel {
     gap: 2vw;
   }
