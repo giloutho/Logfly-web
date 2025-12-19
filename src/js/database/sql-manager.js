@@ -71,3 +71,64 @@ export async function readSqliteFile(file) {
     reader.readAsArrayBuffer(file)
   })
 }
+
+/**
+ * Insère une ligne dans une table de la base de données
+ * @param {Object} db - Instance de la base de données SQL.js
+ * @param {string} tableName - Nom de la table
+ * @param {Object} params - Objet contenant les colonnes et valeurs à insérer
+ * @returns {Object} Résultat de l'insertion {success, lastInsertId, changes, message}
+ * 
+ * @example
+ * insertIntoDatabase(db, 'Site', {
+ *   S_CP: '***',
+ *   S_Type: 'D',
+ *   S_Maj: '2025-12-18',
+ *   S_Alti: 500
+ * })
+ */
+export function insertIntoDatabase(db, tableName, params) {
+  if (!db) {
+    return { success: false, message: 'Database not open' }
+  }
+  
+  if (!params || Object.keys(params).length === 0) {
+    return { success: false, message: 'No parameters provided' }
+  }
+  
+  try {
+    // Extraire les colonnes et les valeurs
+    const columns = Object.keys(params)
+    const values = Object.values(params)
+    
+    // Construire la requête SQL
+    const columnsStr = columns.join(', ')
+    const placeholders = columns.map(() => '?').join(', ')
+    const sql = `INSERT INTO ${tableName} (${columnsStr}) VALUES (${placeholders})`
+    
+    // Préparer et exécuter la requête
+    const stmt = db.prepare(sql)
+    stmt.run(values)
+    stmt.free()
+    
+    // Récupérer l'ID du dernier enregistrement inséré
+    const lastIdStmt = db.prepare('SELECT last_insert_rowid() as id')
+    lastIdStmt.step()
+    const result = lastIdStmt.getAsObject()
+    const lastInsertId = result.id
+    lastIdStmt.free()
+    
+    return {
+      success: true,
+      lastInsertId: lastInsertId,
+      changes: 1,
+      message: 'Row inserted successfully'
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message,
+      error: error
+    }
+  }
+}
