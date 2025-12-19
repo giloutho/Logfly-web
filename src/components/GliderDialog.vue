@@ -1,24 +1,24 @@
 <template>
   <v-dialog v-model="show" max-width="500">
     <v-card>
-      <v-card-title class="headline">Modifier la voile</v-card-title>
+      <v-card-title class="headline">{{ $gettext('Change glider') }}</v-card-title>
       <v-card-text>
         <div class="dialog-section">
-          <div class="dialog-label">Choisir une voile existante</div>
+          <div class="dialog-label">{{ $gettext('Choose an existing glider') }}</div>
           <v-select
             v-model="selectedGlider"
             :items="gliderList"
-            label="Glider"
+            :label="$gettext('Glider')"
             variant="outlined"
             density="compact"
             clearable
           />
         </div>
         <div class="dialog-section">
-          <div class="dialog-label">Ou nouvelle voile</div>
+          <div class="dialog-label">{{ $gettext('Or new glider') }}</div>
           <v-text-field
             v-model="newGlider"
-            label="Enter new glider name"
+            :label="$gettext('Enter new glider name')"
             variant="outlined"
             density="compact"
             clearable
@@ -26,8 +26,8 @@
         </div>
       </v-card-text>
       <v-card-actions class="justify-end">
-        <v-btn variant="text" @click="onCancel">Cancel</v-btn>
-        <v-btn color="primary" @click="onOk">OK</v-btn>
+        <v-btn variant="text" @click="onCancel">{{ $gettext('Cancel') }}</v-btn>
+        <v-btn color="primary" @click="onOk">{{ $gettext('OK') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -35,6 +35,9 @@
 
 <script setup>
 import { ref, watch, computed } from 'vue';
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 const props = defineProps({
   modelValue: Boolean,
