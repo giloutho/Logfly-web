@@ -6,6 +6,7 @@
 import { onMounted, onBeforeUnmount, watch } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import { baseMaps, osm } from '@/js/leaflet/tiles.js'
 
 const props = defineProps({
     geoJson: {
@@ -23,6 +24,7 @@ const emit = defineEmits(['map-ready', 'hover-point'])
 let map = null
 let geoLayer = null
 let hoverMarker = null
+let resizeObserver = null
 
 onMounted(() => {
     map = L.map('map', {
@@ -33,9 +35,27 @@ onMounted(() => {
         position: 'topright'
     }).addTo(map)
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map)
+    // Create fresh instances of layers to avoid singleton conflicts with LittleMapView
+    const localBaseMaps = {}
+    for (const [key, layer] of Object.entries(baseMaps)) {
+        localBaseMaps[key] = L.tileLayer(layer._url, layer.options)
+    }
+
+    // Add default layer (OpenStreetMap)
+    if (localBaseMaps['OpenStreetMap']) {
+        localBaseMaps['OpenStreetMap'].addTo(map)
+    }
+
+    L.control.layers(localBaseMaps, null, { collapsed: false }).addTo(map)
+
+    // Utilisation d'un ResizeObserver pour gérer proprement le redimensionnement
+    // notamment lors de l'ouverture dans une modale
+    resizeObserver = new ResizeObserver(() => {
+        if (map) {
+            map.invalidateSize()
+        }
+    })
+    resizeObserver.observe(document.getElementById('map'))
 
     if (props.geoJson) {
         displayGeoJson(props.geoJson)
@@ -91,6 +111,9 @@ defineExpose({
 })
 
 onBeforeUnmount(() => {
+    if (resizeObserver) {
+        resizeObserver.disconnect()
+    }
     if (map) {
         map.remove()
         map = null

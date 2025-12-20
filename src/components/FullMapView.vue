@@ -33,8 +33,8 @@
             </div>
 
             <div class="graph-section">
-                <GraphUplot v-if="flightData?.decodedIgc?.fixes" :fixes="flightData?.decodedIgc?.fixes" :height="150"
-                    @cursor-changed="onGraphCursorChanged" />
+                <GraphUplot v-if="flightData?.decodedIgc?.fixes" :fixes="flightData?.decodedIgc?.fixes"
+                    :groundAltitudes="groundAltitudes" :height="150" @cursor-changed="onGraphCursorChanged" />
             </div>
         </div>
 
@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import MapLeaflet from './MapLeaflet.vue'
 import GraphUplot from './GraphUplot.vue'
 import TraceInfoDialog from './TraceInfoDialog.vue'
@@ -60,6 +60,7 @@ import AirspaceDialog from './AirspaceDialog.vue'
 import ScoreDialog from './ScoreDialog.vue'
 import CuttingDialog from './CuttingDialog.vue'
 import { igcScoring } from '@/js/igc/igc-scoring.js'
+import { getAltitudesForPoints } from '@/utils/geo/elevation.js'
 
 const props = defineProps({
     flightData: {
@@ -78,6 +79,7 @@ const cuttingDialog = ref(false)
 
 const mapLeaflet = ref(null)
 const hoverInfo = ref('')
+const groundAltitudes = ref(null)
 
 const scores = [
     'FFVL',
@@ -101,6 +103,38 @@ const flightInfo = computed(() => {
 // Function to pass to ScoreDialog
 const scoringFn = igcScoring
 
+onMounted(() => {
+    if (props.flightData?.decodedIgc?.fixes) {
+        loadGroundAltitudes()
+    }
+})
+
+async function loadGroundAltitudes() {
+    // Check if we already have it in props
+    if (props.flightData.anaTrack?.elevation && props.flightData.anaTrack.elevation.length > 0) {
+        groundAltitudes.value = props.flightData.anaTrack.elevation
+        return
+    }
+
+    const fixes = props.flightData.decodedIgc.fixes
+    console.log('Chargement des altitudes sol...', fixes.length, 'points')
+
+    try {
+        const altitudes = await getAltitudesForPoints(fixes)
+        if (altitudes) {
+            groundAltitudes.value = altitudes
+            console.log('Altitudes sol chargées')
+            // Optionnel : mettre à jour l'objet source si on veut le conserver pour cette session
+            if (props.flightData.anaTrack) {
+                props.flightData.anaTrack.elevation = altitudes
+            }
+        }
+    } catch (e) {
+        console.error("Erreur chargement altitudes sol", e)
+    }
+}
+
+
 function onMapReady(mapInstance) {
     // Determine what to do with map instance if needed
 }
@@ -114,13 +148,26 @@ function measureTool() {
 
 function onGraphCursorChanged(data) {
     // Update Hover Info
-    const hground = 'N/A' // Need ground altitude logic
+    // const hground = 'N/A' // Need ground altitude logic
+    // Ground altitude is passed via data now if graph updated OR we look it up here via index
+
+    // GraphUplot updates the event with ground altitude if available? 
+    // Wait, GraphUplot emits simplified data. 
+    // Let's rely on GraphUplot to pass back the data corresponding to the index, OR look into groundAltitudes.value[index]
+
+    const index = data.index
+    let groundAlt = 'N/A'
+    if (groundAltitudes.value && groundAltitudes.value[index] != null) {
+        groundAlt = groundAltitudes.value[index].toFixed(0)
+    }
 
     // Simple HTML formatting mimicking the reference
     hoverInfo.value = `
         <span style="color:#1a6dcc;font-weight:bold;">🕒 ${new Date(data.timestamp).toLocaleTimeString()}</span>
         &nbsp;|&nbsp;
         <span style="color:#1976d2;">⛰️ ${data.altitude.toFixed(0)} m</span>
+        &nbsp;|&nbsp;
+        <span style="color:#5d4037;">⛰️ Sol ${groundAlt} m</span>
         &nbsp;|&nbsp;
         <span style="color:#388e3c;">⬇️ ${data.vario.toFixed(2)} m/s</span>
         &nbsp;|&nbsp;

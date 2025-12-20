@@ -12,6 +12,10 @@ const props = defineProps({
         type: Array,
         required: true
     },
+    groundAltitudes: {
+        type: Array,
+        default: null
+    },
     height: {
         type: Number,
         default: 150
@@ -39,6 +43,17 @@ watch(() => props.fixes, (val) => {
     }
 })
 
+watch(() => props.groundAltitudes, (val) => {
+    // Recreate chart if ground altitudes arrive later
+    if (props.fixes && props.fixes.length > 0) {
+        if (uplotInstance) {
+            uplotInstance.destroy()
+            uplotInstance = null
+        }
+        createChart()
+    }
+})
+
 function createChart() {
     if (!chartContainer.value) return
 
@@ -47,12 +62,22 @@ function createChart() {
     const altitudes = []
     const speeds = []
     const varios = []
+    // Add ground
+    const ground = []
 
     const startTime = fixes[0].timestamp / 1000
 
     for (let i = 0; i < fixes.length; i++) {
         timestamps.push((fixes[i].timestamp / 1000) - startTime)
         altitudes.push(fixes[i].gpsAltitude || 0)
+
+        if (props.groundAltitudes && props.groundAltitudes[i] != null) {
+            ground.push(props.groundAltitudes[i])
+        } else {
+            // Fill with null or 0 if missing, strictly uplot prefers same length arrays
+            ground.push(null)
+        }
+
         if (i > 0) {
             const dt = (fixes[i].timestamp - fixes[i - 1].timestamp) / 1000
             if (dt > 0) {
@@ -74,6 +99,12 @@ function createChart() {
     }
 
     const data = [timestamps, altitudes]
+    // Add ground series data
+    // Only add if we have some valid ground data? Or always add to keep structure consistent?
+    // Let's add it if props.groundAltitudes is present
+    if (props.groundAltitudes) {
+        data.push(ground)
+    }
 
     const series = [
         { label: 'Temps (s)' },
@@ -84,6 +115,16 @@ function createChart() {
             fill: 'rgba(25, 118, 210, 0.1)'
         }
     ]
+
+    if (props.groundAltitudes) {
+        series.push({
+            label: 'Sol (m)',
+            stroke: '#5d4037', // Brownish
+            width: 1,
+            fill: 'rgba(93, 64, 55, 0.3)',
+            points: { show: false }
+        })
+    }
 
     const opts = {
         width: chartContainer.value.offsetWidth,
