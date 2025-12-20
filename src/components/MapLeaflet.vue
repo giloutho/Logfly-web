@@ -1,0 +1,107 @@
+<template>
+    <div id="map" class="map-container"></div>
+</template>
+
+<script setup>
+import { onMounted, onBeforeUnmount, watch } from 'vue'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+
+const props = defineProps({
+    geoJson: {
+        type: Object,
+        default: null
+    },
+    fixes: {
+        type: Array,
+        default: null
+    }
+})
+
+const emit = defineEmits(['map-ready', 'hover-point'])
+
+let map = null
+let geoLayer = null
+let hoverMarker = null
+
+onMounted(() => {
+    map = L.map('map', {
+        zoomControl: false // Position zoom control later if needed or let default
+    }).setView([46, 2], 6)
+
+    L.control.zoom({
+        position: 'topright'
+    }).addTo(map)
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map)
+
+    if (props.geoJson) {
+        displayGeoJson(props.geoJson)
+    }
+
+    emit('map-ready', map)
+})
+
+watch(() => props.geoJson, (val) => {
+    if (val && map) {
+        displayGeoJson(val)
+    }
+})
+
+function displayGeoJson(geoJson) {
+    if (geoLayer) {
+        map.removeLayer(geoLayer)
+    }
+
+    geoLayer = L.geoJSON(geoJson, {
+        style: {
+            color: '#0033ff',
+            weight: 3,
+            opacity: 0.8
+        }
+    }).addTo(map)
+
+    const bounds = geoLayer.getBounds()
+    if (bounds.isValid()) {
+        map.fitBounds(bounds, { padding: [50, 50] })
+    }
+}
+
+// Expose method to syncing hover from graph
+function setHoverPoint(lat, lon) {
+    if (!map) return
+
+    if (!hoverMarker) {
+        hoverMarker = L.circleMarker([lat, lon], {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            radius: 5
+        }).addTo(map)
+    } else {
+        hoverMarker.setLatLng([lat, lon])
+    }
+}
+
+defineExpose({
+    setHoverPoint,
+    map // Expose map instance if parent needs direct access
+})
+
+onBeforeUnmount(() => {
+    if (map) {
+        map.remove()
+        map = null
+    }
+})
+</script>
+
+<style scoped>
+.map-container {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+</style>

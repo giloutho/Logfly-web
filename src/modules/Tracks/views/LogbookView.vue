@@ -86,6 +86,10 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="showFullMap" fullscreen transition="dialog-bottom-transition">
+      <FullMapView v-if="dataFlight" :flightData="dataFlight" @close="showFullMap = false" />
+    </v-dialog>
   </div>
 </template>
 
@@ -96,6 +100,7 @@ import { useGettext } from "vue3-gettext";
 import OpenLogbook from '@/components/OpenLogbook.vue';
 import LittleMapView from '@/components/LittleMapView.vue';
 import LogbookDetails from '@/components/LogbookDetails.vue';
+import FullMapView from '@/components/FullMapView.vue';
 import { useDatabaseStore } from '@/stores/database';
 import { igcDecoding } from '@/js/igc/igc-decoder.js';
 import { IgcAnalyze } from '@/js/igc/igc-analyzer.js';
@@ -119,6 +124,7 @@ const scoreJson = ref(null);
 const snackbar = ref(false);
 const snackbarMessage = ref('');
 const showPhotoViewer = ref(false);
+const showFullMap = ref(false);
 const photoUrl = ref(null);
 const photoTitle = ref('');
 
@@ -415,8 +421,7 @@ function onPhotoUpdate({ id, photoData }) {
 function onOpenFullMap() {
   console.log('Open Full Map requested');
   if (dataFlight.value) {
-    console.log('Flight data available:', dataFlight.value);
-    // Future implementation of FullMapView will use dataFlight.value
+    showFullMap.value = true;
   }
 }
 
