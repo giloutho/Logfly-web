@@ -96,7 +96,6 @@ watch(() => props.scoreJson, (newScoreJson) => {
 });
 
 function displayGeoJson(geoJson) {
-  console.log('displayGeoJson appelé');
 
   // Supprimer la couche précédente de la trace si elle existe
   if (geoJsonLayer) {
@@ -163,10 +162,6 @@ function displayScoreJson(scoreJson) {
       }
     }).addTo(map);
 
-    console.log('ScoreLayer ajouté avec succès');
-    console.log('ScoreLayer bounds:', scoreLayer.getBounds());
-    console.log('ScoreLayer getLayers():', scoreLayer.getLayers().length, 'layers');
-
     // Adapter la vue pour afficher toute la trace et le scoring
     fitBoundsToAllLayers();
   } catch (error) {
@@ -184,25 +179,19 @@ function fitBoundsToAllLayers() {
       if (geoBounds.isValid()) {
         bounds.extend(geoBounds);
         hasBounds = true;
-        console.log('GeoBounds ajoutés');
       }
     }
 
     if (scoreLayer) {
       const scoreBounds = scoreLayer.getBounds();
-      console.log('ScoreBounds:', scoreBounds, 'isValid:', scoreBounds.isValid());
       if (scoreBounds.isValid()) {
         bounds.extend(scoreBounds);
         hasBounds = true;
-        console.log('ScoreBounds ajoutés');
       }
     }
 
-    console.log('Final bounds:', bounds, 'hasBounds:', hasBounds, 'isValid:', bounds.isValid());
-
     if (hasBounds && bounds.isValid()) {
       map.fitBounds(bounds, { padding: [20, 20] });
-      console.log('fitBounds appliqué');
     }
   } catch (error) {
     console.error('Erreur lors de fitBounds:', error);

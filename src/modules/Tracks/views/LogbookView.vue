@@ -419,7 +419,6 @@ function onPhotoUpdate({ id, photoData }) {
 
 
 function onOpenFullMap() {
-  console.log('Open Full Map requested');
   if (dataFlight.value) {
     showFullMap.value = true;
   }
