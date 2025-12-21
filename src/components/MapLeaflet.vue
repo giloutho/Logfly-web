@@ -25,6 +25,7 @@ let map = null
 let geoLayer = null
 let hoverMarker = null
 let resizeObserver = null
+let layerControl = null
 
 onMounted(() => {
     map = L.map('map', {
@@ -46,7 +47,7 @@ onMounted(() => {
         localBaseMaps['OpenStreetMap'].addTo(map)
     }
 
-    L.control.layers(localBaseMaps, null, { collapsed: false }).addTo(map)
+    layerControl = L.control.layers(localBaseMaps, null, { collapsed: false }).addTo(map)
 
     // Utilisation d'un ResizeObserver pour gérer proprement le redimensionnement
     // notamment lors de l'ouverture dans une modale
@@ -105,9 +106,52 @@ function setHoverPoint(lat, lon) {
     }
 }
 
+
+let airspaceLayer = null
+
+function displayAirspaceLayer(geojson) {
+    if (airspaceLayer) {
+        map.removeLayer(airspaceLayer)
+        if (layerControl) {
+            layerControl.removeLayer(airspaceLayer)
+        }
+    }
+
+    if (!geojson || geojson.length === 0) return
+
+    airspaceLayer = L.geoJSON(geojson, {
+        style: (feature) => {
+            return {
+                color: feature.properties.Color || '#808080',
+                weight: 2,
+                opacity: 0.6,
+                fillOpacity: 0.1
+            }
+        },
+        onEachFeature: (feature, layer) => {
+            const props = feature.properties
+            const content = `<b>${props.Name}</b><br>
+                              Class: ${props.Class}<br>
+                              Type: ${props.type}<br>
+                              Floor: ${props.FloorLabel}<br>
+                              Ceiling: ${props.CeilingLabel}`
+            layer.bindPopup(content)
+        }
+    }).addTo(map)
+
+    // Add to layer control if we had access to it, but 'L.control.layers' returns the control
+    // We didn't store the control instance in a variable. Let's fix that.
+    if (layerControl) {
+        layerControl.addOverlay(airspaceLayer, 'OpenAIP')
+    }
+}
+
+// ... existing setHoverPoint
+
 defineExpose({
     setHoverPoint,
-    map // Expose map instance if parent needs direct access
+    displayAirspaceLayer,
+    map
 })
 
 onBeforeUnmount(() => {

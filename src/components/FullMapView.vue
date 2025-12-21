@@ -42,7 +42,8 @@
         <TraceInfoDialog v-model="infoDialog" :trackData="flightInfo" :anaResult="flightData?.anaTrack"
             :decodedData="flightData?.decodedIgc" />
         <ChronoView v-model="chronoDialog" />
-        <AirspaceDialog v-model="airspaceDialog" :decodedData="flightData?.decodedIgc?.data" />
+        <AirspaceDialog v-model="airspaceDialog" :decodedData="flightData?.decodedIgc"
+            @display-airspaces="onDisplayAirspaces" />
         <ScoreDialog v-model="scoreDialog" :scores="scores" :fixes="flightData?.decodedIgc?.fixes || []"
             :date="flightData?.decodedIgc?.info?.date || ''" :scoringFn="scoringFn" />
         <CuttingDialog v-model="cuttingDialog" />
@@ -137,6 +138,12 @@ async function loadGroundAltitudes() {
 
 function onMapReady(mapInstance) {
     // Determine what to do with map instance if needed
+}
+
+function onDisplayAirspaces(geojson) {
+    if (mapLeaflet.value) {
+        mapLeaflet.value.displayAirspaceLayer(geojson)
+    }
 }
 
 function measureTool() {
