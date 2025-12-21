@@ -61,7 +61,7 @@ import AirspaceDialog from './AirspaceDialog.vue'
 import ScoreDialog from './ScoreDialog.vue'
 import CuttingDialog from './CuttingDialog.vue'
 import { igcScoring } from '@/js/igc/igc-scoring.js'
-import { getAltitudesForPoints } from '@/utils/geo/elevation.js'
+import { getAltitudesForPoints } from '@/js/geo/elevation.js'
 
 const props = defineProps({
     flightData: {
@@ -118,13 +118,12 @@ async function loadGroundAltitudes() {
     }
 
     const fixes = props.flightData.decodedIgc.fixes
-    console.log('Chargement des altitudes sol...', fixes.length, 'points')
 
     try {
         const altitudes = await getAltitudesForPoints(fixes)
         if (altitudes) {
             groundAltitudes.value = altitudes
-            console.log('Altitudes sol chargées')
+            // console.log('Altitudes sol chargées')
             // Optionnel : mettre à jour l'objet source si on veut le conserver pour cette session
             if (props.flightData.anaTrack) {
                 props.flightData.anaTrack.elevation = altitudes

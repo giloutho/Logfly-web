@@ -75,8 +75,8 @@ async function getAltitude(lat, lon, zoom = 14) {
  * 4. Lit les altitudes
  */
 async function getAltitudesForPoints(points, zoom = 14) {
-    console.time('AltitudesTotal');
-    console.log(`Traitement de ${points.length} points...`);
+    //console.time('AltitudesTotal');
+    //console.log(`Traitement de ${points.length} points...`);
 
     // Étape 1: Grouper les points par tuile
     const pointsByTile = new Map(); // Key: "z/x/y" -> { points: [], ... }
@@ -101,7 +101,7 @@ async function getAltitudesForPoints(points, zoom = 14) {
         });
     });
 
-    console.log(`${pointsByTile.size} tuiles uniques pour ${points.length} points.`);
+    //console.log(`${pointsByTile.size} tuiles uniques pour ${points.length} points.`);
 
     // Étape 2: Récupération et Décodage des tuiles
     // On conserve un cache des données DECODEES (pixels) localement à cette fonction ou globalement
@@ -153,7 +153,7 @@ async function getAltitudesForPoints(points, zoom = 14) {
         }
     }
 
-    console.timeEnd('AltitudesTotal');
+    //  console.timeEnd('AltitudesTotal');
     return results;
 }
 

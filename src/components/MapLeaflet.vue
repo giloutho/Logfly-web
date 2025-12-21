@@ -119,13 +119,18 @@ function displayAirspaceLayer(geojson) {
 
     if (!geojson || geojson.length === 0) return
 
+    // Use Canvas renderer for better performance and to avoid SVG clipping issues
+    // with large polygons. Increase padding to ensure rendering at edges.
+    const canvasRenderer = L.canvas({ padding: 0.5 });
+
     airspaceLayer = L.geoJSON(geojson, {
+        renderer: canvasRenderer,
         style: (feature) => {
             return {
                 color: feature.properties.Color || '#808080',
                 weight: 2,
-                opacity: 0.6,
-                fillOpacity: 0.1
+                opacity: 0.8,
+                fillOpacity: 0.4
             }
         },
         onEachFeature: (feature, layer) => {
