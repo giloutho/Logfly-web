@@ -4,7 +4,7 @@
         <div class="toolbar-row">
             <div class="toolbar-left">
                 <v-btn class="toolbar-btn" @click="infoDialog = true">Infos</v-btn>
-                <v-btn class="toolbar-btn" @click="chronoDialog = true">Chronologie</v-btn>
+                <v-btn class="toolbar-btn" @click="openChrono">Chronologie</v-btn>
                 <v-btn class="toolbar-btn" @click="airspaceDialog = true">Espaces aériens</v-btn>
                 <v-btn class="toolbar-btn" @click="scoreDialog = true">Score</v-btn>
                 <v-btn class="toolbar-btn" @click="measureTool">Mesurer</v-btn>
@@ -41,7 +41,8 @@
         <!-- Dialogs -->
         <TraceInfoDialog v-model="infoDialog" :trackData="flightInfo" :anaResult="flightData?.anaTrack"
             :decodedData="flightData?.decodedIgc" />
-        <ChronoView v-model="chronoDialog" />
+        <ChronoView v-model="chronoDialog" :anaResult="flightData?.anaTrack" @jump-to="onChronoJump"
+            @jump-to-takeoff="onJumpTakeoff" @jump-to-landing="onJumpLanding" />
         <AirspaceDialog v-model="airspaceDialog" :decodedData="flightData?.decodedIgc"
             @display-airspaces="onDisplayAirspaces" />
         <ScoreDialog v-model="scoreDialog" :scores="scores" :fixes="flightData?.decodedIgc?.fixes || []"
@@ -52,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import MapLeaflet from './MapLeaflet.vue'
 import GraphUplot from './GraphUplot.vue'
 import TraceInfoDialog from './TraceInfoDialog.vue'
@@ -110,6 +111,13 @@ onMounted(() => {
     }
 })
 
+watch(() => props.flightData, () => {
+    if (props.flightData?.decodedIgc?.fixes) {
+        loadGroundAltitudes()
+    }
+    loadAnalysisLayers()
+}, { deep: true })
+
 async function loadGroundAltitudes() {
     // Check if we already have it in props
     if (props.flightData.anaTrack?.elevation && props.flightData.anaTrack.elevation.length > 0) {
@@ -136,7 +144,52 @@ async function loadGroundAltitudes() {
 
 
 function onMapReady(mapInstance) {
-    // Determine what to do with map instance if needed
+    // Load extra layers if data available
+    loadAnalysisLayers()
+}
+
+function openChrono() {
+    chronoDialog.value = true
+    if (mapLeaflet.value) {
+        mapLeaflet.value.setAnalysisLayersVisibility(true)
+    }
+}
+
+function loadAnalysisLayers() {
+    if (props.flightData?.anaTrack && mapLeaflet.value) {
+        if (props.flightData.anaTrack.geoThermals) {
+            mapLeaflet.value.displayThermals(props.flightData.anaTrack.geoThermals)
+        }
+        if (props.flightData.anaTrack.geoGlides) {
+            mapLeaflet.value.displayGlides(props.flightData.anaTrack.geoGlides)
+        }
+    }
+}
+
+function onChronoJump(coords) {
+    if (mapLeaflet.value) {
+        mapLeaflet.value.displaySegment(coords)
+    } else {
+        console.error('FullMapView: mapLeaflet ref is missing')
+    }
+}
+
+function onJumpTakeoff() {
+    console.log('FullMapView: onJumpTakeoff')
+    if (mapLeaflet.value && mapLeaflet.value.displayTakeOff) {
+        mapLeaflet.value.displayTakeOff()
+    } else {
+        console.error('FullMapView: mapLeaflet ref is missing or displayTakeOff not defined')
+    }
+}
+
+function onJumpLanding() {
+    console.log('FullMapView: onJumpLanding')
+    if (mapLeaflet.value && mapLeaflet.value.displayLanding) {
+        mapLeaflet.value.displayLanding()
+    } else {
+        console.error('FullMapView: mapLeaflet ref is missing or displayLanding not defined')
+    }
 }
 
 function onDisplayAirspaces(geojson) {
