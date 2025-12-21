@@ -35,5 +35,9 @@ coverage
 # Vitest
 __screenshots__/
 
+# dotenv environment variables file
+.env
+.env.test
+
 # Doc folder
 doc/
