@@ -64,10 +64,11 @@ const displayFields = computed(() => {
 
     if (fixes.length === 0) return []
 
-    const dateTkoff = new Date(fixes[0].timestamp)
+    const offsetUtcMin = info.offsetUTC || 0
+    const dateTkoff = new Date(fixes[0].timestamp + (offsetUtcMin * 60 * 1000))
     const hTkoff = String(dateTkoff.getUTCHours()).padStart(2, '0') + ':' + String(dateTkoff.getUTCMinutes()).padStart(2, '0')
 
-    const dateLand = new Date(fixes[fixes.length - 1].timestamp)
+    const dateLand = new Date(fixes[fixes.length - 1].timestamp + (offsetUtcMin * 60 * 1000))
     const hLand = String(dateLand.getUTCHours()).padStart(2, '0') + ':' + String(dateLand.getUTCMinutes()).padStart(2, '0')
 
     const durationDate = new Date(stat.duration * 1000)

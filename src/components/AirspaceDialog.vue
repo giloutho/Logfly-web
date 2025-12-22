@@ -108,6 +108,7 @@
                         Local file source
                     </v-btn>
                 </div>
+                <input type="file" ref="fileInput" style="display: none" accept=".txt" @change="onLocalFileChange" />
 
             </v-card-text>
             <v-card-actions>
@@ -119,8 +120,9 @@
 </template>
 
 <script setup>
-import { reactive, computed } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { downloadAirspaces, processDecoding, checkTrack } from '@/js/airspaces/airspaces-aip.js'
+import { downloadBazile, checkOpenAir } from '@/js/airspaces/airspaces-open.js'
 
 const props = defineProps({
     modelValue: Boolean,
@@ -129,7 +131,9 @@ const props = defineProps({
     groundAltitudes: Array
 })
 
-const emit = defineEmits(['update:modelValue', 'display-airspaces', 'display-verification'])
+const fileInput = ref(null)
+
+const emit = defineEmits(['update:modelValue', 'display-airspaces', 'display-verification', 'start-progress', 'end-progress'])
 
 // Mapping for Values (matching reference logic)
 // Classes: 0=A...6=G. Reference sends array of integers.
@@ -222,6 +226,84 @@ async function checkSource(source) {
     console.log('Check track with source:', source)
     if (source === 'openaip') {
         await checkOpenAip()
+    } else if (source === 'bazile') {
+        await checkBazile()
+    } else if (source === 'local') {
+        fileInput.value.click()
+    }
+}
+
+async function onLocalFileChange(event) {
+    const file = event.target.files[0]
+    if (!file) return
+
+    console.log('Local file selected:', file.name)
+    emit('start-progress', 'Airspaces checking in progress')
+    const reader = new FileReader()
+    reader.onload = async (e) => {
+        try {
+            const content = e.target.result
+            if (!content) {
+                console.error('Failed to read local file')
+                emit('end-progress')
+                return
+            }
+
+            const track = props.decodedData
+            const ground = props.groundAltitudes
+            const checkResult = await checkOpenAir(content, track, ground)
+
+            if (checkResult.success) {
+                console.log(`Local check complete. Found ${checkResult.insidePoints.length} points inside.`)
+                emit('display-verification', checkResult)
+                emit('update:modelValue', false)
+            } else {
+                console.error(checkResult.message)
+            }
+        } finally {
+            emit('end-progress')
+        }
+    }
+    reader.readAsText(file)
+    // Reset input so change event fires even for same file
+    event.target.value = ''
+}
+
+async function checkBazile() {
+    if (!props.flightData || !props.decodedData || !props.decodedData.fixes || !props.groundAltitudes) {
+        console.error("Missing flight data or ground altitudes for checking")
+        return
+    }
+
+    try {
+        // Provide feedback on start? (Optional, handled by console logs or future UI feedback)
+        console.log('Starting Bazile verification...')
+        emit('start-progress', 'Airspaces checking in progress')
+        const dlResult = await downloadBazile()
+
+        if (dlResult.success) {
+            console.log('Bazile file downloaded. Size:', dlResult.content.length)
+            // Check
+            const track = props.decodedData
+            const ground = props.groundAltitudes
+
+            // Note: checkOpenAir is async
+            const checkResult = await checkOpenAir(dlResult.content, track, ground)
+
+            if (checkResult.success) {
+                console.log(`Check complete. Found ${checkResult.insidePoints.length} points inside.`)
+                emit('display-verification', checkResult)
+                emit('update:modelValue', false)
+            } else {
+                console.error(checkResult.message)
+            }
+        } else {
+            console.error(dlResult.message)
+        }
+    } catch (e) {
+        console.error('Error checking bazile:', e)
+    } finally {
+        emit('end-progress')
     }
 }
 

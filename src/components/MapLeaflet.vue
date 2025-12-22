@@ -285,7 +285,6 @@ function displayVerification(checkResult, fixes) {
     // 1. Display airspaces in red
     if (checkResult.airGeoJson && checkResult.airGeoJson.length > 0) {
         const airspaceLayer = L.geoJSON(checkResult.airGeoJson, {
-            renderer: mainCanvas,
             style: {
                 color: '#ff0000',
                 weight: 2,
@@ -301,6 +300,7 @@ function displayVerification(checkResult, fixes) {
                 popupContent += `Floor: ${feature.properties.FloorLabel}<br>`
                 popupContent += `Ceiling: ${feature.properties.CeilingLabel}`
                 if (feature.properties.AltLimit_Bottom_AGL) popupContent += ' (AGL)'
+                console.log('Nom espace ', feature.properties.Name)
                 layer.bindPopup(popupContent)
             }
         })
@@ -351,7 +351,7 @@ function updateVerificationTooltip(checkResult) {
         verificationTooltip = null
     }
 
-    if (!checkResult || !checkResult.airGeoJson || checkResult.airGeoJson.length === 0) return
+    if (!checkResult) return
 
     const TooltipControl = L.Control.extend({
         onAdd: function (map) {
@@ -380,28 +380,32 @@ function updateVerificationTooltip(checkResult) {
             header.style.padding = '4px'
 
             const list = L.DomUtil.create('div', '', div)
-            checkResult.airGeoJson.forEach(f => {
-                const item = L.DomUtil.create('div', '', list)
-                item.innerHTML = f.properties.Name
-                item.style.fontSize = '12px'
-                item.style.marginBottom = '2px'
-            })
+            if (checkResult.airGeoJson && checkResult.airGeoJson.length > 0) {
+                checkResult.airGeoJson.forEach(f => {
+                    const item = L.DomUtil.create('div', '', list)
+                    item.innerHTML = f.properties.Name
+                    item.style.fontSize = '12px'
+                    item.style.marginBottom = '2px'
+                })
+            }
 
             const summary = L.DomUtil.create('div', '', div)
-            if (checkResult.insidePoints.length > 0) {
+            if (checkResult.insidePoints && checkResult.insidePoints.length > 0) {
                 summary.innerHTML = `<span style="background-color: #ef5350; color: white; padding: 2px 4px; border-radius: 2px;">violation(s) : ${checkResult.insidePoints.length} points</span>`
             } else {
-                summary.innerHTML = `<span style="color: green;">Aucune violation détectée</span>`
+                summary.innerHTML = `<span style="color: green;">Pas de violations dans le fichier d’espaces</span>`
             }
             summary.style.marginTop = '10px'
             summary.style.fontSize = '12px'
             summary.style.fontWeight = 'bold'
 
-            const hint = L.DomUtil.create('div', 'text-grey', div)
-            hint.innerHTML = '<i>Cliquer sur un espace pour afficher la description</i>'
-            hint.style.fontSize = '10px'
-            hint.style.marginTop = '8px'
-            hint.style.color = '#666'
+            if (checkResult.airGeoJson && checkResult.airGeoJson.length > 0) {
+                const hint = L.DomUtil.create('div', 'text-grey', div)
+                hint.innerHTML = '<i>Cliquer sur un espace pour afficher la description</i>'
+                hint.style.fontSize = '10px'
+                hint.style.marginTop = '8px'
+                hint.style.color = '#666'
+            }
 
             return div
         }

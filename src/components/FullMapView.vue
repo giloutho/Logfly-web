@@ -45,10 +45,12 @@
             @jump-to-takeoff="onJumpTakeoff" @jump-to-landing="onJumpLanding" />
         <AirspaceDialog v-model="airspaceDialog" :decodedData="flightData?.decodedIgc"
             :flightData="flightData?.decodedIgc" :groundAltitudes="groundAltitudes"
-            @display-airspaces="onDisplayAirspaces" @display-verification="onDisplayVerification" />
+            @display-airspaces="onDisplayAirspaces" @display-verification="onDisplayVerification"
+            @start-progress="onStartProgress" @end-progress="onEndProgress" />
         <ScoreDialog v-model="scoreDialog" :scores="scores" :fixes="flightData?.decodedIgc?.fixes || []"
             :date="flightData?.decodedIgc?.info?.date || ''" :scoringFn="scoringFn" />
         <CuttingDialog v-model="cuttingDialog" />
+        <ProgressDialog v-model="progressDialog" :message="progressMessage" @cancel="onProgressCancel" />
 
     </div>
 </template>
@@ -62,6 +64,8 @@ import ChronoView from './ChronoView.vue'
 import AirspaceDialog from './AirspaceDialog.vue'
 import ScoreDialog from './ScoreDialog.vue'
 import CuttingDialog from './CuttingDialog.vue'
+import ProgressDialog from './ProgressDialog.vue'
+import { interruptCheck } from '@/js/airspaces/airspaces-open.js'
 import { igcScoring } from '@/js/igc/igc-scoring.js'
 import { getAltitudesForPoints } from '@/js/geo/elevation.js'
 
@@ -79,6 +83,8 @@ const chronoDialog = ref(false)
 const airspaceDialog = ref(false)
 const scoreDialog = ref(false)
 const cuttingDialog = ref(false)
+const progressDialog = ref(false)
+const progressMessage = ref('Airspaces checking in progress')
 
 const mapLeaflet = ref(null)
 const hoverInfo = ref('')
@@ -206,6 +212,20 @@ function onDisplayVerification(checkResult) {
     }
 }
 
+function onStartProgress(message) {
+    progressMessage.value = message || 'Airspaces checking in progress'
+    progressDialog.value = true
+}
+
+function onEndProgress() {
+    progressDialog.value = false
+}
+
+function onProgressCancel() {
+    interruptCheck()
+    progressDialog.value = false
+}
+
 function measureTool() {
     // Implement measurement tool toggle logic here
     // checking if leaflet-measure plugin is available/needed
@@ -224,8 +244,10 @@ function onGraphCursorChanged(data) {
 
     const index = data.index
     let groundAlt = 'N/A'
+    let hground = 'N/A'
     if (groundAltitudes.value && groundAltitudes.value[index] != null) {
         groundAlt = groundAltitudes.value[index].toFixed(0)
+        hground = groundAltitudes.value[index] !== undefined && groundAltitudes.value[index] !== null ? (data.altitude - groundAltitudes.value[index]).toFixed(0) : 'N/A';
     }
 
     // Simple HTML formatting mimicking the reference
@@ -234,9 +256,11 @@ function onGraphCursorChanged(data) {
         &nbsp;|&nbsp;
         <span style="color:#1976d2;">⛰️ ${data.altitude.toFixed(0)} m</span>
         &nbsp;|&nbsp;
-        <span style="color:#5d4037;">⛰️ Sol ${groundAlt} m</span>
+        <span style="color:#5d4037;">🟫 Sol ${groundAlt} m</span>
         &nbsp;|&nbsp;
-        <span style="color:#388e3c;">⬇️ ${data.vario.toFixed(2)} m/s</span>
+        <span style="color:#6d4c41;">⬇️ ${hground} m</span>
+        &nbsp;|&nbsp;
+        <span style="color:#388e3c;">↕️ ${data.vario.toFixed(2)} m/s</span>
         &nbsp;|&nbsp;
         <span style="color:#e65100;">➡️ ${data.speed.toFixed(0)} km/h</span>
     `
