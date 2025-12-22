@@ -120,14 +120,16 @@
 
 <script setup>
 import { reactive, computed } from 'vue'
-import { downloadAirspaces, processDecoding } from '@/js/airspaces/airspaces-aip.js'
+import { downloadAirspaces, processDecoding, checkTrack } from '@/js/airspaces/airspaces-aip.js'
 
 const props = defineProps({
     modelValue: Boolean,
-    decodedData: Object
+    decodedData: Object,
+    flightData: Object,
+    groundAltitudes: Array
 })
 
-const emit = defineEmits(['update:modelValue', 'display-airspaces']) // New event for map display
+const emit = defineEmits(['update:modelValue', 'display-airspaces', 'display-verification'])
 
 // Mapping for Values (matching reference logic)
 // Classes: 0=A...6=G. Reference sends array of integers.
@@ -216,9 +218,85 @@ async function displayAirspaces() {
     }
 }
 
-function checkSource(source) {
+async function checkSource(source) {
     console.log('Check track with source:', source)
-    // Implement check logic later
+    if (source === 'openaip') {
+        await checkOpenAip()
+    }
+}
+
+async function checkOpenAip() {
+    if (!props.flightData || !props.decodedData || !props.decodedData.fixes || !props.groundAltitudes) {
+        console.error("Missing flight data or ground altitudes for checking")
+        return
+    }
+
+    const feature = props.decodedData.GeoJSON?.features?.[0]
+    if (!feature) {
+        console.error('No GeoJSON feature found')
+        return
+    }
+
+    // Default filters for checking (all relevant)
+    // Logfly65 uses default: classes all but E? Or maybe specific list.
+    // fullmap-track.js: onCheckOpenAipClicked calls openaip:check with args.
+    // it doesn't seem to pass explicit filters, but ipcmain airspaces-aip.js: checkTrack uses 'filter = true' and 'filterValues'.
+    // Wait, logfly65 ipcmain: `const filter = true // always set to true`
+    // but what are filterValues? Passed from fullmap-track.
+    // fullmap-track.js: `values.radius = radioValues[1]*1000` etc.
+    // It captures CURRENT filter values from UI?
+    // Let's assume we use current UI filters for verification as well, OR defaults.
+    // Usually verification should check against ALL regulations, not filtered ones.
+    // BUT logfly65 `onCheckOpenAipClicked` gets `defaultFilter`...
+    // Let's use the current `filters` reactive object as base, similar to display.
+
+    const selectedClasses = [0, 1, 2, 3, 8]
+    const selectedTypes = ['3', '1', '2']
+
+    const filterValues = {
+        classes: selectedClasses,
+        types: selectedTypes,
+        floor: parseInt(props.decodedData.stat.maxalt.gps || '5000'),
+        radius: 0
+    }
+
+    console.log('Filter values:', filterValues)
+
+    try {
+        const dlResult = await downloadAirspaces(filterValues, feature)
+        if (dlResult.success) {
+            console.log(`Downloaded ${dlResult.airspaces.length} airspaces for checking.`)
+            // Decode with filter=true (passed to processDecoding? checkTrack calls it?)
+            // update: in our port `processDecoding` does decoding. `checkTrack` does checking.
+            // We need to decode first matching the steps in ipcmain airspaces-aip check handler.
+
+            const processed = await processDecoding(dlResult.airspaces, true, filterValues)
+            if (processed.success) {
+                console.log(`Decoded ${processed.geojson.length} airspaces. Checking violations...`)
+
+                // Track object needs to act like logfly65 track object (fixes, stat, GeoJSON)
+                // props.decodedData IS the track object usually.
+                const track = props.decodedData
+                const ground = props.groundAltitudes
+
+                const checkResult = await checkTrack(track, processed.geojson, ground)
+
+                if (checkResult.success) {
+                    console.log(`Check complete. Found ${checkResult.insidePoints.length} points inside.`)
+                    emit('display-verification', checkResult)
+                    emit('update:modelValue', false)
+                } else {
+                    console.error(checkResult.message)
+                }
+            } else {
+                console.error(processed.message)
+            }
+        } else {
+            console.error(dlResult.message)
+        }
+    } catch (e) {
+        console.error('Error checking openaip:', e)
+    }
 }
 </script>
 

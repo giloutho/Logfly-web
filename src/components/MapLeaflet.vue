@@ -31,6 +31,7 @@ let layerControl = null
 let airspaceLayer = null
 let thermalLayer = null
 let glideLayer = null
+let verificationLayer = null
 let startMarker = null
 let endMarker = null
 
@@ -267,6 +268,159 @@ function setAnalysisLayersVisibility(visible) {
     }
 }
 
+function displayVerification(checkResult, fixes) {
+    if (!map) return
+
+    // Clear previous verification layer
+    if (verificationLayer) {
+        map.removeLayer(verificationLayer)
+        if (layerControl) {
+            layerControl.removeLayer(verificationLayer)
+        }
+        verificationLayer = null
+    }
+
+    const verificationGroup = L.layerGroup()
+
+    // 1. Display airspaces in red
+    if (checkResult.airGeoJson && checkResult.airGeoJson.length > 0) {
+        const airspaceLayer = L.geoJSON(checkResult.airGeoJson, {
+            renderer: mainCanvas,
+            style: {
+                color: '#ff0000',
+                weight: 2,
+                opacity: 0.8,
+                fillColor: '#ff0000',
+                fillOpacity: 0.1,
+                interactive: true
+            },
+            onEachFeature: (feature, layer) => {
+                // Simple popup
+                let popupContent = `<b>${feature.properties.Name}</b><br>`
+                popupContent += `Class: ${feature.properties.Class}<br>`
+                popupContent += `Floor: ${feature.properties.FloorLabel}<br>`
+                popupContent += `Ceiling: ${feature.properties.CeilingLabel}`
+                if (feature.properties.AltLimit_Bottom_AGL) popupContent += ' (AGL)'
+                layer.bindPopup(popupContent)
+            }
+        })
+        verificationGroup.addLayer(airspaceLayer)
+    }
+
+    // 2. Highlight violating points
+    if (checkResult.insidePoints && checkResult.insidePoints.length > 0 && fixes) {
+        const points = checkResult.insidePoints.map(idx => {
+            const fix = fixes[idx]
+            return [fix.latitude, fix.longitude]
+        })
+
+        // Use circles for points (better performance than markers if many)
+        const violationPoints = points.map(latlng => {
+            return L.circleMarker(latlng, {
+                radius: 4,
+                fillColor: '#ff9900',
+                color: '#fff',
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            })
+        })
+
+        // Or create a feature group
+        L.featureGroup(violationPoints).addTo(verificationGroup)
+    }
+
+    verificationLayer = verificationGroup
+    verificationLayer.addTo(map)
+
+    if (layerControl) {
+        layerControl.addOverlay(verificationLayer, 'Vérification')
+        // Automatically check the layer
+        map.addLayer(verificationLayer)
+    }
+
+    // 3. Add Summary Tooltip (Control)
+    updateVerificationTooltip(checkResult)
+}
+
+let verificationTooltip = null
+
+function updateVerificationTooltip(checkResult) {
+    if (verificationTooltip) {
+        map.removeControl(verificationTooltip)
+        verificationTooltip = null
+    }
+
+    if (!checkResult || !checkResult.airGeoJson || checkResult.airGeoJson.length === 0) return
+
+    const TooltipControl = L.Control.extend({
+        onAdd: function (map) {
+            const div = L.DomUtil.create('div', 'leaflet-bar verification-tooltip')
+            div.style.backgroundColor = 'white'
+            div.style.padding = '10px'
+            div.style.borderRadius = '4px'
+            div.style.boxShadow = '0 1px 5px rgba(0,0,0,0.4)'
+            div.style.maxWidth = '300px'
+
+            // Close button
+            const closeBtn = L.DomUtil.create('div', 'close-btn', div)
+            closeBtn.innerHTML = '×'
+            closeBtn.style.float = 'right'
+            closeBtn.style.cursor = 'pointer'
+            closeBtn.style.fontSize = '16px'
+            closeBtn.style.fontWeight = 'bold'
+            closeBtn.onclick = () => { map.removeControl(this) }
+
+            const header = L.DomUtil.create('h4', 'text-warning', div)
+            header.innerHTML = 'Espaces aériens concernés'
+            header.style.margin = '0 0 8px 0'
+            header.style.fontSize = '14px'
+            header.style.color = '#fb8c00'
+            header.style.backgroundColor = '#fff3e0'
+            header.style.padding = '4px'
+
+            const list = L.DomUtil.create('div', '', div)
+            checkResult.airGeoJson.forEach(f => {
+                const item = L.DomUtil.create('div', '', list)
+                item.innerHTML = f.properties.Name
+                item.style.fontSize = '12px'
+                item.style.marginBottom = '2px'
+            })
+
+            const summary = L.DomUtil.create('div', '', div)
+            if (checkResult.insidePoints.length > 0) {
+                summary.innerHTML = `<span style="background-color: #ef5350; color: white; padding: 2px 4px; border-radius: 2px;">violation(s) : ${checkResult.insidePoints.length} points</span>`
+            } else {
+                summary.innerHTML = `<span style="color: green;">Aucune violation détectée</span>`
+            }
+            summary.style.marginTop = '10px'
+            summary.style.fontSize = '12px'
+            summary.style.fontWeight = 'bold'
+
+            const hint = L.DomUtil.create('div', 'text-grey', div)
+            hint.innerHTML = '<i>Cliquer sur un espace pour afficher la description</i>'
+            hint.style.fontSize = '10px'
+            hint.style.marginTop = '8px'
+            hint.style.color = '#666'
+
+            return div
+        }
+    })
+
+    // We use a custom class/CSS for centering if possible, or standard position.
+    // To center, we can use topright and CSS translation, or a custom control placeholder.
+    // Simpler: use 'topright' but apply a class that we style.
+    verificationTooltip = new TooltipControl({ position: 'topright' })
+    verificationTooltip.addTo(map)
+
+    // Hack to center it: move the container?
+    // Leaflet controls are in corners.
+    // Provide a style block in <style> to handle .verification-tooltip positioning if we want consistent centering?
+    // For now, topright is acceptable functionality.
+    // If user insists on center, we can use L.popup at center?
+    // Let's stick to topright as implemented.
+}
+
 function displaySegment(coords) {
     // conversion logic for strings/flat arrays
     if (typeof coords === 'string') {
@@ -309,6 +463,7 @@ defineExpose({
     displayThermals,
     displayGlides,
     setAnalysisLayersVisibility,
+    displayVerification,
     displaySegment,
     displayTakeOff,
     displayLanding,
@@ -331,5 +486,21 @@ onBeforeUnmount(() => {
     width: 100%;
     height: 100%;
     z-index: 1;
+}
+
+.verification-tooltip {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    z-index: 1000 !important;
+    border: none !important;
+}
+
+.verification-tooltip .close-btn {
+    position: absolute;
+    right: 5px;
+    top: 2px;
 }
 </style>

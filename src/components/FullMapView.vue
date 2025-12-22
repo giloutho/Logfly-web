@@ -44,7 +44,8 @@
         <ChronoView v-model="chronoDialog" :anaResult="flightData?.anaTrack" @jump-to="onChronoJump"
             @jump-to-takeoff="onJumpTakeoff" @jump-to-landing="onJumpLanding" />
         <AirspaceDialog v-model="airspaceDialog" :decodedData="flightData?.decodedIgc"
-            @display-airspaces="onDisplayAirspaces" />
+            :flightData="flightData?.decodedIgc" :groundAltitudes="groundAltitudes"
+            @display-airspaces="onDisplayAirspaces" @display-verification="onDisplayVerification" />
         <ScoreDialog v-model="scoreDialog" :scores="scores" :fixes="flightData?.decodedIgc?.fixes || []"
             :date="flightData?.decodedIgc?.info?.date || ''" :scoringFn="scoringFn" />
         <CuttingDialog v-model="cuttingDialog" />
@@ -192,9 +193,16 @@ function onJumpLanding() {
     }
 }
 
-function onDisplayAirspaces(geojson) {
+function onDisplayAirspaces(geoJsonData) {
     if (mapLeaflet.value) {
-        mapLeaflet.value.displayAirspaceLayer(geojson)
+        mapLeaflet.value.displayAirspaceLayer(geoJsonData)
+    }
+}
+
+function onDisplayVerification(checkResult) {
+    if (mapLeaflet.value) {
+        const fixes = props.flightData?.decodedIgc?.fixes
+        mapLeaflet.value.displayVerification(checkResult, fixes)
     }
 }
 

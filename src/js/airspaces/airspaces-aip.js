@@ -313,3 +313,74 @@ function getColor(item) {
         default: return colOther
     }
 }
+/**
+ * Checks for airspace violations
+ * @param {Object} track The decoded track object (must contain fixes and stat.maxalt)
+ * @param {Array} aipGeojson Array of GeoJSON features for airspaces
+ * @param {Array} ground Array of ground altitudes corresponding to track points
+ */
+export async function checkTrack(track, aipGeojson, ground) {
+    try {
+        let checkResult = {
+            airGeoJson: [],
+            insidePoints: []
+        }
+
+        if (!track || !track.fixes || !ground) {
+            return { success: false, message: 'Invalid track or ground data' }
+        }
+
+        // In order to use turfWithin below, the fixes array must be converted in a "turf multipoint object"
+        let trackPoints = track.fixes.map(point => [point.longitude, point.latitude])
+
+        // Create MultiPoint for turf using imported helper
+        let multiPt = turfHelper.multiPoint(trackPoints)
+
+        // track.GeoJSON is needed for intersection check. 
+        // We assume track has GeoJSON property or we construct it?
+        // In logfly65 it uses track.GeoJSON. 
+        // In logfly-web, flightData.decodedIgc.GeoJSON exists. passed as track.
+        let geoTrack = track.GeoJSON
+        let turfNb = 0
+        let nbInside = 0
+
+        for (let index = 0; index < aipGeojson.length; index++) {
+            const element = aipGeojson[index]
+            // check intersection with the whole track line first
+            if (booleanIntersects(element, geoTrack)) {
+                let pushGeoJson = false
+                let ptsWithin = pointsWithinPolygon(multiPt, element)
+                for (let i = 0; i < ptsWithin.features.length; i++) {
+                    const feature = ptsWithin.features[i]
+                    for (let j = 0; j < feature.geometry.coordinates.length; j++) {
+                        turfNb++
+                        const vPoint = feature.geometry.coordinates[j]
+                        let idxPoint = trackPoints.findIndex(e => e === vPoint)
+                        let floorLimit = element.properties.Floor
+                        let ceilingLimit = element.properties.Ceiling
+                        if (element.properties.AltLimit_Bottom_AGL === true) floorLimit += ground[idxPoint]
+                        if (element.properties.AltLimit_Top_AGL === true) ceilingLimit += ground[idxPoint]
+                        if (track.fixes[idxPoint].gpsAltitude > floorLimit && track.fixes[idxPoint].gpsAltitude < ceilingLimit) {
+                            nbInside++
+                            if (!pushGeoJson) {
+                                checkResult.airGeoJson.push(element)
+                                pushGeoJson = true
+                            }
+                            checkResult.insidePoints.push(idxPoint)
+                        }
+                    }
+                }
+            }
+        }
+        if (checkResult.insidePoints.length === 0) {
+            for (let index = 0; index < aipGeojson.length; index++) {
+                checkResult.airGeoJson.push(aipGeojson[index])
+            }
+        }
+
+        return { success: true, ...checkResult }
+
+    } catch (e) {
+        return { success: false, message: 'Error during airspaces check: ' + e.message }
+    }
+}
