@@ -1,9 +1,10 @@
 <template>
   <v-app-bar color="primary" dark app flat translate="no">
     <v-toolbar-title>
-      <router-link :to="{ name: 'home' }" class="app-title-link"> 
-      <!-- <router-link :to="{ name: 'logbook-view' }" class="app-title-link">  -->      
-        <img src="@/assets/Logo7_32.png" alt="Logo Logfly" style="vertical-align: middle; margin-right: 8px; height: 32px;" />
+      <router-link :to="{ name: 'home' }" class="app-title-link">
+        <!-- <router-link :to="{ name: 'logbook-view' }" class="app-title-link">  -->
+        <img src="@/assets/Logowebwh.png" alt="Logo Logfly"
+          style="vertical-align: middle; margin-right: 8px; height: 32px;" />
         Logfly
       </router-link>
     </v-toolbar-title>
@@ -28,9 +29,9 @@
           </v-list-item>
           <v-list-item :to="{ name: 'external-track' }">
             <v-list-item-title>{{ $gettext('External track') }}</v-list-item-title>
-          </v-list-item>          
+          </v-list-item>
         </v-list>
-      </v-menu>      
+      </v-menu>
       <v-menu offset-y translate="no">
         <template v-slot:activator="{ props }">
           <v-btn text v-bind="props">
@@ -63,13 +64,13 @@
           </v-list-item>
           <v-list-item :to="{ name: 'airspaces-view' }">
             <v-list-item-title>{{ $gettext('Airspaces') }}</v-list-item-title>
-          </v-list-item>       
+          </v-list-item>
           <v-list-item :to="{ name: 'xcnav-view' }">
             <v-list-item-title>{{ $gettext('XC Nav') }}</v-list-item-title>
-          </v-list-item>          
+          </v-list-item>
         </v-list>
-      </v-menu>    
-      
+      </v-menu>
+
       <v-menu offset-y translate="no">
         <template v-slot:activator="{ props }">
           <v-btn text v-bind="props">
@@ -85,13 +86,13 @@
             <v-list-item-title>{{ $gettext('Paragliding Earth') }}</v-list-item-title>
           </v-list-item>
         </v-list>
-      </v-menu>      
-      
+      </v-menu>
+
       <v-btn text :to="{ name: 'equip-base' }">
-       <!-- <v-icon left>mdi-sail-boat</v-icon>. -->
+        <!-- <v-icon left>mdi-sail-boat</v-icon>. -->
         {{ $gettext('Equipment') }}
       </v-btn>
-      
+
       <v-menu offset-y translate="no">
         <template v-slot:activator="{ props }">
           <v-btn text v-bind="props">
@@ -109,9 +110,9 @@
           </v-list-item>
           <v-list-item :to="{ name: 'utils-view' }">
             <v-list-item-title>{{ $gettext('Utilities') }}</v-list-item-title>
-          </v-list-item>          
+          </v-list-item>
         </v-list>
-      </v-menu>        
+      </v-menu>
     </div>
 
     <v-app-bar-nav-icon class="d-sm-none"></v-app-bar-nav-icon>
@@ -129,7 +130,8 @@
 // @use "@/settings.scss" as *;
 
 .app-title-link {
-  color: inherit; /* Utilise la couleur du v-app-bar (white par défaut si 'dark') */
+  color: inherit;
+  /* Utilise la couleur du v-app-bar (white par défaut si 'dark') */
   text-decoration: none;
 }
 </style>
