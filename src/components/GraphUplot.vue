@@ -19,32 +19,53 @@ const props = defineProps({
     height: {
         type: Number,
         default: 150
+    },
+    cuttingMode: {
+        type: Boolean,
+        default: false
+    },
+    cutStart: {
+        type: Number,
+        default: null
+    },
+    cutEnd: {
+        type: Number,
+        default: null
     }
 })
 
-const emit = defineEmits(['cursor-changed'])
+const emit = defineEmits(['cursor-changed', 'click-graph'])
 
 const chartContainer = ref(null)
 let uplotInstance = null
+let resizeObserver = null
 
-onMounted(() => {
+onMounted(async () => {
+    await nextTick()
     if (props.fixes && props.fixes.length > 0) {
         createChart()
     }
-})
 
-watch(() => props.fixes, (val) => {
-    if (val && val.length > 0) {
-        if (uplotInstance) {
-            uplotInstance.destroy()
-            uplotInstance = null
-        }
-        createChart()
+    // Use ResizeObserver for more robust width/height detection
+    if (chartContainer.value) {
+        resizeObserver = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                const { width } = entry.contentRect
+                if (width > 0) {
+                    if (!uplotInstance) {
+                        createChart()
+                    } else {
+                        resizeChart()
+                    }
+                }
+            }
+        })
+        resizeObserver.observe(chartContainer.value)
     }
 })
 
-watch(() => props.groundAltitudes, (val) => {
-    // Recreate chart if ground altitudes arrive later
+watch(() => [props.fixes, props.groundAltitudes, props.cuttingMode, props.cutStart, props.cutEnd], async () => {
+    await nextTick()
     if (props.fixes && props.fixes.length > 0) {
         if (uplotInstance) {
             uplotInstance.destroy()
@@ -55,14 +76,13 @@ watch(() => props.groundAltitudes, (val) => {
 })
 
 function createChart() {
-    if (!chartContainer.value) return
+    if (!chartContainer.value || chartContainer.value.offsetWidth === 0) return
 
     const fixes = props.fixes
     const timestamps = []
     const altitudes = []
     const speeds = []
     const varios = []
-    // Add ground
     const ground = []
 
     const startTime = fixes[0].timestamp / 1000
@@ -74,14 +94,13 @@ function createChart() {
         if (props.groundAltitudes && props.groundAltitudes[i] != null) {
             ground.push(props.groundAltitudes[i])
         } else {
-            // Fill with null or 0 if missing, strictly uplot prefers same length arrays
             ground.push(null)
         }
 
         if (i > 0) {
             const dt = (fixes[i].timestamp - fixes[i - 1].timestamp) / 1000
             if (dt > 0) {
-                const dz = fixes[i].gpsAltitude - fixes[i - 1].gpsAltitude
+                const dz = (fixes[i].gpsAltitude || 0) - (fixes[i - 1].gpsAltitude || 0)
                 varios.push(dz / dt)
                 const dx = Math.sqrt(
                     Math.pow(fixes[i].latitude - fixes[i - 1].latitude, 2) +
@@ -99,10 +118,8 @@ function createChart() {
     }
 
     const data = [timestamps, altitudes]
-    // Add ground series data
-    // Only add if we have some valid ground data? Or always add to keep structure consistent?
-    // Let's add it if props.groundAltitudes is present
-    if (props.groundAltitudes) {
+    // Add ground series data only if NOT in cutting mode for better clarity
+    if (props.groundAltitudes && !props.cuttingMode) {
         data.push(ground)
     }
 
@@ -110,16 +127,16 @@ function createChart() {
         { label: 'Temps (s)' },
         {
             label: 'Altitude (m)',
-            stroke: '#1976d2',
+            stroke: props.cuttingMode ? '#ff0000' : '#1976d2',
             width: 2,
-            fill: 'rgba(25, 118, 210, 0.1)'
+            fill: props.cuttingMode ? 'rgba(255, 0, 0, 0.1)' : 'rgba(25, 118, 210, 0.1)'
         }
     ]
 
-    if (props.groundAltitudes) {
+    if (props.groundAltitudes && !props.cuttingMode) {
         series.push({
             label: 'Sol (m)',
-            stroke: '#5d4037', // Brownish
+            stroke: '#5d4037',
             width: 1,
             fill: 'rgba(93, 64, 55, 0.3)',
             points: { show: false }
@@ -145,13 +162,60 @@ function createChart() {
             { size: 50, label: 'Altitude (m)' }
         ],
         cursor: {
-            drag: { x: true, y: true, uni: 50 }
+            drag: { x: true, y: true, uni: 50 },
+            dataIdx: (u, seriesIdx, dataIdx) => dataIdx
+        },
+        hooks: {
+            draw: [
+                u => {
+                    if (props.cuttingMode) {
+                        const { ctx } = u
+                        const { left, top, width, height } = u.bbox
+
+                        ctx.save()
+                        ctx.beginPath()
+                        ctx.rect(left, top, width, height)
+                        ctx.clip()
+
+                        // Draw selection area
+                        if (props.cutStart !== null && props.cutEnd !== null) {
+                            const startX = u.valToPos(timestamps[props.cutStart], 'x', true)
+                            const endX = u.valToPos(timestamps[props.cutEnd], 'x', true)
+
+                            ctx.fillStyle = 'rgba(255, 0, 0, 0.2)'
+                            ctx.fillRect(Math.min(startX, endX), top, Math.abs(startX - endX), height)
+                        }
+
+                        // Draw vertical lines
+                        if (props.cutStart !== null) {
+                            const x = u.valToPos(timestamps[props.cutStart], 'x', true)
+                            ctx.strokeStyle = 'red'
+                            ctx.setLineDash([5, 5])
+                            ctx.beginPath()
+                            ctx.moveTo(x, top)
+                            ctx.lineTo(x, top + height)
+                            ctx.stroke()
+                        }
+
+                        if (props.cutEnd !== null) {
+                            const x = u.valToPos(timestamps[props.cutEnd], 'x', true)
+                            ctx.strokeStyle = 'red'
+                            ctx.setLineDash([5, 5])
+                            ctx.beginPath()
+                            ctx.moveTo(x, top)
+                            ctx.lineTo(x, top + height)
+                            ctx.stroke()
+                        }
+
+                        ctx.restore()
+                    }
+                }
+            ]
         }
     }
 
     uplotInstance = new uPlot(opts, data, chartContainer.value)
 
-    // Add event listener for cursor move
     uplotInstance.root.addEventListener('mousemove', e => {
         if (!uplotInstance.cursor) return
         const idx = uplotInstance.cursor.idx
@@ -168,12 +232,18 @@ function createChart() {
         }
     })
 
-    // Handle resize
-    window.addEventListener('resize', resizeChart)
+    uplotInstance.root.addEventListener('click', e => {
+        if (props.cuttingMode) {
+            const idx = uplotInstance.cursor.idx
+            if (idx != null && idx >= 0 && idx < fixes.length) {
+                emit('click-graph', idx)
+            }
+        }
+    })
 }
 
 function resizeChart() {
-    if (uplotInstance && chartContainer.value) {
+    if (uplotInstance && chartContainer.value && chartContainer.value.offsetWidth > 0) {
         uplotInstance.setSize({
             width: chartContainer.value.offsetWidth,
             height: props.height
@@ -186,7 +256,9 @@ onBeforeUnmount(() => {
         uplotInstance.destroy()
         uplotInstance = null
     }
-    window.removeEventListener('resize', resizeChart)
+    if (resizeObserver) {
+        resizeObserver.disconnect()
+    }
 })
 </script>
 

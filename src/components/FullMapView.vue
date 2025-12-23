@@ -7,8 +7,9 @@
                 <v-btn class="toolbar-btn" @click="openChrono">Chronologie</v-btn>
                 <v-btn class="toolbar-btn" @click="airspaceDialog = true">Espaces aériens</v-btn>
                 <v-btn class="toolbar-btn" @click="scoreDialog = true">Score</v-btn>
-
-                <v-btn class="toolbar-btn" @click="cuttingDialog = true">Couper</v-btn>
+                <v-btn class="toolbar-btn" :color="isCutting ? 'error' : ''" @click="toggleCutting">{{ isCutting ?
+                    'Annuler' : 'Couper' }}
+                </v-btn>
             </div>
             <div class="toolbar-right">
                 <v-btn icon @click="$emit('close')">
@@ -31,34 +32,35 @@
                 <span v-if="hoverInfo" v-html="hoverInfo"></span>
                 <span v-else>Survolez le graphe pour voir les détails</span>
             </div>
-
             <div class="graph-section">
-                <GraphUplot v-if="flightData?.decodedIgc?.fixes" :fixes="flightData?.decodedIgc?.fixes"
-                    :groundAltitudes="groundAltitudes" :height="150" @cursor-changed="onGraphCursorChanged" />
+                <GraphUplot v-if="flightData?.decodedIgc?.fixes && flightData.decodedIgc.fixes.length > 0"
+                    :fixes="flightData?.decodedIgc?.fixes" :groundAltitudes="groundAltitudes" :height="150"
+                    :cuttingMode="isCutting" :cutStart="cutStartIndex" :cutEnd="cutEndIndex"
+                    @cursor-changed="onGraphCursorChanged" @click-graph="onGraphClick" />
             </div>
+            <TraceInfoDialog v-model="infoDialog" :trackData="flightInfo" :anaResult="flightData?.anaTrack"
+                :decodedData="flightData?.decodedIgc" />
+            <ChronoView v-model="chronoDialog" :anaResult="flightData?.anaTrack" @jump-to="onChronoJump"
+                @jump-to-takeoff="onJumpTakeoff" @jump-to-landing="onJumpLanding" />
+            <AirspaceDialog v-model="airspaceDialog" :decodedData="flightData?.decodedIgc"
+                :flightData="flightData?.decodedIgc" :groundAltitudes="groundAltitudes"
+                @display-airspaces="onDisplayAirspaces" @display-verification="onDisplayVerification"
+                @start-progress="onStartProgress" @end-progress="onEndProgress" />
+            <ScoreDialog v-model="scoreDialog" :scores="scores" :fixes="flightData?.decodedIgc?.fixes || []"
+                :date="flightData?.decodedIgc?.info?.date || ''" :scoringFn="scoringFn" @score-result="onScoreResult" />
+            <ScoreResultDialog v-if="scoreResultDialog" :result="currentScoreResult" :league="currentLeague"
+                @close="scoreResultDialog = false" />
+            <CuttingDialog v-model="cuttingDialog" :startPoint="cutStartPoint" :endPoint="cutEndPoint"
+                @confirm="confirmCut" @cancel="cancelCut" />
+            <ProgressDialog v-model="progressDialog" :message="progressMessage" @cancel="onProgressCancel" />
+
         </div>
-
-        <!-- Dialogs -->
-        <TraceInfoDialog v-model="infoDialog" :trackData="flightInfo" :anaResult="flightData?.anaTrack"
-            :decodedData="flightData?.decodedIgc" />
-        <ChronoView v-model="chronoDialog" :anaResult="flightData?.anaTrack" @jump-to="onChronoJump"
-            @jump-to-takeoff="onJumpTakeoff" @jump-to-landing="onJumpLanding" />
-        <AirspaceDialog v-model="airspaceDialog" :decodedData="flightData?.decodedIgc"
-            :flightData="flightData?.decodedIgc" :groundAltitudes="groundAltitudes"
-            @display-airspaces="onDisplayAirspaces" @display-verification="onDisplayVerification"
-            @start-progress="onStartProgress" @end-progress="onEndProgress" />
-        <ScoreDialog v-model="scoreDialog" :scores="scores" :fixes="flightData?.decodedIgc?.fixes || []"
-            :date="flightData?.decodedIgc?.info?.date || ''" :scoringFn="scoringFn" @score-result="onScoreResult" />
-        <ScoreResultDialog v-if="scoreResultDialog" :result="currentScoreResult" :league="currentLeague"
-            @close="scoreResultDialog = false" />
-        <CuttingDialog v-model="cuttingDialog" />
-        <ProgressDialog v-model="progressDialog" :message="progressMessage" @cancel="onProgressCancel" />
-
     </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
+import { useGettext } from 'vue3-gettext'
 import MapLeaflet from './MapLeaflet.vue'
 import GraphUplot from './GraphUplot.vue'
 import TraceInfoDialog from './TraceInfoDialog.vue'
@@ -71,6 +73,12 @@ import ProgressDialog from './ProgressDialog.vue'
 import { interruptCheck } from '@/js/airspaces/airspaces-open.js'
 import { igcScoring } from '@/js/igc/igc-scoring.js'
 import { getAltitudesForPoints } from '@/js/geo/elevation.js'
+import { encodeIGC } from '@/js/igc/igc-encoding.js'
+import { parseIGC } from '@/modules/Tracks/js/igc-parser.js'
+import { useDatabaseStore } from '@/stores/database'
+
+const databaseStore = useDatabaseStore();
+const { $gettext } = useGettext();
 
 const props = defineProps({
     flightData: {
@@ -280,6 +288,104 @@ function onGraphCursorChanged(data) {
         mapLeaflet.value.setHoverPoint(data.lat, data.lon)
     }
 }
+
+const isCutting = ref(false)
+const cutStartIndex = ref(null)
+const cutEndIndex = ref(null)
+const cutStartPoint = ref(null)
+const cutEndPoint = ref(null)
+
+function toggleCutting() {
+    if (isCutting.value) {
+        cancelCut()
+    } else {
+        isCutting.value = true
+        cutStartIndex.value = null
+        cutEndIndex.value = null
+        alert('Sélectionner par un clic sur la courbe d\'altitude le point de départ et le point de fin de la portion à conserver')
+    }
+}
+
+function onGraphClick(index) {
+    if (!isCutting.value) return
+    const fixes = props.flightData?.decodedIgc?.fixes
+    if (!fixes || !fixes[index]) return
+
+    const fix = fixes[index]
+    const dateObj = new Date(fix.timestamp)
+    const timeStr = dateObj.getHours().toString().padStart(2, '0') + ':' + dateObj.getMinutes().toString().padStart(2, '0') + ':' + dateObj.getSeconds().toString().padStart(2, '0')
+    const pointInfo = {
+        index: index,
+        time: timeStr
+    }
+
+    if (cutStartIndex.value === null) {
+        cutStartIndex.value = index
+        cutStartPoint.value = pointInfo
+    } else if (cutEndIndex.value === null) {
+        // Ensure start < end
+        if (index < cutStartIndex.value) {
+            cutEndIndex.value = cutStartIndex.value
+            cutEndPoint.value = cutStartPoint.value
+            cutStartIndex.value = index
+            cutStartPoint.value = pointInfo
+        } else {
+            cutEndIndex.value = index
+            cutEndPoint.value = pointInfo
+        }
+        // Open confirmation
+        cuttingDialog.value = true
+    }
+}
+
+function cancelCut() {
+    isCutting.value = false
+    cutStartIndex.value = null
+    cutEndIndex.value = null
+    cutStartPoint.value = null
+    cutEndPoint.value = null
+    cuttingDialog.value = false
+}
+
+async function confirmCut() {
+    const startIdx = cutStartIndex.value
+    const endIdx = cutEndIndex.value
+    const fixes = props.flightData?.decodedIgc?.fixes
+    const headers = props.flightData?.decodedIgc?.info
+    console.log('FullMapView: confirmCut', startIdx, endIdx, fixes.length)
+
+    if (startIdx !== null && endIdx !== null && fixes) {
+        const newFixes = fixes.slice(startIdx, endIdx + 1)
+        const newIgcString = encodeIGC(newFixes, {
+            date: props.flightData.day, // headers.date might be DD/MM/YY
+            pilotName: headers.pilot,
+            gliderType: props.flightData.glider,
+            gliderId: headers.gliderId
+        })
+        // check parse
+        const newFlight = parseIGC(newIgcString)
+        if (newFlight.isValid && props.flightData.dbId) {
+            const duration = newFlight.duration
+            const sDuration = newFlight.durationStr
+            console.log('FullMapView: confirmCut', duration, sDuration)
+            // Update DB
+            const result = databaseStore.update(
+                "UPDATE Vol SET V_Duree = ?, V_sDuree = ?, V_IGC = ? WHERE V_ID = ?",
+                [duration, sDuration, newIgcString, props.flightData.dbId]
+            )
+            if (result.success) {
+                alert('Trace mise à jour avec succès.')
+                emit('close') // Close FullMap to refresh parent logic
+            } else {
+                alert('Erreur lors de la mise à jour de la base de données.')
+            }
+        } else {
+            alert('Erreur lors de la génération du fichier IGC.')
+        }
+    }
+    cancelCut()
+}
+
 </script>
 
 <style scoped>

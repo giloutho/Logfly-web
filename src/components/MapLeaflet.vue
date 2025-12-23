@@ -60,7 +60,6 @@ onMounted(async () => {
     window.L = L
     try {
         await import('@/js/leaflet/leaflet-measure.js')
-        console.log('leaflet-measure loaded')
     } catch (e) {
         console.error('Failed to load leaflet-measure', e)
     }
