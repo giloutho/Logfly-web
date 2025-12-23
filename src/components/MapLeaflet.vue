@@ -7,6 +7,7 @@ import { onMounted, onBeforeUnmount, watch, ref } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { baseMaps } from '@/js/leaflet/tiles.js'
+import '@/js/leaflet/leaflet-measure.css'
 import { createPopThermal, createPopGlide, thermalIcon, glideIcon, startIcon, endIcon, getLeagueColor } from '@/js/leaflet/map-utils.js'
 
 const props = defineProps({
@@ -35,6 +36,7 @@ let verificationLayer = null
 let startMarker = null
 let endMarker = null
 let scoreLayer = null
+let measureControl = null
 
 // Shared Canvas Renderer with padding to prevent clipping
 const mainCanvas = L.canvas({ padding: 0.5 })
@@ -53,16 +55,29 @@ const glideOptions = {
     dashArray: '10,5'
 }
 
-onMounted(() => {
+onMounted(async () => {
+    // Expose L globally for plugins that expect it (like leaflet-measure)
+    window.L = L
+    try {
+        await import('@/js/leaflet/leaflet-measure.js')
+        console.log('leaflet-measure loaded')
+    } catch (e) {
+        console.error('Failed to load leaflet-measure', e)
+    }
+
     // Prefer Canvas for all vector layers globally
     map = L.map('map', {
         zoomControl: false,
-        preferCanvas: true
+        preferCanvas: true,
+        measureControl: false
     }).setView([46, 2], 6)
 
     L.control.zoom({
-        position: 'topright'
+        position: 'topleft'
     }).addTo(map)
+
+    // Add measure control manually to ensure it sits below zoom control
+    new L.Control.Measure({ position: 'topleft' }).addTo(map)
 
     // Create fresh instances of tiles
     const localBaseMaps = {}
@@ -530,6 +545,8 @@ function displayLanding() {
     }
 }
 
+
+
 defineExpose({
     setHoverPoint,
     displayAirspaceLayer,
@@ -557,24 +574,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .map-container {
-    width: 100%;
     height: 100%;
-    z-index: 1;
-}
-
-.verification-tooltip {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    margin: 0 !important;
-    z-index: 1000 !important;
-    border: none !important;
-}
-
-.verification-tooltip .close-btn {
-    position: absolute;
-    right: 5px;
-    top: 2px;
+    width: 100%;
 }
 </style>

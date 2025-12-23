@@ -69,7 +69,8 @@
               </v-btn>
               <span class="info-bold">{{ scoreLabel }}</span>
             </div>
-            <ScoreDialog v-model="showScoreDialog" @select="onScoreSelected" />
+            <ScoreDialog v-model="showScoreDialog" :fixes="trackFixes" :date="trackDate" :scoringFn="igcScoring"
+              @score-result="onScoreSelected" />
             <div class="about-row btn-row">
               <v-btn v-if="!trackData?.hasPhoto" color="primary" density="compact" class="mr-2"
                 @click="showPhotoDialog = true">{{ strAddPhoto }}</v-btn>
@@ -295,47 +296,17 @@ const trackDate = computed(() => {
   return props.trackData?.decodedIgc?.info?.date || '';
 });
 
-function onScoreSelected(league) {
-  computeScore(league);
-}
-
-async function computeScore(league) {
-  if (isComputingScore.value) return; // Évite les clics multiples
-  if (!trackFixes.value || trackFixes.value.length === 0) {
-    console.warn('Pas de fixes disponibles pour le calcul du score');
-    return;
-  }
-  if (!trackDate.value) {
-    console.warn('Pas de date disponible pour le calcul du score');
-    return;
-  }
-  isComputingScore.value = true;
-  try {
-    const result = await igcScoring({
-      date: trackDate.value,
-      fixes: trackFixes.value,
-      league: league
-    });
-    if (result.success) {
-      scoreJson.value = result.geojson;
-      const strScore = JSON.parse(JSON.stringify(result.geojson))
-      const sc_league = strScore.league
-      const sc_best = strScore.score + ' pts'
-      const sc_course = strScore.course
-      const sc_distance = strScore.distance + ' km'
-      const sc_multi = strScore.multiplier
-      // Score computed: League=FFVL, Score=34.64 pts, Course=Triangle plat, Distance=28.87 km, Multiplier=1.2
-      scoreLabel.value = `${sc_league} : ${sc_course} Distance ${sc_distance}   Score ${sc_best} Coeff =${sc_multi}`;
-      // Informer le parent (LogbookView)du nouveau score calculé
-      emit('update:scoreJson', result.geojson);
-      return result.geojson;
-    } else {
-      console.error('Erreur scoring:', result.message);
-    }
-  } catch (error) {
-    console.error('Erreur lors du calcul du score:', error);
-  } finally {
-    isComputingScore.value = false;
+function onScoreSelected({ league, result }) {
+  if (result) {
+    scoreJson.value = result;
+    const sc_league = result.league
+    const sc_best = result.score + ' pts'
+    const sc_course = result.course
+    const sc_distance = result.distance + ' km'
+    const sc_multi = result.multiplier
+    scoreLabel.value = `${sc_league} : ${sc_course} Distance ${sc_distance}   Score ${sc_best} Coeff =${sc_multi}`;
+    // Informer le parent (LogbookView) du nouveau score calculé
+    emit('update:scoreJson', result);
   }
 }
 

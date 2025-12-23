@@ -7,7 +7,7 @@
                 <v-btn class="toolbar-btn" @click="openChrono">Chronologie</v-btn>
                 <v-btn class="toolbar-btn" @click="airspaceDialog = true">Espaces aériens</v-btn>
                 <v-btn class="toolbar-btn" @click="scoreDialog = true">Score</v-btn>
-                <v-btn class="toolbar-btn" @click="measureTool">Mesurer</v-btn>
+
                 <v-btn class="toolbar-btn" @click="cuttingDialog = true">Couper</v-btn>
             </div>
             <div class="toolbar-right">
@@ -241,12 +241,7 @@ function onProgressCancel() {
     progressDialog.value = false
 }
 
-function measureTool() {
-    // Implement measurement tool toggle logic here
-    // checking if leaflet-measure plugin is available/needed
-    // For now, placeholder alert
-    alert("Outil de mesure à implémenter")
-}
+
 
 function onGraphCursorChanged(data) {
     // Update Hover Info
