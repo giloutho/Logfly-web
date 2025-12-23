@@ -88,7 +88,7 @@
     </v-dialog>
 
     <v-dialog v-model="showFullMap" fullscreen transition="dialog-bottom-transition">
-      <FullMapView v-if="dataFlight" :flightData="dataFlight" @close="showFullMap = false" />
+      <FullMapView v-if="dataFlight" :flightData="dataFlight" @close="onFullMapClose" />
     </v-dialog>
   </div>
 </template>
@@ -158,7 +158,7 @@ const headers = [
   { title: 'Engin', key: 'V_Engin' },
 ];
 
-function loadFlights() {
+function loadFlights(keepSelection = false) {
   if (!databaseStore.hasOpenDatabase) return;
 
   let reqSQL = "SELECT V_ID, strftime('%d-%m-%Y',V_date) AS Day, strftime('%H:%M',V_date) AS Hour, replace(V_sDuree,'mn','') AS Duree, V_Site, V_Engin, V_Commentaire, V_Duree, V_Tag, ";
@@ -179,8 +179,18 @@ function loadFlights() {
       return obj;
     });
 
-    // Sélectionner la première ligne de la première page
-    selectFirstVisibleRow();
+    // Sélectionner la première ligne de la première page ou garder la sélection actuelle
+    if (keepSelection && selectedItems.value.length > 0) {
+      // Vérifier si l'item sélectionné existe toujours
+      const exists = flights.value.some(f => f.V_ID === selectedItems.value[0]);
+      if (exists) {
+        onSelectionChange(selectedItems.value);
+      } else {
+        selectFirstVisibleRow();
+      }
+    } else {
+      selectFirstVisibleRow();
+    }
 
   } else {
     console.error('Erreur lors du chargement des vols:', result.message);
@@ -422,6 +432,13 @@ function onOpenFullMap() {
   if (dataFlight.value) {
     showFullMap.value = true;
   }
+}
+
+function onFullMapClose() {
+  showFullMap.value = false;
+  // Recharger la liste pour prendre en compte les modifs (durée, IGC...)
+  // et forcer le rafraîchissement de la sélection
+  loadFlights(true);
 }
 
 function onOpenFlyXc() {
