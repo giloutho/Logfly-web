@@ -34,6 +34,7 @@ import { useGettext } from "vue3-gettext";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { baseMaps, osm } from '@/js/leaflet/tiles.js';
+import { startIcon, endIcon } from '@/js/leaflet/map-utils.js';
 
 const { $gettext } = useGettext();
 
@@ -54,6 +55,8 @@ const mapContainer = ref(null);
 let map = null;
 let geoJsonLayer = null;
 let scoreLayer = null;
+let startMarker = null;
+let endMarker = null;
 
 onMounted(() => {
   // Initialiser la carte Leaflet
@@ -105,7 +108,16 @@ function displayGeoJson(geoJson) {
   if (scoreLayer) {
     map.removeLayer(scoreLayer);
     scoreLayer = null;
-  };
+  }
+  // Supprimer les marqueurs précédents
+  if (startMarker) {
+    map.removeLayer(startMarker);
+    startMarker = null;
+  }
+  if (endMarker) {
+    map.removeLayer(endMarker);
+    endMarker = null;
+  }
 
   // Ajouter la nouvelle couche GeoJSON (trace du vol)
   geoJsonLayer = L.geoJSON(geoJson, {
@@ -115,6 +127,20 @@ function displayGeoJson(geoJson) {
       opacity: 0.8
     }
   }).addTo(map);
+
+  // Ajouter les marqueurs de début et fin
+  if (geoJson.features && geoJson.features.length > 0) {
+    const trackFeature = geoJson.features.find(f => f.geometry.type === 'LineString')
+    if (trackFeature) {
+      const coords = trackFeature.geometry.coordinates
+      if (coords.length > 0) {
+        const startPoint = coords[0]
+        const endPoint = coords[coords.length - 1]
+        startMarker = L.marker([startPoint[1], startPoint[0]], { icon: startIcon }).addTo(map)
+        endMarker = L.marker([endPoint[1], endPoint[0]], { icon: endIcon }).addTo(map)
+      }
+    }
+  }
 
 
   // Adapter la vue pour afficher toute la trace et le scoring
