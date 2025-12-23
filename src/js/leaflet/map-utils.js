@@ -76,6 +76,7 @@ export const startIcon = L.divIcon({
     popupAnchor: [10, -22]
 })
 
+
 export const endIcon = L.divIcon({
     html: '<i class="mdi mdi-flag-checkered" style="font-size: 24px; color: #c62828; text-shadow: 1px 1px 2px white;"></i>',
     className: 'end-icon',
@@ -83,3 +84,35 @@ export const endIcon = L.divIcon({
     iconAnchor: [2, 22],
     popupAnchor: [10, -22]
 })
+
+export function getLeagueColor(selLeague) {
+    let selColor
+    // 33 at the end for transparency if needed, though we might control opacity in Leaflet style
+    switch (selLeague) {
+        case 'FFVL':
+            selColor = { namedColor: 'yellow', hexaColor: '#FFFF0033' };
+            break;
+        case 'XContest':
+            selColor = { namedColor: 'fuchsia', hexaColor: '#FF00FF33' };
+            break;
+        case 'FAI':
+            selColor = { namedColor: 'darkorange', hexaColor: '#FF8C0033' };
+            break;
+        case 'FAI-Cylinders':
+            selColor = { namedColor: 'skyblue', hexaColor: '#87CEEB33' };
+            break;
+        case 'FAI-OAR':
+            selColor = { namedColor: 'yellowgreen', hexaColor: '#9BCD9B33' };
+            break;
+        case 'FAI-OAR2':
+            selColor = { namedColor: 'sienna', hexaColor: '#A0522D33' };
+            break;
+        case 'XCLeague':
+            selColor = { namedColor: 'lawngreen', hexaColor: '#7CFC0033' };
+            break;
+        default:
+            selColor = { namedColor: 'yellow', hexaColor: '#FFFF0033' };
+            break;
+    }
+    return selColor
+}

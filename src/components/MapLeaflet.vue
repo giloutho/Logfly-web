@@ -7,7 +7,7 @@ import { onMounted, onBeforeUnmount, watch, ref } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { baseMaps } from '@/js/leaflet/tiles.js'
-import { createPopThermal, createPopGlide, thermalIcon, glideIcon, startIcon, endIcon } from '@/js/leaflet/map-utils.js'
+import { createPopThermal, createPopGlide, thermalIcon, glideIcon, startIcon, endIcon, getLeagueColor } from '@/js/leaflet/map-utils.js'
 
 const props = defineProps({
     geoJson: {
@@ -34,6 +34,7 @@ let glideLayer = null
 let verificationLayer = null
 let startMarker = null
 let endMarker = null
+let scoreLayer = null
 
 // Shared Canvas Renderer with padding to prevent clipping
 const mainCanvas = L.canvas({ padding: 0.5 })
@@ -343,6 +344,74 @@ function displayVerification(checkResult, fixes) {
     updateVerificationTooltip(checkResult)
 }
 
+function displayScoringResult(geojson, league) {
+    if (!map) return
+
+    // Remove existing score layer
+    if (scoreLayer) {
+        map.removeLayer(scoreLayer)
+        if (layerControl) {
+            layerControl.removeLayer(scoreLayer)
+        }
+        scoreLayer = null
+    }
+
+    if (!geojson) return
+
+    const leagueColor = getLeagueColor(league)
+    const drawingColor = leagueColor ? leagueColor.namedColor : 'orange'
+
+    scoreLayer = L.geoJSON(geojson, {
+        renderer: mainCanvas,
+        style: function (feature) {
+            // For the track line (LineString), we use the league color
+            // For points (if any), we might just use default markers or similar style
+            return {
+                stroke: true,
+                color: drawingColor,
+                weight: 4,
+                opacity: 0.8
+            };
+        },
+        onEachFeature: (feature, layer) => {
+            if (feature.properties && feature.properties.popupContent) {
+                if (feature.geometry && feature.geometry.type === 'Point') {
+                    layer.bindPopup(
+                        `<b>${league} :</b><br> ${feature.properties.popupContent}`
+                    );
+                } else if (feature.geometry && feature.geometry.type === 'LineString') {
+                    // We bind a tooltip for the main scoring path
+                    layer.bindTooltip(
+                        `<b>${league} :</b><br> ${feature.properties.popupContent}`,
+                        { permanent: true, direction: 'auto', className: 'score-tooltip' }
+                    );
+                    // Also bind a popup if user clicks
+                    layer.bindPopup(
+                        `<b>${league} :</b><br> ${feature.properties.popupContent}`
+                    );
+                }
+            }
+        }
+    }).addTo(map)
+
+    // Open popups/tooltips if needed, or just fit bounds
+    // Reference logfly65 opens popup for LineString
+    scoreLayer.eachLayer(layer => {
+        if (layer.feature && layer.feature.geometry && layer.feature.geometry.type === 'LineString') {
+            layer.openPopup();
+        }
+    });
+
+    if (layerControl) {
+        layerControl.addOverlay(scoreLayer, `Score ${league}`)
+    }
+
+    const bounds = scoreLayer.getBounds()
+    if (bounds.isValid()) {
+        map.fitBounds(bounds, { padding: [20, 20] })
+    }
+}
+
 let verificationTooltip = null
 
 function updateVerificationTooltip(checkResult) {
@@ -471,6 +540,7 @@ defineExpose({
     displaySegment,
     displayTakeOff,
     displayLanding,
+    displayScoringResult,
     map
 })
 

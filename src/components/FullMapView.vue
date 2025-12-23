@@ -48,7 +48,9 @@
             @display-airspaces="onDisplayAirspaces" @display-verification="onDisplayVerification"
             @start-progress="onStartProgress" @end-progress="onEndProgress" />
         <ScoreDialog v-model="scoreDialog" :scores="scores" :fixes="flightData?.decodedIgc?.fixes || []"
-            :date="flightData?.decodedIgc?.info?.date || ''" :scoringFn="scoringFn" />
+            :date="flightData?.decodedIgc?.info?.date || ''" :scoringFn="scoringFn" @score-result="onScoreResult" />
+        <ScoreResultDialog v-if="scoreResultDialog" :result="currentScoreResult" :league="currentLeague"
+            @close="scoreResultDialog = false" />
         <CuttingDialog v-model="cuttingDialog" />
         <ProgressDialog v-model="progressDialog" :message="progressMessage" @cancel="onProgressCancel" />
 
@@ -60,6 +62,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import MapLeaflet from './MapLeaflet.vue'
 import GraphUplot from './GraphUplot.vue'
 import TraceInfoDialog from './TraceInfoDialog.vue'
+import ScoreResultDialog from './ScoreResultDialog.vue'
 import ChronoView from './ChronoView.vue'
 import AirspaceDialog from './AirspaceDialog.vue'
 import ScoreDialog from './ScoreDialog.vue'
@@ -82,6 +85,7 @@ const infoDialog = ref(false)
 const chronoDialog = ref(false)
 const airspaceDialog = ref(false)
 const scoreDialog = ref(false)
+const scoreResultDialog = ref(false)
 const cuttingDialog = ref(false)
 const progressDialog = ref(false)
 const progressMessage = ref('Airspaces checking in progress')
@@ -89,6 +93,8 @@ const progressMessage = ref('Airspaces checking in progress')
 const mapLeaflet = ref(null)
 const hoverInfo = ref('')
 const groundAltitudes = ref(null)
+const currentScoreResult = ref(null)
+const currentLeague = ref('')
 
 const scores = [
     'FFVL',
@@ -209,6 +215,15 @@ function onDisplayVerification(checkResult) {
     if (mapLeaflet.value) {
         const fixes = props.flightData?.decodedIgc?.fixes
         mapLeaflet.value.displayVerification(checkResult, fixes)
+    }
+}
+
+function onScoreResult({ league, result }) {
+    currentLeague.value = league
+    currentScoreResult.value = result
+    scoreResultDialog.value = true
+    if (mapLeaflet.value) {
+        mapLeaflet.value.displayScoringResult(result, league)
     }
 }
 
