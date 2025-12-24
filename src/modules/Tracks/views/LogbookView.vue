@@ -15,12 +15,30 @@
     <div class="right-panel">
       <div class="top-block">
         <v-text-field v-model="search" :label="$gettext('Search')" prepend-inner-icon="mdi-magnify" single-line
-          hide-details clearable density="compact" variant="outlined"></v-text-field>
+          hide-details clearable density="compact" variant="outlined" class="search-field"></v-text-field>
+        <v-select v-model="selectedTagFilter" :items="tagOptions" :label="$gettext('Filter by tag')" density="compact"
+          variant="outlined" hide-details class="tag-filter ml-4" item-title="title" item-value="value">
+          <template v-slot:item="{ props, item }">
+            <v-list-item v-bind="props" :title="item.title">
+              <template v-slot:prepend v-if="item.value">
+                <v-icon :color="item.raw.color" class="mr-2">mdi-circle</v-icon>
+              </template>
+            </v-list-item>
+          </template>
+          <template v-slot:selection="{ item }">
+            <div class="d-flex align-center">
+              <v-icon v-if="item.value && item.raw.color" :color="item.raw.color" size="small"
+                class="mr-2">mdi-circle</v-icon>
+              {{ item.title }}
+            </div>
+          </template>
+        </v-select>
       </div>
       <div class="table-block">
-        <v-data-table v-model="selectedItems" :headers="headers" :items="flights" :search="search" item-value="V_ID"
-          density="compact" class="flights-table" v-model:page="page" v-model:items-per-page="itemsPerPage"
-          @update:model-value="onSelectionChange" @update:current-items="onFilteredItemsUpdate">
+        <v-data-table v-model="selectedItems" :headers="headers" :items="processedFlights" :search="search"
+          item-value="V_ID" density="compact" class="flights-table" v-model:page="page"
+          v-model:items-per-page="itemsPerPage" @update:model-value="onSelectionChange"
+          @update:current-items="onFilteredItemsUpdate">
           <template v-slot:item="{ item, index, props }">
             <tr v-bind="props" :class="{
               'selected-row': selectedItems.includes(item.V_ID),
@@ -32,7 +50,10 @@
                   {{ selectedItems.includes(item.V_ID) ? 'mdi-camera-outline' : 'mdi-camera' }}
                 </v-icon>
               </td>
-              <td class="col-tag">{{ item.V_Tag }}</td>
+              <td class="col-tag">
+                <v-icon v-if="item.V_Tag && tagsMap[item.V_Tag]" :color="tagsMap[item.V_Tag].color"
+                  size="small">mdi-circle</v-icon>
+              </td>
               <td class="col-day">{{ item.Day }}</td>
               <td class="col-hour">{{ item.Hour }}</td>
               <td class="col-duree">{{ item.Duree }}</td>
@@ -68,7 +89,7 @@
       <div class="bottom-block">
         <LogbookDetails v-if="dataFlight" :trackData="dataFlight" @update:scoreJson="scoreJson = $event"
           @update:comment="onCommentUpdate" @update:glider="onGliderUpdate" @update:site="onSiteUpdate"
-          @update:delete="onFlightDelete" @update:photo="onPhotoUpdate" />
+          @update:delete="onFlightDelete" @update:photo="onPhotoUpdate" @update:tag="onTagUpdate" />
         <div v-else class="no-track-message">
           <p>Sélectionnez un vol pour afficher les détails</p>
         </div>
@@ -127,6 +148,17 @@ const showPhotoViewer = ref(false);
 const showFullMap = ref(false);
 const photoUrl = ref(null);
 const photoTitle = ref('');
+const tagsMap = ref({});
+const selectedTagFilter = ref(null);
+
+const tagOptions = computed(() => {
+  const opts = Object.values(tagsMap.value).map(t => ({
+    title: t.label,
+    value: t.id,
+    color: t.color
+  }));
+  return [{ title: $gettext('All tags'), value: null }, ...opts];
+});
 
 const pageCount = computed(() => {
   return Math.ceil(flights.value.length / itemsPerPage.value);
@@ -136,11 +168,16 @@ const pageCount = computed(() => {
 // Pour obtenir tous les items filtrés (toutes pages confondues), 
 // il faut utiliser un computed qui applique manuellement 
 // le filtre de recherche sur flights.value.
+const processedFlights = computed(() => {
+  if (!selectedTagFilter.value) return flights.value;
+  return flights.value.filter(f => f.V_Tag === selectedTagFilter.value);
+});
+
 const filteredFlights = computed(() => {
-  if (!search.value) return flights.value;
+  if (!search.value) return processedFlights.value;
 
   const searchLower = search.value.toLowerCase();
-  return flights.value.filter(flight => {
+  return processedFlights.value.filter(flight => {
     return Object.values(flight).some(value => {
       if (value === null || value === undefined) return false;
       return String(value).toLowerCase().includes(searchLower);
@@ -158,8 +195,20 @@ const headers = [
   { title: 'Engin', key: 'V_Engin' },
 ];
 
+function loadTags() {
+  const res = databaseStore.query("SELECT Tag_ID, Tag_Label, Tag_Color FROM Tag");
+  if (res.success && res.data && res.data[0]) {
+    const map = {};
+    res.data[0].values.forEach(r => {
+      map[r[0]] = { id: r[0], label: r[1], color: r[2] };
+    });
+    tagsMap.value = map;
+  }
+}
+
 function loadFlights(keepSelection = false) {
   if (!databaseStore.hasOpenDatabase) return;
+  loadTags();
 
   let reqSQL = "SELECT V_ID, strftime('%d-%m-%Y',V_date) AS Day, strftime('%H:%M',V_date) AS Hour, replace(V_sDuree,'mn','') AS Duree, V_Site, V_Engin, V_Commentaire, V_Duree, V_Tag, ";
   reqSQL += "CASE WHEN (V_Photos IS NOT NULL AND V_Photos !='') THEN 'Yes' END Photo ";
@@ -180,6 +229,8 @@ function loadFlights(keepSelection = false) {
     });
 
     // Sélectionner la première ligne de la première page ou garder la sélection actuelle
+    // Use processedFlights instead of flights to respect filter if applied?
+    // Actually keep logic simple: verify selection in whole list
     if (keepSelection && selectedItems.value.length > 0) {
       // Vérifier si l'item sélectionné existe toujours
       const exists = flights.value.some(f => f.V_ID === selectedItems.value[0]);
@@ -427,6 +478,29 @@ function onPhotoUpdate({ id, photoData }) {
   emit('db-updated');
 }
 
+function onTagUpdate({ id, tag }) {
+  const flightId = id || dataFlight.value?.dbId;
+  if (!flightId) return;
+
+  const tagVal = tag === null ? 'NULL' : tag;
+  const req = `UPDATE Vol SET V_Tag = ${tagVal} WHERE V_ID = ${flightId}`;
+  const result = databaseStore.query(req);
+
+  if (!result.success) {
+    console.error('Error updating tag', result.message);
+    return;
+  }
+
+  // Update lists
+  const idx = flights.value.findIndex(f => f.V_ID === flightId);
+  if (idx !== -1) {
+    flights.value[idx].V_Tag = tag;
+  }
+  if (dataFlight.value && dataFlight.value.dbId === flightId) {
+    dataFlight.value.tag = tag;
+  }
+  emit('db-updated');
+}
 
 function onOpenFullMap() {
   if (dataFlight.value) {
@@ -452,21 +526,19 @@ function onOpenAnalyze() {
 async function readIgcFromDb(flightId) {
   // Fonction fictive pour lire et analyser le contenu IGC
   if (!databaseStore.hasOpenDatabase) return;
-  const reqSQL = `SELECT V_IGC, strftime('%d-%m-%Y',V_date) AS Day, V_Site, V_Engin, V_Commentaire, V_sDuree, CASE WHEN (V_Photos IS NOT NULL AND V_Photos !='') THEN 1 ELSE 0 END as HasPhoto FROM Vol WHERE V_ID = ${flightId}`;
+  const reqSQL = `SELECT V_IGC, strftime('%d-%m-%Y',V_date) AS Day, V_Site, V_Engin, V_Commentaire, V_sDuree, CASE WHEN (V_Photos IS NOT NULL AND V_Photos !='') THEN 1 ELSE 0 END as HasPhoto, V_Tag FROM Vol WHERE V_ID = ${flightId}`;
   const result = databaseStore.query(reqSQL);
 
   if (result.success && result.data && result.data[0]) {
     const strIgc = result.data[0].values[0][0];
-    const flightDay = result.data[0].values[0][1];
-    const flightSite = result.data[0].values[0][5];
     const decodedIgc = await igcDecoding(strIgc)
     if (decodedIgc.success && decodedIgc.data.fixes && decodedIgc.data.fixes.length > 0) {
       decodedTrack.value = decodedIgc.data
       const analyzeIgc = await IgcAnalyze(decodedIgc.data.fixes);
       if (!analyzeIgc.success) {
         console.log(analyzeIgc.message)
-        fileError.value = analyzeIgc.message;
-        fileContent.value = null;
+        // fileError.value = analyzeIgc.message;
+        // fileContent.value = null;
       } else {
         dataFlight.value = {
           dbId: flightId,
@@ -476,6 +548,7 @@ async function readIgcFromDb(flightId) {
           comment: result.data[0].values[0][4],
           duration: result.data[0].values[0][5],
           hasPhoto: result.data[0].values[0][6] === 1,
+          tag: result.data[0].values[0][7],
           anaTrack: analyzeIgc.anaTrack,
           decodedIgc: decodedTrack.value
         }

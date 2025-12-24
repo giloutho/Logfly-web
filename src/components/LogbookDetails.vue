@@ -37,10 +37,10 @@
       <v-window-item value="about">
         <v-card-text>
           <div class="about-block">
-            <!--
-            <div class="about-row tag-row">
-              <span class="tag-label">{{ trackData?.tagLabel || 'Une ligne pour le libellé éventuel du tag' }}</span>
-            </div>-->
+            <div class="about-row tag-row" v-if="trackData?.tag">
+              <v-icon :color="tagsMap[trackData.tag]?.color" class="mr-2">mdi-circle</v-icon>
+              <span class="tag-label">{{ tagsMap[trackData.tag]?.label || 'Tag' }}</span>
+            </div>
             <div class="about-row info-row">
               <span class="info-bold">{{ $gettext('Site') }}</span>
               <span>{{ trackData?.site || '' }}</span>
@@ -72,11 +72,14 @@
             <ScoreDialog v-model="showScoreDialog" :fixes="trackFixes" :date="trackDate" :scoringFn="igcScoring"
               @score-result="onScoreSelected" />
             <div class="about-row btn-row">
+              <v-btn color="secondary" density="compact" class="mr-2" @click="showTagDialog = true">TAG</v-btn>
+              <TagDialog v-model="showTagDialog" :currentTag="trackData?.tag" :flightDate="trackData?.day"
+                :flightSite="trackData?.site" @save="onTagSave" />
               <v-btn v-if="!trackData?.hasPhoto" color="primary" density="compact" class="mr-2"
                 @click="showPhotoDialog = true">{{ strAddPhoto }}</v-btn>
               <LogbookPhoto v-model="showPhotoDialog" @save="onPhotoSave" />
               <v-btn v-if="trackData?.hasPhoto" color="error" density="compact" @click="onPhotoDelete">{{ strRemovePhoto
-              }}</v-btn>
+                }}</v-btn>
             </div>
           </div>
         </v-card-text>
@@ -98,7 +101,7 @@
           <div class="modify-btn-row">
             <div class="modify-line">
               <v-btn color="primary" density="compact" class="mr-2" @click="showGliderDialog = true">{{ strChangeGlider
-              }}</v-btn>
+                }}</v-btn>
               <GliderDialog v-model="showGliderDialog" :gliderList="gliderList" :currentGlider="trackData?.glider"
                 @save="onGliderSave" />
               <v-btn color="primary" density="compact" @click="showSiteDialog = true">{{ strChangeSite }}</v-btn>
@@ -138,6 +141,7 @@ import { igcScoring } from '@/js/igc/igc-scoring';
 import ScoreDialog from '@/components/ScoreDialog.vue';
 import GliderDialog from '@/components/GliderDialog.vue';
 import ChangeSiteDialog from '@/components/ChangeSiteDialog.vue';
+import TagDialog from '@/components/TagDialog.vue';
 import LogbookPhoto from '@/components/LogbookPhoto.vue';
 import { useDatabaseStore } from '@/stores/database';
 
@@ -147,6 +151,7 @@ const { $gettext } = useGettext();
 const showGliderDialog = ref(false);
 const showSiteDialog = ref(false);
 const showPhotoDialog = ref(false);
+const showTagDialog = ref(false);
 const gliderList = ref([]);
 const siteList = ref([]);
 const tab = ref('about'); // Onglet "About" sélectionné par défaut
@@ -155,6 +160,8 @@ const showScoreDialog = ref(false);
 const scoreJson = ref(null);
 const scoreLabel = ref('');
 const commentText = ref('');
+const currentTag = ref(null);
+const tagsMap = ref({});
 
 // Computed string resources to avoid template line-breaking issues
 const strChangeGlider = computed(() => $gettext('Change glider'));
@@ -172,7 +179,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['update:scoreJson', 'update:comment', 'update:glider', 'update:site', 'update:delete', 'update:photo']);
+const emit = defineEmits(['update:scoreJson', 'update:comment', 'update:glider', 'update:site', 'update:delete', 'update:photo', 'update:tag']);
 
 
 function loadGliderList() {
@@ -228,6 +235,31 @@ function onSiteSave(newSite) {
     site: newSite
   });
 }
+
+function onTagSave(tagId) {
+  emit('update:tag', {
+    id: props.trackData?.dbId || null,
+    tag: tagId
+  });
+  // Reload tags map in case labels changed
+  loadTagsMap();
+}
+
+function loadTagsMap() {
+  if (!databaseStore.hasOpenDatabase) return;
+  const res = databaseStore.query("SELECT Tag_ID, Tag_Label, Tag_Color FROM Tag");
+  if (res.success && res.data && res.data[0]) {
+    const map = {};
+    res.data[0].values.forEach(r => {
+      map[r[0]] = { label: r[1], color: r[2] };
+    });
+    tagsMap.value = map;
+  }
+}
+
+watch(() => props.trackData, () => {
+  loadTagsMap();
+}, { immediate: true });
 
 function onPhotoSave(photoBase64) {
   emit('update:photo', {

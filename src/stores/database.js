@@ -39,6 +39,26 @@ export const useDatabaseStore = defineStore('database', () => {
           db.value = null
           throw new Error('The database does not contain a "Vol" table')
         }
+
+        // Vérification / Création de la table Tag
+        const resTag = executeQuery(db.value, "SELECT name FROM sqlite_master WHERE type='table' AND name='Tag'")
+        if (resTag.success && resTag.data.length === 0) {
+          const createSQL = `CREATE TABLE Tag (Tag_ID INTEGER PRIMARY KEY, Tag_Label TEXT, Tag_Color TEXT)`
+          executeQuery(db.value, createSQL)
+          const defaults = [
+            [1, 'Tag 1', '#F44336'], // Red
+            [2, 'Tag 2', '#FF9800'], // Orange
+            [3, 'Tag 3', '#FFEB3B'], // Yellow
+            [4, 'Tag 4', '#4CAF50'], // Green
+            [5, 'Tag 5', '#2196F3']  // Blue
+          ]
+          defaults.forEach(d => {
+            executeQuery(db.value, `INSERT INTO Tag (Tag_ID, Tag_Label, Tag_Color) VALUES (${d[0]}, '${d[1]}', '${d[2]}')`)
+          })
+          // Mark as dirty because we modified the structure/content
+          markAsDirty()
+        }
+
         isOpen.value = true
         dbName.value = file.name
         // Lors d'un chargement tout neuf, on est "propre"
