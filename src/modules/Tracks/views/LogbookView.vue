@@ -157,7 +157,7 @@ const tagOptions = computed(() => {
     value: t.id,
     color: t.color
   }));
-  return [{ title: $gettext('All tags'), value: null }, ...opts];
+  return [{ title: $gettext('All flights'), value: null }, ...opts];
 });
 
 const pageCount = computed(() => {
@@ -266,7 +266,7 @@ function onFilteredItemsUpdate(items) {
 function selectFirstVisibleRow() {
   // Calculer l'index de début de page
   const start = (page.value - 1) * itemsPerPage.value;
-  const visibleRows = flights.value.slice(start, start + itemsPerPage.value);
+  const visibleRows = filteredFlights.value.slice(start, start + itemsPerPage.value);
   if (visibleRows.length > 0) {
     selectedItems.value = [visibleRows[0].V_ID];
     onSelectionChange([visibleRows[0].V_ID]);
@@ -282,9 +282,16 @@ watch(() => databaseStore.hasOpenDatabase, (isOpen) => {
 
 // Sélectionner la première ligne affichée à chaque changement de page ou d'items-per-page
 watch([page, itemsPerPage], () => {
-  if (flights.value.length > 0) {
+  if (filteredFlights.value.length > 0) {
     selectFirstVisibleRow();
   }
+});
+
+// Auto-select first row when filter changes
+watch(selectedTagFilter, () => {
+  // Reset page to 1 when filter changes to ensure we see results
+  page.value = 1;
+  selectFirstVisibleRow();
 });
 
 // Met à jour le commentaire en base, dans flights, et dans dataFlight

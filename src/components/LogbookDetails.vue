@@ -2,9 +2,13 @@
   <v-card class="details-card" translate="no">
     <v-card-title class="d-flex justify-space-between align-center">
       <div class="d-flex align-center flex-grow-1">
-        <v-chip color="primary" label>
+        <v-chip color="primary" label class="mr-2">
           {{ trackData.site }} {{ trackData.day }}
         </v-chip>
+        <div v-if="trackData?.tag" class="d-flex align-center ml-2">
+          <v-icon :color="tagsMap[trackData.tag]?.color" size="small" class="mr-1">mdi-circle</v-icon>
+          <span class="text-caption font-weight-bold">{{ tagsMap[trackData.tag]?.label }}</span>
+        </div>
       </div>
       <div class="text-right flex-grow-1">
         {{ $gettext('Flight Details') }}
@@ -37,10 +41,6 @@
       <v-window-item value="about">
         <v-card-text>
           <div class="about-block">
-            <div class="about-row tag-row" v-if="trackData?.tag">
-              <v-icon :color="tagsMap[trackData.tag]?.color" class="mr-2">mdi-circle</v-icon>
-              <span class="tag-label">{{ tagsMap[trackData.tag]?.label || 'Tag' }}</span>
-            </div>
             <div class="about-row info-row">
               <span class="info-bold">{{ $gettext('Site') }}</span>
               <span>{{ trackData?.site || '' }}</span>
@@ -79,7 +79,7 @@
                 @click="showPhotoDialog = true">{{ strAddPhoto }}</v-btn>
               <LogbookPhoto v-model="showPhotoDialog" @save="onPhotoSave" />
               <v-btn v-if="trackData?.hasPhoto" color="error" density="compact" @click="onPhotoDelete">{{ strRemovePhoto
-                }}</v-btn>
+              }}</v-btn>
             </div>
           </div>
         </v-card-text>
@@ -101,7 +101,7 @@
           <div class="modify-btn-row">
             <div class="modify-line">
               <v-btn color="primary" density="compact" class="mr-2" @click="showGliderDialog = true">{{ strChangeGlider
-                }}</v-btn>
+              }}</v-btn>
               <GliderDialog v-model="showGliderDialog" :gliderList="gliderList" :currentGlider="trackData?.glider"
                 @save="onGliderSave" />
               <v-btn color="primary" density="compact" @click="showSiteDialog = true">{{ strChangeSite }}</v-btn>

@@ -12,7 +12,8 @@
 
                 <div v-for="tag in tags" :key="tag.Tag_ID" class="tag-row">
                     <v-btn icon size="small" :color="tag.Tag_Color" class="mr-3" @click="selectTag(tag.Tag_ID)">
-                        <v-icon v-if="currentTagId === tag.Tag_ID" color="white" size="x-small">mdi-check</v-icon>
+                        <v-icon v-if="currentTagId === tag.Tag_ID" color="white"
+                            style="font-size: 22px;">mdi-check</v-icon>
                     </v-btn>
                     <v-text-field v-model="tag.Tag_Label" density="compact" variant="outlined"
                         hide-details></v-text-field>
@@ -20,7 +21,7 @@
 
                 <div class="mt-6 text-center" v-if="currentTagId">
                     <v-btn color="error" variant="text" @click="clearTag">
-                        {{ $gettext('No tag') }}
+                        {{ $gettext('Remove tag') }}
                     </v-btn>
                 </div>
                 <div class="mt-2 text-center" v-else>
