@@ -82,12 +82,12 @@ function loadCesiumScripts() {
         // Load CSS
         const css = document.createElement('link');
         css.rel = 'stylesheet';
-        css.href = 'https://cesium.com/downloads/cesiumjs/releases/1.96/Build/Cesium/Widgets/widgets.css';
+        css.href = 'https://cesium.com/downloads/cesiumjs/releases/1.136/Build/Cesium/Widgets/widgets.css';
         document.head.appendChild(css);
 
         // Load JS
         const script = document.createElement('script');
-        script.src = 'https://cesium.com/downloads/cesiumjs/releases/1.96/Build/Cesium/Cesium.js';
+        script.src = 'https://cesium.com/downloads/cesiumjs/releases/1.136/Build/Cesium/Cesium.js';
         script.onload = () => resolve();
         script.onerror = () => reject(new Error('Failed to load Cesium'));
         document.head.appendChild(script);

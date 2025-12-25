@@ -31,6 +31,10 @@ const props = defineProps({
     cutEnd: {
         type: Number,
         default: null
+    },
+    currentIndex: {
+        type: Number,
+        default: null
     }
 })
 
@@ -39,6 +43,7 @@ const emit = defineEmits(['cursor-changed', 'click-graph'])
 const chartContainer = ref(null)
 let uplotInstance = null
 let resizeObserver = null
+let chartTimestamps = [] // Stored at module level for draw hook access
 
 onMounted(async () => {
     await nextTick()
@@ -72,6 +77,13 @@ watch(() => [props.fixes, props.groundAltitudes, props.cuttingMode, props.cutSta
             uplotInstance = null
         }
         createChart()
+    }
+})
+
+// Watch currentIndex for animation synchronization - only redraw without recreating
+watch(() => props.currentIndex, () => {
+    if (uplotInstance && props.currentIndex !== null) {
+        uplotInstance.redraw()
     }
 })
 
@@ -116,6 +128,9 @@ function createChart() {
             speeds.push(0)
         }
     }
+
+    // Store timestamps at module level for draw hook access during redraw
+    chartTimestamps = timestamps
 
     const data = [timestamps, altitudes]
     // Add ground series data only if NOT in cutting mode for better clarity
@@ -168,15 +183,16 @@ function createChart() {
         hooks: {
             draw: [
                 u => {
+                    const { ctx } = u
+                    const { left, top, width, height } = u.bbox
+
+                    ctx.save()
+                    ctx.beginPath()
+                    ctx.rect(left, top, width, height)
+                    ctx.clip()
+
+                    // Draw cutting mode overlays
                     if (props.cuttingMode) {
-                        const { ctx } = u
-                        const { left, top, width, height } = u.bbox
-
-                        ctx.save()
-                        ctx.beginPath()
-                        ctx.rect(left, top, width, height)
-                        ctx.clip()
-
                         // Draw selection area
                         if (props.cutStart !== null && props.cutEnd !== null) {
                             const startX = u.valToPos(timestamps[props.cutStart], 'x', true)
@@ -186,11 +202,12 @@ function createChart() {
                             ctx.fillRect(Math.min(startX, endX), top, Math.abs(startX - endX), height)
                         }
 
-                        // Draw vertical lines
+                        // Draw vertical lines for cut points
                         if (props.cutStart !== null) {
                             const x = u.valToPos(timestamps[props.cutStart], 'x', true)
                             ctx.strokeStyle = 'red'
                             ctx.setLineDash([5, 5])
+                            ctx.lineWidth = 2
                             ctx.beginPath()
                             ctx.moveTo(x, top)
                             ctx.lineTo(x, top + height)
@@ -201,14 +218,44 @@ function createChart() {
                             const x = u.valToPos(timestamps[props.cutEnd], 'x', true)
                             ctx.strokeStyle = 'red'
                             ctx.setLineDash([5, 5])
+                            ctx.lineWidth = 2
                             ctx.beginPath()
                             ctx.moveTo(x, top)
                             ctx.lineTo(x, top + height)
                             ctx.stroke()
                         }
-
-                        ctx.restore()
                     }
+
+                    // Draw animation progress fill (for CesiumReplayView synchronization)
+                    // Colors the portion of the graph already traversed in orange
+                    if (props.currentIndex !== null && props.currentIndex >= 0 && props.currentIndex < chartTimestamps.length) {
+                        const startX = u.valToPos(chartTimestamps[0], 'x', true)
+                        const currentX = u.valToPos(chartTimestamps[props.currentIndex], 'x', true)
+
+                        // Draw filled rectangle from start to current position
+                        ctx.fillStyle = 'rgba(255, 152, 0, 0.3)' // Semi-transparent orange
+                        ctx.fillRect(startX, top, currentX - startX, height)
+
+                        // Draw vertical line at current position
+                        ctx.strokeStyle = '#ff9800' // Orange color
+                        ctx.setLineDash([]) // Solid line
+                        ctx.lineWidth = 2
+                        ctx.beginPath()
+                        ctx.moveTo(currentX, top)
+                        ctx.lineTo(currentX, top + height)
+                        ctx.stroke()
+
+                        // Draw a small triangle at the top
+                        ctx.fillStyle = '#ff9800'
+                        ctx.beginPath()
+                        ctx.moveTo(currentX, top)
+                        ctx.lineTo(currentX - 6, top - 8)
+                        ctx.lineTo(currentX + 6, top - 8)
+                        ctx.closePath()
+                        ctx.fill()
+                    }
+
+                    ctx.restore()
                 }
             ]
         }
@@ -233,11 +280,10 @@ function createChart() {
     })
 
     uplotInstance.root.addEventListener('click', e => {
-        if (props.cuttingMode) {
-            const idx = uplotInstance.cursor.idx
-            if (idx != null && idx >= 0 && idx < fixes.length) {
-                emit('click-graph', idx)
-            }
+        const idx = uplotInstance.cursor.idx
+        if (idx != null && idx >= 0 && idx < fixes.length) {
+            // Always emit click-graph for animation jumping or cutting mode
+            emit('click-graph', idx)
         }
     })
 }
