@@ -10,10 +10,10 @@
               @click="$emit('open-full-map')"></v-btn>
           </template>
         </v-tooltip>
-        <v-tooltip :text="$gettext('FlyXC')" location="top">
+        <v-tooltip :text="$gettext('3D View')" location="top">
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props" icon="mdi-earth" size="small" color="white" class="map-btn"
-              @click="$emit('open-flyxc')"></v-btn>
+              @click="$emit('open-cesium')"></v-btn>
           </template>
         </v-tooltip>
         <v-tooltip :text="$gettext('Analyze')" location="top">
@@ -49,7 +49,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['open-full-map', 'open-flyxc', 'open-analyze']);
+const emit = defineEmits(['open-full-map', 'open-cesium', 'open-analyze']);
 
 const mapContainer = ref(null);
 let map = null;
