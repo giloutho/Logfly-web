@@ -6,7 +6,7 @@
   <div v-if="databaseStore.hasOpenDatabase" class="global-logbook">
     <div class="left-panel">
       <LittleMapView v-if="decodedTrack && decodedTrack.GeoJSON" :geoJson="decodedTrack.GeoJSON" :scoreJson="scoreJson"
-        @open-full-map="onOpenFullMap" @open-flyxc="onOpenFlyXc" @open-analyze="onOpenAnalyze" />
+        @open-full-map="onOpenFullMap" @open-cesium="onOpenCesium" @open-analyze="onOpenAnalyze" />
       <div v-else class="no-track-message">
         <p>Base de données : {{ databaseStore.dbName }}</p>
         <p>Sélectionnez un vol pour afficher la trace</p>
@@ -111,6 +111,8 @@
     <v-dialog v-model="showFullMap" fullscreen transition="dialog-bottom-transition">
       <FullMapView v-if="dataFlight" :flightData="dataFlight" @close="onFullMapClose" />
     </v-dialog>
+
+    <CesiumView v-model="showCesiumView" :gpxContent="gpxContent" @close="showCesiumView = false" />
   </div>
 </template>
 
@@ -122,9 +124,11 @@ import OpenLogbook from '@/components/OpenLogbook.vue';
 import LittleMapView from '@/components/LittleMapView.vue';
 import LogbookDetails from '@/components/LogbookDetails.vue';
 import FullMapView from '@/components/FullMapView.vue';
+import CesiumView from '@/components/CesiumView.vue';
 import { useDatabaseStore } from '@/stores/database';
 import { igcDecoding } from '@/js/igc/igc-decoder.js';
 import { IgcAnalyze } from '@/js/igc/igc-analyzer.js';
+import { igcToGpx } from '@/js/igc/igc-to-gpx.js';
 
 // Déclarer les événements que ce composant peut émettre
 const emit = defineEmits(['db-updated']);
@@ -150,6 +154,8 @@ const photoUrl = ref(null);
 const photoTitle = ref('');
 const tagsMap = ref({});
 const selectedTagFilter = ref(null);
+const showCesiumView = ref(false);
+const gpxContent = ref(null);
 
 const tagOptions = computed(() => {
   const opts = Object.values(tagsMap.value).map(t => ({
@@ -522,8 +528,22 @@ function onFullMapClose() {
   loadFlights(true);
 }
 
-function onOpenFlyXc() {
-  console.log('Open FlyXC requested');
+function onOpenCesium() {
+  if (!decodedTrack.value || !decodedTrack.value.fixes) {
+    console.error('No flight data available for 3D view');
+    return;
+  }
+
+  try {
+    // Convert IGC fixes to GPX format
+    gpxContent.value = igcToGpx({
+      fixes: decodedTrack.value.fixes,
+      info: decodedTrack.value.info
+    });
+    showCesiumView.value = true;
+  } catch (error) {
+    console.error('Error converting to GPX:', error);
+  }
 }
 
 function onOpenAnalyze() {
