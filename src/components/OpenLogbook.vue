@@ -1,8 +1,10 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="500">
     <v-card :loading="loading">
-      <v-card-title class="pa-4">
-        {{ $gettext('Ouverture du Journal') }}
+      <v-card-title class="pa-4 d-flex justify-space-between align-center">
+        <span>{{ $gettext('Opening the logbook') }}</span>
+        <v-btn icon="mdi-information-outline" variant="text" density="comfortable" color="grey-darken-1"
+          @click="displayInfo"></v-btn>
       </v-card-title>
 
       <v-card-text>
@@ -11,7 +13,7 @@
         </v-alert>
 
         <v-btn block color="primary" prepend-icon="mdi-folder-search" @click="handlePickDirectory" :disabled="loading">
-          {{ hasFileSystemApi ? $gettext('Choisir le dossier de la base') : $gettext('Ouvrir un fichier .db') }}
+          {{ hasFileSystemApi ? $gettext('Choose a folder') : $gettext('Open a .db file') }}
         </v-btn>
 
         <!-- Fallback input for standard file selection -->
@@ -20,8 +22,8 @@
 
         <v-slide-y-transition>
           <div v-if="availableFiles.length > 0" class="mt-6">
-            <div class="text-caption mb-2">{{ $gettext('Fichiers détectés :') }}</div>
-            <v-select :items="availableFiles" item-title="name" label="Sélectionnez votre base SQLite"
+            <div class="text-caption mb-2">{{ $gettext('Logbooks detected') }} :</div>
+            <v-select :items="sortedAvailableFiles" item-title="name" :label="$gettext('Select a logbook')"
               prepend-inner-icon="mdi-database" return-object variant="outlined"
               @update:model-value="handleFileSelection"></v-select>
           </div>
@@ -29,7 +31,7 @@
 
         <v-btn v-if="currentFile && availableFiles.length === 0" variant="text" block class="mt-4"
           @click="reconnectLastFile">
-          {{ $gettext('Réouvrir') }} {{ currentFile.name }}
+          {{ $gettext('Reopen') }} {{ currentFile.name }}
         </v-btn>
       </v-card-text>
 
@@ -37,10 +39,19 @@
 
       <v-card-actions>
         <v-btn variant="text" @click="closeDialog">
-          {{ $gettext('Annuler') }}
+          {{ $gettext('Cancel') }}
         </v-btn>
       </v-card-actions>
     </v-card>
+
+    <v-snackbar v-model="showInfo" timeout="8000" color="info" location="bottom">
+      {{ infoMessage }}
+      <template v-slot:actions>
+        <v-btn variant="text" @click="showInfo = false">
+          {{ $gettext('Close') }}
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-dialog>
 </template>
 
@@ -63,6 +74,8 @@ const databaseStore = useDatabaseStore();
 const router = useRouter();
 const error = ref('');
 const loading = ref(false);
+const showInfo = ref(false);
+const infoMessage = ref('');
 
 const { $gettext } = useGettext();
 const emit = defineEmits(['db-opened', 'close']);
@@ -76,6 +89,10 @@ const dialog = computed(() => props.show && !databaseStore.hasOpenDatabase);
 // Accès aux variables réactives du service
 const { availableFiles, isReady, currentFile, dirHandle } = logbookService;
 
+const sortedAvailableFiles = computed(() => {
+  return [...availableFiles.value].sort((a, b) => a.name.localeCompare(b.name));
+});
+
 onMounted(async () => {
   // Tente de restaurer les handles au montage (IndexedDB)
   await logbookService.initPersistence();
@@ -84,6 +101,14 @@ onMounted(async () => {
 function closeDialog() {
   emit('close');
   router.push({ name: 'home' });
+}
+
+function displayInfo() {
+  let msg = $gettext('In previous versions of Logfly');
+  msg += ', ' + $gettext('the default logbook folder was Documents/Logfly');
+  msg += '. ' + $gettext('The default logbook was logfly.db') + '.';
+  infoMessage.value = msg;
+  showInfo.value = true;
 }
 
 /**
@@ -102,7 +127,7 @@ async function handlePickDirectory() {
     loading.value = true;
     await logbookService.pickFolder();
     if (availableFiles.value.length === 0) {
-      error.value = $gettext('Aucun fichier SQLite trouvé dans ce dossier.');
+      error.value = $gettext('No logbook found in this folder');
     }
   } catch (err) {
     if (err.name !== 'AbortError') error.value = err.message;
@@ -130,7 +155,7 @@ async function handleFileSelection(fileHandle) {
       error.value = databaseStore.error;
     }
   } catch (err) {
-    error.value = $gettext('Erreur lors de la lecture du fichier.');
+    error.value = $gettext('Error reading the file');
     console.error(err);
   } finally {
     loading.value = false;
@@ -158,7 +183,7 @@ async function handleFallbackFileSelection(event) {
       error.value = databaseStore.error;
     }
   } catch (err) {
-    error.value = $gettext('Erreur lors de la lecture du fichier.');
+    error.value = $gettext('Error reading the file');
     console.error(err);
   } finally {
     loading.value = false;
