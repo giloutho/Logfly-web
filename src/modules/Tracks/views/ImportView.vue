@@ -11,22 +11,12 @@
                 <v-col cols="12" md="3">
                   <v-menu offset-y>
                     <template v-slot:activator="{ props }">
-                      <v-btn
-                        v-bind="props"
-                        color="primary"
-                        block
-                        size="large"
-                        prepend-icon="mdi-usb"
-                      >
-                        GPS USB
+                      <v-btn v-bind="props" color="primary" block size="large" prepend-icon="mdi-usb">
+                        {{ $gettext('USB GPS') }}
                       </v-btn>
                     </template>
                     <v-list>
-                      <v-list-item
-                        v-for="device in usbDevices"
-                        :key="device"
-                        @click="openImportDialog(device, 'usb')"
-                      >
+                      <v-list-item v-for="device in usbDevices" :key="device" @click="openImportDialog(device, 'usb')">
                         <v-list-item-title>{{ device }}</v-list-item-title>
                       </v-list-item>
                     </v-list>
@@ -37,22 +27,13 @@
                 <v-col cols="12" md="3">
                   <v-menu offset-y>
                     <template v-slot:activator="{ props }">
-                      <v-btn
-                        v-bind="props"
-                        color="secondary"
-                        block
-                        size="large"
-                        prepend-icon="mdi-serial-port"
-                      >
-                        GPS Serial
+                      <v-btn v-bind="props" color="secondary" block size="large" prepend-icon="mdi-serial-port">
+                        {{ $gettext('Serial GPS') }}
                       </v-btn>
                     </template>
                     <v-list>
-                      <v-list-item
-                        v-for="device in serialDevices"
-                        :key="device"
-                        @click="openImportDialog(device, 'serial')"
-                      >
+                      <v-list-item v-for="device in serialDevices" :key="device"
+                        @click="openImportDialog(device, 'serial')">
                         <v-list-item-title>{{ device }}</v-list-item-title>
                       </v-list-item>
                     </v-list>
@@ -63,22 +44,13 @@
                 <v-col cols="12" md="3">
                   <v-menu offset-y>
                     <template v-slot:activator="{ props }">
-                      <v-btn
-                        v-bind="props"
-                        color="success"
-                        block
-                        size="large"
-                        prepend-icon="mdi-folder-open"
-                      >
-                        Dossier
+                      <v-btn v-bind="props" color="success" block size="large" prepend-icon="mdi-folder-open">
+                        {{ $gettext('Folder') }}
                       </v-btn>
                     </template>
                     <v-list>
-                      <v-list-item
-                        v-for="option in folderOptions"
-                        :key="option"
-                        @click="openImportDialog(option, 'folder')"
-                      >
+                      <v-list-item v-for="option in folderOptions" :key="option"
+                        @click="openImportDialog(option, 'folder')">
                         <v-list-item-title>{{ option }}</v-list-item-title>
                       </v-list-item>
                     </v-list>
@@ -87,14 +59,9 @@
 
                 <!-- Vol sans trace -->
                 <v-col cols="12" md="3">
-                  <v-btn
-                    color="warning"
-                    block
-                    size="large"
-                    prepend-icon="mdi-airplane-off"
-                    @click="openImportDialog($gettext('Flight without GPS'), 'notrace')"
-                  >
-                    {{ $gettext('Flight without GPS') }}
+                  <v-btn color="warning" block size="large" prepend-icon="mdi-airplane-off"
+                    @click="openImportDialog($gettext('Flight without GPS'), 'notrace')">
+                    {{ $gettext('Flight without GPS track') }}
                   </v-btn>
                 </v-col>
               </v-row>
@@ -112,47 +79,25 @@
             <v-card-title class="d-flex justify-space-between align-center">
               <div>
                 <span><b>{{ currentDevice }}</b> : {{ filteredFlights.length }} {{ $gettext('tracks decoded') }}</span>
-                <v-checkbox
-                  v-model="showAllFlights"
-                  label="Afficher tous les vols"
-                  hide-details
-                  density="compact"
-                  class="mt-2"
-                />
+                <v-checkbox v-model="showAllFlights" label="Display all tracks" hide-details density="compact"
+                  class="mt-2" />
               </div>
               <div>
-                <v-btn
-                  color="success"
-                  @click="importSelectedFlights"
-                  :disabled="!hasSelectedFlights"
-                  class="mr-2"
-                >
+                <v-btn color="success" @click="importSelectedFlights" :disabled="!hasSelectedFlights" class="mr-2">
                   <v-icon start>mdi-database-import</v-icon>
-                  Importer ({{ selectedFlightsCount }})
+                  {{ $gettext('Import') }} {{ selectedFlightsCount }}
                 </v-btn>
-                <v-btn
-                  color="grey"
-                  variant="text"
-                  @click="closeFlightTable"
-                >
-                  Fermer
+                <v-btn color="grey" variant="text" @click="closeFlightTable">
+                  {{ $gettext('Close') }}
                 </v-btn>
               </div>
             </v-card-title>
             <v-card-text>
-              <v-data-table
-                :headers="flightTableHeaders"
-                :items="filteredFlights"
-                :items-per-page="6"
-                class="elevation-1"
-              >
+              <v-data-table :headers="flightTableHeaders" :items="filteredFlights" :items-per-page="6"
+                class="elevation-1">
                 <!-- Checkbox to-store -->
                 <template v-slot:item.toStore="{ item }">
-                  <v-checkbox
-                    v-model="item.toStore"
-                    hide-details
-                    :disabled="!item.isValid || item.existsInDB"
-                  />
+                  <v-checkbox v-model="item.toStore" hide-details :disabled="!item.isValid || item.existsInDB" />
                 </template>
 
                 <!-- Date -->
@@ -174,7 +119,7 @@
                   <span :class="{ 'text-grey': !item.isValid }">
                     {{ item.durationStr || '-' }}
                   </span>
-                </template>                
+                </template>
 
                 <!-- Nom du fichier -->
                 <template v-slot:item.fileName="{ item }">
@@ -185,20 +130,10 @@
                       </span>
                     </template>
                   </v-tooltip>
-                  <v-chip
-                    v-if="item.existsInDB"
-                    size="x-small"
-                    color="warning"
-                    class="ml-2"
-                  >
+                  <v-chip v-if="item.existsInDB" size="x-small" color="warning" class="ml-2">
                     {{ $gettext('Already in the logbook') }}
                   </v-chip>
-                  <v-chip
-                    v-if="!item.isValid"
-                    size="x-small"
-                    color="error"
-                    class="ml-2"
-                  >
+                  <v-chip v-if="!item.isValid" size="x-small" color="error" class="ml-2">
                     {{ $gettext('Invalid') }}
                   </v-chip>
                 </template>
@@ -212,14 +147,8 @@
 
                 <!-- Bouton Map -->
                 <template v-slot:item.actions="{ item }">
-                  <v-btn
-                    icon="mdi-map"
-                    size="small"
-                    variant="text"
-                    color="primary"
-                    @click="showFlightOnMap(item)"
-                    :disabled="!item.isValid"
-                  />
+                  <v-btn icon="mdi-map" size="small" variant="text" color="primary" @click="showFlightOnMap(item)"
+                    :disabled="!item.isValid" />
                 </template>
               </v-data-table>
             </v-card-text>
@@ -242,12 +171,7 @@
           </v-alert>
 
           <div v-if="importType !== 'serial'" class="text-center">
-            <v-btn
-              color="primary"
-              size="large"
-              prepend-icon="mdi-folder-open"
-              @click="selectDirectory"
-            >
+            <v-btn color="primary" size="large" prepend-icon="mdi-folder-open" @click="selectDirectory">
               {{ $gettext('Select') }}
             </v-btn>
             <p v-if="selectedDirectory" class="mt-4 text-success">
@@ -268,16 +192,12 @@
         <v-card-actions>
           <v-spacer />
           <v-btn variant="text" @click="closeImportDialog">
-            {{ $gettext('Annuler') }}
+            {{ $gettext('Cancel') }}
           </v-btn>
-          <v-btn
-            color="primary"
-            variant="elevated"
-            @click="startImport"
+          <v-btn color="primary" variant="elevated" @click="startImport"
             :disabled="importType === 'serial' || (!selectedDirectory && importType !== 'serial')"
-            :loading="isScanning"
-          >
-            {{ isScanning ? 'Scan en cours...' : $gettext('Importer') }}
+            :loading="isScanning">
+            {{ isScanning ? $gettext('Scanning') + '(...)' : $gettext('Import') }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -327,7 +247,7 @@ const serialDevices = [
 ];
 
 const folderOptions = [
-  'Dossier',
+  $gettext('Folder'),
   'Syride PCTools'
 ];
 
@@ -348,10 +268,10 @@ const currentDevice = ref('');
 const flightTableHeaders = [
   { title: '', key: 'toStore', sortable: false, width: '50px' },
   { title: 'Date', key: 'date', sortable: true },
-  { title: 'Heure', key: 'takeoffTime', sortable: true },
-  { title: 'Durée', key: 'durationStr', sortable: false },
-  { title: 'Fichier', key: 'fileName', sortable: true },
-  { title: 'Pilote', key: 'pilotName', sortable: true },
+  { title: 'Time', key: 'takeoffTime', sortable: true },
+  { title: 'Duration', key: 'durationStr', sortable: false },
+  { title: 'File', key: 'fileName', sortable: true },
+  { title: 'Pilot', key: 'pilotName', sortable: true },
   { title: 'Actions', key: 'actions', sortable: false, align: 'center', width: '100px' }
 ];
 
@@ -405,11 +325,14 @@ async function selectDirectory() {
       error.value = '';
     } else {
       // Fallback pour navigateurs non supportés
-      error.value = 'L\'API File System Access n\'est pas supportée par ce navigateur. Veuillez utiliser Chrome, Edge ou Opera.';
+      let errMsg = 'The File System Access API is not supported by this browser' + '\n';
+      errMsg += 'Use LogflyGPS to upload GPS tracks' + '\n'
+      errMsg += 'Or use Chrome, Edge, or Opera.';
+      error.value = errMsg;
     }
   } catch (err) {
     if (err.name !== 'AbortError') {
-      error.value = `Erreur lors de la sélection du dossier: ${err.message}`;
+      error.value = $gettext('Error while selecting the folder') + ':' + err.message;
       console.error('Erreur showDirectoryPicker:', err);
     }
   }
@@ -423,11 +346,11 @@ async function startImport() {
 
   isScanning.value = true;
   error.value = '';
-  
+
   try {
     // 1. Scanner le répertoire pour trouver tous les fichiers IGC
     const igcFiles = await scanDirectoryForIGC(selectedDirectoryHandle.value);
-    
+
     if (igcFiles.length === 0) {
       error.value = $gettext('No tracks in this folder');
       isScanning.value = false;
@@ -437,14 +360,14 @@ async function startImport() {
     // 2. Traiter chaque fichier (parser + vérifier existence)
     const db = databaseStore.db;
     scannedFlights.value = await processIGCFiles(igcFiles, parseIGC, checkFlightExists, db);
-    
+
     // 3. Mémoriser le device et fermer le dialog
     currentDevice.value = selectedDevice.value;
     closeImportDialog();
     showFlightTable.value = true;
-    
+
   } catch (err) {
-    error.value = `Erreur lors du scan: ${err.message}`;
+    error.value = $gettext('Error during scanning') + ':' + err.message;
     console.error('Erreur startImport:', err);
   } finally {
     isScanning.value = false;
@@ -463,12 +386,12 @@ async function showFlightOnMap(flight) {
   //console.log('Afficher le vol sur la carte:', flight.firstLatitude);
   //alert(`Affichage carte pour ${flight.fileName}\nDate: ${flight.date}\nHeure: ${flight.takeoffTime}`);
   const flightSite = await searchSite(flight.firstLatitude, flight.firstLongitude, flight.firstAltGPS, $gettext('To rename'));
-  console.log('site:', flightSite.siteName,flightSite.siteCountry);
+  console.log('site:', flightSite.siteName, flightSite.siteCountry);
 }
 
 async function importSelectedFlights() {
   const flightsToImport = scannedFlights.value.filter(f => f.toStore);
-  
+
   if (flightsToImport.length === 0) {
     return;
   }
@@ -482,17 +405,17 @@ async function importSelectedFlights() {
         const flightSite = await searchSite(flight.firstLatitude, flight.firstLongitude, flight.firstAltGPS, $gettext('To rename'));
         const sqltable = 'Vol';
         const sqlparams = {
-            V_Date: flight.sqlDateTime,
-            V_Duree: flight.durationStr,
-            V_sDuree: flight.duration,
-            V_LatDeco: flight.firstLatitude,
-            V_LongDeco: flight.firstLongitude,
-            V_AltDeco: flight.firstAltGPS,
-            V_Site: flightSite.siteName,
-            V_Pays: flightSite.siteCountry,
-            V_IGC: flight.rawContent,
-            UTC: flight.offsetUTC,
-            V_Engin: flight.gliderType
+          V_Date: flight.sqlDateTime,
+          V_Duree: flight.durationStr,
+          V_sDuree: flight.duration,
+          V_LatDeco: flight.firstLatitude,
+          V_LongDeco: flight.firstLongitude,
+          V_AltDeco: flight.firstAltGPS,
+          V_Site: flightSite.siteName,
+          V_Pays: flightSite.siteCountry,
+          V_IGC: flight.rawContent,
+          UTC: flight.offsetUTC,
+          V_Engin: flight.gliderType
         }
         const result = databaseStore.insert(sqltable, sqlparams);
         if (!result.success) {
@@ -500,7 +423,7 @@ async function importSelectedFlights() {
           continue;
         }
         importedCount++;
-        console.log(importedCount,' Importing flight: '+sqlparams.V_Date+' '+sqlparams.V_Site);
+        console.log(importedCount, ' Importing flight: ' + sqlparams.V_Date + ' ' + sqlparams.V_Site);
       } catch (err) {
         console.error(`Erreur import ${flight.fileName}:`, err);
       }

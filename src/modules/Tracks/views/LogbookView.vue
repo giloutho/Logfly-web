@@ -118,7 +118,7 @@
 
 <script setup>
 
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import { useGettext } from "vue3-gettext";
 import OpenLogbook from '@/components/OpenLogbook.vue';
 import LittleMapView from '@/components/LittleMapView.vue';
@@ -137,6 +137,22 @@ const { $gettext } = useGettext();
 
 const flights = ref([]);
 const selectedItems = ref([]);
+
+// Warn user if leaving with unsaved changes
+function handleBeforeUnload(e) {
+  if (databaseStore.isDirty) {
+    e.preventDefault();
+    e.returnValue = ''; // Standard for showing confirmation dialog
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('beforeunload', handleBeforeUnload);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', handleBeforeUnload);
+});
 const page = ref(1);
 const itemsPerPage = ref(8);
 const search = ref('');
@@ -305,7 +321,7 @@ function onCommentUpdate({ id, comment }) {
   if (!flightId) return;
   // Mise à jour en base
   const req = `UPDATE Vol SET V_Commentaire = "${comment}" WHERE V_ID = ${flightId}`;
-  const result = databaseStore.query(req);
+  const result = databaseStore.update(req);
   if (!result.success) {
     console.error('Erreur lors de la mise à jour du commentaire:', result.message);
     snackbarMessage.value = 'Erreur lors de la mise à jour du commentaire';
@@ -332,7 +348,7 @@ function onGliderUpdate({ id, glider }) {
   const flightId = id || dataFlight.value?.decodedIgc?.info?.id || selectedItems.value[0];
   if (!flightId) return;
   const req = `UPDATE Vol SET V_Engin = '${glider}' WHERE V_ID = ${flightId}`;
-  const result = databaseStore.query(req);
+  const result = databaseStore.update(req);
   if (!result.success) {
     snackbarMessage.value = 'Erreur lors de la mise à jour de la voile';
     snackbar.value = true;
@@ -358,7 +374,7 @@ function onSiteUpdate({ id, site }) {
   const flightId = id || dataFlight.value?.decodedIgc?.info?.id || selectedItems.value[0];
   if (!flightId) return;
   const req = `UPDATE Vol SET V_Site = '${site}' WHERE V_ID = ${flightId}`;
-  const result = databaseStore.query(req);
+  const result = databaseStore.update(req);
   if (!result.success) {
     snackbarMessage.value = 'Erreur lors de la mise à jour du site';
     snackbar.value = true;
@@ -384,7 +400,7 @@ function onFlightDelete(flightId) {
   if (!flightId) return;
 
   const req = `DELETE FROM Vol WHERE V_ID = ${flightId}`;
-  const result = databaseStore.query(req);
+  const result = databaseStore.update(req);
 
   if (!result.success) {
     snackbarMessage.value = 'Erreur lors de la suppression du vol';
@@ -465,7 +481,7 @@ function onPhotoUpdate({ id, photoData }) {
     );
   } else {
     // Delete (set null)
-    result = databaseStore.query(`UPDATE Vol SET V_Photos = NULL WHERE V_ID = ${flightId}`);
+    result = databaseStore.update(`UPDATE Vol SET V_Photos = NULL WHERE V_ID = ${flightId}`);
   }
 
   if (!result.success) {
@@ -495,7 +511,7 @@ function onTagUpdate({ id, tag }) {
 
   const tagVal = tag === null ? 'NULL' : tag;
   const req = `UPDATE Vol SET V_Tag = ${tagVal} WHERE V_ID = ${flightId}`;
-  const result = databaseStore.query(req);
+  const result = databaseStore.update(req);
 
   if (!result.success) {
     console.error('Error updating tag', result.message);

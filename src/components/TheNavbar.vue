@@ -4,7 +4,7 @@
       <router-link :to="{ name: 'home' }" class="app-title-link">
         <!-- <router-link :to="{ name: 'logbook-view' }" class="app-title-link">  -->
         <img src="@/assets/Logowebwh.png" alt="Logo Logfly"
-          style="vertical-align: middle; margin-right: 8px; height: 32px;" />
+          style="vertical-align: middle; margin-right: 8px; height: 48px;" />
         Logfly
       </router-link>
     </v-toolbar-title>
