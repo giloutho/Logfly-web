@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { readSqliteFile, openDatabase, executeQuery, closeDatabase, insertIntoDatabase, updateDatabase } from '@/js/database/sql-manager.js'
+import { readSqliteFile, openDatabase, executeQuery, closeDatabase, insertIntoDatabase, updateDatabase, createNewDatabase } from '@/js/database/sql-manager.js'
 
 export const useDatabaseStore = defineStore('database', () => {
   // État
@@ -111,6 +111,31 @@ export const useDatabaseStore = defineStore('database', () => {
     throw new Error("Base non initialisée");
   }
 
+  /**
+   * Crée un nouveau logbook vide avec le schéma complet
+   * @param {string} name - Nom du fichier (affiché dans l'UI)
+   * @returns {Object} { success: true } ou { success: false, error: string }
+   */
+  async function createNewLogbook(name = 'newlogbook.db') {
+    try {
+      error.value = '';
+      markAsSaved(); // Reset dirty state
+      if (db.value) { closeDatabase(db.value); }
+
+      db.value = await createNewDatabase();
+      isOpen.value = true;
+      dbName.value = name;
+
+      return { success: true };
+    } catch (e) {
+      error.value = e.message || 'Error creating new database';
+      isOpen.value = false;
+      db.value = null;
+      dbName.value = '';
+      return { success: false, error: error.value };
+    }
+  }
+
   function insert(tableName, params) {
     if (!db.value) {
       return { success: false, message: 'No database open' }
@@ -190,6 +215,7 @@ export const useDatabaseStore = defineStore('database', () => {
     isDirty,
     // Actions
     loadDatabase,
+    createNewLogbook,
     exportDatabase,
     closeDatabaseStore,
     markAsSaved,

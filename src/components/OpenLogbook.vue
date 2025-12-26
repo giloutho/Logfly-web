@@ -1,19 +1,30 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="500">
     <v-card :loading="loading">
-      <v-card-title class="pa-4 d-flex justify-space-between align-center">
-        <span>{{ $gettext('Opening the logbook') }}</span>
+      <!--
+      <v-card-title class="pa-2 d-flex justify-end">
         <v-btn icon="mdi-information-outline" variant="text" density="comfortable" color="grey-darken-1"
           @click="displayInfo"></v-btn>
       </v-card-title>
-
+-->
       <v-card-text>
+        <h3 class="text-h6 text-primary mb-4 font-weight-bold">
+          <v-icon start color="primary">mdi-database-eye</v-icon>
+          {{ $gettext('Existing logbook') }}
+          <span> <v-btn icon="mdi-information-outline" variant="text" density="comfortable" color="grey-darken-1"
+              @click="displayInfo"></v-btn></span>
+        </h3>
         <v-alert v-if="error" type="error" variant="tonal" class="mb-4">
           {{ error }}
         </v-alert>
 
         <v-btn block color="primary" prepend-icon="mdi-folder-search" @click="handlePickDirectory" :disabled="loading">
           {{ hasFileSystemApi ? $gettext('Choose a folder') : $gettext('Open a .db file') }}
+        </v-btn>
+
+        <v-btn v-if="currentFile && availableFiles.length === 0" variant="text" block class="mt-4"
+          @click="reconnectLastFile">
+          {{ $gettext('Reopen') }} {{ currentFile.name }}
         </v-btn>
 
         <!-- Fallback input for standard file selection -->
@@ -29,16 +40,28 @@
           </div>
         </v-slide-y-transition>
 
-        <v-btn v-if="currentFile && availableFiles.length === 0" variant="text" block class="mt-4"
-          @click="reconnectLastFile">
-          {{ $gettext('Reopen') }} {{ currentFile.name }}
+        <v-divider class="my-6"></v-divider>
+
+        <!-- Création nouveau logbook -->
+        <h3 class="text-h6 text-primary mb-4 font-weight-bold">
+          <v-icon start color="primary">mdi-database-plus</v-icon>
+          {{ $gettext('New logbook') }}
+        </h3>
+
+        <v-text-field v-model="newLogbookName" :label="$gettext('Enter a name and click the Create button')"
+          prepend-inner-icon="mdi-database-minus" variant="outlined" density="compact" class="mb-2" hide-details
+          placeholder="mylogbook.db"></v-text-field>
+        <v-btn block color="success" prepend-icon="mdi-plus-circle" @click="handleCreateNewLogbook"
+          :disabled="loading || !newLogbookName">
+          {{ $gettext('Create new logbook') }}
         </v-btn>
       </v-card-text>
 
       <v-divider></v-divider>
 
-      <v-card-actions>
-        <v-btn variant="text" @click="closeDialog">
+      <v-card-actions class="pa-4">
+        <v-spacer></v-spacer>
+        <v-btn variant="text" color="grey-darken-1" @click="closeDialog">
           {{ $gettext('Cancel') }}
         </v-btn>
       </v-card-actions>
@@ -76,6 +99,7 @@ const error = ref('');
 const loading = ref(false);
 const showInfo = ref(false);
 const infoMessage = ref('');
+const newLogbookName = ref('');
 
 const { $gettext } = useGettext();
 const emit = defineEmits(['db-opened', 'close']);
@@ -109,6 +133,81 @@ function displayInfo() {
   msg += '. ' + $gettext('The default logbook was logfly.db') + '.';
   infoMessage.value = msg;
   showInfo.value = true;
+}
+
+/**
+ * Création d'un nouveau logbook
+ */
+async function handleCreateNewLogbook() {
+  error.value = '';
+  loading.value = true;
+
+  try {
+    // Ajouter .db si non présent
+    let filename = newLogbookName.value.trim();
+    if (!filename.toLowerCase().endsWith('.db')) {
+      filename += '.db';
+    }
+
+    // Créer la nouvelle base de données
+    const result = await databaseStore.createNewLogbook(filename);
+    if (!result.success) {
+      error.value = result.error || $gettext('Error creating the logbook');
+      loading.value = false;
+      return;
+    }
+
+    // Exporter et sauvegarder le fichier
+    const data = await databaseStore.exportDatabase();
+    const blob = new Blob([data], { type: 'application/x-sqlite3' });
+
+    if ('showSaveFilePicker' in window) {
+      // API File System Access - Ouvrir un sélecteur de sauvegarde
+      try {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: filename,
+          types: [{
+            description: 'SQLite Database',
+            accept: { 'application/x-sqlite3': ['.db'] }
+          }]
+        });
+        const writable = await handle.createWritable();
+        await writable.write(blob);
+        await writable.close();
+
+        // Confirmer et enregistrer le handle pour autosave futur
+        await logbookService.confirmFile(handle);
+      } catch (saveErr) {
+        if (saveErr.name === 'AbortError') {
+          // L'utilisateur a annulé -> on reste dans le dialog
+          loading.value = false;
+          return;
+        }
+        throw saveErr;
+      }
+    } else {
+      // Fallback : téléchargement classique
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+
+      // Mode fallback - pas de handle
+      logbookService.setFallbackFile({ name: filename });
+    }
+
+    // Succès - Émettre l'événement et naviguer vers ImportView
+    emit('db-opened');
+    newLogbookName.value = '';
+    router.push({ name: 'import' });
+
+  } catch (err) {
+    error.value = err.message || $gettext('Error creating the logbook');
+    console.error('Erreur création logbook:', err);
+  } finally {
+    loading.value = false;
+  }
 }
 
 /**
