@@ -59,8 +59,7 @@
 
                 <!-- Vol sans trace -->
                 <v-col cols="12" md="3">
-                  <v-btn color="warning" block size="large" prepend-icon="mdi-airplane-off"
-                    @click="openImportDialog($gettext('Flight without GPS'), 'notrace')">
+                  <v-btn color="warning" block size="large" prepend-icon="mdi-airplane-off" @click="notraceImport">
                     {{ $gettext('Flight without GPS track') }}
                   </v-btn>
                 </v-col>
@@ -325,8 +324,8 @@ async function selectDirectory() {
       error.value = '';
     } else {
       // Fallback pour navigateurs non supportés
-      let errMsg = 'The File System Access API is not supported by this browser' + '\n';
-      errMsg += 'Use LogflyGPS to upload GPS tracks' + '\n'
+      let errMsg = 'The File System Access API is not supported by this browser' + '. ';
+      errMsg += 'Use LogflyGPS to upload GPS tracks' + ' .';
       errMsg += 'Or use Chrome, Edge, or Opera.';
       error.value = errMsg;
     }
@@ -439,6 +438,10 @@ async function importSelectedFlights() {
     console.error('Erreur lors de l\'import:', err);
     alert(`Erreur lors de l'import: ${err.message}`);
   }
+}
+
+function notraceImport() {
+  alert('Coming soon');
 }
 </script>
 
