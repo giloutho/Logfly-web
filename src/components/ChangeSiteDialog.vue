@@ -17,7 +17,7 @@
                 <div class="dialog-section">
                     <div class="dialog-label">{{ $gettext('Option 1 Update name') }}</div>
                     <v-text-field v-model="newSiteName" :label="$gettext('Enter new site name')" variant="outlined"
-                        density="compact" clearable />
+                        density="compact" class="text-uppercase" clearable />
                 </div>
 
                 <div class="summary-section" v-if="currentSite || targetSite">
@@ -67,9 +67,16 @@ watch(() => props.modelValue, (val) => {
     }
 });
 
+// Force la saisie en majuscules
+watch(newSiteName, (val) => {
+    if (val) {
+        newSiteName.value = val.toUpperCase();
+    }
+});
+
 const targetSite = computed(() => {
     if (newSiteName.value && newSiteName.value.trim()) {
-        return newSiteName.value.trim();
+        return newSiteName.value.trim().toUpperCase();
     }
     return selectedSite.value || '';
 });

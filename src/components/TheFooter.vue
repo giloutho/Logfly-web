@@ -5,7 +5,7 @@
       <span class="footer-version">v{{ version }}</span>
 
       <v-chip class="footer-db" color="primary" variant="outlined" size="small">
-        {{ dbPath || $gettext('Aucune base ouverte') }}
+        {{ dbPath || $gettext('No logbook opened') }}
       </v-chip>
 
       <v-btn v-if="databaseStore.hasOpenDatabase" :color="databaseStore.isDirty ? 'error' : 'success'"
@@ -31,7 +31,7 @@ const { $gettext } = useGettext();
 const databaseStore = useDatabaseStore();
 
 const props = defineProps({
-  version: { type: String, default: '1.0.0' },
+  version: { type: String, default: '7.0.1' },
   dbPath: { type: String, default: '' }
 });
 
