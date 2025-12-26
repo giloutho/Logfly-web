@@ -26,6 +26,7 @@ export const useDatabaseStore = defineStore('database', () => {
   async function loadDatabase(file) {
     try {
       error.value = ''
+      markAsSaved() // Reset dirty state at start
       if (db.value) { closeDatabase(db.value) }
 
       const fileBuffer = await readSqliteFile(file)
@@ -38,6 +39,19 @@ export const useDatabaseStore = defineStore('database', () => {
           closeDatabase(db.value)
           db.value = null
           throw new Error('The database does not contain a "Vol" table')
+        }
+
+        // Vérification de la présence de la colonne V_Tag dans la table Vol
+        const resVolInfo = executeQuery(db.value, "PRAGMA table_info(Vol)")
+        if (resVolInfo.success && resVolInfo.data[0]) {
+          // Les colonnes sont dans values[x][1] (nom de la colonne)
+          const columns = resVolInfo.data[0].values.map(row => row[1]);
+          if (!columns.includes('V_Tag')) {
+            console.log("Migration : Ajout de la colonne V_Tag à la table Vol");
+            const alterSQL = "ALTER TABLE Vol ADD COLUMN V_Tag INTEGER";
+            executeQuery(db.value, alterSQL);
+            markAsDirty();
+          }
         }
 
         // Vérification / Création de la table Tag
@@ -58,11 +72,24 @@ export const useDatabaseStore = defineStore('database', () => {
           // Mark as dirty because we modified the structure/content
           markAsDirty()
         }
+        // Vérification / Création de la table Equip
+        const resEquip = executeQuery(db.value, "SELECT name FROM sqlite_master WHERE type='table' AND name='Equip'")
+        if (resEquip.success && resEquip.data.length === 0) {
+          const creaEquip = 'CREATE TABLE Equip (M_ID integer NOT NULL PRIMARY KEY, M_Date TimeStamp, M_Engin varchar(30), M_Event varchar(30), M_Price double, M_Comment Long Text)';
+          executeQuery(db.value, creaEquip);
+          markAsDirty();
+        }
+
+
 
         isOpen.value = true
         dbName.value = file.name
         // Lors d'un chargement tout neuf, on est "propre"
-        markAsSaved()
+        // Si aucune migration n'a eu lieu, on confirme que c'est propre.
+        // Sinon (isDirty == true), on le laisse tel quel pour déclencher l'autosave.
+        if (!isDirty.value) {
+          markAsSaved()
+        }
         return { success: true }
       } else {
         throw new Error(result.message || 'Error while executing the open request')
