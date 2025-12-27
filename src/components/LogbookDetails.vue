@@ -72,7 +72,10 @@
             <ScoreDialog v-model="showScoreDialog" :fixes="trackFixes" :date="trackDate" :scoringFn="igcScoring"
               @score-result="onScoreSelected" />
             <div class="about-row btn-row">
-              <v-btn color="secondary" density="compact" class="mr-2" @click="showTagDialog = true">TAG</v-btn>
+              <v-btn color="orange-darken-2" density="compact" class="mr-2" @click="showTagDialog = true">
+                <v-icon start>mdi-tag-outline</v-icon>
+                TAG
+              </v-btn>
               <TagDialog v-model="showTagDialog" :currentTag="trackData?.tag" :flightDate="trackData?.day"
                 :flightSite="trackData?.site" @save="onTagSave" />
               <v-btn v-if="!trackData?.hasPhoto" color="primary" density="compact" class="mr-2"
@@ -121,7 +124,16 @@
 
       <v-window-item value="share">
         <v-card-text>
-          Options de partage...
+          <div class="share-btn-row">
+            <v-btn color="primary" density="compact" class="mr-3" @click="onExportIgc">
+              <v-icon start>mdi-file-export</v-icon>
+              {{ $gettext('IGC export') }}
+            </v-btn>
+            <v-btn color="secondary" density="compact" @click="onExportGpx">
+              <v-icon start>mdi-file-export</v-icon>
+              {{ $gettext('GPX export') }}
+            </v-btn>
+          </div>
         </v-card-text>
       </v-window-item>
 
@@ -348,6 +360,54 @@ function formatDuration(seconds) {
   const minutes = Math.floor((seconds % 3600) / 60);
   return `${hours}h ${minutes}min`;
 }
+
+function onExportIgc() {
+  const igcContent = props.trackData?.rawIgc;
+  if (!igcContent) {
+    console.warn('No IGC content to export');
+    return;
+  }
+
+  // Create filename from date or default
+  const date = props.trackData?.day || 'flight';
+  const filename = `${date.replace(/-/g, '')}_logfly.igc`;
+
+  // Create blob and trigger download
+  const blob = new Blob([igcContent], { type: 'application/octet-stream' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+async function onExportGpx() {
+  const decodedIgc = props.trackData?.decodedIgc;
+  if (!decodedIgc?.fixes) {
+    console.warn('No track data to export as GPX');
+    return;
+  }
+
+  // Import GPX converter
+  const { igcToGpx } = await import('@/js/igc/igc-to-gpx.js');
+
+  const gpxContent = igcToGpx(decodedIgc);
+  const date = props.trackData?.day || 'flight';
+  const filename = `${date.replace(/-/g, '')}_logfly.gpx`;
+
+  const blob = new Blob([gpxContent], { type: 'application/gpx+xml' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 </script>
 
 <style scoped>
@@ -449,6 +509,14 @@ function formatDuration(seconds) {
   gap: 12px;
   margin-top: 10px;
   justify-content: flex-end;
+}
+
+.share-btn-row {
+  display: flex;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border-radius: 4px;
 }
 
 .compute-btn {

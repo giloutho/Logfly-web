@@ -115,6 +115,10 @@
     </v-dialog>
 
     <CesiumReplayView v-model="showCesiumView" :flightData="dataFlight" @close="showCesiumView = false" />
+
+    <!-- TraceInfoDialog modal for Analyze -->
+    <TraceInfoDialog v-model="showTraceInfoDialog" :decodedData="dataFlight?.decodedIgc"
+      :anaResult="dataFlight?.anaTrack" />
   </div>
 </template>
 
@@ -127,6 +131,7 @@ import LittleMapView from '@/components/LittleMapView.vue';
 import LogbookDetails from '@/components/LogbookDetails.vue';
 import FullMapView from '@/components/FullMapView.vue';
 import CesiumReplayView from '@/components/CesiumReplayView.vue';
+import TraceInfoDialog from '@/components/TraceInfoDialog.vue';
 import { useDatabaseStore } from '@/stores/database';
 import { igcDecoding } from '@/js/igc/igc-decoder.js';
 import { IgcAnalyze } from '@/js/igc/igc-analyzer.js';
@@ -174,6 +179,7 @@ const photoTitle = ref('');
 const tagsMap = ref({});
 const selectedTagFilter = ref(null);
 const showCesiumView = ref(false);
+const showTraceInfoDialog = ref(false);
 
 const tagOptions = computed(() => {
   const opts = Object.values(tagsMap.value).map(t => ({
@@ -555,7 +561,11 @@ function onOpenCesium() {
 }
 
 function onOpenAnalyze() {
-  console.log('Open Analyze requested');
+  if (!dataFlight.value || !dataFlight.value.decodedIgc?.fixes) {
+    console.error('No flight data available for analysis');
+    return;
+  }
+  showTraceInfoDialog.value = true;
 }
 
 async function readIgcFromDb(flightId) {
@@ -593,7 +603,8 @@ async function readIgcFromDb(flightId) {
           hasPhoto: result.data[0].values[0][6] === 1,
           tag: result.data[0].values[0][7],
           anaTrack: analyzeIgc.anaTrack,
-          decodedIgc: decodedTrack.value
+          decodedIgc: decodedTrack.value,
+          rawIgc: strIgc
         }
       }
     }

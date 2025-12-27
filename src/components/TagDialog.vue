@@ -6,8 +6,8 @@
             </v-card-title>
             <v-divider></v-divider>
             <v-card-text class="pa-4">
-                <div class="text-center mb-4 subtitle-2">
-                    {{ $gettext('Click on the colored button') }}
+                <div class="instruction-highlight text-center mb-4">
+                    {{ $gettext('Click on the colored button and then OK') }}
                 </div>
 
                 <div v-for="tag in tags" :key="tag.Tag_ID" class="tag-row">
@@ -124,6 +124,16 @@ function save() {
 </script>
 
 <style scoped>
+.instruction-highlight {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: #1565c0;
+    border: 1px solid #90caf9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .tag-row {
     display: flex;
     align-items: center;
