@@ -41,3 +41,6 @@ __screenshots__/
 
 # Doc folder
 doc/
+
+# Local Netlify folder
+.netlify

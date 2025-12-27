@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick, toRaw } from 'vue';
 import { useGettext } from "vue3-gettext";
 import GraphUplot from './GraphUplot.vue';
 import { igcToCzml, getFixIndexForTimestamp, julianDateToTimestamp } from '@/js/igc/igc-to-czml.js';
@@ -103,16 +103,42 @@ const dialog = computed({
 
 // Playback state
 const isPlaying = ref(false);
-const speedMultiplier = ref(1);  // Default to x1 for smooth animation
+const speedMultiplier = ref(30);  // Default to x30
 const cameraMode = ref('follow');  // Default to follow for free navigation
 const currentFixIndex = ref(0);
 const hoverInfo = ref('');
 const groundAltitudes = ref(null);
-const isFullView = ref(true);  // Start in full view mode
+const isFullView = ref(false);  // Start focused on takeoff
 
-// Extract fixes from flight data
+// Extract fixes from flight data and sanitize them (strip Vue proxies / ensure numbers)
+const rawFixes = computed(() => props.flightData?.decodedIgc?.fixes || []);
+
 const fixes = computed(() => {
-    return props.flightData?.decodedIgc?.fixes || [];
+    if (!rawFixes.value || rawFixes.value.length === 0) return [];
+
+    return rawFixes.value
+        .map((fix) => {
+            const plain = toRaw(fix) || {};
+            const lon = Number(plain.longitude);
+            const lat = Number(plain.latitude);
+            const alt = Number(plain.gpsAltitude ?? plain.pressureAltitude ?? 0);
+            const ts = Number(plain.timestamp);
+
+            return {
+                ...plain,
+                longitude: lon,
+                latitude: lat,
+                gpsAltitude: Number.isFinite(alt) ? alt : 0,
+                timestamp: ts
+            };
+        })
+        .filter((fix) =>
+            Number.isFinite(fix.longitude) &&
+            Number.isFinite(fix.latitude) &&
+            Number.isFinite(fix.timestamp) &&
+            fix.longitude >= -180 && fix.longitude <= 180 &&
+            fix.latitude >= -90 && fix.latitude <= 90
+        );
 });
 
 // Cesium Ion access token
@@ -204,6 +230,9 @@ function loadFlightAnimation() {
     dataSource.load(czml).then(() => {
         viewer.dataSources.add(dataSource);
 
+        // Ensure camera isn't locked by a previous lookAt
+        viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
+
         // Apply the dataSource clock to the viewer (this has the correct times from CZML)
         if (dataSource.clock) {
             viewer.clock.startTime = dataSource.clock.startTime;
@@ -212,38 +241,9 @@ function loadFlightAnimation() {
             viewer.clock.multiplier = speedMultiplier.value;
         }
 
-        // Create a static polyline for the full track (visible immediately)
-        // Use sampled positions to avoid performance issues
-        const sampleRate = Math.max(1, Math.floor(fixes.value.length / 500));
-        const positions = [];
-
-        for (let i = 0; i < fixes.value.length; i += sampleRate) {
-            const fix = fixes.value[i];
-            positions.push(Cesium.Cartesian3.fromDegrees(
-                fix.longitude,
-                fix.latitude,
-                fix.gpsAltitude || 0
-            ));
-        }
-        // Include last point
-        const lastFix = fixes.value[fixes.value.length - 1];
-        positions.push(Cesium.Cartesian3.fromDegrees(
-            lastFix.longitude,
-            lastFix.latitude,
-            lastFix.gpsAltitude || 0
-        ));
-
-        // Add static track polyline
-        viewer.entities.add({
-            id: 'staticTrack',
-            name: 'Flight Track',
-            polyline: {
-                positions: positions,
-                width: 3,
-                material: Cesium.Color.RED.withAlpha(0.8),
-                clampToGround: false
-            }
-        });
+        // NOTE: We intentionally do NOT add a static polyline entity here.
+        // In production builds, polyline geometry creation can trigger a Cesium worker NaN error
+        // depending on the packed data passed to workers.
 
         // Get the paraglider entity
         const paraglider = dataSource.entities.getById('paraglider');
@@ -251,19 +251,34 @@ function loadFlightAnimation() {
             // Don't auto-track entity - let user navigate freely
             viewer.trackedEntity = undefined;
 
-            // Start in full view mode: jump to end
-            viewer.clock.currentTime = Cesium.JulianDate.clone(viewer.clock.stopTime);
-            currentFixIndex.value = fixes.value.length - 1;
+            // Initial camera: focus on takeoff (first valid fix)
+            const startFix = fixes.value[0];
+            if (startFix) {
+                const lon = Number(startFix.longitude);
+                const lat = Number(startFix.latitude);
+                const alt = Number(startFix.gpsAltitude ?? startFix.pressureAltitude ?? 0);
 
-            // Fly to see the entire track from above
-            viewer.flyTo(viewer.entities.getById('staticTrack'), {
-                duration: 1.5,
-                offset: new Cesium.HeadingPitchRange(
-                    Cesium.Math.toRadians(0),
-                    Cesium.Math.toRadians(-45),
-                    0  // Auto-calculate distance
-                )
-            });
+                // Start in replay mode focused on takeoff
+                isFullView.value = false;
+                viewer.clock.currentTime = Cesium.JulianDate.clone(viewer.clock.startTime);
+                currentFixIndex.value = 0;
+
+                if (Number.isFinite(lon) && Number.isFinite(lat)) {
+                    const centerHeight = Number.isFinite(alt) ? Math.max(0, alt) : 0;
+                    const center = Cesium.Cartesian3.fromDegrees(lon, lat, centerHeight);
+                    const sphere = new Cesium.BoundingSphere(center, 1500);
+
+                    // Larger range = less zoom (icon visible immediately)
+                    viewer.camera.flyToBoundingSphere(sphere, {
+                        duration: 1.2,
+                        offset: new Cesium.HeadingPitchRange(
+                            Cesium.Math.toRadians(0),
+                            Cesium.Math.toRadians(-45),
+                            9000
+                        )
+                    });
+                }
+            }
         }
     }).catch((error) => {
         console.error('Error loading CZML:', error);
@@ -564,8 +579,8 @@ watch(() => props.flightData, () => {
 }, { deep: true });
 
 function close() {
-    // Reset state for next open (start in full view mode)
-    isFullView.value = true;
+    // Reset state for next open (start focused on takeoff)
+    isFullView.value = false;
     currentFixIndex.value = 0;
     cameraMode.value = 'follow';
     dialog.value = false;

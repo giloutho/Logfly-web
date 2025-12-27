@@ -210,7 +210,7 @@ import { useGettext } from 'vue3-gettext';
 import OpenLogbook from '@/components/OpenLogbook.vue';
 import { useDatabaseStore } from '@/stores/database';
 import { parseIGC, checkFlightExists } from '../js/igc-parser';
-import { scanDirectoryForIGC, processIGCFiles } from '../js/directory-scanner';
+import { scanDirectoryForTracks, processTrackFiles } from '../js/directory-scanner';
 import { getDeviceDescriptions } from '../js/device-descriptions';
 import { searchSite } from '../js/flight-site';
 
@@ -347,18 +347,22 @@ async function startImport() {
   error.value = '';
 
   try {
-    // 1. Scanner le répertoire pour trouver tous les fichiers IGC
-    const igcFiles = await scanDirectoryForIGC(selectedDirectoryHandle.value);
+    // 1. Scanner le répertoire pour trouver tous les fichiers IGC et GPX
+    const { igcFiles, gpxFiles } = await scanDirectoryForTracks(selectedDirectoryHandle.value);
 
-    if (igcFiles.length === 0) {
+    if (igcFiles.length === 0 && gpxFiles.length === 0) {
       error.value = $gettext('No tracks in this folder');
       isScanning.value = false;
       return;
     }
 
-    // 2. Traiter chaque fichier (parser + vérifier existence)
+    // 2. Traiter les fichiers (IGC prioritaires, GPX doublons ignorés, GPX uniques convertis)
     const db = databaseStore.db;
-    scannedFlights.value = await processIGCFiles(igcFiles, parseIGC, checkFlightExists, db);
+    const result = await processTrackFiles(igcFiles, gpxFiles, parseIGC, checkFlightExists, db);
+    scannedFlights.value = result.flights;
+
+    // Log des stats de traitement
+    console.log(`Scan terminé: ${result.stats.igcCount} IGC, ${result.stats.gpxConverted} GPX convertis, ${result.stats.gpxDuplicates} GPX doublons ignorés`);
 
     // 3. Mémoriser le device et fermer le dialog
     currentDevice.value = selectedDevice.value;
@@ -405,8 +409,8 @@ async function importSelectedFlights() {
         const sqltable = 'Vol';
         const sqlparams = {
           V_Date: flight.sqlDateTime,
-          V_Duree: flight.durationStr,
-          V_sDuree: flight.duration,
+          V_Duree: flight.duration,
+          V_sDuree: flight.durationStr,
           V_LatDeco: flight.firstLatitude,
           V_LongDeco: flight.firstLongitude,
           V_AltDeco: flight.firstAltGPS,

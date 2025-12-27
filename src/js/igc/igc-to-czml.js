@@ -19,34 +19,76 @@ export function igcToCzml(fixes, options = {}) {
     } = options;
 
     // Get time bounds
-    const startTime = new Date(fixes[0].timestamp).toISOString();
-    const endTime = new Date(fixes[fixes.length - 1].timestamp).toISOString();
+    const epochMs = Number(fixes[0].timestamp);
+    const endMs = Number(fixes[fixes.length - 1].timestamp);
+    if (!Number.isFinite(epochMs) || !Number.isFinite(endMs)) {
+        console.warn('Invalid timestamps for CZML animation');
+        return null;
+    }
+
+    const startTime = new Date(epochMs).toISOString();
+    const endTime = new Date(endMs).toISOString();
     const availability = `${startTime}/${endTime}`;
 
-    // Build position array in cartographicDegrees format
-    // Format: [ISO_TIME, LON, LAT, ALT, ISO_TIME, LON, LAT, ALT, ...]
+    // Build position array in cartographicDegrees format.
+    // IMPORTANT: when `epoch` is provided in CZML, times must be numeric seconds offsets.
+    // Format: [SECONDS, LON, LAT, ALT, SECONDS, LON, LAT, ALT, ...]
     const positions = [];
+
+    // Helper to validate coordinates
+    const isValidCoord = (fix) => {
+        return fix &&
+            typeof fix.longitude === 'number' && !isNaN(fix.longitude) &&
+            typeof fix.latitude === 'number' && !isNaN(fix.latitude) &&
+            isFinite(fix.longitude) && isFinite(fix.latitude) &&
+            fix.longitude >= -180 && fix.longitude <= 180 &&
+            fix.latitude >= -90 && fix.latitude <= 90;
+    };
 
     // Sample every N points for performance (keep ~1000 points max for smooth animation)
     const sampleRate = Math.max(1, Math.floor(fixes.length / 1000));
 
     for (let i = 0; i < fixes.length; i += sampleRate) {
         const fix = fixes[i];
-        const isoTime = new Date(fix.timestamp).toISOString();
-        positions.push(isoTime);
-        positions.push(fix.longitude);
-        positions.push(fix.latitude);
-        positions.push(fix.gpsAltitude || fix.pressureAltitude || 0);
+        if (isValidCoord(fix)) {
+            const t = (Number(fix.timestamp) - epochMs) / 1000;
+            const lon = Number(fix.longitude);
+            const lat = Number(fix.latitude);
+            const alt = Number(fix.gpsAltitude || fix.pressureAltitude || 0);
+
+            if (!Number.isFinite(t) || !Number.isFinite(lon) || !Number.isFinite(lat) || !Number.isFinite(alt)) {
+                continue;
+            }
+
+            positions.push(t);
+            positions.push(lon);
+            positions.push(lat);
+            positions.push(alt);
+        }
     }
 
     // Make sure we include the last point
     if ((fixes.length - 1) % sampleRate !== 0) {
         const lastFix = fixes[fixes.length - 1];
-        const isoTime = new Date(lastFix.timestamp).toISOString();
-        positions.push(isoTime);
-        positions.push(lastFix.longitude);
-        positions.push(lastFix.latitude);
-        positions.push(lastFix.gpsAltitude || lastFix.pressureAltitude || 0);
+        if (isValidCoord(lastFix)) {
+            const t = (Number(lastFix.timestamp) - epochMs) / 1000;
+            const lon = Number(lastFix.longitude);
+            const lat = Number(lastFix.latitude);
+            const alt = Number(lastFix.gpsAltitude || lastFix.pressureAltitude || 0);
+
+            if (Number.isFinite(t) && Number.isFinite(lon) && Number.isFinite(lat) && Number.isFinite(alt)) {
+                positions.push(t);
+                positions.push(lon);
+                positions.push(lat);
+                positions.push(alt);
+            }
+        }
+    }
+
+    // Check if we have valid positions
+    if (positions.length < 8) { // At least 2 positions (4 values each)
+        console.warn('Not enough valid coordinates for CZML animation');
+        return null;
     }
 
     // Build CZML document

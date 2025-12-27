@@ -1,13 +1,9 @@
 <template>
   <!-- Affiche le composant d'analyse si les données sont prêtes -->
   <div v-if="analysisTrack" class="fullmap-container">
-    <FullmapTrack 
-      :decoded-track="decodedTrack"
-      :analysis-track="analysisTrack" 
-      @close="closeAnalysisView" 
-    />
+    <FullmapTrack :decoded-track="decodedTrack" :analysis-track="analysisTrack" @close="closeAnalysisView" />
   </div>
-  
+
   <!-- Sinon, affiche la vue d'upload de fichier -->
   <div v-else class="external-view">
     <div class="external-view-content">
@@ -46,6 +42,8 @@ const { $gettext } = useGettext();
 
 import { igcDecoding } from '@/js/igc/igc-decoder.js';
 import { IgcAnalyze } from '@/js/igc/igc-analyzer.js';
+import { parseGPX } from '@/js/gpx/gpx-parser.js';
+import { gpxToIgc } from '@/js/gpx/gpx-to-igc.js';
 
 const fileName = ref('');
 const fileInput = ref(null);
@@ -80,37 +78,55 @@ function closeAnalysisView() {
 
 function validateFile(file) {
   const reader = new FileReader();
-  reader.onload = async function(e) {
+  reader.onload = async function (e) {
     try {
-      const content = e.target.result;
+      let content = e.target.result;
       const ext = file.name.split('.').pop().toLowerCase();
-      if (ext !== 'gpx' && ext !== 'igc') { 
+      if (ext !== 'gpx' && ext !== 'igc') {
         fileError.value = $gettext("GPX or IGC format only");
         fileContent.value = null;
-      } else {
-        fileContent.value = content;
-        fileError.value = '';
-        if (ext === 'gpx') {
-          // transformation en igc
-          // si la transfo a échoué on déclenche une erreur
-        }
-        const decodedIgc = await igcDecoding(fileContent.value)
-        if (decodedIgc.success && decodedIgc.data.fixes && decodedIgc.data.fixes.length > 0) {
-          decodedTrack.value = decodedIgc.data
-          const analyzeIgc = await IgcAnalyze(decodedIgc.data.fixes);
-          if (!analyzeIgc.success) {
-            console.log(analyzeIgc.message)
-            fileError.value = analyzeIgc.message;
-            fileContent.value = null;
-          } else {
-            console.log('analyzeIgc.anaTrack', analyzeIgc.anaTrack.bestGain)
-            analysisTrack.value = analyzeIgc.anaTrack;
-          }
-        } else {
-          console.log(decodedIgc.message)
-          fileError.value = decodedIgc.message;
+        return;
+      }
+
+      // Conversion GPX → IGC si nécessaire
+      if (ext === 'gpx') {
+        const gpxData = parseGPX(content);
+        if (!gpxData.success) {
+          fileError.value = $gettext('GPX decoding error') + ': ' + gpxData.message;
           fileContent.value = null;
+          return;
         }
+
+        const igcResult = gpxToIgc(gpxData);
+        if (!igcResult.success) {
+          fileError.value = $gettext('GPX to IGC conversion failed') + ': ' + igcResult.message;
+          fileContent.value = null;
+          return;
+        }
+
+        content = igcResult.igcString;
+        console.log(`GPX converti en IGC: ${igcResult.nbPoints} points`);
+      }
+
+      fileContent.value = content;
+      fileError.value = '';
+
+      const decodedIgc = await igcDecoding(fileContent.value)
+      if (decodedIgc.success && decodedIgc.data.fixes && decodedIgc.data.fixes.length > 0) {
+        decodedTrack.value = decodedIgc.data
+        const analyzeIgc = await IgcAnalyze(decodedIgc.data.fixes);
+        if (!analyzeIgc.success) {
+          console.log(analyzeIgc.message)
+          fileError.value = analyzeIgc.message;
+          fileContent.value = null;
+        } else {
+          console.log('analyzeIgc.anaTrack', analyzeIgc.anaTrack.bestGain)
+          analysisTrack.value = analyzeIgc.anaTrack;
+        }
+      } else {
+        console.log(decodedIgc.message)
+        fileError.value = decodedIgc.message;
+        fileContent.value = null;
       }
     } catch (err) {
       fileError.value = $gettext('Decoding problem in track file');
@@ -131,17 +147,20 @@ function validateFile(file) {
   z-index: 1000;
   background: white;
 }
+
 .external-view {
   padding: 20px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
 }
+
 .external-view-content {
   max-width: 800px;
   width: 100%;
   text-align: center;
 }
+
 .drop-zone {
   border: 2px dashed #ccc;
   border-radius: 10px;
