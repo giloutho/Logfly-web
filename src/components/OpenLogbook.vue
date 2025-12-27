@@ -43,8 +43,8 @@
         <v-divider class="my-6"></v-divider>
 
         <!-- Création nouveau logbook -->
-        <h3 class="text-h6 text-primary mb-4 font-weight-bold">
-          <v-icon start color="primary">mdi-database-plus</v-icon>
+        <h3 class="text-h6 text-success mb-4 font-weight-bold">
+          <v-icon start color="success">mdi-database-plus</v-icon>
           {{ $gettext('New logbook') }}
         </h3>
 

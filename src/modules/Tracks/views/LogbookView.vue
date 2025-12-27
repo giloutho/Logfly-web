@@ -5,8 +5,10 @@
   <OpenLogbook :show="true" />
   <div v-if="databaseStore.hasOpenDatabase" class="global-logbook">
     <div class="left-panel">
-      <LittleMapView v-if="decodedTrack && decodedTrack.GeoJSON" :geoJson="decodedTrack.GeoJSON" :scoreJson="scoreJson"
-        @open-full-map="onOpenFullMap" @open-cesium="onOpenCesium" @open-analyze="onOpenAnalyze" />
+      <LittleMapView v-if="decodedTrack && decodedTrack.GeoJSON" ref="littleMapRef" :geoJson="decodedTrack.GeoJSON"
+        :scoreJson="scoreJson" @open-full-map="onOpenFullMap" @open-cesium="onOpenCesium"
+        @open-analyze="onOpenAnalyze" />
+      <LittleMapView v-else-if="noIgcFlight" ref="littleMapRef" :hideOverlay="true" />
       <div v-else class="no-track-message">
         <p>Base de données : {{ databaseStore.dbName }}</p>
         <p>Sélectionnez un vol pour afficher la trace</p>
@@ -86,7 +88,7 @@
           </template>
         </v-data-table>
       </div>
-      <div class="bottom-block">
+      <div v-if="!noIgcFlight" class="bottom-block">
         <LogbookDetails v-if="dataFlight" :trackData="dataFlight" @update:scoreJson="scoreJson = $event"
           @update:comment="onCommentUpdate" @update:glider="onGliderUpdate" @update:site="onSiteUpdate"
           @update:delete="onFlightDelete" @update:photo="onPhotoUpdate" @update:tag="onTagUpdate" />
@@ -118,7 +120,7 @@
 
 <script setup>
 
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue';
 import { useGettext } from "vue3-gettext";
 import OpenLogbook from '@/components/OpenLogbook.vue';
 import LittleMapView from '@/components/LittleMapView.vue';
@@ -161,6 +163,8 @@ const decodedTrack = ref(null)
 const analysisTrack = ref(null);
 const dataFlight = ref(null);
 const scoreJson = ref(null);
+const noIgcFlight = ref(null); // { lat, lon, site, alt } for flights without GPS track
+const littleMapRef = ref(null);
 const snackbar = ref(false);
 const snackbarMessage = ref('');
 const showPhotoViewer = ref(false);
@@ -562,8 +566,16 @@ async function readIgcFromDb(flightId) {
 
   if (result.success && result.data && result.data[0]) {
     const strIgc = result.data[0].values[0][0];
+
+    // Detect empty or null V_IGC -> flight without GPS track
+    if (!strIgc || strIgc.trim() === '') {
+      await mapWithoutIgc(flightId);
+      return;
+    }
+
     const decodedIgc = await igcDecoding(strIgc)
     if (decodedIgc.success && decodedIgc.data.fixes && decodedIgc.data.fixes.length > 0) {
+      noIgcFlight.value = null; // Reset no-IGC state
       decodedTrack.value = decodedIgc.data
       const analyzeIgc = await IgcAnalyze(decodedIgc.data.fixes);
       if (!analyzeIgc.success) {
@@ -589,6 +601,36 @@ async function readIgcFromDb(flightId) {
     console.error('Erreur lors du chargement des vols:', result.message);
   }
 
+}
+
+/**
+ * Display a map for flights without GPS track (manual entry)
+ */
+async function mapWithoutIgc(flightId) {
+  const req = `SELECT V_IGC, V_LatDeco, V_LongDeco, V_AltDeco, V_Site FROM Vol WHERE V_ID = ${flightId}`;
+  const result = databaseStore.query(req);
+
+  if (result.success && result.data && result.data[0] && result.data[0].values[0]) {
+    const row = result.data[0].values[0];
+    const lat = row[1];
+    const lon = row[2];
+    const alt = row[3];
+    const site = row[4];
+
+    // Clear previous decoded track
+    decodedTrack.value = null;
+    dataFlight.value = null;
+    scoreJson.value = null;
+
+    // Set no-IGC flight data to trigger the map display
+    noIgcFlight.value = { lat, lon, site, alt };
+
+    // Wait for next tick for the component to mount, then call displayTakeoffOnly
+    await nextTick();
+    if (littleMapRef.value && littleMapRef.value.displayTakeoffOnly) {
+      littleMapRef.value.displayTakeoffOnly(lat, lon, site, alt);
+    }
+  }
 }
 
 </script>

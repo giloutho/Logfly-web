@@ -31,7 +31,7 @@ const { $gettext } = useGettext();
 const databaseStore = useDatabaseStore();
 
 const props = defineProps({
-  version: { type: String, default: '7.0.1' },
+  version: { type: String, default: '7.0.0' },
   dbPath: { type: String, default: '' }
 });
 

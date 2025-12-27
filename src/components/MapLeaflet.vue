@@ -6,7 +6,7 @@
 import { onMounted, onBeforeUnmount, watch, ref } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { baseMaps } from '@/js/leaflet/tiles.js'
+import { baseMaps, kk7layer } from '@/js/leaflet/tiles.js'
 import '@/js/leaflet/leaflet-measure.css'
 import { createPopThermal, createPopGlide, thermalIcon, glideIcon, startIcon, endIcon, getLeagueColor } from '@/js/leaflet/map-utils.js'
 
@@ -90,6 +90,10 @@ onMounted(async () => {
     }
 
     layerControl = L.control.layers(localBaseMaps, null, { collapsed: false }).addTo(map)
+
+    // Add Skyways overlay
+    const skywaysLayer = L.tileLayer(kk7layer._url, kk7layer.options)
+    layerControl.addOverlay(skywaysLayer, 'Skyways kk7.ch')
 
     // Handle Resize
     resizeObserver = new ResizeObserver(() => {

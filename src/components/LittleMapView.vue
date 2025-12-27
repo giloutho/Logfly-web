@@ -2,7 +2,7 @@
   <div class="little-map-wrapper">
     <div ref="mapContainer" class="map-container"></div>
 
-    <div class="map-overlay-bottom">
+    <div v-if="!hideOverlay" class="map-overlay-bottom">
       <div class="map-buttons">
         <v-tooltip :text="$gettext('Full map')" location="top">
           <template v-slot:activator="{ props }">
@@ -46,6 +46,10 @@ const props = defineProps({
   scoreJson: {
     type: Object,
     default: null
+  },
+  hideOverlay: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -223,6 +227,48 @@ function fitBoundsToAllLayers() {
     console.error('Erreur lors de fitBounds:', error);
   }
 }
+
+/**
+ * Display only a takeoff marker for flights without GPS track
+ * @param {number} lat - Latitude of takeoff
+ * @param {number} lon - Longitude of takeoff
+ * @param {string} site - Site name
+ * @param {number} alt - Altitude
+ */
+function displayTakeoffOnly(lat, lon, site, alt) {
+  // Clear existing layers
+  if (geoJsonLayer) {
+    map.removeLayer(geoJsonLayer);
+    geoJsonLayer = null;
+  }
+  if (scoreLayer) {
+    map.removeLayer(scoreLayer);
+    scoreLayer = null;
+  }
+  if (startMarker) {
+    map.removeLayer(startMarker);
+  }
+  if (endMarker) {
+    map.removeLayer(endMarker);
+    endMarker = null;
+  }
+
+  // Create the takeoff marker with popup
+  const popupContent = `${site || 'Unknown'}<br>${alt || 0}m`;
+  startMarker = L.marker([lat, lon], { icon: startIcon })
+    .bindPopup(popupContent)
+    .addTo(map);
+
+  // Center map on takeoff
+  map.setView([lat, lon], 12);
+
+  // Open popup
+  startMarker.openPopup();
+}
+
+defineExpose({
+  displayTakeoffOnly
+});
 
 onBeforeUnmount(() => {
   if (map) {
