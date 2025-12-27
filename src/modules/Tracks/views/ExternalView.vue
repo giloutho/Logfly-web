@@ -1,7 +1,8 @@
 <template>
   <!-- Affiche le composant d'analyse si les données sont prêtes -->
   <div v-if="analysisTrack" class="fullmap-container">
-    <FullmapTrack :decoded-track="decodedTrack" :analysis-track="analysisTrack" @close="closeAnalysisView" />
+    <ExternalLayout :decodedTrack="decodedTrack" :analysisTrack="analysisTrack" :rawIgcContent="fileContent"
+      :fileName="fileName" @close="closeAnalysisView" />
   </div>
 
   <!-- Sinon, affiche la vue d'upload de fichier -->
@@ -36,7 +37,7 @@
 import { ref } from "vue";
 import { useGettext } from "vue3-gettext";
 
-import FullmapTrack from '@/components/FullmapTrack.vue';
+import ExternalLayout from '@/components/ExternalLayout.vue';
 
 const { $gettext } = useGettext();
 
@@ -139,12 +140,7 @@ function validateFile(file) {
 
 <style scoped>
 .fullmap-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 1000;
+  width: 100%;
   background: white;
 }
 

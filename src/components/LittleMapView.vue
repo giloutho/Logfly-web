@@ -6,19 +6,19 @@
       <div class="map-buttons">
         <v-tooltip :text="$gettext('Full map')" location="top">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" icon="mdi-fullscreen" size="small" color="white" class="map-btn"
+            <v-btn v-bind="props" icon="mdi-fullscreen" size="36" color="white" class="map-btn"
               @click="$emit('open-full-map')"></v-btn>
           </template>
         </v-tooltip>
         <v-tooltip :text="$gettext('3D View')" location="top">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" icon="mdi-earth" size="small" color="white" class="map-btn"
+            <v-btn v-bind="props" icon="mdi-video-3d" size="36" color="white" class="map-btn"
               @click="$emit('open-cesium')"></v-btn>
           </template>
         </v-tooltip>
         <v-tooltip :text="$gettext('Analyze')" location="top">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" icon="mdi-chart-line" size="small" color="white" class="map-btn"
+            <v-btn v-bind="props" icon="mdi-chart-line" size="36" color="white" class="map-btn"
               @click="$emit('open-analyze')"></v-btn>
           </template>
         </v-tooltip>
