@@ -1,6 +1,11 @@
 <template>
-  <v-snackbar v-model="snackbar" :timeout="2000" color="success">
+  <v-snackbar v-model="snackbar" :timeout="5000" color="success" location="top">
     {{ snackbarMessage }}
+    <template v-slot:actions>
+      <v-btn variant="text" @click="snackbar = false">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    </template>
   </v-snackbar>
   <OpenLogbook :show="true" />
   <div v-if="databaseStore.hasOpenDatabase" class="global-logbook">
@@ -288,9 +293,34 @@ function onFilteredItemsUpdate(items) {
   // items contient uniquement les items de la page actuelle
   // Pour obtenir tous les items filtrés, utiliser filteredFlights.value
   filteredCount.value = filteredFlights.value.length;
-  //  console.log('Nombre total de lignes filtrées:', filteredFlights.value.length);
-  //  console.log('Duree:', filteredFlights.value[0]?.V_Duree);
-  // console.log('Items de la page actuelle:', items.length);  uniquement la page affichée
+
+  // Afficher les statistiques quand un filtre est actif (recherche OU tag)
+  const hasSearchFilter = search.value && search.value.trim() !== '';
+  const hasTagFilter = selectedTagFilter.value !== null;
+
+  if (hasSearchFilter || hasTagFilter) {
+    // Compter les lignes filtrées
+    const nbLines = filteredFlights.value.length;
+
+    // Calculer la somme des durées (V_Duree est en secondes)
+    const totalSeconds = filteredFlights.value.reduce((sum, flight) => {
+      return sum + (parseInt(flight.V_Duree) || 0);
+    }, 0);
+
+    // Convertir en format HHhMMmn
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const totalTime = `${hours}h${minutes.toString().padStart(2, '0')}mn`;
+
+    // Afficher le snackbar avec les totaux
+    // snackbarLines.value = nbLines;
+    // snackbarTotalTime.value = totalTime;
+    let msg = `${$gettext('Totals for the selection')}`;
+    msg += ` : ${$gettext('Flights') + ' = ' + nbLines}`;
+    msg += `  ${$gettext('Flight hours') + ' = ' + totalTime}`;
+    snackbarMessage.value = msg;
+    snackbar.value = true;
+  }
 }
 
 function selectFirstVisibleRow() {
@@ -317,11 +347,13 @@ watch([page, itemsPerPage], () => {
   }
 });
 
-// Auto-select first row when filter changes
+// Auto-select first row when filter changes and show stats
 watch(selectedTagFilter, () => {
   // Reset page to 1 when filter changes to ensure we see results
   page.value = 1;
   selectFirstVisibleRow();
+  // Déclencher le calcul des statistiques
+  onFilteredItemsUpdate([]);
 });
 
 // Met à jour le commentaire en base, dans flights, et dans dataFlight

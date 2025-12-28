@@ -21,12 +21,12 @@
       </section>
 
       <section v-if="fileName">
-        <h2>{{ $gettext('Analyse de :') }} {{ fileName }}</h2>
+        <h2>{{ $gettext('Analyse of') }} : {{ fileName }}</h2>
         <v-alert v-if="fileError" type="error" dismissible>
           {{ fileError }}
         </v-alert>
         <div v-else>
-          <p>{{ $gettext('Décodage et vérification en cours...') }}</p>
+          <p>{{ $gettext('Decoding in progress') }}...</p>
         </div>
       </section>
     </div>

@@ -14,7 +14,8 @@
         <div class="right-panel">
             <!-- Top title: FileName -->
             <div class="top-title">
-                <span class="filename-text">{{ fileName }}</span>
+                <span class="title-label">{{ $gettext('External track') }} :</span><span class="filename-text">{{
+                    fileName }}</span>
             </div>
 
             <!-- Top block: TraceInfoPanel -->
@@ -166,6 +167,10 @@ function onClose() {
     font-weight: bold;
     color: #333;
     font-size: 1.1rem;
+}
+
+.title-label {
+    margin-right: 20px;
 }
 
 .top-block {
