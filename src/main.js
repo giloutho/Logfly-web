@@ -30,12 +30,26 @@ const vuetify = createVuetify({
 });
 
 // 3. Création de l'instance Gettext
+const availableLanguages = {
+  en: "English",
+  fr: "Français",
+};
+
+// Detect browser language and use it if available, otherwise fallback to 'en'
+function detectBrowserLanguage() {
+  const browserLang = navigator.language || navigator.userLanguage || 'en';
+  // Extract language code (e.g., 'fr-FR' -> 'fr')
+  const langCode = browserLang.split('-')[0].toLowerCase();
+  // Check if this language is available
+  if (availableLanguages[langCode]) {
+    return langCode;
+  }
+  return 'en'; // fallback
+}
+
 const gettext = createGettext({
-  availableLanguages: {
-    en: "English",
-    fr: "Français",
-  },
-  defaultLanguage: "en",
+  availableLanguages: availableLanguages,
+  defaultLanguage: detectBrowserLanguage(),
   translations: translations,
   silent: true,   // pour éviter les warnings
 });

@@ -4,6 +4,25 @@
     <div class="footer-content">
       <span class="footer-version">v{{ version }}</span>
 
+      <!-- Language selector -->
+      <v-menu offset-y>
+        <template v-slot:activator="{ props }">
+          <v-btn v-bind="props" variant="outlined" size="default" class="footer-lang-btn">
+            <span class="flag-emoji">{{ langFlags[currentLangCode] }}</span>
+            {{ currentLangCode.toUpperCase() }}
+          </v-btn>
+        </template>
+        <v-list density="compact">
+          <v-list-item v-for="(label, code) in availableLangs" :key="code" :value="code"
+            :class="{ 'v-list-item--active': code === currentLangCode }" @click="changeLanguage(code)">
+            <template v-slot:prepend>
+              <span class="flag-emoji mr-2">{{ langFlags[code] }}</span>
+            </template>
+            <v-list-item-title>{{ label }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
       <v-chip class="footer-db" color="primary" variant="outlined" size="small">
         {{ dbPath || $gettext('No logbook opened') }}
       </v-chip>
@@ -22,12 +41,13 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import { useGettext } from 'vue3-gettext';
 import { useDatabaseStore } from '@/stores/database';
 import * as logbookService from '@/js/database/logbookService';
 
-const { $gettext } = useGettext();
+const gettext = useGettext();
+const { $gettext } = gettext;
 const databaseStore = useDatabaseStore();
 
 const props = defineProps({
@@ -40,6 +60,39 @@ const emit = defineEmits(['save', 'saved']);
 const isSaving = ref(false);
 const showSnack = ref(false);
 const snackText = ref('');
+
+// Language management
+const availableLangs = computed(() => gettext.available);
+const currentLangCode = computed(() => gettext.current);
+
+// Country flag emojis for each language code
+const langFlags = {
+  en: '🇬🇧',
+  fr: '🇫🇷',
+  de: '🇩🇪',
+  es: '🇪🇸',
+  it: '🇮🇹',
+  pt: '🇵🇹',
+  nl: '🇳🇱',
+  pl: '🇵🇱',
+  ru: '🇷🇺',
+  ja: '🇯🇵',
+  zh: '🇨🇳'
+};
+
+function changeLanguage(code) {
+  gettext.current = code;
+  // Persist choice in localStorage
+  localStorage.setItem('logfly-language', code);
+}
+
+// On mount, check if user has a saved language preference
+onMounted(() => {
+  const savedLang = localStorage.getItem('logfly-language');
+  if (savedLang && gettext.available[savedLang]) {
+    gettext.current = savedLang;
+  }
+});
 
 /**
  * LOGIQUE D'AUTOSAVE
@@ -162,6 +215,18 @@ async function handleManualSave() {
   max-width: 40vw;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.footer-lang-btn {
+  margin-left: 12px;
+  text-transform: none;
+  font-size: 0.95em;
+  min-width: 80px;
+}
+
+.flag-emoji {
+  font-size: 1.2em;
+  margin-right: 6px;
 }
 
 .footer-save-btn {

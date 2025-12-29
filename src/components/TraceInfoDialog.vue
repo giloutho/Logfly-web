@@ -32,7 +32,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="$emit('update:modelValue', false)">Fermer</v-btn>
+                <v-btn color="primary" text @click="$emit('update:modelValue', false)">{{ $gettext('Close') }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -174,7 +174,7 @@ const barSegments = computed(() => {
     segments.push({
         value: percThermals,
         color: '#ffb300', // Amber
-        label: 'Thermique',
+        label: $gettext('Thermals'),
         width: percThermals,
         radius: '8px 0 0 8px',
         showValue: percThermals > 8
@@ -184,7 +184,7 @@ const barSegments = computed(() => {
     segments.push({
         value: percGlides,
         color: '#1976d2', // Blue
-        label: 'Transition',
+        label: $gettext('Glides'),
         width: percGlides,
         radius: '0',
         showValue: percGlides > 8
@@ -195,7 +195,7 @@ const barSegments = computed(() => {
         segments.push({
             value: percDives,
             color: '#c62828', // Red
-            label: 'Dive',
+            label: $gettext('Dives'),
             width: percDives,
             radius: '0',
             showValue: percDives > 8
@@ -206,7 +206,7 @@ const barSegments = computed(() => {
     segments.push({
         value: percVarious,
         color: '#43a047', // Green
-        label: 'Divers',
+        label: $gettext('Various'),
         width: percVarious,
         radius: '0 8px 8px 0',
         showValue: percVarious > 8

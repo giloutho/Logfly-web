@@ -148,7 +148,7 @@ const barSegments = computed(() => {
     segments.push({
         value: percThermals,
         color: '#ffb300',
-        label: 'Thermique',
+        label: $gettext('Thermals'),
         width: percThermals,
         radius: '8px 0 0 8px',
         showValue: percThermals > 8
@@ -157,7 +157,7 @@ const barSegments = computed(() => {
     segments.push({
         value: percGlides,
         color: '#1976d2',
-        label: 'Transition',
+        label: $gettext('Glides'),
         width: percGlides,
         radius: '0',
         showValue: percGlides > 8
@@ -167,7 +167,7 @@ const barSegments = computed(() => {
         segments.push({
             value: percDives,
             color: '#c62828',
-            label: 'Dive',
+            label: $gettext('Dives'),
             width: percDives,
             radius: '0',
             showValue: percDives > 8
@@ -177,7 +177,7 @@ const barSegments = computed(() => {
     segments.push({
         value: percVarious,
         color: '#43a047',
-        label: 'Divers',
+        label: $gettext('Various'),
         width: percVarious,
         radius: '0 8px 8px 0',
         showValue: percVarious > 8
