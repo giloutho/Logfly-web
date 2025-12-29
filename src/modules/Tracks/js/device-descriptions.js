@@ -13,8 +13,8 @@ export function getDeviceDescriptions($gettext) {
     $gettext('The browser cannot read this type of GPS directly'),
     $gettext('There are two solutions') + ' :',
     $gettext('- Install the LogflyGPS import software. It will update the logbook directly'),
-    $gettext('- use the manufacturer software to download the flight logs.'),
-    $gettext('. Then import the downloaded files with the "Import from Folder" option'),
+    $gettext('- use the manufacturer software to download the flight logs'),
+    $gettext('then import the downloaded files with the "Import from Folder" option'),
   ]
   return {
     'XCTracer': [
@@ -123,6 +123,6 @@ export function getDeviceDescriptions($gettext) {
       $gettext('By default, Sys-PC-Tool create a folder in user.home directory called "parapente"'),
       validate
     ],
-    'Vol sans trace': [$gettext('Créez une entrée de vol manuel sans fichier de trace associé.')]
+    [$gettext('Flight without GPS track')]: [$gettext('Create a manual flight entry without an associated track file.')]
   };
 }

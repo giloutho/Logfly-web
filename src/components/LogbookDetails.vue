@@ -82,7 +82,7 @@
                 @click="showPhotoDialog = true">{{ strAddPhoto }}</v-btn>
               <LogbookPhoto v-model="showPhotoDialog" @save="onPhotoSave" />
               <v-btn v-if="trackData?.hasPhoto" color="error" density="compact" @click="onPhotoDelete">{{ strRemovePhoto
-              }}</v-btn>
+                }}</v-btn>
             </div>
           </div>
         </v-card-text>
@@ -104,7 +104,7 @@
           <div class="modify-btn-row">
             <div class="modify-line">
               <v-btn color="primary" density="compact" class="mr-2" @click="showGliderDialog = true">{{ strChangeGlider
-              }}</v-btn>
+                }}</v-btn>
               <GliderDialog v-model="showGliderDialog" :gliderList="gliderList" :currentGlider="trackData?.glider"
                 @save="onGliderSave" />
               <v-btn color="primary" density="compact" @click="showSiteDialog = true">{{ strChangeSite }}</v-btn>
@@ -281,7 +281,7 @@ function onPhotoSave(photoBase64) {
 }
 
 function onPhotoDelete() {
-  if (confirm($gettext('Delete photo?'))) {
+  if (confirm($gettext('Delete photo') + ' ?')) {
     emit('update:photo', {
       id: props.trackData?.dbId || null,
       photoData: null

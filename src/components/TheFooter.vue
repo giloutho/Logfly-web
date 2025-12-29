@@ -62,7 +62,7 @@ async function runAutoSave() {
     // Appelle l'action du store que nous venons d'ajouter
     databaseStore.markAsSaved();
 
-    snackText.value = $gettext('Journal auto-enregistré');
+    snackText.value = $gettext('Auto-saved logbook');
     showSnack.value = true;
   } catch (err) {
     console.error("Autosave failed:", err);
@@ -97,11 +97,11 @@ async function handleManualSave() {
 
       // On considère que c'est sauvegardé (même si c'est un download)
       databaseStore.markAsSaved();
-      snackText.value = $gettext('Fichier téléchargé avec succès');
+      snackText.value = $gettext('File successfully downloaded');
       showSnack.value = true;
     } catch (err) {
       console.error("Export failed:", err);
-      snackText.value = $gettext('Erreur lors du téléchargement');
+      snackText.value = $gettext('Error downloading file');
       showSnack.value = true;
     } finally {
       isSaving.value = false;
@@ -119,7 +119,7 @@ async function handleManualSave() {
       const data = await databaseStore.exportDatabase();
       // Ceci ouvrira le dossier A et demandera un nouveau nom de fichier
       await logbookService.backupDatabase(data);
-      snackText.value = $gettext('Copie de sauvegarde créée');
+      snackText.value = $gettext('Backup copy created');
       showSnack.value = true;
     } catch (e) {
       // Annulation du sélecteur de fichier

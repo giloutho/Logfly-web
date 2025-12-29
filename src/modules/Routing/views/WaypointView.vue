@@ -8,7 +8,7 @@
         @click="goToAnnualStats" 
         class="btn-primary"
       >
-        📊 {{ $gettext('Test d\'accès direct') }}
+        📊 Access test
       </button>    
   </div>
 </template>

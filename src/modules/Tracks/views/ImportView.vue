@@ -2,7 +2,7 @@
   <OpenLogbook :show="true" />
   <div v-if="databaseStore.hasOpenDatabase" class="import-view">
     <v-container fluid>
-      <v-row>
+      <v-row class="ml-n13">
         <v-col cols="12">
           <v-card>
             <v-card-text>

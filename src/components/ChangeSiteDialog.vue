@@ -4,7 +4,7 @@
             <v-card-title class="headline">{{ $gettext('Change site') }}</v-card-title>
             <v-card-text>
                 <div class="dialog-section">
-                    <div class="dialog-label">{{ $gettext('Option 2 Switch to an existing site') }}</div>
+                    <div class="dialog-label">1. {{ $gettext('Switch to an existing site') }}</div>
                     <v-autocomplete v-model="selectedSite" :items="siteList" item-title="S_Nom" item-value="S_Nom"
                         :label="$gettext('Choose an existing site')" variant="outlined" density="compact" clearable
                         auto-select-first>
@@ -15,14 +15,14 @@
                 </div>
 
                 <div class="dialog-section">
-                    <div class="dialog-label">{{ $gettext('Option 1 Update name') }}</div>
+                    <div class="dialog-label">2. {{ $gettext('Update name') }}</div>
                     <v-text-field v-model="newSiteName" :label="$gettext('Enter new site name')" variant="outlined"
                         density="compact" class="text-uppercase" clearable />
                 </div>
 
                 <div class="summary-section" v-if="currentSite || targetSite">
                     <span class="current-site">{{ currentSite }}</span>
-                    <span class="separator"> {{ $gettext('become') }} </span>
+                    <span class="separator"> {{ $gettext('becomes') }} </span>
                     <span class="target-site">{{ targetSite }}</span>
                 </div>
 
@@ -78,7 +78,7 @@ const targetSite = computed(() => {
     if (newSiteName.value && newSiteName.value.trim()) {
         return newSiteName.value.trim().toUpperCase();
     }
-    return selectedSite.value || '';
+    return selectedSite.value || '...';
 });
 
 function onCancel() {

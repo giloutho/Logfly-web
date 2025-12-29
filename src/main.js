@@ -35,7 +35,7 @@ const gettext = createGettext({
     en: "English",
     fr: "Français",
   },
-  defaultLanguage: "en",
+  defaultLanguage: "fr",
   translations: translations,
   silent: true,   // pour éviter les warnings
 });

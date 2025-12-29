@@ -19,9 +19,12 @@ const openReadmeInEditor = () => fetch('/__open-in-editor?file=README.md')
         </template>
         <template #heading>{{ $gettext('Flights & Tracks') }}</template>
         <ul>
-          <li>{{ $gettext('Accédez à votre carnet de vols') }}<router-link :to="{ name: 'logbook-view' }">{{ $gettext('Logbook') }}</router-link></li>
-          <li>  {{ $gettext('Importez de nouvelles traces') }}<router-link :to="{ name: 'import-gps' }">{{ $gettext('Import GPS tracks') }}</router-link></li>
-          <li>{{ $gettext('Examinez des traces IGC ou GPX') }}<router-link :to="{ name: 'external-track' }">{{ $gettext('Review an external GPS track') }}</router-link></li>
+          <li>{{ $gettext('Access your logbook') }}<router-link :to="{ name: 'logbook-view' }">{{ $gettext('Logbook')
+              }}</router-link></li>
+          <li> {{ $gettext('Import new flights with or without GPS tracks') }}<router-link :to="{ name: 'import-gps' }">{{ $gettext('Import flights')
+              }}</router-link></li>
+          <li>{{ $gettext('Review external GPS tracks') }} IGC/GPX<router-link :to="{ name: 'external-track' }">{{
+            $gettext('External GPS track') }}</router-link></li>
         </ul>
       </WelcomeItem>
 
@@ -31,9 +34,13 @@ const openReadmeInEditor = () => fetch('/__open-in-editor?file=README.md')
         </template>
         <template #heading>{{ $gettext('Statistics') }}</template>
         <ul>
-          <li>{{ $gettext('Consultez la synthèse annuelle de vos vols') }}<router-link :to="{ name: 'synthese-annee' }">{{ $gettext('Annual summary') }}</router-link></li>
-          <li>{{ $gettext('Obtenez les statistiques globales du carnet de vols') }}<router-link :to="{ name: 'synthese-globale' }">{{ $gettext('Global summary') }}</router-link></li>
-        </ul>    
+          <li>{{ $gettext('Consult the annual summary of your flights') }}<router-link
+              :to="{ name: 'synthese-annee' }">{{
+                $gettext('Annual summary') }}</router-link></li>
+          <li>{{ $gettext('Obtain global statistics of your logbook') }}<router-link
+              :to="{ name: 'synthese-globale' }">{{
+                $gettext('Global summary') }}</router-link></li>
+        </ul>
       </WelcomeItem>
 
       <WelcomeItem>
@@ -42,9 +49,13 @@ const openReadmeInEditor = () => fetch('/__open-in-editor?file=README.md')
         </template>
         <template #heading>{{ $gettext('Routing') }}</template>
         <ul>
-          <li>{{ $gettext('Gérez vos waypoints') }}<router-link :to="{ name: 'waypoints-view' }">{{ $gettext('Waypoints') }}</router-link></li>
-          <li>{{ $gettext('Visualisez et éditez les espaces aériens') }}<router-link :to="{ name: 'airspaces-view' }">{{ $gettext('Airspaces') }}</router-link></li>
-          <li>{{ $gettext('Programmez les itinéraires de cross') }}<router-link :to="{ name: 'xcnav-view' }">{{ $gettext('XC Nav') }}</router-link></li>      
+          <li>{{ $gettext('Manage your waypoints') }}<router-link :to="{ name: 'waypoints-view' }">{{
+            $gettext('Waypoints')
+              }}</router-link></li>
+          <li>{{ $gettext('Visualize and edit airspaces') }}<router-link :to="{ name: 'airspaces-view' }">{{
+            $gettext('Airspaces') }}</router-link></li>
+          <li>{{ $gettext('Program XC flights') }}<router-link :to="{ name: 'xcnav-view' }">{{ $gettext('XC Nav')
+          }}</router-link></li>
         </ul>
       </WelcomeItem>
 
@@ -54,8 +65,9 @@ const openReadmeInEditor = () => fetch('/__open-in-editor?file=README.md')
         </template>
         <template #heading>{{ $gettext('Sites') }}</template>
         <ul>
-          <li>{{ $gettext('Gérez le fichier des sites du carnet de vol') }}<router-link :to="{ name: 'files-base' }">{{ $gettext('Sites') }}</router-link></li>
-          <li>{{ $gettext('Consultez la base de données Paragliding Earth') }}</li>
+          <li>{{ $gettext('Manage the sites file of your logbook') }}<router-link :to="{ name: 'files-base' }">{{
+            $gettext('Sites') }}</router-link></li>
+          <li>{{ $gettext('Consult the Paragliding Earth database') }}</li>
         </ul>
       </WelcomeItem>
       <WelcomeItem>
@@ -64,19 +76,21 @@ const openReadmeInEditor = () => fetch('/__open-in-editor?file=README.md')
         </template>
         <template #heading>{{ $gettext('Equipment') }}</template>
         <ul>
-          <li>{{ $gettext('Gérez votre matériel : achat, révision...') }}<router-link :to="{ name: 'equip-base' }">{{ $gettext('Equipment') }}</router-link></li>
+          <li>{{ $gettext('Manage your equipment : purchase, revision...') }}<router-link
+              :to="{ name: 'equip-base' }">{{
+                $gettext('Equipment') }}</router-link></li>
         </ul>
       </WelcomeItem>
       <WelcomeItem>
         <template #icon>
           <SupportIcon />
         </template>
-        <template #heading>{{ $gettext('Settings & Utilities') }}</template>
+        <template #heading>{{ $gettext('Utilities') }}</template>
         <ul>
-          <li>{{ $gettext('Gérez les préférences de l\'application') }}</li>
-          <li>{{ $gettext('Accédez au support') }}</li>
+          <li>{{ $gettext('Manage app preferences') }}</li>
+          <li>{{ $gettext('Access support') }}</li>
         </ul>
-      </WelcomeItem>  
+      </WelcomeItem>
     </div>
   </div>
 </template>
@@ -87,6 +101,7 @@ const openReadmeInEditor = () => fetch('/__open-in-editor?file=README.md')
   width: 100%;
   padding-top: 30px;
 }
+
 .welcome-inner {
   display: flex;
   flex-direction: column;
