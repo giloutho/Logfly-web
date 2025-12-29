@@ -37,6 +37,10 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
+
 import { igcScoring } from '@/js/igc/igc-scoring';
 import ScoreDialog from '@/components/ScoreDialog.vue';
 
@@ -53,7 +57,7 @@ const isComputingScore = ref(false);
 const scoreLabel = ref('');
 
 const siteName = computed(() => {
-    return props.decodedData?.info?.site || 'Site non défini';
+    return props.decodedData?.info?.site || $gettext('Site not defined');
 });
 
 const fixes = computed(() => {

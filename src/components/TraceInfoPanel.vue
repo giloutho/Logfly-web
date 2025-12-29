@@ -33,6 +33,9 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 const props = defineProps({
     decodedData: Object,
@@ -76,55 +79,55 @@ const displayFields = computed(() => {
 
     // Fields definition matching reference layout (2 columns)
     const r1 = [
-        { id: 'date', label: 'Date', value: info.date },
-        { id: 'site', label: 'Site', value: fSite }
+        { id: 'date', label: $gettext('Date'), value: info.date },
+        { id: 'site', label: $gettext('Site'), value: fSite }
     ]
     const r2 = [
-        { id: 'pilot', label: 'Pilote', value: info.pilot },
-        { id: 'glider', label: 'Voile', value: info.gliderType }
+        { id: 'pilot', label: $gettext('Pilot'), value: info.pilot },
+        { id: 'glider', label: $gettext('Glider'), value: info.gliderType }
     ]
     const r3 = [
-        { id: 'tkofftime', label: 'Décollage', value: hTkoff },
-        { id: 'tkoffalt', label: 'Alti GPS', value: formatAlt(fixes[0].gpsAltitude) }
+        { id: 'tkofftime', label: $gettext('Take off'), value: hTkoff },
+        { id: 'tkoffalt', label: $gettext('GPS alt'), value: formatAlt(fixes[0].gpsAltitude) }
     ]
     const r4 = [
-        { id: 'landtime', label: 'Atterrissage', value: hLand },
-        { id: 'landalt', label: 'Alti GPS', value: formatAlt(fixes[fixes.length - 1].gpsAltitude) }
+        { id: 'landtime', label: $gettext('Landing'), value: hLand },
+        { id: 'landalt', label: $gettext('GPS alt'), value: formatAlt(fixes[fixes.length - 1].gpsAltitude) }
     ]
     const r5 = [
-        { id: 'duration', label: 'Durée', value: durationFormatted },
-        { id: 'size', label: 'Longueur', value: (stat.distance || 0).toFixed(2) + ' km' }
+        { id: 'duration', label: $gettext('Duration'), value: durationFormatted },
+        { id: 'size', label: $gettext('Size'), value: (stat.distance || 0).toFixed(2) + ' km' }
     ]
     const r6 = [
-        { id: 'maxalt', label: 'Alt max GPS', value: formatAlt(stat.maxalt?.gps) },
-        { id: 'minalt', label: 'Alti Mini GPS', value: formatAlt(stat.minialt?.gps) }
+        { id: 'maxalt', label: $gettext('Max GPS alt'), value: formatAlt(stat.maxalt?.gps) },
+        { id: 'minalt', label: $gettext('Min GPS alt'), value: formatAlt(stat.minialt?.gps) }
     ]
     const r7 = [
-        { id: 'maxclimb', label: 'Vario max', value: (stat.maxclimb || 0) + ' m/s' },
-        { id: 'minvario', label: 'Vario mini', value: (stat.maxsink || 0) + ' m/s' }
+        { id: 'maxclimb', label: $gettext('Max climb'), value: (stat.maxclimb || 0) + ' m/s' },
+        { id: 'minvario', label: $gettext('Max sink'), value: (stat.maxsink || 0) + ' m/s' }
     ]
     const r8 = [
-        { id: 'maxgain', label: 'Gain max', value: formatAlt(ana.bestGain) },
-        { id: 'maxspeed', label: 'Vitesse max', value: (stat.maxspeed || 0) + ' km/h' }
+        { id: 'maxgain', label: $gettext('Max gain'), value: formatAlt(ana.bestGain) },
+        { id: 'maxspeed', label: $gettext('Max speed'), value: (stat.maxspeed || 0) + ' km/h' }
     ]
     const r9 = [
-        { id: 'bestglide', label: 'Meilleure transition', value: ((ana.bestGlide || 0) / 1000).toFixed(2) + ' km' },
+        { id: 'bestglide', label: $gettext('Best glide'), value: ((ana.bestGlide || 0) / 1000).toFixed(2) + ' km' },
         { id: 'empty1', label: '', value: '' }
     ]
     const r10 = [
-        { id: 'avgtrans', label: 'Vit moyenne transition', value: avgTransSpeed + ' km/h' },
+        { id: 'avgtrans', label: $gettext('Avg glide speed'), value: avgTransSpeed + ' km/h' },
         { id: 'empty2', label: '', value: '' }
     ]
     const r11 = [
-        { id: 'avgthermal', label: 'Taux moyen montée', value: avgThermalClimb + ' m/s' },
+        { id: 'avgthermal', label: $gettext('Average climb'), value: avgThermalClimb + ' m/s' },
         { id: 'empty3', label: '', value: '' }
     ]
     const r12 = [
-        { id: 'extracttime', label: "Délai d'extraction", value: hExtractTime },
+        { id: 'extracttime', label: $gettext('Extraction time'), value: hExtractTime },
         { id: 'empty4', label: '', value: '' }
     ]
     const r13 = [
-        { id: 'efficiency', label: 'Efficacité moyenne', value: Math.ceil(ana.avgThermalEffi || 0) + ' %' },
+        { id: 'efficiency', label: $gettext('Avg th efficiency'), value: Math.ceil(ana.avgThermalEffi || 0) + ' %' },
         { id: 'empty5', label: '', value: '' }
     ]
 

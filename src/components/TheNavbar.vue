@@ -97,7 +97,7 @@
         <template v-slot:activator="{ props }">
           <v-btn text v-bind="props">
             <!-- <v-icon left>mdi-map-marker-path</v-icon>. -->
-            {{ $gettext('Settings & Utilities') }}
+            {{ $gettext('Utilities') }}
             <v-icon right>mdi-menu-down</v-icon>
           </v-btn>
         </template>
@@ -108,8 +108,8 @@
           <v-list-item :to="{ name: 'support-view' }">
             <v-list-item-title>{{ $gettext('Support') }}</v-list-item-title>
           </v-list-item>
-          <v-list-item :to="{ name: 'utils-view' }">
-            <v-list-item-title>{{ $gettext('Utilities') }}</v-list-item-title>
+          <v-list-item :to="{ name: 'translation-view' }">
+            <v-list-item-title>{{ $gettext('Translation') }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>

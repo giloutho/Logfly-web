@@ -1,13 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
-"Language: en\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.6\n"
 
 #: src/components/CesiumReplayView.vue:6
 msgid "3D Flight Replay"
@@ -64,14 +66,10 @@ msgstr ""
 msgid "GPX export"
 msgstr ""
 
-#: src/components/ExternalDetails.vue:60
-msgid "Site not defined"
-msgstr ""
-
 #: src/components/ExternalLayout.vue:17 src/components/TheNavbar.vue:31
 #: src/modules/Tracks/views/ExternalView.vue:12
 msgid "External track"
-msgstr "External track"
+msgstr ""
 
 #: src/components/ExternalLayout.vue:35 src/components/OpenLogbook.vue:74
 #: src/modules/Tracks/views/ImportView.vue:90
@@ -90,9 +88,7 @@ msgstr ""
 msgid "Charts"
 msgstr ""
 
-#: src/components/FullmapTrack.vue:8
-#: src/modules/Settings/views/TranslationView.vue:80
-#: src/modules/Stat/views/AnnualSummary.vue:9
+#: src/components/FullmapTrack.vue:8 src/modules/Stat/views/AnnualSummary.vue:9
 msgid "Export"
 msgstr ""
 
@@ -105,7 +101,6 @@ msgid "Choose an existing glider"
 msgstr ""
 
 #: src/components/GliderDialog.vue:8 src/components/LogbookDetails.vue:47
-#: src/components/TraceInfoDialog.vue:111 src/components/TraceInfoPanel.vue:87
 msgid "Glider"
 msgstr ""
 
@@ -126,23 +121,20 @@ msgid "3D View"
 msgstr ""
 
 #: src/components/LittleMapView.vue:19
-#, fuzzy
 msgid "Analyze"
-msgstr "Analyse de :"
+msgstr ""
 
 #: src/components/LogbookDetails.vue:14
-#, fuzzy
 msgid "Flight Details"
-msgstr "Flights & Tracks"
+msgstr ""
 
 #: src/components/LogbookDetails.vue:20
 msgid "About"
 msgstr ""
 
 #: src/components/LogbookDetails.vue:24
-#, fuzzy
 msgid "Comment"
-msgstr "Community"
+msgstr ""
 
 #: src/components/LogbookDetails.vue:28
 msgid "Modify"
@@ -156,44 +148,35 @@ msgstr ""
 msgid "More"
 msgstr ""
 
-#: src/components/LogbookDetails.vue:45 src/components/TraceInfoDialog.vue:107
-#: src/components/TraceInfoPanel.vue:83
-#, fuzzy
+#: src/components/LogbookDetails.vue:45
 msgid "Site"
-msgstr "Sites"
+msgstr ""
 
-#: src/components/LogbookDetails.vue:49 src/components/TraceInfoDialog.vue:110
-#: src/components/TraceInfoPanel.vue:86
+#: src/components/LogbookDetails.vue:49
 msgid "Pilot"
 msgstr ""
 
-#: src/components/LogbookDetails.vue:53 src/components/TraceInfoDialog.vue:114
-#: src/components/TraceInfoPanel.vue:90
+#: src/components/LogbookDetails.vue:53
 msgid "Take off"
 msgstr ""
 
-#: src/components/LogbookDetails.vue:54 src/components/TraceInfoDialog.vue:118
-#: src/components/TraceInfoPanel.vue:94
+#: src/components/LogbookDetails.vue:54
 msgid "Landing"
 msgstr ""
 
-#: src/components/LogbookDetails.vue:55 src/components/TraceInfoDialog.vue:122
-#: src/components/TraceInfoPanel.vue:98
+#: src/components/LogbookDetails.vue:55
 msgid "Duration"
 msgstr ""
 
-#: src/components/LogbookDetails.vue:58 src/components/TraceInfoDialog.vue:126
-#: src/components/TraceInfoPanel.vue:102
+#: src/components/LogbookDetails.vue:58
 msgid "Max GPS alt"
 msgstr ""
 
-#: src/components/LogbookDetails.vue:60 src/components/TraceInfoDialog.vue:130
-#: src/components/TraceInfoPanel.vue:106
+#: src/components/LogbookDetails.vue:60
 msgid "Max climb"
 msgstr ""
 
-#: src/components/LogbookDetails.vue:62 src/components/TraceInfoDialog.vue:131
-#: src/components/TraceInfoPanel.vue:107
+#: src/components/LogbookDetails.vue:62
 msgid "Max sink"
 msgstr ""
 
@@ -254,9 +237,8 @@ msgid "Select a logbook"
 msgstr ""
 
 #: src/components/OpenLogbook.vue:48
-#, fuzzy
 msgid "New logbook"
-msgstr "Logbook"
+msgstr ""
 
 #: src/components/OpenLogbook.vue:51
 msgid "Enter a name and click the Create button"
@@ -295,9 +277,8 @@ msgid "Remove tag"
 msgstr ""
 
 #: src/components/TagDialog.vue:28
-#, fuzzy
 msgid "No tag selected"
-msgstr "or click to select"
+msgstr ""
 
 #: src/components/TagDialog.vue:39
 msgid "Ok"
@@ -320,9 +301,8 @@ msgid "Saved"
 msgstr ""
 
 #: src/components/TheFooter.vue:65
-#, fuzzy
 msgid "Auto-saved logbook"
-msgstr "Logbook"
+msgstr ""
 
 #: src/components/TheFooter.vue:100
 msgid "File successfully downloaded"
@@ -338,19 +318,19 @@ msgstr ""
 
 #: src/components/TheNavbar.vue:19 src/components/TheWelcome.vue:20
 msgid "Flights & Tracks"
-msgstr "Flights & Tracks"
+msgstr ""
 
 #: src/components/TheNavbar.vue:25 src/components/TheWelcome.vue:22
 msgid "Logbook"
-msgstr "Logbook"
+msgstr ""
 
 #: src/components/TheNavbar.vue:28
 msgid "Import tracks"
-msgstr "Import tracks"
+msgstr ""
 
 #: src/components/TheNavbar.vue:39 src/components/TheWelcome.vue:35
 msgid "Statistics"
-msgstr "Statistics"
+msgstr ""
 
 #: src/components/TheNavbar.vue:45 src/components/TheWelcome.vue:39
 msgid "Annual summary"
@@ -362,7 +342,7 @@ msgstr ""
 
 #: src/components/TheNavbar.vue:57 src/components/TheWelcome.vue:50
 msgid "Routing"
-msgstr "Routing"
+msgstr ""
 
 #: src/components/TheNavbar.vue:63 src/components/TheWelcome.vue:53
 msgid "Waypoints"
@@ -379,7 +359,7 @@ msgstr ""
 #: src/components/TheNavbar.vue:77 src/components/TheNavbar.vue:83
 #: src/components/TheWelcome.vue:66 src/components/TheWelcome.vue:69
 msgid "Sites"
-msgstr "Sites"
+msgstr ""
 
 #: src/components/TheNavbar.vue:86
 msgid "Paragliding Earth"
@@ -388,50 +368,43 @@ msgstr ""
 #: src/components/TheNavbar.vue:93 src/components/TheWelcome.vue:77
 #: src/components/TheWelcome.vue:81
 msgid "Equipment"
-msgstr "Equipment"
+msgstr ""
 
-#: src/components/TheNavbar.vue:100 src/components/TheWelcome.vue:88
-#, fuzzy
-msgid "Utilities"
-msgstr "Settings & Utilities"
+#: src/components/TheNavbar.vue:100
+msgid "Settings & Utilities"
+msgstr ""
 
 #: src/components/TheNavbar.vue:106
 msgid "Settings"
 msgstr ""
 
 #: src/components/TheNavbar.vue:109
-#, fuzzy
 msgid "Support"
-msgstr "Support Vue"
+msgstr ""
 
-#: src/components/TheNavbar.vue:112
-msgid "Translation"
+#: src/components/TheNavbar.vue:112 src/components/TheWelcome.vue:88
+msgid "Utilities"
 msgstr ""
 
 #: src/components/TheWelcome.vue:22
-#, fuzzy
 msgid "Access your logbook"
-msgstr "Logbook"
+msgstr ""
 
 #: src/components/TheWelcome.vue:24
-#, fuzzy
 msgid "Import new flights with or without GPS tracks"
-msgstr "Flights & Tracks"
+msgstr ""
 
 #: src/components/TheWelcome.vue:24
-#, fuzzy
 msgid "Import flights"
-msgstr "Import tracks"
+msgstr ""
 
 #: src/components/TheWelcome.vue:26
-#, fuzzy
 msgid "Review external GPS tracks"
-msgstr "Review an external GPS track"
+msgstr ""
 
 #: src/components/TheWelcome.vue:27
-#, fuzzy
 msgid "External GPS track"
-msgstr "External track"
+msgstr ""
 
 #: src/components/TheWelcome.vue:37
 msgid "Consult the annual summary of your flights"
@@ -471,73 +444,6 @@ msgstr ""
 
 #: src/components/TheWelcome.vue:91
 msgid "Access support"
-msgstr ""
-
-#: src/components/TraceInfoDialog.vue:106 src/components/TraceInfoPanel.vue:82
-msgid "Date"
-msgstr ""
-
-#: src/components/TraceInfoDialog.vue:115
-#: src/components/TraceInfoDialog.vue:119 src/components/TraceInfoPanel.vue:91
-#: src/components/TraceInfoPanel.vue:95
-msgid "GPS alt"
-msgstr ""
-
-#: src/components/TraceInfoDialog.vue:123 src/components/TraceInfoPanel.vue:99
-msgid "Size"
-msgstr ""
-
-#: src/components/TraceInfoDialog.vue:127 src/components/TraceInfoPanel.vue:103
-msgid "Min GPS alt"
-msgstr ""
-
-#: src/components/TraceInfoDialog.vue:134 src/components/TraceInfoPanel.vue:110
-msgid "Max gain"
-msgstr ""
-
-#: src/components/TraceInfoDialog.vue:135 src/components/TraceInfoPanel.vue:111
-msgid "Max speed"
-msgstr ""
-
-#: src/components/TraceInfoDialog.vue:138 src/components/TraceInfoPanel.vue:114
-msgid "Best glide"
-msgstr ""
-
-#: src/components/TraceInfoDialog.vue:142 src/components/TraceInfoPanel.vue:118
-msgid "Avg glide speed"
-msgstr ""
-
-#: src/components/TraceInfoDialog.vue:146 src/components/TraceInfoPanel.vue:122
-msgid "Average climb"
-msgstr ""
-
-#: src/components/TraceInfoDialog.vue:150 src/components/TraceInfoPanel.vue:126
-msgid "Extraction time"
-msgstr ""
-
-#: src/components/TraceInfoDialog.vue:154 src/components/TraceInfoPanel.vue:130
-msgid "Avg th efficiency"
-msgstr ""
-
-#: src/modules/Settings/views/TranslationView.vue:3
-msgid "Translation Editor"
-msgstr ""
-
-#: src/modules/Settings/views/TranslationView.vue:6
-msgid "Loading translations..."
-msgstr ""
-
-#: src/modules/Settings/views/TranslationView.vue:15
-#: src/modules/Tracks/views/LogbookView.vue:24
-msgid "Search"
-msgstr ""
-
-#: src/modules/Settings/views/TranslationView.vue:18
-msgid "Context"
-msgstr ""
-
-#: src/modules/Settings/views/TranslationView.vue:22
-msgid "Target language"
 msgstr ""
 
 #: src/modules/Tracks/js/device-descriptions.js:9
@@ -694,9 +600,8 @@ msgstr ""
 
 #: src/modules/Tracks/js/device-descriptions.js:126
 #: src/modules/Tracks/views/ImportView.vue:63
-#, fuzzy
 msgid "Flight without GPS track"
-msgstr "Flights & Tracks"
+msgstr ""
 
 #: src/modules/Tracks/js/device-descriptions.js:126
 msgid "Create a manual flight entry without an associated track file."
@@ -704,20 +609,19 @@ msgstr ""
 
 #: src/modules/Tracks/views/ExternalView.vue:13
 msgid "Analyze a track file without importing it into your logbook"
-msgstr "Analyze a track file without importing it into your logbook"
+msgstr ""
 
 #: src/modules/Tracks/views/ExternalView.vue:18
 msgid "Drag and drop your file here"
-msgstr "Drag and drop your file here"
+msgstr ""
 
 #: src/modules/Tracks/views/ExternalView.vue:18
 msgid "or click to select"
-msgstr "or click to select"
+msgstr ""
 
 #: src/modules/Tracks/views/ExternalView.vue:24
-#, fuzzy
 msgid "Analyse of"
-msgstr "Analyse de :"
+msgstr ""
 
 #: src/modules/Tracks/views/ExternalView.vue:29
 msgid "Decoding in progress"
@@ -753,9 +657,8 @@ msgstr ""
 
 #: src/modules/Tracks/views/ImportView.vue:87
 #: src/modules/Tracks/views/ImportView.vue:199
-#, fuzzy
 msgid "Import"
-msgstr "Import tracks"
+msgstr ""
 
 #: src/modules/Tracks/views/ImportView.vue:133
 msgid "Already in the logbook"
@@ -782,9 +685,8 @@ msgid "Error while selecting the folder"
 msgstr ""
 
 #: src/modules/Tracks/views/ImportView.vue:342
-#, fuzzy
 msgid "No directory selected"
-msgstr "or click to select"
+msgstr ""
 
 #: src/modules/Tracks/views/ImportView.vue:354
 msgid "No tracks in this folder"
@@ -797,6 +699,10 @@ msgstr ""
 #: src/modules/Tracks/views/ImportView.vue:391
 #: src/modules/Tracks/views/ImportView.vue:408
 msgid "To rename"
+msgstr ""
+
+#: src/modules/Tracks/views/LogbookView.vue:24
+msgid "Search"
 msgstr ""
 
 #: src/modules/Tracks/views/LogbookView.vue:26
@@ -812,115 +718,9 @@ msgid "Totals for the selection"
 msgstr ""
 
 #: src/modules/Tracks/views/LogbookView.vue:319
-#, fuzzy
 msgid "Flights"
-msgstr "Flights & Tracks"
+msgstr ""
 
 #: src/modules/Tracks/views/LogbookView.vue:320
-#, fuzzy
 msgid "Flight hours"
-msgstr "Flights & Tracks"
-
-#~ msgid "Settings & Utilities"
-#~ msgstr "Settings & Utilities"
-
-#, fuzzy
-#~ msgid "Importez de nouvelles traces"
-#~ msgstr "Importer des Traces GPS"
-
-#~ msgid "Import GPS tracks"
-#~ msgstr "Import GPS tracks"
-
-#, fuzzy
-#~ msgid "Consultez la synthèse annuelle de vos vols"
-#~ msgstr "Voir la Synthèse Annuelle (Module Stat)"
-
-#~ msgid "Traces & Vols"
-#~ msgstr "Traces & Vols"
-
-#~ msgid ""
-#~ "Gérez et analysez tous vos vols. Accédez à votre carnet de vols, importez "
-#~ "de nouvelles traces ou examinez des fichiers externes."
-#~ msgstr ""
-#~ "Gérez et analysez tous vos vols. Accédez à votre carnet de vols, importez "
-#~ "de nouvelles traces ou examinez des fichiers externes."
-
-#~ msgid "Tooling"
-#~ msgstr "Tooling"
-
-#~ msgid "This project is served and bundled with"
-#~ msgstr "This project is served and bundled with"
-
-#~ msgid "recommended IDE setup is"
-#~ msgstr "recommended IDE setup is"
-
-#~ msgid "Vitest"
-#~ msgstr "Vitest"
-
-#~ msgid "Cypress"
-#~ msgstr "Cypress"
-
-#~ msgid "Playwright"
-#~ msgstr "Playwright"
-
-#~ msgid "More instructions are available in"
-#~ msgstr "More instructions are available in"
-
-#~ msgid "Ecosystem"
-#~ msgstr "Ecosystem"
-
-#~ msgid "Get official tools and libraries for your project:"
-#~ msgstr "Get official tools and libraries for your project:"
-
-#~ msgid "Got stuck? Ask your question on"
-#~ msgstr "Got stuck? Ask your question on"
-
-#~ msgid "StackOverflow"
-#~ msgstr "StackOverflow"
-
-#~ msgid "You should also follow the official"
-#~ msgstr "You should also follow the official"
-
-#~ msgid "Bluesky account or the"
-#~ msgstr "Bluesky account or the"
-
-#~ msgid "X account for latest news in the Vue world."
-#~ msgstr "X account for latest news in the Vue world."
-
-#~ msgid ""
-#~ "As an independent project, Vue relies on community backing for its "
-#~ "sustainability. You can help"
-#~ msgstr ""
-#~ "As an independent project, Vue relies on community backing for its "
-#~ "sustainability. You can help"
-
-#~ msgid "becoming a sponsor"
-#~ msgstr "becoming a sponsor"
-
-#~ msgid "Les détails de l'analyse de la trace apparaîtront ici..."
-#~ msgstr "Les détails de l'analyse de la trace apparaîtront ici..."
-
-#~ msgid ""
-#~ "Sélectionnez un ou plusieurs fichiers de trace (IGC, GPX, etc.) depuis "
-#~ "votre ordinateur pour les ajouter à votre carnet de vols."
-#~ msgstr ""
-#~ "Sélectionnez un ou plusieurs fichiers de trace (IGC, GPX, etc.) depuis "
-#~ "votre ordinateur pour les ajouter à votre carnet de vols."
-
-#~ msgid "Glissez et déposez vos fichiers ici, ou cliquez pour sélectionner."
-#~ msgstr "Glissez et déposez vos fichiers ici, ou cliquez pour sélectionner."
-
-#~ msgid "Fichiers à importer :"
-#~ msgstr "Fichiers à importer :"
-
-#~ msgid "Lancer l'importation"
-#~ msgstr "Lancer l'importation"
-
-#~ msgid "Importer Traces GPS"
-#~ msgstr "Importer Traces GPS"
-
-#~ msgid "Examiner Trace Extérieure"
-#~ msgstr "Examiner Trace Extérieure"
-
-#~ msgid "Liste détaillée de tous les vols enregistrés..."
-#~ msgstr "Liste détaillée de tous les vols enregistrés..."
+msgstr ""
