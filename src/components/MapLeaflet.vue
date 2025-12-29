@@ -4,11 +4,14 @@
 
 <script setup>
 import { onMounted, onBeforeUnmount, watch, ref } from 'vue'
+import { useGettext } from "vue3-gettext";
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { baseMaps, kk7layer } from '@/js/leaflet/tiles.js'
 import '@/js/leaflet/leaflet-measure.css'
 import { createPopThermal, createPopGlide, thermalIcon, glideIcon, startIcon, endIcon, getLeagueColor } from '@/js/leaflet/map-utils.js'
+
+const { $gettext } = useGettext()
 
 const props = defineProps({
     geoJson: {
@@ -240,7 +243,7 @@ function displayThermals(geoThermals) {
     })
 
     if (layerControl) {
-        layerControl.addOverlay(thermalLayer, 'Thermiques')
+        layerControl.addOverlay(thermalLayer, $gettext('Thermals'))
     }
 }
 
@@ -271,7 +274,7 @@ function displayGlides(geoGlides) {
     })
 
     if (layerControl) {
-        layerControl.addOverlay(glideLayer, 'Transitions')
+        layerControl.addOverlay(glideLayer, $gettext('Glides'))
     }
 }
 
@@ -315,9 +318,9 @@ function displayVerification(checkResult, fixes) {
             onEachFeature: (feature, layer) => {
                 // Simple popup
                 let popupContent = `<b>${feature.properties.Name}</b><br>`
-                popupContent += `Class: ${feature.properties.Class}<br>`
-                popupContent += `Floor: ${feature.properties.FloorLabel}<br>`
-                popupContent += `Ceiling: ${feature.properties.CeilingLabel}`
+                popupContent += `${$gettext('Class')}: ${feature.properties.Class}<br>`
+                popupContent += `${$gettext('Floor')}: ${feature.properties.FloorLabel}<br>`
+                popupContent += `${$gettext('Ceiling')}: ${feature.properties.CeilingLabel}`
                 if (feature.properties.AltLimit_Bottom_AGL) popupContent += ' (AGL)'
                 console.log('Nom espace ', feature.properties.Name)
                 layer.bindPopup(popupContent)
@@ -353,7 +356,7 @@ function displayVerification(checkResult, fixes) {
     verificationLayer.addTo(map)
 
     if (layerControl) {
-        layerControl.addOverlay(verificationLayer, 'Vérification')
+        layerControl.addOverlay(verificationLayer, $gettext('Checking'))
         // Automatically check the layer
         map.addLayer(verificationLayer)
     }
@@ -459,7 +462,7 @@ function updateVerificationTooltip(checkResult) {
             closeBtn.onclick = () => { map.removeControl(this) }
 
             const header = L.DomUtil.create('h4', 'text-warning', div)
-            header.innerHTML = 'Espaces aériens concernés'
+            header.innerHTML = $gettext('Airspaces involved')
             header.style.margin = '0 0 8px 0'
             header.style.fontSize = '14px'
             header.style.color = '#fb8c00'
@@ -478,9 +481,9 @@ function updateVerificationTooltip(checkResult) {
 
             const summary = L.DomUtil.create('div', '', div)
             if (checkResult.insidePoints && checkResult.insidePoints.length > 0) {
-                summary.innerHTML = `<span style="background-color: #ef5350; color: white; padding: 2px 4px; border-radius: 2px;">violation(s) : ${checkResult.insidePoints.length} points</span>`
+                summary.innerHTML = `<span style="background-color: #ef5350; color: white; padding: 2px 4px; border-radius: 2px;">${$gettext('violation(s)')}: ${checkResult.insidePoints.length} points</span>`
             } else {
-                summary.innerHTML = `<span style="color: green;">Pas de violations dans le fichier d’espaces</span>`
+                summary.innerHTML = `<span style="color: green;">${$gettext('No violations in the selected airspace file')}</span>`
             }
             summary.style.marginTop = '10px'
             summary.style.fontSize = '12px'
@@ -488,7 +491,7 @@ function updateVerificationTooltip(checkResult) {
 
             if (checkResult.airGeoJson && checkResult.airGeoJson.length > 0) {
                 const hint = L.DomUtil.create('div', 'text-grey', div)
-                hint.innerHTML = '<i>Cliquer sur un espace pour afficher la description</i>'
+                hint.innerHTML = `<i>${$gettext('Click on an airspace to display the description')}</i>`
                 hint.style.fontSize = '10px'
                 hint.style.marginTop = '8px'
                 hint.style.color = '#666'

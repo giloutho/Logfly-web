@@ -682,8 +682,9 @@ async function mapWithoutIgc(flightId) {
 .global-logbook {
   display: flex;
   flex-direction: row;
-  width: 100vw;
-  height: 90vh;
+  width: 100%;
+  height: calc(100vh - 120px);
+  /* Account for navbar + footer */
   margin: 0;
   padding: 10px;
   gap: 2vw;

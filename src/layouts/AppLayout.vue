@@ -1,16 +1,20 @@
 <style>
 .app-container {
-  height: 100vh !important;
-  min-height: 100vh !important;
-  width: 100vw !important;
+  height: 100vh;
+  width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .content-area {
-  height: 100%;
-  min-height: 100%;
   width: 100%;
   box-sizing: border-box;
+  padding-bottom: 56px !important;
+  /* Space for fixed footer */
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 </style>
 <template>
@@ -21,14 +25,8 @@
       <router-view @db-updated="onDbUpdated" />
     </v-main>
 
-
-    <!-- Pas de footer pour l'instant     -->
-    <v-footer class="app-footer">
-      © Paragliding App
-    </v-footer>
     <TheFooter :version="appVersion" :dbPath="dbPath" :isDirty="isDirty" @save="onSave" />
     <OpenLogbook @db-opened="onDbOpened" @file-handle="onFileHandle" @close="onCloseLogbook" />
-    <!-- Snackbar supprimé -->
   </v-app>
 </template>
 

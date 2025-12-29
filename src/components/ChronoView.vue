@@ -15,11 +15,11 @@
                 <v-table density="compact" fixed-header height="100%">
                     <thead>
                         <tr>
-                            <th class="text-left">Heure</th>
-                            <th class="text-left">Ecouté</th>
-                            <th class="text-left">Alt</th>
-                            <th class="text-left">Description</th>
-                            <th class="text-left">Infos</th>
+                            <th class="text-left">{{ $gettext('Time') }}</th>
+                            <th class="text-left">{{ $gettext('Elapsed') }}</th>
+                            <th class="text-left">{{ $gettext('Alt') }}</th>
+                            <th class="text-left">{{ $gettext('Type') }}</th>
+                            <th class="text-left">{{ $gettext('Infos') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,6 +45,9 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext()
 
 const props = defineProps({
     modelValue: Boolean,
@@ -93,10 +96,10 @@ function getIcon(category) {
 
 function getLabel(category) {
     switch (category) {
-        case 'K': return 'Décollage'
-        case 'T': return 'Thermique'
-        case 'G': return 'Transition'
-        case 'L': return 'Atterrissage'
+        case 'K': return $gettext('Take off')
+        case 'T': return $gettext('Thermal')
+        case 'G': return $gettext('Glide')
+        case 'L': return $gettext('Landing')
         default: return ''
     }
 }

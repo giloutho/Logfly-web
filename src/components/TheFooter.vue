@@ -7,7 +7,7 @@
       <!-- Language selector -->
       <v-menu offset-y>
         <template v-slot:activator="{ props }">
-          <v-btn v-bind="props" variant="outlined" size="default" class="footer-lang-btn">
+          <v-btn v-bind="props" variant="text" size="small" class="footer-lang-btn">
             <span class="flag-emoji">{{ langFlags[currentLangCode] }}</span>
             {{ currentLangCode.toUpperCase() }}
           </v-btn>

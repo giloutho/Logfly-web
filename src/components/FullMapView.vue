@@ -3,12 +3,12 @@
         <!-- App Bar -->
         <div class="toolbar-row">
             <div class="toolbar-left">
-                <v-btn class="toolbar-btn" @click="infoDialog = true">Infos</v-btn>
-                <v-btn class="toolbar-btn" @click="openChrono">Chronologie</v-btn>
-                <v-btn class="toolbar-btn" @click="airspaceDialog = true">Espaces aériens</v-btn>
-                <v-btn class="toolbar-btn" @click="scoreDialog = true">Score</v-btn>
+                <v-btn class="toolbar-btn" @click="infoDialog = true"> {{ $gettext('Infos') }}</v-btn>
+                <v-btn class="toolbar-btn" @click="openChrono">{{ $gettext('Pathway') }}</v-btn>
+                <v-btn class="toolbar-btn" @click="airspaceDialog = true">{{ $gettext('Airspaces') }}</v-btn>
+                <v-btn class="toolbar-btn" @click="scoreDialog = true">{{ $gettext('Score') }}</v-btn>
                 <v-btn class="toolbar-btn" :color="isCutting ? 'error' : ''" @click="toggleCutting">{{ isCutting ?
-                    'Annuler' : 'Couper' }}
+                    $gettext('Cancel') : $gettext('Cut') }}
                 </v-btn>
             </div>
             <div class="toolbar-right">
@@ -30,7 +30,7 @@
             <div class="graph-info" id="graph-info" ref="graphInfo">
                 <!-- Info will be injected here or via Vue binding if improved -->
                 <span v-if="hoverInfo" v-html="hoverInfo"></span>
-                <span v-else>Survolez le graphe pour voir les détails</span>
+                <span v-else>{{ $gettext('Hover over the graph to see details') }}</span>
             </div>
             <div class="graph-section">
                 <GraphUplot v-if="flightData?.decodedIgc?.fixes && flightData.decodedIgc.fixes.length > 0"
