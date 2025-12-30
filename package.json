@@ -11,7 +11,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "gettext:extract": "vue-gettext-extract",
-    "gettext:compile": "vue-gettext-compile"
+    "gettext:compile": "vue-gettext-compile",
+    "translations:download": "node src/language/download-translations.cjs",
+    "translations:update-ref": "node src/language/update-reference-total.cjs"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
