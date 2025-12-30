@@ -9,13 +9,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: extract-translations.js\n"
 
 #: src/components/CesiumReplayView.vue:6
 msgid "3D Flight Replay"
 msgstr ""
 
-#: src/components/CesiumReplayView.vue:63
+#: src/components/CesiumReplayView.vue:63 src/components/FullMapView.vue:33
 msgid "Hover over the graph to see details"
 msgstr ""
 
@@ -47,34 +47,79 @@ msgstr ""
 msgid "becomes"
 msgstr ""
 
-#: src/components/ChangeSiteDialog.vue:31 src/components/GliderDialog.vue:18
-#: src/components/LogbookPhoto.vue:23 src/components/OpenLogbook.vue:65
-#: src/components/TagDialog.vue:36 src/modules/Tracks/views/ImportView.vue:194
+#: src/components/ChangeSiteDialog.vue:31 src/components/FullMapView.vue:11
+#: src/components/GliderDialog.vue:18 src/components/LogbookPhoto.vue:23
+#: src/components/OpenLogbook.vue:65 src/components/TagDialog.vue:36
+#: src/modules/Settings/views/TranslationView.vue:67
+#: src/modules/Tracks/views/ImportView.vue:194
 msgid "Cancel"
-msgstr ""
+msgstr "Annulla"
 
 #: src/components/ChangeSiteDialog.vue:32 src/components/GliderDialog.vue:19
 #: src/components/LogbookDetails.vue:97 src/components/LogbookPhoto.vue:24
 msgid "OK"
+msgstr "OK"
+
+#: src/components/ChronoView.vue:18
+msgid "Time"
+msgstr "Ora"
+
+#: src/components/ChronoView.vue:19
+msgid "Elapsed"
+msgstr "Trascorso"
+
+#: src/components/ChronoView.vue:20
+msgid "Alt"
+msgstr "Alt"
+
+#: src/components/ChronoView.vue:21
+msgid "Type"
 msgstr ""
+
+#: src/components/ChronoView.vue:22 src/components/FullMapView.vue:6
+msgid "Infos"
+msgstr "Informazioni"
+
+#: src/components/ChronoView.vue:99 src/components/LogbookDetails.vue:53
+#: src/components/TraceInfoDialog.vue:114 src/components/TraceInfoPanel.vue:90
+msgid "Take off"
+msgstr "Decollo"
+
+#: src/components/ChronoView.vue:100
+msgid "Thermal"
+msgstr "Termica"
+
+#: src/components/ChronoView.vue:101
+msgid "Glide"
+msgstr "Planata"
+
+#: src/components/ChronoView.vue:102 src/components/LogbookDetails.vue:54
+#: src/components/TraceInfoDialog.vue:118 src/components/TraceInfoPanel.vue:94
+msgid "Landing"
+msgstr "Atterraggio"
 
 #: src/components/ExternalDetails.vue:26 src/components/LogbookDetails.vue:130
 msgid "IGC export"
-msgstr ""
+msgstr "Esportazione IGC"
 
 #: src/components/ExternalDetails.vue:30 src/components/LogbookDetails.vue:134
 msgid "GPX export"
+msgstr "Esportazione GPX"
+
+#: src/components/ExternalDetails.vue:60
+msgid "Site not defined"
 msgstr ""
 
 #: src/components/ExternalLayout.vue:17 src/components/TheNavbar.vue:31
 #: src/modules/Tracks/views/ExternalView.vue:12
 msgid "External track"
-msgstr ""
+msgstr "Traccia esterna"
 
 #: src/components/ExternalLayout.vue:35 src/components/OpenLogbook.vue:74
+#: src/components/TraceInfoDialog.vue:35
 #: src/modules/Tracks/views/ImportView.vue:90
 msgid "Close"
-msgstr ""
+msgstr "Chiudi"
 
 #: src/components/FullmapTrack.vue:5 src/modules/Stat/views/AnnualSummary.vue:6
 msgid "Year"
@@ -90,23 +135,41 @@ msgstr ""
 
 #: src/components/FullmapTrack.vue:8 src/modules/Stat/views/AnnualSummary.vue:9
 msgid "Export"
+msgstr "Esporta"
+
+#: src/components/FullMapView.vue:7
+msgid "Pathway"
+msgstr "Percorso"
+
+#: src/components/FullMapView.vue:8 src/components/TheNavbar.vue:66
+#: src/components/TheWelcome.vue:56
+msgid "Airspaces"
+msgstr "Spazi aerei"
+
+#: src/components/FullMapView.vue:9
+msgid "Score"
+msgstr "Punteggio"
+
+#: src/components/FullMapView.vue:11
+msgid "Cut"
 msgstr ""
 
 #: src/components/GliderDialog.vue:4 src/components/LogbookDetails.vue:179
 msgid "Change glider"
-msgstr ""
+msgstr "Cambia vela"
 
 #: src/components/GliderDialog.vue:7
 msgid "Choose an existing glider"
 msgstr ""
 
 #: src/components/GliderDialog.vue:8 src/components/LogbookDetails.vue:47
+#: src/components/TraceInfoDialog.vue:111 src/components/TraceInfoPanel.vue:87
 msgid "Glider"
-msgstr ""
+msgstr "Vela"
 
 #: src/components/GliderDialog.vue:12
 msgid "Or new glider"
-msgstr ""
+msgstr "O una nuova vela"
 
 #: src/components/GliderDialog.vue:13
 msgid "Enter new glider name"
@@ -114,7 +177,7 @@ msgstr ""
 
 #: src/components/LittleMapView.vue:7
 msgid "Full map"
-msgstr ""
+msgstr "Mappa completa"
 
 #: src/components/LittleMapView.vue:13
 msgid "3D View"
@@ -134,11 +197,11 @@ msgstr ""
 
 #: src/components/LogbookDetails.vue:24
 msgid "Comment"
-msgstr ""
+msgstr "Commento"
 
 #: src/components/LogbookDetails.vue:28
 msgid "Modify"
-msgstr ""
+msgstr "Modifica"
 
 #: src/components/LogbookDetails.vue:32
 msgid "Share"
@@ -148,37 +211,35 @@ msgstr ""
 msgid "More"
 msgstr ""
 
-#: src/components/LogbookDetails.vue:45
+#: src/components/LogbookDetails.vue:45 src/components/TraceInfoDialog.vue:107
+#: src/components/TraceInfoPanel.vue:83
 msgid "Site"
-msgstr ""
+msgstr "Sito"
 
-#: src/components/LogbookDetails.vue:49
+#: src/components/LogbookDetails.vue:49 src/components/TraceInfoDialog.vue:110
+#: src/components/TraceInfoPanel.vue:86
 msgid "Pilot"
-msgstr ""
+msgstr "Pilota"
 
-#: src/components/LogbookDetails.vue:53
-msgid "Take off"
-msgstr ""
-
-#: src/components/LogbookDetails.vue:54
-msgid "Landing"
-msgstr ""
-
-#: src/components/LogbookDetails.vue:55
+#: src/components/LogbookDetails.vue:55 src/components/TraceInfoDialog.vue:122
+#: src/components/TraceInfoPanel.vue:98
 msgid "Duration"
-msgstr ""
+msgstr "Durata"
 
-#: src/components/LogbookDetails.vue:58
+#: src/components/LogbookDetails.vue:58 src/components/TraceInfoDialog.vue:126
+#: src/components/TraceInfoPanel.vue:102
 msgid "Max GPS alt"
-msgstr ""
+msgstr "Max alt. GPS"
 
-#: src/components/LogbookDetails.vue:60
+#: src/components/LogbookDetails.vue:60 src/components/TraceInfoDialog.vue:130
+#: src/components/TraceInfoPanel.vue:106
 msgid "Max climb"
-msgstr ""
+msgstr "Max salita"
 
-#: src/components/LogbookDetails.vue:62
+#: src/components/LogbookDetails.vue:62 src/components/TraceInfoDialog.vue:131
+#: src/components/TraceInfoPanel.vue:107
 msgid "Max sink"
-msgstr ""
+msgstr "Max discesa"
 
 #: src/components/LogbookDetails.vue:93
 msgid "Add a comment"
@@ -186,15 +247,15 @@ msgstr ""
 
 #: src/components/LogbookDetails.vue:181
 msgid "Delete"
-msgstr ""
+msgstr "Elimina"
 
 #: src/components/LogbookDetails.vue:182
 msgid "Edit/Duplicate"
-msgstr ""
+msgstr "Modifica/Duplica"
 
 #: src/components/LogbookDetails.vue:183
 msgid "Merge flights"
-msgstr ""
+msgstr "Unire i voli"
 
 #: src/components/LogbookDetails.vue:184 src/components/LogbookPhoto.vue:4
 msgid "Add photo"
@@ -212,13 +273,55 @@ msgstr ""
 msgid "Select a photo"
 msgstr ""
 
+#: src/components/MapLeaflet.vue:246 src/components/TraceInfoDialog.vue:177
+#: src/components/TraceInfoPanel.vue:151
+msgid "Thermals"
+msgstr "Termiche"
+
+#: src/components/MapLeaflet.vue:277 src/components/TraceInfoDialog.vue:187
+#: src/components/TraceInfoPanel.vue:160
+msgid "Glides"
+msgstr ""
+
+#: src/components/MapLeaflet.vue:321
+msgid "Class"
+msgstr "Classe"
+
+#: src/components/MapLeaflet.vue:322
+msgid "Floor"
+msgstr "Piano"
+
+#: src/components/MapLeaflet.vue:323
+msgid "Ceiling"
+msgstr "Soffitto"
+
+#: src/components/MapLeaflet.vue:359
+msgid "Checking"
+msgstr "Verifica"
+
+#: src/components/MapLeaflet.vue:465
+msgid "Airspaces involved"
+msgstr "Spazi aerei coinvolti"
+
+#: src/components/MapLeaflet.vue:484
+msgid "violation(s)"
+msgstr "violazione/i"
+
+#: src/components/MapLeaflet.vue:486
+msgid "No violations in the selected airspace file"
+msgstr "Nessuna violazione nel file dello spazio aereo selezionato"
+
+#: src/components/MapLeaflet.vue:494
+msgid "Click on an airspace to display the description"
+msgstr "Fare clic su uno spazio aereo per visualizzare la descrizione"
+
 #: src/components/OpenLogbook.vue:13
 msgid "Existing logbook"
 msgstr ""
 
 #: src/components/OpenLogbook.vue:22
 msgid "Choose a folder"
-msgstr ""
+msgstr "Seleziona una cartella"
 
 #: src/components/OpenLogbook.vue:22
 msgid "Open a .db file"
@@ -278,41 +381,41 @@ msgstr ""
 
 #: src/components/TagDialog.vue:28
 msgid "No tag selected"
-msgstr ""
+msgstr "Nessun tag selezionato"
 
 #: src/components/TagDialog.vue:39
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #: src/components/TagDialog.vue:78
 msgid "Tag selection"
 msgstr ""
 
-#: src/components/TheFooter.vue:8
+#: src/components/TheFooter.vue:27
 msgid "No logbook opened"
 msgstr ""
 
-#: src/components/TheFooter.vue:14
+#: src/components/TheFooter.vue:33
 msgid "To be saved"
 msgstr ""
 
-#: src/components/TheFooter.vue:14
+#: src/components/TheFooter.vue:33
 msgid "Saved"
 msgstr ""
 
-#: src/components/TheFooter.vue:65
+#: src/components/TheFooter.vue:118
 msgid "Auto-saved logbook"
 msgstr ""
 
-#: src/components/TheFooter.vue:100
+#: src/components/TheFooter.vue:153
 msgid "File successfully downloaded"
 msgstr ""
 
-#: src/components/TheFooter.vue:104
+#: src/components/TheFooter.vue:157
 msgid "Error downloading file"
 msgstr ""
 
-#: src/components/TheFooter.vue:122
+#: src/components/TheFooter.vue:175
 msgid "Backup copy created"
 msgstr ""
 
@@ -322,7 +425,7 @@ msgstr ""
 
 #: src/components/TheNavbar.vue:25 src/components/TheWelcome.vue:22
 msgid "Logbook"
-msgstr ""
+msgstr "Diario di volo"
 
 #: src/components/TheNavbar.vue:28
 msgid "Import tracks"
@@ -330,7 +433,7 @@ msgstr ""
 
 #: src/components/TheNavbar.vue:39 src/components/TheWelcome.vue:35
 msgid "Statistics"
-msgstr ""
+msgstr "Statistiche"
 
 #: src/components/TheNavbar.vue:45 src/components/TheWelcome.vue:39
 msgid "Annual summary"
@@ -346,20 +449,16 @@ msgstr ""
 
 #: src/components/TheNavbar.vue:63 src/components/TheWelcome.vue:53
 msgid "Waypoints"
-msgstr ""
-
-#: src/components/TheNavbar.vue:66 src/components/TheWelcome.vue:56
-msgid "Airspaces"
-msgstr ""
+msgstr "Waypoints"
 
 #: src/components/TheNavbar.vue:69 src/components/TheWelcome.vue:57
 msgid "XC Nav"
-msgstr ""
+msgstr "XC Nav"
 
 #: src/components/TheNavbar.vue:77 src/components/TheNavbar.vue:83
 #: src/components/TheWelcome.vue:66 src/components/TheWelcome.vue:69
 msgid "Sites"
-msgstr ""
+msgstr "Siti di volo"
 
 #: src/components/TheNavbar.vue:86
 msgid "Paragliding Earth"
@@ -368,22 +467,22 @@ msgstr ""
 #: src/components/TheNavbar.vue:93 src/components/TheWelcome.vue:77
 #: src/components/TheWelcome.vue:81
 msgid "Equipment"
-msgstr ""
+msgstr "Equipaggiamento"
 
-#: src/components/TheNavbar.vue:100
-msgid "Settings & Utilities"
-msgstr ""
+#: src/components/TheNavbar.vue:100 src/components/TheWelcome.vue:88
+msgid "Utilities"
+msgstr "Servizi"
 
 #: src/components/TheNavbar.vue:106
 msgid "Settings"
-msgstr ""
+msgstr "Impostazioni"
 
 #: src/components/TheNavbar.vue:109
 msgid "Support"
-msgstr ""
+msgstr "Supporto"
 
-#: src/components/TheNavbar.vue:112 src/components/TheWelcome.vue:88
-msgid "Utilities"
+#: src/components/TheNavbar.vue:112
+msgid "Translation"
 msgstr ""
 
 #: src/components/TheWelcome.vue:22
@@ -444,6 +543,131 @@ msgstr ""
 
 #: src/components/TheWelcome.vue:91
 msgid "Access support"
+msgstr ""
+
+#: src/components/TraceInfoDialog.vue:106 src/components/TraceInfoPanel.vue:82
+msgid "Date"
+msgstr "Data"
+
+#: src/components/TraceInfoDialog.vue:115
+#: src/components/TraceInfoDialog.vue:119 src/components/TraceInfoPanel.vue:91
+#: src/components/TraceInfoPanel.vue:95
+msgid "GPS alt"
+msgstr "Alt GPS"
+
+#: src/components/TraceInfoDialog.vue:123 src/components/TraceInfoPanel.vue:99
+msgid "Size"
+msgstr "Dimensione"
+
+#: src/components/TraceInfoDialog.vue:127 src/components/TraceInfoPanel.vue:103
+msgid "Min GPS alt"
+msgstr "Min alt. GPS"
+
+#: src/components/TraceInfoDialog.vue:134 src/components/TraceInfoPanel.vue:110
+msgid "Max gain"
+msgstr "Max guadagno"
+
+#: src/components/TraceInfoDialog.vue:135 src/components/TraceInfoPanel.vue:111
+msgid "Max speed"
+msgstr "Max velocità"
+
+#: src/components/TraceInfoDialog.vue:138 src/components/TraceInfoPanel.vue:114
+msgid "Best glide"
+msgstr ""
+
+#: src/components/TraceInfoDialog.vue:142 src/components/TraceInfoPanel.vue:118
+msgid "Avg glide speed"
+msgstr ""
+
+#: src/components/TraceInfoDialog.vue:146 src/components/TraceInfoPanel.vue:122
+msgid "Average climb"
+msgstr "Salita media"
+
+#: src/components/TraceInfoDialog.vue:150 src/components/TraceInfoPanel.vue:126
+msgid "Extraction time"
+msgstr "Tempo di estrazione"
+
+#: src/components/TraceInfoDialog.vue:154 src/components/TraceInfoPanel.vue:130
+msgid "Avg th efficiency"
+msgstr "Avg th efficenza"
+
+#: src/components/TraceInfoDialog.vue:198 src/components/TraceInfoPanel.vue:170
+msgid "Dives"
+msgstr ""
+
+#: src/components/TraceInfoDialog.vue:209 src/components/TraceInfoPanel.vue:180
+msgid "Various"
+msgstr "Varie"
+
+#: src/modules/Settings/views/TranslationView.vue:8
+#: src/modules/Settings/views/TranslationView.vue:72
+msgid "Translation Editor"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:22
+msgid "Continue a translation"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:45
+msgid "New translation"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:48
+msgid "Select a language"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:52
+msgid "Start"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:59
+msgid "Load from file"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:75
+msgid "Loading translations"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:84
+#: src/modules/Tracks/views/LogbookView.vue:24
+msgid "Search"
+msgstr "Ricerca"
+
+#: src/modules/Settings/views/TranslationView.vue:87
+msgid "Already translated"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:97
+#, fuzzy
+msgid "Change"
+msgstr "Cambia vela"
+
+#: src/modules/Settings/views/TranslationView.vue:106
+msgid "Untranslated"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:153
+msgid "Download"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:157
+msgid "Save to server"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:456
+msgid "Firebase not configured. Using local mode only."
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:464
+msgid "Could not connect to server"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:656
+msgid "Translation saved successfully!"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:661
+msgid "Error saving translation"
 msgstr ""
 
 #: src/modules/Tracks/js/device-descriptions.js:9
@@ -582,7 +806,7 @@ msgstr ""
 #: src/modules/Tracks/views/ImportView.vue:48
 #: src/modules/Tracks/views/ImportView.vue:249
 msgid "Folder"
-msgstr ""
+msgstr "Cartella"
 
 #: src/modules/Tracks/js/device-descriptions.js:118
 msgid "Select a folder containing track files (IGC or GPX)"
@@ -601,7 +825,7 @@ msgstr ""
 #: src/modules/Tracks/js/device-descriptions.js:126
 #: src/modules/Tracks/views/ImportView.vue:63
 msgid "Flight without GPS track"
-msgstr ""
+msgstr "Volo senza traccia GPS"
 
 #: src/modules/Tracks/js/device-descriptions.js:126
 msgid "Create a manual flight entry without an associated track file."
@@ -641,7 +865,7 @@ msgstr ""
 
 #: src/modules/Tracks/views/ExternalView.vue:133
 msgid "Decoding problem in track file"
-msgstr ""
+msgstr "Problema di decodifica nel file della traccia"
 
 #: src/modules/Tracks/views/ImportView.vue:15
 msgid "USB GPS"
@@ -653,12 +877,12 @@ msgstr ""
 
 #: src/modules/Tracks/views/ImportView.vue:80
 msgid "tracks decoded"
-msgstr ""
+msgstr "tracce decodificate"
 
 #: src/modules/Tracks/views/ImportView.vue:87
 #: src/modules/Tracks/views/ImportView.vue:199
 msgid "Import"
-msgstr ""
+msgstr "Importazione"
 
 #: src/modules/Tracks/views/ImportView.vue:133
 msgid "Already in the logbook"
@@ -670,7 +894,7 @@ msgstr ""
 
 #: src/modules/Tracks/views/ImportView.vue:174
 msgid "Select"
-msgstr ""
+msgstr "Seleziona"
 
 #: src/modules/Tracks/views/ImportView.vue:199
 msgid "Scanning"
@@ -699,11 +923,7 @@ msgstr ""
 #: src/modules/Tracks/views/ImportView.vue:391
 #: src/modules/Tracks/views/ImportView.vue:408
 msgid "To rename"
-msgstr ""
-
-#: src/modules/Tracks/views/LogbookView.vue:24
-msgid "Search"
-msgstr ""
+msgstr "Da rinominare"
 
 #: src/modules/Tracks/views/LogbookView.vue:26
 msgid "Filter by tag"
@@ -715,12 +935,12 @@ msgstr ""
 
 #: src/modules/Tracks/views/LogbookView.vue:318
 msgid "Totals for the selection"
-msgstr ""
+msgstr "Totali per la selezione"
 
 #: src/modules/Tracks/views/LogbookView.vue:319
 msgid "Flights"
-msgstr ""
+msgstr "Voli"
 
 #: src/modules/Tracks/views/LogbookView.vue:320
 msgid "Flight hours"
-msgstr ""
+msgstr "Ore di volo"
