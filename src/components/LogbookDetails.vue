@@ -9,6 +9,11 @@
           <v-icon :color="tagsMap[trackData.tag]?.color" size="small" class="mr-1">mdi-circle</v-icon>
           <span class="text-caption font-weight-bold">{{ tagsMap[trackData.tag]?.label }}</span>
         </div>
+        <!-- Indicator for no-track flights -->
+        <v-chip v-if="isNoTrackFlight" color="warning" size="small" class="ml-2">
+          <v-icon start size="small">mdi-airplane-off</v-icon>
+          {{ $gettext('No GPS track') }}
+        </v-chip>
       </div>
       <div class="text-right flex-grow-1">
         {{ $gettext('Flight Details') }}
@@ -27,50 +32,65 @@
         <v-icon class="mr-2">mdi-pencil-outline</v-icon>
         {{ $gettext('Modify') }}
       </v-tab>
-      <v-tab value="share">
+      <!-- Share tab: hidden for no-track flights -->
+      <v-tab v-if="!isNoTrackFlight" value="share">
         <v-icon class="mr-2">mdi-share-variant-outline</v-icon>
         {{ $gettext('Share') }}
       </v-tab>
-      <v-tab value="more">
+      <!-- More tab: hidden for no-track flights -->
+      <v-tab v-if="!isNoTrackFlight" value="more">
         <v-icon class="mr-2">mdi-dots-horizontal</v-icon>
         {{ $gettext('More') }}...
       </v-tab>
     </v-tabs>
 
     <v-window v-model="tab">
+      <!-- ABOUT TAB -->
       <v-window-item value="about">
         <v-card-text>
           <div class="about-block">
+            <!-- Line 1: Site, Glider (Pilot only for flights with track) -->
             <div class="about-row info-row">
               <span class="info-bold">{{ $gettext('Site') }}</span>
               <span>{{ trackData?.site || '' }}</span>
               <span class="info-bold">{{ $gettext('Glider') }}</span>
               <span>{{ trackData?.glider || '' }}</span>
-              <span class="info-bold">{{ $gettext('Pilot') }}</span>
-              <span>{{ trackData?.decodedIgc.info.pilot || '' }}</span>
+              <template v-if="!isNoTrackFlight">
+                <span class="info-bold">{{ $gettext('Pilot') }}</span>
+                <span>{{ trackData?.decodedIgc?.info?.pilot || '' }}</span>
+              </template>
             </div>
+            <!-- Line 2: Take off, Duration (Landing only for flights with track) -->
             <div class="about-row info-row">
-              <span class="info-bold">{{ $gettext('Take off') }} :</span> <span>{{ timeTakeOff }}</span>
-              <span class="info-bold">{{ $gettext('Landing') }} :</span> <span>{{ timeLanding }}</span>
-              <span class="info-bold">{{ $gettext('Duration') }} :</span> <span>{{ trackData?.duration || '' }}</span>
+              <span class="info-bold">{{ $gettext('Take off') }} :</span>
+              <span>{{ isNoTrackFlight ? (trackData?.time || '') : timeTakeOff }}</span>
+              <template v-if="!isNoTrackFlight">
+                <span class="info-bold">{{ $gettext('Landing') }} :</span>
+                <span>{{ timeLanding }}</span>
+              </template>
+              <span class="info-bold">{{ $gettext('Duration') }} :</span>
+              <span>{{ trackData?.duration || '' }}</span>
             </div>
-            <div class="about-row info-row">
-              <span class="info-bold">{{ $gettext('Max GPS alt') }} :</span> <span>{{
-                trackData?.decodedIgc.stat.maxalt.gps || '' }}m</span>
-              <span class="info-bold">{{ $gettext('Max climb') }} :</span> <span>{{ trackData?.decodedIgc.stat.maxclimb
-                || '' }}m/s</span>
-              <span class="info-bold">{{ $gettext('Max sink') }} :</span> <span>{{ trackData?.decodedIgc.stat.maxsink ||
-                '' }}m/s</span>
+            <!-- Line 3: Max GPS alt, Max climb, Max sink (only for flights with track) -->
+            <div v-if="!isNoTrackFlight" class="about-row info-row">
+              <span class="info-bold">{{ $gettext('Max GPS alt') }} :</span>
+              <span>{{ trackData?.decodedIgc?.stat?.maxalt?.gps || '' }}m</span>
+              <span class="info-bold">{{ $gettext('Max climb') }} :</span>
+              <span>{{ trackData?.decodedIgc?.stat?.maxclimb || '' }}m/s</span>
+              <span class="info-bold">{{ $gettext('Max sink') }} :</span>
+              <span>{{ trackData?.decodedIgc?.stat?.maxsink || '' }}m/s</span>
             </div>
-            <div class="about-row info-row">
+            <!-- Line 4: Scoring (only for flights with track) -->
+            <div v-if="!isNoTrackFlight" class="about-row info-row">
               <v-btn color="success" density="compact" @click="showScoreDialog = true" :disabled="isComputingScore"
                 class="ml-2">
                 {{ isComputingScore ? 'Computing...' : 'Scoring' }}
               </v-btn>
               <span class="info-bold">{{ scoreLabel }}</span>
             </div>
-            <ScoreDialog v-model="showScoreDialog" :fixes="trackFixes" :date="trackDate" :scoringFn="igcScoring"
-              @score-result="onScoreSelected" />
+            <ScoreDialog v-if="!isNoTrackFlight" v-model="showScoreDialog" :fixes="trackFixes" :date="trackDate"
+              :scoringFn="igcScoring" @score-result="onScoreSelected" />
+            <!-- Line 5: TAG and Photo buttons (always available) -->
             <div class="about-row btn-row">
               <v-btn color="orange-darken-2" density="compact" class="mr-2" @click="showTagDialog = true">
                 <v-icon start>mdi-tag-outline</v-icon>
@@ -79,15 +99,17 @@
               <TagDialog v-model="showTagDialog" :currentTag="trackData?.tag" :flightDate="trackData?.day"
                 :flightSite="trackData?.site" @save="onTagSave" />
               <v-btn v-if="!trackData?.hasPhoto" color="primary" density="compact" class="mr-2"
-                @click="showPhotoDialog = true">{{ strAddPhoto }}</v-btn>
+                @click="showPhotoDialog = true">{{
+                  strAddPhoto }}</v-btn>
               <LogbookPhoto v-model="showPhotoDialog" @save="onPhotoSave" />
               <v-btn v-if="trackData?.hasPhoto" color="error" density="compact" @click="onPhotoDelete">{{ strRemovePhoto
-                }}</v-btn>
+              }}</v-btn>
             </div>
           </div>
         </v-card-text>
       </v-window-item>
 
+      <!-- COMMENT TAB (always available) -->
       <v-window-item value="comment">
         <v-card-text>
           <v-textarea v-model="commentText" :label="$gettext('Add a comment')" rows="5" variant="outlined"
@@ -99,30 +121,36 @@
         </v-card-text>
       </v-window-item>
 
+      <!-- MODIFY TAB -->
       <v-window-item value="modify">
         <v-card-text>
           <div class="modify-btn-row">
-            <div class="modify-line">
+            <!-- Line 1: Change glider and site (only for flights with track) -->
+            <div v-if="!isNoTrackFlight" class="modify-line">
               <v-btn color="primary" density="compact" class="mr-2" @click="showGliderDialog = true">{{ strChangeGlider
-                }}</v-btn>
+              }}</v-btn>
               <GliderDialog v-model="showGliderDialog" :gliderList="gliderList" :currentGlider="trackData?.glider"
                 @save="onGliderSave" />
               <v-btn color="primary" density="compact" @click="showSiteDialog = true">{{ strChangeSite }}</v-btn>
               <ChangeSiteDialog v-model="showSiteDialog" :siteList="siteList" :currentSite="trackData?.site"
                 @save="onSiteSave" />
             </div>
+            <!-- Line 2: Delete (always available) -->
             <div class="modify-line">
               <v-btn color="error" density="compact" @click="onDeleteFlight">{{ strDelete }}</v-btn>
             </div>
+            <!-- Line 3: Edit/Duplicate (always available), Merge flights (only for flights with track) -->
             <div class="modify-line">
-              <v-btn color="warning" density="compact" class="mr-2">{{ strEditDuplicate }}</v-btn>
-              <v-btn color="secondary" density="compact">{{ strMergeFlights }}</v-btn>
+              <v-btn color="warning" density="compact" class="mr-2" @click="onEditDuplicate">{{ strEditDuplicate
+              }}</v-btn>
+              <v-btn v-if="!isNoTrackFlight" color="secondary" density="compact">{{ strMergeFlights }}</v-btn>
             </div>
           </div>
         </v-card-text>
       </v-window-item>
 
-      <v-window-item value="share">
+      <!-- SHARE TAB (only for flights with track) -->
+      <v-window-item v-if="!isNoTrackFlight" value="share">
         <v-card-text>
           <div class="share-btn-row">
             <v-btn color="primary" density="compact" class="mr-3" @click="onExportIgc">
@@ -137,7 +165,8 @@
         </v-card-text>
       </v-window-item>
 
-      <v-window-item value="more">
+      <!-- MORE TAB (only for flights with track) -->
+      <v-window-item v-if="!isNoTrackFlight" value="more">
         <v-card-text>
           Autres options...
         </v-card-text>
@@ -191,7 +220,16 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['update:scoreJson', 'update:comment', 'update:glider', 'update:site', 'update:delete', 'update:photo', 'update:tag']);
+const emit = defineEmits(['update:scoreJson', 'update:comment', 'update:glider', 'update:site', 'update:delete', 'update:photo', 'update:tag', 'edit-notrack']);
+
+// Computed to detect if this is a flight without GPS track
+const isNoTrackFlight = computed(() => {
+  // A flight without GPS track has no decodedIgc or rawIgc is empty/null
+  if (!props.trackData) return false;
+  const hasIgc = props.trackData.rawIgc && props.trackData.rawIgc.trim() !== '';
+  const hasDecoded = props.trackData.decodedIgc && props.trackData.decodedIgc.fixes && props.trackData.decodedIgc.fixes.length > 0;
+  return !hasIgc && !hasDecoded;
+});
 
 
 function loadGliderList() {
@@ -294,6 +332,17 @@ function onDeleteFlight() {
   const { site, day } = props.trackData;
   if (confirm(`Voulez-vous vraiment supprimer le vol de ${site} du ${day} ?`)) {
     emit('update:delete', props.trackData.dbId);
+  }
+}
+
+function onEditDuplicate() {
+  if (!props.trackData) return;
+  // For no-track flights, emit event to open NoTrackDialog
+  if (isNoTrackFlight.value) {
+    emit('edit-notrack', props.trackData.dbId);
+  } else {
+    // For flights with track, future implementation
+    alert($gettext('Edit/Duplicate') + ' - ' + $gettext('Coming soon'));
   }
 }
 

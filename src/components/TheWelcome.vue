@@ -20,8 +20,10 @@ const openReadmeInEditor = () => fetch('/__open-in-editor?file=README.md')
         <template #heading>{{ $gettext('Flights & Tracks') }}</template>
         <ul>
           <li>{{ $gettext('Access your logbook') }}<router-link :to="{ name: 'logbook-view' }">{{ $gettext('Logbook')
-              }}</router-link></li>
-          <li> {{ $gettext('Import new flights with or without GPS tracks') }}<router-link :to="{ name: 'import-gps' }">{{ $gettext('Import flights')
+          }}</router-link></li>
+          <li> {{ $gettext('Import new flights with or without GPS tracks') }}<router-link
+              :to="{ name: 'import-gps' }">{{
+                $gettext('Import flights')
               }}</router-link></li>
           <li>{{ $gettext('Review external GPS tracks') }} IGC/GPX<router-link :to="{ name: 'external-track' }">{{
             $gettext('External GPS track') }}</router-link></li>
@@ -55,7 +57,7 @@ const openReadmeInEditor = () => fetch('/__open-in-editor?file=README.md')
           <li>{{ $gettext('Visualize and edit airspaces') }}<router-link :to="{ name: 'airspaces-view' }">{{
             $gettext('Airspaces') }}</router-link></li>
           <li>{{ $gettext('Program XC flights') }}<router-link :to="{ name: 'xcnav-view' }">{{ $gettext('XC Nav')
-          }}</router-link></li>
+              }}</router-link></li>
         </ul>
       </WelcomeItem>
 
@@ -89,6 +91,8 @@ const openReadmeInEditor = () => fetch('/__open-in-editor?file=README.md')
         <ul>
           <li>{{ $gettext('Manage app preferences') }}</li>
           <li>{{ $gettext('Access support') }}</li>
+          <li>{{ $gettext('Help translate Logfly') }}<router-link :to="{ name: 'translation-view' }">{{
+            $gettext('Translation') }}</router-link></li>
         </ul>
       </WelcomeItem>
     </div>

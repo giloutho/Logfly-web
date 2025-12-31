@@ -93,10 +93,12 @@
           </template>
         </v-data-table>
       </div>
-      <div v-if="!noIgcFlight" class="bottom-block">
-        <LogbookDetails v-if="dataFlight" :trackData="dataFlight" @update:scoreJson="scoreJson = $event"
-          @update:comment="onCommentUpdate" @update:glider="onGliderUpdate" @update:site="onSiteUpdate"
-          @update:delete="onFlightDelete" @update:photo="onPhotoUpdate" @update:tag="onTagUpdate" />
+      <!-- Bottom block: LogbookDetails for all flight types -->
+      <div class="bottom-block" :class="{ 'notrack-panel': noIgcFlight }">
+        <LogbookDetails v-if="dataFlight || noTrackFlightDetails" :trackData="dataFlight || noTrackFlightDetails"
+          @update:scoreJson="scoreJson = $event" @update:comment="onCommentUpdate" @update:glider="onGliderUpdate"
+          @update:site="onSiteUpdate" @update:delete="onFlightDelete" @update:photo="onPhotoUpdate"
+          @update:tag="onTagUpdate" @edit-notrack="openNoTrackEdit" />
         <div v-else class="no-track-message">
           <p>Sélectionnez un vol pour afficher les détails</p>
         </div>
@@ -124,6 +126,10 @@
     <!-- TraceInfoDialog modal for Analyze -->
     <TraceInfoDialog v-model="showTraceInfoDialog" :decodedData="dataFlight?.decodedIgc"
       :anaResult="dataFlight?.anaTrack" />
+
+    <!-- NoTrackDialog for editing flights without GPS track -->
+    <NoTrackDialog v-model="showNoTrackDialog" mode="edit" :flightData="noTrackFlightData"
+      @saved="onNoTrackFlightSaved" />
   </div>
 </template>
 
@@ -137,6 +143,7 @@ import LogbookDetails from '@/components/LogbookDetails.vue';
 import FullMapView from '@/components/FullMapView.vue';
 import CesiumReplayView from '@/components/CesiumReplayView.vue';
 import TraceInfoDialog from '@/components/TraceInfoDialog.vue';
+import NoTrackDialog from '@/components/NoTrackDialog.vue';
 import { useDatabaseStore } from '@/stores/database';
 import { igcDecoding } from '@/js/igc/igc-decoder.js';
 import { IgcAnalyze } from '@/js/igc/igc-analyzer.js';
@@ -185,6 +192,9 @@ const tagsMap = ref({});
 const selectedTagFilter = ref(null);
 const showCesiumView = ref(false);
 const showTraceInfoDialog = ref(false);
+const showNoTrackDialog = ref(false);
+const noTrackFlightData = ref(null);
+const noTrackFlightDetails = ref(null); // Flight details for no-track flights (used by LogbookDetails)
 
 const tagOptions = computed(() => {
   const opts = Object.values(tagsMap.value).map(t => ({
@@ -618,6 +628,7 @@ async function readIgcFromDb(flightId) {
     const decodedIgc = await igcDecoding(strIgc)
     if (decodedIgc.success && decodedIgc.data.fixes && decodedIgc.data.fixes.length > 0) {
       noIgcFlight.value = null; // Reset no-IGC state
+      noTrackFlightDetails.value = null; // Reset no-track flight details
       decodedTrack.value = decodedIgc.data
       const analyzeIgc = await IgcAnalyze(decodedIgc.data.fixes);
       if (!analyzeIgc.success) {
@@ -650,15 +661,16 @@ async function readIgcFromDb(flightId) {
  * Display a map for flights without GPS track (manual entry)
  */
 async function mapWithoutIgc(flightId) {
-  const req = `SELECT V_IGC, V_LatDeco, V_LongDeco, V_AltDeco, V_Site FROM Vol WHERE V_ID = ${flightId}`;
+  // Load full flight data for no-track flights
+  const req = `SELECT V_ID, V_IGC, V_LatDeco, V_LongDeco, V_AltDeco, V_Site, V_Pays, V_Engin, V_Commentaire, strftime('%d-%m-%Y', V_Date) AS Day, strftime('%H:%M', V_Date) AS Time, V_sDuree, CASE WHEN (V_Photos IS NOT NULL AND V_Photos != '') THEN 1 ELSE 0 END as HasPhoto, V_Tag FROM Vol WHERE V_ID = ${flightId}`;
   const result = databaseStore.query(req);
 
   if (result.success && result.data && result.data[0] && result.data[0].values[0]) {
     const row = result.data[0].values[0];
-    const lat = row[1];
-    const lon = row[2];
-    const alt = row[3];
-    const site = row[4];
+    const lat = row[2];
+    const lon = row[3];
+    const alt = row[4];
+    const site = row[5];
 
     // Clear previous decoded track
     decodedTrack.value = null;
@@ -666,7 +678,24 @@ async function mapWithoutIgc(flightId) {
     scoreJson.value = null;
 
     // Set no-IGC flight data to trigger the map display
-    noIgcFlight.value = { lat, lon, site, alt };
+    noIgcFlight.value = { lat, lon, site, alt, flightId };
+
+    // Create noTrackFlightDetails for LogbookDetails
+    noTrackFlightDetails.value = {
+      dbId: row[0],
+      day: row[9],
+      time: row[10],
+      site: row[5],
+      pays: row[6],
+      glider: row[7],
+      comment: row[8],
+      duration: row[11],
+      hasPhoto: row[12] === 1,
+      tag: row[13],
+      // Mark as no-track flight (no rawIgc, no decodedIgc)
+      rawIgc: null,
+      decodedIgc: null
+    };
 
     // Wait for next tick for the component to mount, then call displayTakeoffOnly
     await nextTick();
@@ -675,6 +704,56 @@ async function mapWithoutIgc(flightId) {
     }
   }
 }
+
+/**
+ * Open NoTrackDialog to edit a flight without GPS track
+ */
+async function openNoTrackEdit(flightId) {
+  if (!databaseStore.hasOpenDatabase) return;
+
+  const reqSQL = `SELECT V_ID, strftime('%Y-%m-%d', V_Date) AS DateFmt, strftime('%H:%M', V_Date) AS TimeFmt, V_sDuree, V_Duree, V_Site, V_Pays, V_Engin, V_Commentaire, V_LatDeco, V_LongDeco, V_AltDeco FROM Vol WHERE V_ID = ${flightId}`;
+  const result = databaseStore.query(reqSQL);
+
+  if (result.success && result.data && result.data[0] && result.data[0].values[0]) {
+    const row = result.data[0].values[0];
+
+    // Convert duration seconds to HH:MM format
+    const durationSec = row[4] || 3600;
+    const hours = Math.floor(durationSec / 3600);
+    const minutes = Math.floor((durationSec % 3600) / 60);
+    const durationStr = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+
+    noTrackFlightData.value = {
+      id: row[0],
+      date: row[1],
+      time: row[2],
+      duration: durationStr,
+      siteName: row[5],
+      sitePays: row[6],
+      glider: row[7],
+      comment: row[8],
+      siteLat: row[9],
+      siteLong: row[10],
+      siteAlti: row[11]
+    };
+
+    showNoTrackDialog.value = true;
+  }
+}
+
+/**
+ * Handle save from NoTrackDialog
+ */
+function onNoTrackFlightSaved(flightData) {
+  // Reload flights list keeping selection
+  loadFlights(true);
+  snackbarMessage.value = $gettext('Flight saved');
+  snackbar.value = true;
+  emit('db-updated');
+}
+
+// Expose openNoTrackEdit for external calls (e.g., from bottom panel)
+defineExpose({ openNoTrackEdit });
 
 </script>
 
@@ -812,6 +891,10 @@ async function mapWithoutIgc(flightId) {
   border-radius: 10px;
   box-sizing: border-box;
   overflow: hidden;
+}
+
+.notrack-panel {
+  background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
 }
 
 @media (max-width: 900px) {

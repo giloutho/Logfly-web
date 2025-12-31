@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="show" max-width="500">
     <v-card>
-      <v-card-title class="headline">{{ $gettext('Change glider') }}</v-card-title>
+      <v-card-title class="headline">{{ dialogTitle || $gettext('Change glider') }}</v-card-title>
       <v-card-text>
         <div class="dialog-section">
           <div class="dialog-label">{{ $gettext('Choose an existing glider') }}</div>
@@ -34,7 +34,11 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  currentGlider: String
+  currentGlider: String,
+  dialogTitle: {
+    type: String,
+    default: ''
+  }
 });
 const emit = defineEmits(['update:modelValue', 'save']);
 

@@ -201,6 +201,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- NoTrackDialog for manual flight entry -->
+    <NoTrackDialog v-model="showNoTrackDialog" mode="new" @saved="onNoTrackFlightSaved" />
   </div>
 </template>
 
@@ -208,6 +211,7 @@
 import { ref, computed } from 'vue';
 import { useGettext } from 'vue3-gettext';
 import OpenLogbook from '@/components/OpenLogbook.vue';
+import NoTrackDialog from '@/components/NoTrackDialog.vue';
 import { useDatabaseStore } from '@/stores/database';
 import { parseIGC, checkFlightExists } from '../js/igc-parser';
 import { scanDirectoryForTracks, processTrackFiles } from '../js/directory-scanner';
@@ -262,6 +266,7 @@ const scannedFlights = ref([]);
 const showFlightTable = ref(false);
 const showAllFlights = ref(true);
 const currentDevice = ref('');
+const showNoTrackDialog = ref(false);
 
 // Headers de la table des vols
 const flightTableHeaders = [
@@ -445,7 +450,12 @@ async function importSelectedFlights() {
 }
 
 function notraceImport() {
-  alert('Coming soon');
+  showNoTrackDialog.value = true;
+}
+
+function onNoTrackFlightSaved(flightData) {
+  // Notify parent that database was updated
+  emit('db-updated');
 }
 </script>
 
