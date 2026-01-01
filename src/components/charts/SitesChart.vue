@@ -201,9 +201,9 @@ function displayChart() {
 
 .selection-title {
     text-align: center;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 500;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     color: #333;
 }
 
@@ -212,6 +212,14 @@ function displayChart() {
     align-items: center;
     justify-content: center;
     gap: 16px;
+}
+
+.radio-row :deep(.v-label) {
+    font-size: 0.85rem;
+}
+
+.radio-row :deep(.v-selection-control) {
+    min-height: 24px;
 }
 
 .chart-wrapper {
