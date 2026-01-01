@@ -4,24 +4,39 @@
     <!-- Line 1: Summary cards -->
     <div class="summary-cards">
       <v-card class="summary-card flights-card" elevation="4">
-        <div class="card-corner">{{ refYear }}</div>
         <img src="@/assets/cloudglider.png" class="card-icon" alt="flights" />
-        <div class="card-title">{{ $gettext('Flights') }}</div>
-        <div class="card-value">{{ summary.flights }}</div>
+
+        <div class="card-title">
+          <span>{{ $gettext('Flights') }}</span>
+          <span class="card-year">{{ refYear }}</span>
+        </div>
+        <div class="card-content-row">
+          <div class="card-value">{{ summary.flights }}</div>
+
+        </div>
       </v-card>
       <v-card class="summary-card hours-card" elevation="4">
         <img src="@/assets/clock3.png" class="card-icon" alt="hours" />
-        <div class="card-title">{{ $gettext('Hours') }}</div>
+        <div class="card-title">
+          <span>{{ $gettext('Hours') }}</span>
+          <span class="card-year">{{ refYear }}</span>
+        </div>
         <div class="card-value">{{ formatHoursDecimal(summary.hours) }}</div>
       </v-card>
       <v-card class="summary-card gliders-card" elevation="4">
         <img src="@/assets/glider.png" class="card-icon" alt="gliders" />
-        <div class="card-title">{{ $gettext('Gliders') }}</div>
+        <div class="card-title">
+          <span>{{ $gettext('Gliders') }}</span>
+          <span class="card-year">{{ refYear }}</span>
+        </div>
         <div class="card-value">{{ summary.gliders }}</div>
       </v-card>
       <v-card class="summary-card sites-card" elevation="4">
         <img src="@/assets/windsock.png" class="card-icon" alt="sites" />
-        <div class="card-title">{{ $gettext('Sites') }}</div>
+        <div class="card-title">
+          <span>{{ $gettext('Sites') }}</span>
+          <span class="card-year">{{ refYear }}</span>
+        </div>
         <div class="card-value">{{ summary.sites }}</div>
       </v-card>
     </div>
@@ -434,14 +449,16 @@ function updateChart() {
           data: refData,
           backgroundColor: isHoursMode ? 'rgba(217, 83, 79, 0.8)' : 'rgba(79, 196, 79, 0.8)',
           borderWidth: 0,
-          barPercentage: 0.4
+          barPercentage: 0.8,
+          categoryPercentage: 0.7
         },
         {
           label: prevLabel,
           data: prevData,
           backgroundColor: isHoursMode ? 'rgba(79, 213, 217, 0.8)' : 'rgba(196, 79, 196, 0.8)',
           borderWidth: 0,
-          barPercentage: 0.4
+          barPercentage: 0.8,
+          categoryPercentage: 0.7
         }
       ]
     },
@@ -485,8 +502,21 @@ function updateChart() {
 
 /**
  * Handle reference year change
+ * Also updates prevYear to n-1 if it exists
  */
 async function onRefYearChange() {
+  // Auto-update prevYear to n-1 if exists
+  const refYearInt = parseInt(refYear.value);
+  const prevYearStr = (refYearInt - 1).toString();
+  if (yearList.value.includes(prevYearStr)) {
+    prevYear.value = prevYearStr;
+  } else if (yearList.value.length > 1) {
+    // Fallback to next available year
+    const currentIdx = yearList.value.indexOf(refYear.value);
+    if (currentIdx < yearList.value.length - 1) {
+      prevYear.value = yearList.value[currentIdx + 1];
+    }
+  }
   await loadAllData();
 }
 
@@ -592,6 +622,19 @@ async function setRightMode(mode) {
 .card-value {
   font-size: 2.2rem;
   font-weight: bold;
+}
+
+.card-content-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.card-year {
+  font-size: 1.75rem;
+  font-weight: bold;
+  opacity: 0.7;
+  margin-left: 20px;
 }
 
 /* Main content row */
