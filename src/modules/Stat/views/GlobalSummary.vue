@@ -29,14 +29,8 @@
     <div v-if="currentChart" class="chart-section">
       <YearlyChart v-if="currentChart === 'yearly'" :year-begin="selYearBegin" :year-end="selYearEnd" />
       <MonthlyChart v-else-if="currentChart === 'monthly'" :year-begin="selYearBegin" :year-end="selYearEnd" />
-      <div v-else-if="currentChart === 'gliders'" class="coming-soon">
-        <v-icon size="64" color="grey">mdi-parachute</v-icon>
-        <p>Gliders chart - Coming soon</p>
-      </div>
-      <div v-else-if="currentChart === 'sites'" class="coming-soon">
-        <v-icon size="64" color="grey">mdi-map-marker</v-icon>
-        <p>Sites chart - Coming soon</p>
-      </div>
+      <GlidersChart v-else-if="currentChart === 'gliders'" :year-begin="selYearBegin" :year-end="selYearEnd" />
+      <SitesChart v-else-if="currentChart === 'sites'" :year-begin="selYearBegin" :year-end="selYearEnd" />
     </div>
 
     <!-- Section 3: Info cards footer -->
@@ -107,6 +101,8 @@ import { useGettext } from "vue3-gettext";
 import OpenLogbook from '@/components/OpenLogbook.vue';
 import YearlyChart from '@/components/charts/YearlyChart.vue';
 import MonthlyChart from '@/components/charts/MonthlyChart.vue';
+import GlidersChart from '@/components/charts/GlidersChart.vue';
+import SitesChart from '@/components/charts/SitesChart.vue';
 import { useDatabaseStore } from '@/stores/database';
 
 const databaseStore = useDatabaseStore();
