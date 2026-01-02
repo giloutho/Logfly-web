@@ -82,9 +82,12 @@
           <v-list-item :to="{ name: 'sites-view' }">
             <v-list-item-title>{{ $gettext('Sites') }}</v-list-item-title>
           </v-list-item>
+          <!-- On n'affiche pas pour l'instant le site paragliding earth -->
+          <!--
           <v-list-item :to="{ name: 'pgearth-view' }">
             <v-list-item-title>{{ $gettext('Paragliding Earth') }}</v-list-item-title>
           </v-list-item>
+          -->
         </v-list>
       </v-menu>
 
@@ -102,9 +105,12 @@
           </v-btn>
         </template>
         <v-list>
+          <!-- On n'affiche pas pour l'instant l'onglet settings -->
+          <!--
           <v-list-item :to="{ name: 'settings-view' }">
             <v-list-item-title>{{ $gettext('Settings') }}</v-list-item-title>
           </v-list-item>
+          -->
           <v-list-item :to="{ name: 'support-view' }">
             <v-list-item-title>{{ $gettext('Support') }}</v-list-item-title>
           </v-list-item>

@@ -39,8 +39,11 @@ __screenshots__/
 .env
 .env.test
 
-# Doc folder
+# Doc folder for developper
 doc/
+
+# Doc folder for user
+docs/
 
 # Local Netlify folder
 .netlify

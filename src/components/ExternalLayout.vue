@@ -1,10 +1,10 @@
 <template>
-    <div class="external-layout">
+    <div class="external-layout" :class="{ 'fullscreen-mode': fullscreen }">
         <!-- Left panel: Map -->
         <div class="left-panel">
             <LittleMapView v-if="decodedTrack && decodedTrack.GeoJSON" ref="littleMapRef"
-                :geoJson="decodedTrack.GeoJSON" :scoreJson="scoreJson" @open-full-map="onOpenFullMap"
-                @open-cesium="onOpenCesium" @open-analyze="onOpenAnalyze" />
+                :geoJson="decodedTrack.GeoJSON" :scoreJson="scoreJson" :hideAnalyze="true"
+                @open-full-map="onOpenFullMap" @open-cesium="onOpenCesium" />
             <div v-else class="no-track-message">
                 <p>Chargement de la trace...</p>
             </div>
@@ -70,6 +70,10 @@ const props = defineProps({
     fileName: {
         type: String,
         default: ''
+    },
+    fullscreen: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -124,6 +128,10 @@ function onClose() {
     box-sizing: border-box;
     background: #fff;
     position: relative;
+}
+
+.external-layout.fullscreen-mode {
+    height: 100vh;
 }
 
 .left-panel,

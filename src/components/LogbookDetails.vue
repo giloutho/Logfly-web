@@ -35,13 +35,14 @@
       <!-- Share tab: hidden for no-track flights -->
       <v-tab v-if="!isNoTrackFlight" value="share">
         <v-icon class="mr-2">mdi-share-variant-outline</v-icon>
-        {{ $gettext('Share') }}
+        {{ $gettext('Export') }}
       </v-tab>
-      <!-- More tab: hidden for no-track flights -->
+      <!-- More tab: hidden for no-track flights 
       <v-tab v-if="!isNoTrackFlight" value="more">
         <v-icon class="mr-2">mdi-dots-horizontal</v-icon>
         {{ $gettext('More') }}...
       </v-tab>
+      -->
     </v-tabs>
 
     <v-window v-model="tab">
@@ -139,10 +140,11 @@
             <div class="modify-line">
               <v-btn color="error" density="compact" @click="onDeleteFlight">{{ strDelete }}</v-btn>
             </div>
-            <!-- Line 3: Edit/Duplicate (always available), Merge flights (only for flights with track) -->
+            <!-- Line 3: Edit/Duplicate (only for no-track flights), Merge flights (only for flights with track) -->
             <div class="modify-line">
-              <v-btn color="warning" density="compact" class="mr-2" @click="onEditDuplicate">{{ strEditDuplicate
-              }}</v-btn>
+              <v-btn v-if="isNoTrackFlight" color="warning" density="compact" class="mr-2" @click="onEditDuplicate">{{
+                strEditDuplicate
+                }}</v-btn>
               <v-btn v-if="!isNoTrackFlight" color="secondary" density="compact">{{ strMergeFlights }}</v-btn>
             </div>
           </div>
@@ -165,12 +167,13 @@
         </v-card-text>
       </v-window-item>
 
-      <!-- MORE TAB (only for flights with track) -->
+      <!-- MORE TAB (only for flights with track)
       <v-window-item v-if="!isNoTrackFlight" value="more">
         <v-card-text>
           Autres options...
         </v-card-text>
-      </v-window-item>
+      </v-window-item>.  
+      -->
     </v-window>
   </v-card>
 </template>

@@ -175,7 +175,7 @@ import { useGettext } from 'vue3-gettext';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Position } from '@/js/geo/position.js';
-import { baseMaps, osm } from '@/js/leaflet/tiles.js';
+import { createBaseMaps } from '@/js/leaflet/tiles.js';
 
 // Fix Leaflet default icon issue
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
@@ -368,11 +368,14 @@ function initMap() {
     // Create map centered on position
     map = L.map(mapContainer.value).setView([position.latitude, position.longitude], 12);
 
-    // Add default tile layer (OpenStreetMap)
-    osm.addTo(map);
+    // Create fresh tile layer instances for this map (avoid conflicts with other maps)
+    const mapBaseLayers = createBaseMaps();
+
+    // Use the OSM layer from baseMaps so it appears selected in the layer control
+    mapBaseLayers['OpenStreetMap'].addTo(map);
 
     // Add layer control (same as LittleMapView)
-    L.control.layers(baseMaps, null, { collapsed: false }).addTo(map);
+    L.control.layers(mapBaseLayers, null, { collapsed: false }).addTo(map);
 
     // Create custom violet marker icon
     const violetIcon = L.icon({

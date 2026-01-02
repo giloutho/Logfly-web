@@ -16,7 +16,7 @@
               @click="$emit('open-cesium')"></v-btn>
           </template>
         </v-tooltip>
-        <v-tooltip :text="$gettext('Analyze')" location="top">
+        <v-tooltip v-if="!hideAnalyze" :text="$gettext('Analyze')" location="top">
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props" icon="mdi-chart-line" size="36" color="white" class="map-btn"
               @click="$emit('open-analyze')"></v-btn>
@@ -33,7 +33,7 @@ import { useGettext } from "vue3-gettext";
 
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { baseMaps, osm } from '@/js/leaflet/tiles.js';
+import { createBaseMaps } from '@/js/leaflet/tiles.js';
 import { startIcon, endIcon } from '@/js/leaflet/map-utils.js';
 
 const { $gettext } = useGettext();
@@ -50,6 +50,14 @@ const props = defineProps({
   hideOverlay: {
     type: Boolean,
     default: false
+  },
+  hideAnalyze: {
+    type: Boolean,
+    default: false
+  },
+  zoomLevel: {
+    type: Number,
+    default: 12
   }
 });
 
@@ -66,11 +74,14 @@ onMounted(() => {
   // Initialiser la carte Leaflet
   map = L.map(mapContainer.value).setView([45.0, 6.0], 10);
 
-  // Ajouter le fond par défaut
-  osm.addTo(map);
+  // Create fresh tile layer instances for this map (avoid conflicts with other maps)
+  const mapBaseLayers = createBaseMaps();
+
+  // Use the OSM layer from baseMaps so it appears selected in the layer control
+  mapBaseLayers['OpenStreetMap'].addTo(map);
 
   // Ajouter le contrôleur de couches
-  L.control.layers(baseMaps, null, { collapsed: false }).addTo(map);
+  L.control.layers(mapBaseLayers, null, { collapsed: false }).addTo(map);
 
   // Forcer un rafraîchissement après un court délai
   setTimeout(() => {
@@ -259,8 +270,8 @@ function displayTakeoffOnly(lat, lon, site, alt) {
     .bindPopup(popupContent)
     .addTo(map);
 
-  // Center map on takeoff
-  map.setView([lat, lon], 12);
+  // Center map on takeoff with custom zoom level
+  map.setView([lat, lon], props.zoomLevel);
 
   // Open popup
   startMarker.openPopup();
