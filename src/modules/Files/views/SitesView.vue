@@ -16,8 +16,18 @@
       <LittleMapView ref="littleMapRef" :hideOverlay="true" :zoomLevel="14" />
     </div>
 
-    <!-- Right panel: Search, Table, Details -->
+    <!-- Right panel: Filter, Search, Table, Details -->
     <div class="right-panel">
+      <!-- Filter bar -->
+      <div class="filter-block">
+        <v-radio-group v-model="typeFilter" inline hide-details density="compact">
+          <v-radio :label="$gettext('All')" value="all"></v-radio>
+          <v-radio :label="$gettext('Take off')" value="D"></v-radio>
+          <v-radio :label="$gettext('Landing')" value="A"></v-radio>
+          <v-radio :label="$gettext('Not defined')" value="other"></v-radio>
+        </v-radio-group>
+      </div>
+
       <!-- Search bar -->
       <div class="top-block">
         <v-text-field v-model="search" :label="$gettext('Search')" prepend-inner-icon="mdi-magnify" single-line
@@ -35,14 +45,15 @@
               'has-comment': item.S_Commentaire
             }" @click="selectedItems = [item.S_ID]; onSelectionChange(item)" style="cursor:pointer;">
               <td class="col-type">
-                <v-icon v-if="item.S_Type === 'D'" size="small" color="orange">mdi-weather-windy</v-icon>
-                <v-icon v-else size="small" color="blue">mdi-flag-checkered</v-icon>
+                <img v-if="item.S_Type === 'D'" :src="windsockIcon" alt="Take off" class="type-icon" />
+                <img v-else-if="item.S_Type === 'A'" :src="arriveeIcon" alt="Landing" class="type-icon" />
+                <img v-else :src="flagYellowIcon" alt="Not defined" class="type-icon" />
               </td>
               <td class="col-nom">{{ item.S_Nom }}</td>
               <td class="col-localite">{{ item.S_Localite }}</td>
               <td class="col-cp">{{ item.S_CP }}</td>
               <td class="col-alt">{{ item.S_Alti }}</td>
-              <td class="col-orient">{{ item.S_Orientation }}</td>
+              <td class="col-pays">{{ item.S_Pays }}</td>
             </tr>
           </template>
           <template v-slot:bottom>
@@ -152,9 +163,13 @@
             <v-window-item value="utilities">
               <v-card-text>
                 <div class="utilities-btn-row">
-                  <v-btn color="secondary" density="compact" class="mr-3" disabled>
+                  <v-btn color="secondary" density="compact" class="mr-3" @click="onShowDuplicates">
                     <v-icon start>mdi-content-duplicate</v-icon>
                     {{ $gettext('Duplicate') }}
+                  </v-btn>
+                  <v-btn color="warning" density="compact" class="mr-3" @click="onCleanDuplicates">
+                    <v-icon start>mdi-broom</v-icon>
+                    {{ $gettext('Cleaning') }}
                   </v-btn>
                   <v-btn color="secondary" density="compact" class="mr-3" disabled>
                     <v-icon start>mdi-file-export</v-icon>
@@ -190,6 +205,11 @@ import LittleMapView from '@/components/LittleMapView.vue';
 import SiteFormDialog from '@/components/SiteFormDialog.vue';
 import { useDatabaseStore } from '@/stores/database';
 
+// Import icons
+import windsockIcon from '@/assets/windsock22.png';
+import arriveeIcon from '@/assets/arrivee22.png';
+import flagYellowIcon from '@/assets/flag-yellow-22.png';
+
 const databaseStore = useDatabaseStore();
 const { $gettext } = useGettext();
 
@@ -208,6 +228,8 @@ const commentText = ref('');
 const littleMapRef = ref(null);
 const snackbar = ref(false);
 const snackbarMessage = ref('');
+const typeFilter = ref('all');
+const showDuplicatesMode = ref(false);
 
 // Site Form Dialog
 const showSiteDialog = ref(false);
@@ -216,22 +238,38 @@ const siteFormData = ref(null);
 // Table headers
 const headers = [
   { title: '', key: 'S_Type', sortable: false, width: '5%' },
-  { title: 'Name', key: 'S_Nom', sortable: true },
-  { title: 'Locality', key: 'S_Localite', sortable: true },
-  { title: 'ZIP', key: 'S_CP', sortable: true },
-  { title: 'Alt', key: 'S_Alti', sortable: true },
-  { title: 'Orientation', key: 'S_Orientation', sortable: true },
+  { title: $gettext('Name'), key: 'S_Nom', sortable: true },
+  { title: $gettext('Locality'), key: 'S_Localite', sortable: true },
+  { title: $gettext('ZIP'), key: 'S_CP', sortable: true },
+  { title: $gettext('Alt'), key: 'S_Alti', sortable: true },
+  { title: $gettext('Country'), key: 'S_Pays', sortable: true },
 ];
 
 // Computed
 const filteredSites = computed(() => {
-  if (!search.value) return sites.value;
-  const searchLower = search.value.toLowerCase();
-  return sites.value.filter(site => {
-    return (site.S_Nom && site.S_Nom.toLowerCase().includes(searchLower)) ||
-      (site.S_Localite && site.S_Localite.toLowerCase().includes(searchLower)) ||
-      (site.S_CP && site.S_CP.toString().includes(searchLower));
-  });
+  let result = sites.value;
+
+  // Apply type filter
+  if (typeFilter.value === 'D') {
+    result = result.filter(site => site.S_Type === 'D');
+  } else if (typeFilter.value === 'A') {
+    result = result.filter(site => site.S_Type === 'A');
+  } else if (typeFilter.value === 'other') {
+    result = result.filter(site => site.S_Type !== 'D' && site.S_Type !== 'A');
+  }
+
+  // Apply search filter
+  if (search.value) {
+    const searchLower = search.value.toLowerCase();
+    result = result.filter(site => {
+      return (site.S_Nom && site.S_Nom.toLowerCase().includes(searchLower)) ||
+        (site.S_Localite && site.S_Localite.toLowerCase().includes(searchLower)) ||
+        (site.S_Pays && site.S_Pays.toLowerCase().includes(searchLower)) ||
+        (site.S_CP && site.S_CP.toString().includes(searchLower));
+    });
+  }
+
+  return result;
 });
 
 const pageCount = computed(() => {
@@ -257,10 +295,37 @@ watch(selectedSite, (newSite) => {
   commentText.value = newSite?.S_Commentaire || '';
 });
 
+// Watch for filter changes to select first filtered site
+watch(typeFilter, async () => {
+  await nextTick();
+  selectFirstFilteredSite();
+});
+
+// Watch for search changes to select first filtered site
+watch(search, async () => {
+  await nextTick();
+  selectFirstFilteredSite();
+});
+
+/**
+ * Select the first site in the filtered list
+ */
+function selectFirstFilteredSite() {
+  if (filteredSites.value.length > 0) {
+    const firstSite = filteredSites.value[0];
+    selectedItems.value = [firstSite.S_ID];
+    selectedSite.value = firstSite;
+    displaySiteOnMap(firstSite);
+  } else {
+    selectedItems.value = [];
+    selectedSite.value = null;
+  }
+}
+
 /**
  * Load all sites from database
  */
-function loadSites() {
+async function loadSites() {
   if (!databaseStore.hasOpenDatabase) return;
 
   const reqSQL = `SELECT S_ID, S_Type, S_Nom, S_Localite, S_CP, S_Pays, S_Alti, S_Orientation, S_Latitude, S_Longitude, S_Commentaire, S_Maj FROM Site ORDER BY S_Nom`;
@@ -277,11 +342,11 @@ function loadSites() {
       return obj;
     });
 
-    // Select first site
-    if (sites.value.length > 0) {
-      selectedItems.value = [sites.value[0].S_ID];
-      onSelectionChange(sites.value[0]);
-    }
+    // Wait for DOM and map to be ready, then select first site
+    await nextTick();
+    setTimeout(() => {
+      selectFirstFilteredSite();
+    }, 200);
   } else {
     sites.value = [];
   }
@@ -307,7 +372,8 @@ async function displaySiteOnMap(site) {
       site.S_Latitude,
       site.S_Longitude,
       site.S_Nom,
-      site.S_Alti
+      site.S_Alti,
+      site.S_Type
     );
   }
 }
@@ -493,6 +559,69 @@ function onValidateComment() {
     emit('dbUpdated');
   }
 }
+
+/**
+ * Show duplicate sites
+ */
+function onShowDuplicates() {
+  if (!databaseStore.hasOpenDatabase) return;
+
+  const reqSQL = `SELECT a.* FROM Site a JOIN (SELECT *, COUNT(S_ID) FROM Site GROUP BY S_Nom, S_Alti HAVING COUNT(S_Nom) > 1) b ON a.S_Nom = b.S_Nom ORDER BY a.S_Nom`;
+  const result = databaseStore.query(reqSQL);
+
+  if (result.success && result.data && result.data[0]) {
+    const columns = result.data[0].columns;
+    const values = result.data[0].values;
+    sites.value = values.map(row => {
+      const obj = {};
+      columns.forEach((col, idx) => {
+        obj[col] = row[idx];
+      });
+      return obj;
+    });
+
+    showDuplicatesMode.value = true;
+    typeFilter.value = 'all';
+    snackbarMessage.value = $gettext('Displaying duplicates') + `: ${sites.value.length} ` + $gettext('sites');
+    snackbar.value = true;
+
+    // Select first site if available
+    if (sites.value.length > 0) {
+      selectedItems.value = [sites.value[0].S_ID];
+      onSelectionChange(sites.value[0]);
+    } else {
+      selectedSite.value = null;
+    }
+  } else {
+    snackbarMessage.value = $gettext('No duplicates found');
+    snackbar.value = true;
+  }
+}
+
+/**
+ * Clean duplicate sites
+ */
+function onCleanDuplicates() {
+  if (!databaseStore.hasOpenDatabase) return;
+
+  if (confirm($gettext('Delete all duplicate sites? This action cannot be undone.'))) {
+    const reqSQL = `DELETE FROM Site WHERE rowid NOT IN (SELECT MIN(rowid) FROM Site GROUP BY S_Nom, S_Alti)`;
+    const result = databaseStore.update(reqSQL);
+
+    if (result.success) {
+      // Save database
+      databaseStore.saveDatabase();
+      snackbarMessage.value = $gettext('Duplicates removed successfully');
+      snackbar.value = true;
+      showDuplicatesMode.value = false;
+      loadSites();
+      emit('dbUpdated');
+    } else {
+      snackbarMessage.value = $gettext('Error removing duplicates');
+      snackbar.value = true;
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -531,9 +660,22 @@ function onValidateComment() {
   gap: 10px;
 }
 
+.filter-block {
+  width: 100%;
+  height: 6%;
+  background: #f0f0f0;
+  border: 2px solid #333;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 4px 20px;
+}
+
 .top-block {
   width: 100%;
-  height: 8.33%;
+  height: 7%;
   background: #f0f0f0;
   border: 2px solid #333;
   border-radius: 10px;
@@ -550,7 +692,7 @@ function onValidateComment() {
 
 .table-block {
   width: 100%;
-  height: 50%;
+  height: 54%;
   background: #f0f0f0;
   border: 2px solid #333;
   border-radius: 10px;
@@ -593,7 +735,7 @@ function onValidateComment() {
   width: 10% !important;
 }
 
-.col-orient {
+.col-pays {
   width: 15% !important;
 }
 
@@ -617,11 +759,17 @@ function onValidateComment() {
 
 .bottom-block {
   width: 100%;
-  height: 41.67%;
+  height: 33%;
   border: 2px solid #333;
   border-radius: 10px;
   box-sizing: border-box;
   overflow: hidden;
+}
+
+.type-icon {
+  width: 22px;
+  height: 22px;
+  vertical-align: middle;
 }
 
 .details-card {

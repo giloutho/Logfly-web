@@ -36,6 +36,33 @@ import 'leaflet/dist/leaflet.css';
 import { createBaseMaps } from '@/js/leaflet/tiles.js';
 import { startIcon, endIcon } from '@/js/leaflet/map-utils.js';
 
+// Import site type icons
+import windsockIconUrl from '@/assets/windsock22.png';
+import arriveeIconUrl from '@/assets/arrivee22.png';
+import flagYellowIconUrl from '@/assets/flag-yellow-22.png';
+
+// Create Leaflet icons for site types
+const takeoffIcon = L.icon({
+  iconUrl: windsockIconUrl,
+  iconSize: [22, 22],
+  iconAnchor: [11, 22],
+  popupAnchor: [0, -22]
+});
+
+const landingIcon = L.icon({
+  iconUrl: arriveeIconUrl,
+  iconSize: [22, 22],
+  iconAnchor: [11, 22],
+  popupAnchor: [0, -22]
+});
+
+const undefinedIcon = L.icon({
+  iconUrl: flagYellowIconUrl,
+  iconSize: [22, 22],
+  iconAnchor: [11, 22],
+  popupAnchor: [0, -22]
+});
+
 const { $gettext } = useGettext();
 
 const props = defineProps({
@@ -245,8 +272,9 @@ function fitBoundsToAllLayers() {
  * @param {number} lon - Longitude of takeoff
  * @param {string} site - Site name
  * @param {number} alt - Altitude
+ * @param {string} siteType - Site type ('D' for takeoff, 'A' for landing, other for undefined)
  */
-function displayTakeoffOnly(lat, lon, site, alt) {
+function displayTakeoffOnly(lat, lon, site, alt, siteType = 'D') {
   // Clear existing layers
   if (geoJsonLayer) {
     map.removeLayer(geoJsonLayer);
@@ -264,9 +292,19 @@ function displayTakeoffOnly(lat, lon, site, alt) {
     endMarker = null;
   }
 
+  // Select icon based on site type
+  let markerIcon;
+  if (siteType === 'D') {
+    markerIcon = takeoffIcon;
+  } else if (siteType === 'A') {
+    markerIcon = landingIcon;
+  } else {
+    markerIcon = undefinedIcon;
+  }
+
   // Create the takeoff marker with popup
   const popupContent = `${site || 'Unknown'}<br>${alt || 0}m`;
-  startMarker = L.marker([lat, lon], { icon: startIcon })
+  startMarker = L.marker([lat, lon], { icon: markerIcon })
     .bindPopup(popupContent)
     .addTo(map);
 
