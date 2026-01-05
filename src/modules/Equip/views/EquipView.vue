@@ -206,13 +206,15 @@ const form = reactive({
 
 // Computed
 const contentStatusMessage = computed(() => {
-    let msg = $gettext('You can record all operations') + ' : ';
-    msg += $gettext('purchase') + ', ';
-    msg += $gettext('sale') + ', ';
-    msg += $gettext('overhaul') + ', ';
-    msg += $gettext('emergency folding') + ', ';
-    msg += $gettext('chocking') + ', ';
-    msg += $gettext('etc') + '...';
+    // very strange problem with gettext:extract
+    const msg1 = $gettext('You can record all operations') + ' : ';
+    const msg2 = $gettext('purchase')
+    const msg3 = $gettext('sale')
+    const msg4 = $gettext('overhaul')
+    const msg5 = $gettext('emergency folding')
+    const msg6 = $gettext('chocking')
+    const msg7 = $gettext('etc')
+    const msg = msg1 + msg2 + ', ' + msg3 + ', ' + msg4 + ', ' + msg5 + ', ' + msg6 + ', ' + msg7 + '...';
     return msg;
 });
 

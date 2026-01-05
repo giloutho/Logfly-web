@@ -27,6 +27,7 @@ if (fs.existsSync(envPath)) {
 
 // Chemin du fichier messages.pot
 const potFilePath = path.join(__dirname, 'messages.pot');
+const publicPotPath = path.join(__dirname, '..', '..', 'public', 'messages.pot');
 
 /**
  * Compte le nombre de msgid dans un fichier POT
@@ -73,8 +74,13 @@ async function main() {
     const totalKeys = countMsgids(potContent);
     console.log(`   -> ${totalKeys} clés trouvées`);
 
+    // Copier messages.pot vers public/ pour TranslationView
+    console.log('2. Copie de messages.pot vers public/...');
+    fs.copyFileSync(potFilePath, publicPotPath);
+    console.log('   -> ✅ Copié vers public/messages.pot');
+
     // Initialiser Firebase (dynamiquement pour éviter les problèmes ESM)
-    console.log('2. Connexion à Firebase...');
+    console.log('3. Connexion à Firebase...');
 
     const { initializeApp } = await import('firebase/app');
     const { getFirestore, doc, setDoc, serverTimestamp } = await import('firebase/firestore');
@@ -94,12 +100,12 @@ async function main() {
     const auth = getAuth(app);
 
     // Authentification anonyme
-    console.log('3. Authentification...');
+    console.log('4. Authentification...');
     await signInAnonymously(auth);
     console.log('   -> Authentifié');
 
     // Mise à jour du document config/reference
-    console.log('4. Mise à jour sur Firebase...');
+    console.log('5. Mise à jour sur Firebase...');
     const docRef = doc(db, 'config', 'reference');
     await setDoc(docRef, {
         totalKeys: totalKeys,
