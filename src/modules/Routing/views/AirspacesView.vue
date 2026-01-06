@@ -8,8 +8,7 @@
     </v-snackbar>
 
     <!-- Toolbar -->
-    <v-toolbar density="compact" color="surface" class="border-b flex-grow-0"
-      style="z-index: 1001; position: relative;">
+    <v-toolbar density="compact" color="surface" class="border-b" elevation="2">
       <!-- File selection -->
       <v-btn prepend-icon="mdi-folder-open" variant="text" @click="triggerFileInput">
         {{ $gettext('Select file') }}
@@ -26,8 +25,13 @@
       <div v-if="currentFileName" class="d-flex align-center mx-2 font-weight-bold text-primary">
         {{ currentFileName }}
         <v-chip size="small" class="ml-2" color="primary" variant="outlined">{{ visibleCount }} / {{ totalCount
-        }}</v-chip>
+          }}</v-chip>
       </div>
+
+      <!-- Search Name -->
+      <v-text-field v-if="hasData" v-model="searchQuery" :placeholder="$gettext('Search name...')" density="compact"
+        variant="outlined" hide-details single-line append-inner-icon="mdi-magnify" class="mx-4"
+        style="max-width: 250px" @keyup.enter="performSearch" @click:append-inner="performSearch"></v-text-field>
 
       <v-spacer></v-spacer>
 
@@ -154,6 +158,7 @@ const fileInput = ref(null);
 const currentFileName = ref('');
 const floorFilter = ref(0); // 0 = All
 const restrictedFilter = ref(true); // Default true
+const searchQuery = ref('');
 
 const rawAirspaces = ref([]); // All airspaces from file
 const groupedData = ref([]); // Processed for tree: [{class: 'A', items: [...], selected: true, indeterminate: false}]
@@ -251,6 +256,33 @@ async function onLocalFileChange(event) {
   };
   reader.readAsText(file);
   event.target.value = ''; // Reset
+}
+
+function performSearch() {
+  if (!searchQuery.value || searchQuery.value.length < 2) return;
+  const term = searchQuery.value.toLowerCase();
+
+  // Search in all raw airspaces
+  const matches = rawAirspaces.value.filter(a => a.name.toLowerCase().startsWith(term));
+
+  if (matches.length > 0) {
+    // Create temp layers to calculate global bounds
+    const layers = matches.map(m => L.geoJSON(m.dbGeoJson));
+    if (layers.length > 0) {
+      const group = L.featureGroup(layers);
+      try {
+        const bounds = group.getBounds();
+        if (bounds.isValid()) {
+          map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
+          showMessage(`${matches.length} matches found`, 'success');
+        }
+      } catch (e) {
+        console.warn('Search fitBounds error', e);
+      }
+    }
+  } else {
+    showMessage($gettext('No airspace found'), 'warning');
+  }
 }
 
 async function downloadBazileFile() {
@@ -641,70 +673,102 @@ function resetView() {
 
 </script>
 
+
 <style scoped>
-/* Ensure the root takes full height relative to parent container (router-view) */
+/* 
+ * Layout Strategy:
+ * - Root container fills available space
+ * - Toolbar is at top with fixed height
+ * - Content area uses absolute positioning to fill remaining space
+ * - Left panel scrolls independently
+ * - Map fills its container
+ */
+
 .airspaces-view-root {
+  position: relative;
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+/* Toolbar - fixed at top, never scrolls or moves */
+.airspaces-view-root :deep(.v-toolbar) {
+  flex-shrink: 0;
+  z-index: 100;
 }
 
 .content-wrapper {
-  display: flex;
   flex: 1;
-  overflow: hidden;
+  display: flex;
   position: relative;
-  /* Ensure it contains absolute children if any */
+  overflow: hidden;
+  min-height: 0;
+  /* Critical for flex children to shrink and scroll */
 }
 
-/* Sidebar for tree */
+/* Sidebar for tree - independent scroll */
 .left-panel {
   width: 25%;
   min-width: 300px;
+  max-width: 400px;
+  height: 100%;
   border-right: 1px solid #ddd;
-  overflow-y: auto;
   background-color: #fafafa;
-  display: flex;
-  flex-direction: column;
+  overflow-y: auto !important;
+  overflow-x: hidden;
 }
 
 .tree-container {
-  flex: 1;
+  min-height: min-content;
+  /* Allow content to define height */
+}
+
+/* Force v-list to respect container scroll */
+.left-panel :deep(.v-list) {
+  overflow: visible !important;
+  height: auto !important;
 }
 
 /* Map area */
 .right-panel {
   flex: 1;
   position: relative;
-  /* Leaflet needs relative/absolute parent */
+  overflow: hidden;
+  min-width: 0;
+  /* Prevent flex item from overflowing */
 }
 
 .map-container {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 1;
-  /* Ensure map is below overlay UI if any */
 }
 
 .gap-4 {
   gap: 16px;
 }
 
-/* Scrollbar styling for list */
-.left-panel::-webkit-scrollbar {
-  width: 6px;
+/* Scrollbar styling */
+.tree-container::-webkit-scrollbar {
+  width: 8px;
 }
 
-.left-panel::-webkit-scrollbar-track {
+.tree-container::-webkit-scrollbar-track {
   background: #f1f1f1;
+  border-radius: 4px;
 }
 
-.left-panel::-webkit-scrollbar-thumb {
-  background: #ccc;
+.tree-container::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 4px;
 }
 
-.left-panel::-webkit-scrollbar-thumb:hover {
+.tree-container::-webkit-scrollbar-thumb:hover {
   background: #888;
 }
 
