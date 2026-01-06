@@ -147,12 +147,18 @@ export function interruptCheck() {
 // DECODING LOGIC (Ported from logfly65 airspaces-open.js)
 // -------------------------------------------------------------------------
 
+export function decodeOpenAir(oaText, modeReport) {
+    return decodeOA(oaText, modeReport)
+}
+
 function decodeOA(oaText, modeReport) {
     let openPolygons = {
         airspaceSet: [],
         report: '',
         center: { long: 0, lat: 0 },
     }
+    // ... (rest of function remains internal, just wrapping it)
+
     decodingReport = ''
     modeDebug = modeReport
     let lines = oaText.split('\n')
@@ -637,7 +643,7 @@ function parseUnit(value) {
     return 'F'
 }
 
-function setCatColor(value) {
+export function setCatColor(value) {
     let catColor = '1'
     switch (value) {
         case 'A':
