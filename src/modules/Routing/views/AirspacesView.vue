@@ -3,7 +3,7 @@
     <v-snackbar v-model="snackbar" :timeout="3000" :color="snackbarColor" location="top">
       {{ snackbarMessage }}
       <template v-slot:actions>
-        <v-btn variant="text" @click="snackbar = false">Fermer</v-btn>
+        <v-btn variant="text" @click="snackbar = false">{{ $gettext('Close') }}</v-btn>
       </template>
     </v-snackbar>
 
@@ -11,7 +11,7 @@
     <v-toolbar density="compact" color="surface" class="border-b" elevation="2">
       <!-- File selection -->
       <v-btn prepend-icon="mdi-folder-open" variant="text" @click="triggerFileInput">
-        {{ $gettext('Select file') }}
+        {{ $gettext('Select a file') }}
       </v-btn>
       <input type="file" ref="fileInput" style="display: none" accept=".txt" @change="onLocalFileChange" />
 
@@ -25,11 +25,11 @@
       <div v-if="currentFileName" class="d-flex align-center mx-2 font-weight-bold text-primary">
         {{ currentFileName }}
         <v-chip size="small" class="ml-2" color="primary" variant="outlined">{{ visibleCount }} / {{ totalCount
-        }}</v-chip>
+          }}</v-chip>
       </div>
 
       <!-- Search Name -->
-      <v-text-field v-if="hasData" v-model="searchQuery" :placeholder="$gettext('Search name...')" density="compact"
+      <v-text-field v-if="hasData" v-model="searchQuery" :placeholder="$gettext('Search')" density="compact"
         variant="outlined" hide-details single-line append-inner-icon="mdi-magnify" class="mx-4"
         style="max-width: 250px" @keyup.enter="performSearch" @click:append-inner="performSearch"></v-text-field>
 
@@ -72,15 +72,15 @@
       <v-menu>
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props" prepend-icon="mdi-export" variant="text" color="primary" :disabled="!hasData">
-            {{ $gettext('Save/Export') }}
+            {{ $gettext('Save') }}/{{ $gettext('Export') }}
           </v-btn>
         </template>
         <v-list>
           <v-list-item @click="exportOpenAir" prepend-icon="mdi-file-document-outline">
-            <v-list-item-title>OpenAir Format</v-list-item-title>
+            <v-list-item-title>{{ $gettext('Open Air format') }}</v-list-item-title>
           </v-list-item>
           <v-list-item @click="exportGPX" prepend-icon="mdi-xml">
-            <v-list-item-title>GPX Format</v-list-item-title>
+            <v-list-item-title>{{ $gettext('GPX Format') }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -396,7 +396,7 @@ async function downloadBazileFile() {
         processFileContent(result.content);
         showMessage($gettext('Bazile file loaded successfully'), 'success');
       } else {
-        showMessage($gettext('Error downloading Bazile file: ') + result.message || 'Unknown error', 'error');
+        showMessage($gettext('Error downloading Bazile file') + ': ' + result.message || 'Unknown error', 'error');
       }
     } catch (e) {
       console.error(e);
@@ -824,7 +824,7 @@ function enableZoneSelection() {
   hasSelectionSnapshot.value = true;
   isSelecting.value = true;
 
-  showMessage($gettext('Click and drag on the map to draw a selection rectangle'), 'info');
+  showMessage($gettext('Click and drag to draw a selection rectangle'), 'info');
 
   // Change cursor to crosshair
   map.getContainer().style.cursor = 'crosshair';
@@ -979,7 +979,7 @@ function applyZoneSelection(bounds) {
     map.fitBounds(group.getBounds(), { padding: [50, 50] });
   }
 
-  showMessage(`${filteredAirspaces.length} airspaces kept, ${removedCount} removed`, 'success');
+  showMessage(`${filteredAirspaces.length} ${$gettext('airspaces kept')}, ${removedCount} ${$gettext('removed')}`, 'success');
 }
 
 function cancelZoneSelection() {
