@@ -25,7 +25,7 @@
       <div v-if="currentFileName" class="d-flex align-center mx-2 font-weight-bold text-primary">
         {{ currentFileName }}
         <v-chip size="small" class="ml-2" color="primary" variant="outlined">{{ visibleCount }} / {{ totalCount
-          }}</v-chip>
+        }}</v-chip>
       </div>
 
       <!-- Search Name -->
@@ -75,7 +75,7 @@
 
     <!-- Main Content -->
     <div class="content-wrapper">
-      <!-- Left Panel: Tree View -->
+      <!-- Left Panel: Virtual Scroll List -->
       <div class="left-panel">
         <div v-if="loading" class="d-flex justify-center align-center h-100">
           <v-progress-circular indeterminate color="primary"></v-progress-circular>
@@ -84,47 +84,45 @@
           class="d-flex justify-center align-center h-100 text-medium-emphasis text-center pa-4">
           {{ $gettext('No airspace file loaded') }}
         </div>
-        <div v-else class="tree-container">
-          <!-- Custom Tree Implementation using v-list -->
-          <v-list density="compact" :opened="openedGroups" @update:opened="loadGroup"> <!-- Vuetify 3 unified list -->
+        <template v-else>
+          <!-- Header bar with global toggle -->
+          <div class="list-header">
+            <v-checkbox :model-value="allSelected" :indeterminate="allIndeterminate" @update:model-value="toggleAll"
+              density="compact" hide-details class="mr-2"></v-checkbox>
+            <span class="font-weight-bold">Airspaces</span>
+          </div>
 
-            <v-list-group value="all">
-              <template v-slot:activator="{ props }">
-                <!-- Header for All -->
-                <v-list-item v-bind="props">
-                  <template v-slot:prepend>
-                    <v-checkbox-btn :model-value="allSelected" :indeterminate="allIndeterminate"
-                      @click.stop="toggleAll"></v-checkbox-btn>
-                  </template>
-                  <v-list-item-title class="font-weight-bold">Airspaces</v-list-item-title>
-                </v-list-item>
-              </template>
+          <!-- Virtual Scroll List -->
+          <!-- Gros problèmes avec le scroll vertical qui n'apparaissait jamais
+              résolu en mettant une hauteur fixe. Si l'on tente un calcul dynamique cela ne fonctionne pas
+              à priori pas gênant : 200 ou 400 il occupe toujours toute la hauteur disponible-->
+          <v-virtual-scroll :items="flatList" :item-height="48" height="100" class="virtual-list">
+            <template v-slot:default="{ item }">
+              <!-- Class Header Item -->
+              <div v-if="item.isHeader" class="list-item class-header" @click="toggleGroup(item.classKey)">
+                <v-checkbox :model-value="getGroupSelected(item.classKey)"
+                  :indeterminate="getGroupIndeterminate(item.classKey)" @click.stop="toggleGroup(item.classKey)"
+                  density="compact" hide-details class="mr-2 flex-shrink-0"></v-checkbox>
+                <div class="class-badge" :style="{ backgroundColor: getClassColor(item.classKey) }">
+                  {{ item.classKey }}
+                </div>
+                <span class="item-name font-weight-medium">{{ item.label || `Classe ${item.classKey}` }}</span>
+                <v-chip size="x-small" class="ml-auto" variant="outlined">{{ item.count }}</v-chip>
+              </div>
 
-              <!-- Classes Groups -->
-              <v-list-group v-for="group in filteredGroups" :key="group.class" :value="group.class">
-                <template v-slot:activator="{ props }">
-                  <v-list-item v-bind="props">
-                    <template v-slot:prepend>
-                      <v-checkbox-btn :model-value="group.selected" :indeterminate="group.indeterminate"
-                        @click.stop="toggleGroup(group)"></v-checkbox-btn>
-                    </template>
-                    <v-list-item-title>{{ group.class }} ({{ group.items.length }})</v-list-item-title>
-                  </v-list-item>
-                </template>
-
-                <!-- Items -->
-                <v-list-item v-for="item in group.items" :key="item.id" density="compact" class="pl-4">
-                  <template v-slot:prepend>
-                    <v-checkbox-btn v-model="item.selected" @update:model-value="onItemToggle(item)"
-                      density="compact"></v-checkbox-btn>
-                  </template>
-                  <v-list-item-title class="text-caption">{{ item.name }}</v-list-item-title>
-                </v-list-item>
-              </v-list-group>
-
-            </v-list-group>
-          </v-list>
-        </div>
+              <!-- Airspace Item -->
+              <div v-else class="list-item airspace-item" :class="{ 'item-selected': item.selected }"
+                @click="onItemClick(item)">
+                <v-checkbox v-model="item.selected" @click.stop="onItemToggle(item)" density="compact" hide-details
+                  class="mr-2 flex-shrink-0"></v-checkbox>
+                <div class="class-badge small" :style="{ backgroundColor: getClassColor(item.class) }">
+                  {{ item.class }}
+                </div>
+                <span class="item-name text-truncate">{{ item.name }}</span>
+              </div>
+            </template>
+          </v-virtual-scroll>
+        </template>
       </div>
 
       <!-- Right Panel: Map -->
@@ -147,6 +145,9 @@ const { $gettext } = useGettext();
 
 // Define emits to handle Extraneous non-emits event listeners warning
 const emit = defineEmits(['db-updated']);
+
+const listHeight = ref(0)
+const leftPanel = ref(null)
 
 // --- State ---
 const snackbar = ref(false);
@@ -174,6 +175,44 @@ const floorOptions = [
   ...Array.from({ length: 12 }, (_, i) => ({ title: (i + 1) * 500, value: (i + 1) * 500 }))
 ];
 
+// Colors for each airspace class (A-G and special types)
+const classColors = {
+  'A': '#FF0000',   // Rouge vif
+  'B': '#FF6600',   // Orange
+  'C': '#FFCC00',   // Jaune doré
+  'D': '#0066FF',   // Bleu
+  'E': '#00CC66',   // Vert
+  'F': '#9933FF',   // Violet
+  'G': '#00CCCC',   // Cyan
+  'CTR': '#FF3366', // Rose
+  'R': '#CC0000',   // Rouge foncé (Restricted)
+  'P': '#990000',   // Rouge sombre (Prohibited)
+  'Q': '#FF6699',   // Rose clair (Danger)
+  'W': '#996633',   // Marron (Wave)
+  'GP': '#666666',  // Gris (Glider Prohibited)
+  'TMZ': '#CC6600', // Orange foncé
+  'RMZ': '#0099CC', // Bleu clair
+};
+
+// Labels for class headers (you can fill these in later)
+const classLabels = {
+  'A': '',
+  'B': '',
+  'C': '',
+  'D': '',
+  'E': '',
+  'F': '',
+  'G': '',
+  'CTR': 'Control Zone',
+  'R': 'Restricted',
+  'P': 'Prohibited',
+  'Q': 'Danger',
+  'W': 'Wave Window',
+  'GP': 'Glider Prohibited',
+  'TMZ': 'Transponder Mandatory Zone',
+  'RMZ': 'Radio Mandatory Zone',
+};
+
 // --- Computed ---
 const hasData = computed(() => rawAirspaces.value.length > 0);
 const totalCount = computed(() => rawAirspaces.value.length);
@@ -186,8 +225,24 @@ const visibleCount = computed(() => {
   return count;
 });
 
-const filteredGroups = computed(() => {
-  return groupedData.value;
+// --- Flat list for virtual scroll ---
+// Creates a flat list with headers for each class followed by its items
+const flatList = computed(() => {
+  const result = [];
+  groupedData.value.forEach(group => {
+    // Add class header
+    result.push({
+      isHeader: true,
+      classKey: group.class,
+      label: classLabels[group.class] || '',
+      count: group.items.length
+    });
+    // Add all items of this class
+    group.items.forEach(item => {
+      result.push(item);
+    });
+  });
+  return result;
 });
 
 const allSelected = computed(() => groupedData.value.length > 0 && groupedData.value.every(g => g.selected));
@@ -196,6 +251,10 @@ const allIndeterminate = computed(() => groupedData.value.some(g => g.selected |
 // --- Lifecycle ---
 onMounted(() => {
   initMap();
+  // Le panneau gauche a déjà la bonne hauteur (flex 1)
+  // On récupère sa hauteur réelle et on la transmet au virtual‑scroll
+  listHeight.value = leftPanel.value?.clientHeight ?? 0
+  console.log('leftPanel', leftPanel.value, 'listHeight', listHeight.value);
 });
 
 onUnmounted(() => {
@@ -262,8 +321,8 @@ function performSearch() {
   if (!searchQuery.value || searchQuery.value.length < 2) return;
   const term = searchQuery.value.toLowerCase();
 
-  // Search in all raw airspaces
-  const matches = rawAirspaces.value.filter(a => a.name.toLowerCase().startsWith(term));
+  // Search in all raw airspaces - uses includes() to find term anywhere in the name
+  const matches = rawAirspaces.value.filter(a => a.name.toLowerCase().includes(term));
 
   if (matches.length > 0) {
     // Create temp layers to calculate global bounds
@@ -275,6 +334,19 @@ function performSearch() {
         if (bounds.isValid()) {
           map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
           showMessage(`${matches.length} matches found`, 'success');
+
+          // Show popup with all matching airspaces at the center of bounds
+          const center = bounds.getCenter();
+          let popupContent = '<div class="airspace-popup">';
+          matches.forEach(as => {
+            popupContent += formatAirspacePopup(as);
+          });
+          popupContent += '</div>';
+
+          L.popup({ maxHeight: 400 })
+            .setLatLng(center)
+            .setContent(popupContent)
+            .openOn(map);
         }
       } catch (e) {
         console.warn('Search fitBounds error', e);
@@ -438,7 +510,30 @@ function addLayerToMap(airspace) {
 }
 
 
-// --- Tree Interaction ---
+// --- List Interaction ---
+
+// Get color for a class
+function getClassColor(classKey) {
+  return classColors[classKey] || '#999999';
+}
+
+// Get text color for a class badge (for contrast)
+function getClassTextColor(classKey) {
+  const lightClasses = ['C', 'E', 'G', 'Q'];
+  return lightClasses.includes(classKey) ? '#000000' : '#FFFFFF';
+}
+
+// Check if a group is fully selected
+function getGroupSelected(classKey) {
+  const group = groupedData.value.find(g => g.class === classKey);
+  return group ? group.selected : false;
+}
+
+// Check if a group is indeterminate
+function getGroupIndeterminate(classKey) {
+  const group = groupedData.value.find(g => g.class === classKey);
+  return group ? group.indeterminate : false;
+}
 
 function toggleAll() {
   const newState = !allSelected.value;
@@ -450,7 +545,10 @@ function toggleAll() {
   updateMapFromSelection();
 }
 
-function toggleGroup(group) {
+function toggleGroup(classKey) {
+  const group = groupedData.value.find(g => g.class === classKey);
+  if (!group) return;
+
   const newState = !group.selected;
   group.selected = newState;
   group.indeterminate = false;
@@ -459,7 +557,7 @@ function toggleGroup(group) {
 }
 
 function onItemToggle(item) {
-  const group = groupedData.value.find(g => g.class === item.data.class);
+  const group = groupedData.value.find(g => g.class === item.class);
   if (group) {
     const all = group.items.every(i => i.selected);
     const some = group.items.some(i => i.selected);
@@ -467,28 +565,39 @@ function onItemToggle(item) {
     group.indeterminate = some && !all;
   }
   updateMapFromSelection();
+}
 
-  // Feature request: Zoom to bounds on select
-  if (item.selected && item.data && item.data.dbGeoJson) {
-    // Create a temporary layer to get bounds easily without searching the mapLayers map
-    const tempLayer = L.geoJSON(item.data.dbGeoJson);
-    try {
-      const bounds = tempLayer.getBounds();
-      if (bounds.isValid()) {
-        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
-      }
-    } catch (e) {
-      console.warn('Could not fit bounds', e);
+// Handle click on an item (zoom to bounds and show popup)
+function onItemClick(item) {
+  if (!item.data || !item.data.dbGeoJson) return;
+
+  // If the item is not selected (not visible on map), make it visible first
+  if (!item.selected) {
+    item.selected = true;
+    onItemToggle(item); // Update group state and map
+  }
+
+  const tempLayer = L.geoJSON(item.data.dbGeoJson);
+  try {
+    const bounds = tempLayer.getBounds();
+    if (bounds.isValid()) {
+      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
+
+      // Show popup at the center of the airspace
+      const center = bounds.getCenter();
+      const popupContent = '<div class="airspace-popup">' + formatAirspacePopup(item.data) + '</div>';
+      L.popup()
+        .setLatLng(center)
+        .setContent(popupContent)
+        .openOn(map);
     }
+  } catch (e) {
+    console.warn('Could not fit bounds', e);
   }
 }
 
 
 // --- Map Interaction ---
-
-function loadGroup(newVal) {
-  openedGroups.value = newVal;
-}
 
 function onMapClick(e) {
   // Use Point GeoJSON for correct booleanIntersects checking
@@ -679,8 +788,8 @@ function resetView() {
  * Layout Strategy:
  * - Root container fills available space
  * - Toolbar is at top with fixed height
- * - Content area uses absolute positioning to fill remaining space
- * - Left panel scrolls independently
+ * - Content area uses flex to fill remaining space
+ * - Left panel has a fixed header and virtual scroll list
  * - Map fills its container
  */
 
@@ -705,10 +814,9 @@ function resetView() {
   position: relative;
   overflow: hidden;
   min-height: 0;
-  /* Critical for flex children to shrink and scroll */
 }
 
-/* Sidebar for tree - independent scroll */
+/* Left panel with virtual scroll */
 .left-panel {
   width: 25%;
   min-width: 300px;
@@ -716,19 +824,92 @@ function resetView() {
   height: 100%;
   border-right: 1px solid #ddd;
   background-color: #fafafa;
-  overflow-y: auto !important;
-  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.tree-container {
-  min-height: min-content;
-  /* Allow content to define height */
+/* Fixed header at top of left panel */
+.list-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #ddd;
+  flex-shrink: 0;
 }
 
-/* Force v-list to respect container scroll */
-.left-panel :deep(.v-list) {
-  overflow: visible !important;
-  height: auto !important;
+/* Virtual scroll takes remaining height */
+.virtual-list {
+  /* Prevents flex item from expanding */
+  overflow-y: auto;
+}
+
+/* Common list item styles */
+.list-item {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 12px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.list-item:hover {
+  background-color: #e8f4fc;
+}
+
+/* Class header styling */
+.class-header {
+  background-color: #f5f5f5;
+  font-weight: 500;
+}
+
+.class-header:hover {
+  background-color: #e0e0e0;
+}
+
+/* Airspace item styling */
+.airspace-item {
+  padding-left: 24px;
+}
+
+.airspace-item.item-selected {
+  background-color: #e3f2fd;
+}
+
+/* Class badge */
+.class-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  margin-right: 10px;
+  flex-shrink: 0;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.class-badge.small {
+  min-width: 24px;
+  height: 20px;
+  font-size: 11px;
+  margin-right: 8px;
+}
+
+/* Item name */
+.item-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
 }
 
 /* Map area */
@@ -737,7 +918,6 @@ function resetView() {
   position: relative;
   overflow: hidden;
   min-width: 0;
-  /* Prevent flex item from overflowing */
 }
 
 .map-container {
@@ -753,22 +933,22 @@ function resetView() {
   gap: 16px;
 }
 
-/* Scrollbar styling */
-.tree-container::-webkit-scrollbar {
+/* Scrollbar styling for virtual list */
+.virtual-list::-webkit-scrollbar {
   width: 8px;
 }
 
-.tree-container::-webkit-scrollbar-track {
+.virtual-list::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 4px;
 }
 
-.tree-container::-webkit-scrollbar-thumb {
+.virtual-list::-webkit-scrollbar-thumb {
   background: #bbb;
   border-radius: 4px;
 }
 
-.tree-container::-webkit-scrollbar-thumb:hover {
+.virtual-list::-webkit-scrollbar-thumb:hover {
   background: #888;
 }
 
@@ -776,10 +956,31 @@ function resetView() {
 :deep(.leaflet-popup-content-wrapper) {
   padding: 0;
   overflow: hidden;
+  border-radius: 8px;
 }
 
 :deep(.leaflet-popup-content) {
   margin: 0;
   width: 300px !important;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Scrollbar styling for popup */
+:deep(.leaflet-popup-content)::-webkit-scrollbar {
+  width: 6px;
+}
+
+:deep(.leaflet-popup-content)::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+:deep(.leaflet-popup-content)::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+:deep(.leaflet-popup-content)::-webkit-scrollbar-thumb:hover {
+  background: #666;
 }
 </style>
