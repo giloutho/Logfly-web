@@ -756,6 +756,63 @@ msgstr "Doublons supprimés"
 msgid "Error removing duplicates"
 msgstr "Erreur pendant la suppression des doublons"
 
+msgid "Select a file"
+msgstr "Choisir un fichier"
+
+msgid "Zone selection"
+msgstr "Sélection de zone"
+
+msgid "Cancel selection"
+msgstr "Annuler la sélection"
+
+msgid "Reset"
+msgstr "Reset"
+
+msgid "Save"
+msgstr "Enregistrer"
+
+msgid "Open Air format"
+msgstr "Format Open Air"
+
+msgid "GPX Format"
+msgstr "Format GPX"
+
+msgid "No airspace file loaded"
+msgstr "Pas de fichier espaces chargé"
+
+msgid "No airspace found"
+msgstr "Aucun espace aérien trouvé"
+
+msgid "Bazile file loaded successfully"
+msgstr "Fichier Bazile téléchargé"
+
+msgid "Error downloading Bazile file"
+msgstr "Erreur de téléchargement du fichier Bazile"
+
+msgid "Error"
+msgstr "Erreur"
+
+msgid "No valid airspaces found in file"
+msgstr "Pas d'espaces valides dans ce fichier"
+
+msgid "No airspaces selected"
+msgstr "Pas d'espaces sélectionnés"
+
+msgid "Click and drag to draw a selection rectangle"
+msgstr "Cliquer et faire glisser pour dessiner un rectangle de sélection"
+
+msgid "Selection too small, please draw a larger rectangle"
+msgstr "Sélection trop petite, veuillez dessiner un rectangle plus grand"
+
+msgid "Selection cancelled"
+msgstr "Sélection annulée"
+
+msgid "No airspaces in selection area"
+msgstr "Pas d'espaces dans le rectangle de sélection"
+
+msgid "Selection cancelled, airspaces restored"
+msgstr "Sélection annulée, espaces aériens rétablis"
+
 msgid "Contact"
 msgstr "Contact"
 

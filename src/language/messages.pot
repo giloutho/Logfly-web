@@ -304,6 +304,7 @@ msgstr ""
 #: src/components/ExternalLayout.vue:35
 #: src/components/OpenLogbook.vue:74
 #: src/components/TraceInfoDialog.vue:35
+#: src/modules/Routing/views/AirspacesView.vue:6
 #: src/modules/Tracks/views/ImportView.vue:90
 msgid "Close"
 msgstr ""
@@ -323,6 +324,7 @@ msgstr ""
 #: src/components/FullmapTrack.vue:8
 #: src/components/LogbookDetails.vue:38
 #: src/modules/Files/views/SitesView.vue:176
+#: src/modules/Routing/views/AirspacesView.vue:75
 msgid "Export"
 msgstr ""
 
@@ -513,6 +515,7 @@ msgid "Class"
 msgstr ""
 
 #: src/components/MapLeaflet.vue:322
+#: src/modules/Routing/views/AirspacesView.vue:42
 msgid "Floor"
 msgstr ""
 
@@ -998,6 +1001,7 @@ msgstr ""
 
 #: src/modules/Equip/views/EquipView.vue:26
 #: src/modules/Files/views/SitesView.vue:33
+#: src/modules/Routing/views/AirspacesView.vue:32
 #: src/modules/Settings/views/TranslationView.vue:84
 #: src/modules/Tracks/views/LogbookView.vue:24
 msgid "Search"
@@ -1209,6 +1213,82 @@ msgstr ""
 
 #: src/modules/Files/views/SitesView.vue:620
 msgid "Error removing duplicates"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:14
+msgid "Select a file"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:57
+msgid "Zone selection"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:62
+msgid "Cancel selection"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:69
+msgid "Reset"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:75
+msgid "Save"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:80
+msgid "Open Air format"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:83
+msgid "GPX Format"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:98
+msgid "No airspace file loaded"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:381
+msgid "No airspace found"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:397
+msgid "Bazile file loaded successfully"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:399
+msgid "Error downloading Bazile file"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:403
+msgid "Error"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:426
+msgid "No valid airspaces found in file"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:746
+msgid "No airspaces selected"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:827
+msgid "Click and drag to draw a selection rectangle"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:889
+msgid "Selection too small, please draw a larger rectangle"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:919
+msgid "Selection cancelled"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:966
+msgid "No airspaces in selection area"
+msgstr ""
+
+#: src/modules/Routing/views/AirspacesView.vue:1002
+msgid "Selection cancelled, airspaces restored"
 msgstr ""
 
 #: src/modules/Settings/views/SupportView.vue:11

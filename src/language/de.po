@@ -756,6 +756,63 @@ msgstr ""
 msgid "Error removing duplicates"
 msgstr ""
 
+msgid "Select a file"
+msgstr "Auswählen"
+
+msgid "Zone selection"
+msgstr "Summen der Auswahl"
+
+msgid "Cancel selection"
+msgstr "Summen der Auswahl"
+
+msgid "Reset"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Open Air format"
+msgstr ""
+
+msgid "GPX Format"
+msgstr "GPX Export"
+
+msgid "No airspace file loaded"
+msgstr ""
+
+msgid "No airspace found"
+msgstr ""
+
+msgid "Bazile file loaded successfully"
+msgstr ""
+
+msgid "Error downloading Bazile file"
+msgstr ""
+
+msgid "Error"
+msgstr ""
+
+msgid "No valid airspaces found in file"
+msgstr ""
+
+msgid "No airspaces selected"
+msgstr "Kein Fluggebiet ausgewählt"
+
+msgid "Click and drag to draw a selection rectangle"
+msgstr ""
+
+msgid "Selection too small, please draw a larger rectangle"
+msgstr ""
+
+msgid "Selection cancelled"
+msgstr ""
+
+msgid "No airspaces in selection area"
+msgstr ""
+
+msgid "Selection cancelled, airspaces restored"
+msgstr ""
+
 msgid "Contact"
 msgstr ""
 
