@@ -51,6 +51,19 @@
 
       <v-divider vertical class="mx-2"></v-divider>
 
+      <!-- Zone Selection -->
+      <v-btn prepend-icon="mdi-selection-drag" variant="text" @click="enableZoneSelection"
+        :disabled="!hasData || isSelecting" :color="isSelecting ? 'warning' : ''">
+        {{ $gettext('Zone selection') }}
+      </v-btn>
+
+      <v-btn v-if="hasSelectionSnapshot" prepend-icon="mdi-undo" variant="text" @click="cancelZoneSelection"
+        color="secondary">
+        {{ $gettext('Cancel selection') }}
+      </v-btn>
+
+      <v-divider vertical class="mx-2"></v-divider>
+
       <!-- Actions -->
       <v-btn prepend-icon="mdi-refresh" variant="text" @click="resetView" :disabled="!hasData">
         {{ $gettext('Reset') }}
@@ -139,6 +152,7 @@ import { useGettext } from "vue3-gettext";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import booleanIntersects from '@turf/boolean-intersects';
+import centroid from '@turf/centroid';
 import { decodeOpenAir, downloadBazile, setCatColor } from '@/js/airspaces/airspaces-open.js';
 
 const { $gettext } = useGettext();
@@ -168,6 +182,13 @@ const openedGroups = ref(['all']);
 // Map related
 let map = null;
 let mapLayers = new Map(); // id -> L.GeoJSON
+
+// Zone selection state
+const isSelecting = ref(false);
+const hasSelectionSnapshot = ref(false);
+let airspacesSnapshot = null; // Snapshot before zone selection
+let selectionRectangle = null; // L.Rectangle for visual feedback
+let selectionStartPoint = null; // Starting point of selection
 
 // --- Constants ---
 const floorOptions = [
@@ -251,6 +272,10 @@ const allIndeterminate = computed(() => groupedData.value.some(g => g.selected |
 // --- Lifecycle ---
 onMounted(() => {
   initMap();
+  // On tentait de récupérer la hauteur du panneau gauche pour le virtual-scroll
+  // pour pouvoir déterminer la hauteur à affecter au virtual-scroll
+  // finalement on est resté sur une hauteur fixe, voir le commentaire ligne 109
+  // 
   // Le panneau gauche a déjà la bonne hauteur (flex 1)
   // On récupère sa hauteur réelle et on la transmet au virtual‑scroll
   listHeight.value = leftPanel.value?.clientHeight ?? 0
@@ -383,6 +408,11 @@ async function downloadBazileFile() {
 }
 
 function processFileContent(content) {
+  // Reset selection state when loading a new file
+  hasSelectionSnapshot.value = false;
+  airspacesSnapshot = null;
+  isSelecting.value = false;
+
   const result = decodeOpenAir(content, false);
   if (result.airspaceSet && result.airspaceSet.length > 0) {
     rawAirspaces.value = result.airspaceSet.map((param, index) => ({
@@ -778,6 +808,198 @@ function resetView() {
   groupedData.value = [];
   currentFileName.value = '';
   clearMapLayers();
+  // Reset selection state
+  isSelecting.value = false;
+  hasSelectionSnapshot.value = false;
+  airspacesSnapshot = null;
+}
+
+// --- Zone Selection ---
+
+function enableZoneSelection() {
+  if (!map || !hasData.value) return;
+
+  // Save snapshot of current airspaces for potential cancellation
+  airspacesSnapshot = JSON.parse(JSON.stringify(rawAirspaces.value));
+  hasSelectionSnapshot.value = true;
+  isSelecting.value = true;
+
+  showMessage($gettext('Click and drag on the map to draw a selection rectangle'), 'info');
+
+  // Change cursor to crosshair
+  map.getContainer().style.cursor = 'crosshair';
+
+  // Disable map dragging during selection
+  map.dragging.disable();
+
+  // Mouse down - start drawing
+  const onMouseDown = (e) => {
+    selectionStartPoint = e.latlng;
+
+    // Create rectangle with zero size initially
+    selectionRectangle = L.rectangle(
+      [selectionStartPoint, selectionStartPoint],
+      {
+        color: '#3388ff',
+        weight: 2,
+        opacity: 0.8,
+        fillOpacity: 0.2,
+        dashArray: '5, 5'
+      }
+    ).addTo(map);
+
+    // Listen for mouse move
+    map.on('mousemove', onMouseMove);
+    map.once('mouseup', onMouseUp);
+  };
+
+  // Mouse move - update rectangle
+  const onMouseMove = (e) => {
+    if (selectionRectangle && selectionStartPoint) {
+      const bounds = L.latLngBounds(selectionStartPoint, e.latlng);
+      selectionRectangle.setBounds(bounds);
+    }
+  };
+
+  // Mouse up - finish drawing
+  const onMouseUp = (e) => {
+    map.off('mousemove', onMouseMove);
+    map.off('mousedown', onMouseDown);
+
+    // Re-enable map dragging
+    map.dragging.enable();
+    map.getContainer().style.cursor = '';
+
+    if (selectionRectangle && selectionStartPoint) {
+      const bounds = L.latLngBounds(selectionStartPoint, e.latlng);
+
+      // Remove the visual rectangle
+      map.removeLayer(selectionRectangle);
+      selectionRectangle = null;
+      selectionStartPoint = null;
+
+      // Check if rectangle is big enough (avoid accidental clicks)
+      const size = map.latLngToLayerPoint(bounds.getNorthEast())
+        .distanceTo(map.latLngToLayerPoint(bounds.getSouthWest()));
+
+      if (size > 10) {
+        // Apply the zone selection filter
+        applyZoneSelection(bounds);
+      } else {
+        showMessage($gettext('Selection too small, please draw a larger rectangle'), 'warning');
+      }
+    }
+
+    isSelecting.value = false;
+  };
+
+  // Handle escape key to cancel
+  const onKeyDown = (e) => {
+    if (e.key === 'Escape') {
+      cancelDrawing();
+    }
+  };
+
+  const cancelDrawing = () => {
+    map.off('mousedown', onMouseDown);
+    map.off('mousemove', onMouseMove);
+    map.off('mouseup', onMouseUp);
+    document.removeEventListener('keydown', onKeyDown);
+
+    if (selectionRectangle) {
+      map.removeLayer(selectionRectangle);
+      selectionRectangle = null;
+    }
+    selectionStartPoint = null;
+
+    map.dragging.enable();
+    map.getContainer().style.cursor = '';
+    isSelecting.value = false;
+
+    showMessage($gettext('Selection cancelled'), 'info');
+  };
+
+  document.addEventListener('keydown', onKeyDown);
+  map.once('mousedown', onMouseDown);
+}
+
+function applyZoneSelection(bounds) {
+  console.log('Selection bounds:', {
+    west: bounds.getWest(),
+    south: bounds.getSouth(),
+    east: bounds.getEast(),
+    north: bounds.getNorth()
+  });
+
+  // Filter airspaces whose centroid is INSIDE the selection rectangle
+  // Using direct coordinate comparison for reliability
+  const filteredAirspaces = rawAirspaces.value.filter(as => {
+    if (!as.dbGeoJson) return false;
+    try {
+      // Calculate the centroid (center point) of the airspace
+      const center = centroid(as.dbGeoJson);
+      const [lng, lat] = center.geometry.coordinates;
+
+      // Check if centroid is within bounds
+      const isInside = (
+        lng >= bounds.getWest() &&
+        lng <= bounds.getEast() &&
+        lat >= bounds.getSouth() &&
+        lat <= bounds.getNorth()
+      );
+
+      if (isInside) {
+        console.log('Keeping:', as.name, 'centroid:', [lng, lat]);
+      }
+
+      return isInside;
+    } catch (err) {
+      console.warn('Centroid check failed for', as.name, err);
+      return false;
+    }
+  });
+
+  const removedCount = rawAirspaces.value.length - filteredAirspaces.length;
+  console.log('Filtered:', filteredAirspaces.length, 'Removed:', removedCount);
+
+  if (filteredAirspaces.length === 0) {
+    showMessage($gettext('No airspaces in selection area'), 'warning');
+    return;
+  }
+
+  // Update rawAirspaces with filtered list
+  rawAirspaces.value = filteredAirspaces;
+
+  // Rebuild grouped data and map
+  applyFilters();
+
+  // Fit map to the new bounds
+  if (mapLayers.size > 0) {
+    const group = L.featureGroup(Array.from(mapLayers.values()));
+    map.fitBounds(group.getBounds(), { padding: [50, 50] });
+  }
+
+  showMessage(`${filteredAirspaces.length} airspaces kept, ${removedCount} removed`, 'success');
+}
+
+function cancelZoneSelection() {
+  if (!airspacesSnapshot) return;
+
+  // Restore the snapshot
+  rawAirspaces.value = airspacesSnapshot;
+  airspacesSnapshot = null;
+  hasSelectionSnapshot.value = false;
+
+  // Rebuild grouped data and map
+  applyFilters();
+
+  // Fit map to restored bounds
+  if (mapLayers.size > 0) {
+    const group = L.featureGroup(Array.from(mapLayers.values()));
+    map.fitBounds(group.getBounds(), { padding: [50, 50] });
+  }
+
+  showMessage($gettext('Selection cancelled, airspaces restored'), 'info');
 }
 
 </script>
@@ -982,5 +1204,39 @@ function resetView() {
 
 :deep(.leaflet-popup-content)::-webkit-scrollbar-thumb:hover {
   background: #666;
+}
+
+/* Leaflet Draw styles for rectangle selection */
+:deep(.leaflet-draw-section) {
+  display: none !important;
+}
+
+:deep(.leaflet-draw-tooltip) {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+:deep(.leaflet-draw-tooltip-single) {
+  margin-top: -12px;
+  margin-left: 20px;
+}
+
+:deep(.leaflet-mouse-marker) {
+  cursor: crosshair !important;
+}
+
+/* Make the drawing rectangle visible */
+:deep(.leaflet-draw-guide-dash) {
+  stroke: #3388ff;
+  stroke-width: 2;
+  stroke-dasharray: 5, 5;
+}
+
+:deep(.leaflet-interactive.leaflet-draw-marker) {
+  cursor: crosshair;
 }
 </style>
