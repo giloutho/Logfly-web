@@ -390,6 +390,11 @@ function stopDrawing() {
     tempLine = null;
   }
 
+  // Rebuild vertex markers so they become draggable (they were non-draggable during drawing)
+  if (routePoints.value.length > 0) {
+    updatePolyline();
+  }
+
   if (routePoints.value.length >= 2) {
     showMessage(`${$gettext('Route created with')} ${routePoints.value.length} ${$gettext('points')}`, 'success');
   }
@@ -476,45 +481,109 @@ function updateVertexMarkers() {
     const isFirst = index === 0;
     const isLast = index === routePoints.value.length - 1;
 
-    const marker = L.circleMarker([point.lat, point.lng], {
-      radius: isFirst || isLast ? 8 : 6,
-      fillColor: isFirst ? '#28a745' : (isLast ? '#ff6b6b' : '#3388ff'),
-      color: '#fff',
-      weight: 2,
-      fillOpacity: 1,
-      className: 'vertex-marker'
+    // Use L.Marker with DivIcon for proper dragging support
+    // Using squares instead of circles to distinguish from scoring points
+    const size = isFirst || isLast ? 18 : 14;
+    const color = isFirst ? '#28a745' : (isLast ? '#ff6b6b' : '#3388ff');
+
+    const icon = L.divIcon({
+      className: 'vertex-div-icon',
+      html: `<div class="vertex-point" style="
+        width: ${size}px; 
+        height: ${size}px; 
+        background-color: ${color}; 
+        border: 2px solid white; 
+        border-radius: 3px; 
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        cursor: ${isFirst ? 'default' : 'grab'};
+      "></div>`,
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2]
+    });
+
+    const marker = L.marker([point.lat, point.lng], {
+      icon: icon,
+      draggable: !isFirst && !isDrawing.value, // Make draggable except for start point
+      bubblingMouseEvents: false,
+      zIndexOffset: isFirst || isLast ? 1000 : 500
     }).addTo(map);
 
-    // Make vertex draggable
-    marker.on('mousedown', (e) => {
-      if (!isDrawing.value) {
-        L.DomEvent.stopPropagation(e);
-        startDragVertex(index);
+    // Store index in marker
+    marker._vertexIndex = index;
+
+    // Handle drag events
+    marker.on('dragstart', () => {
+      isDraggingVertex = true;
+      draggingVertexIndex = index;
+    });
+
+    marker.on('drag', (e) => {
+      const latlng = e.target.getLatLng();
+      routePoints.value[index] = { lat: latlng.lat, lng: latlng.lng };
+
+      // Update polyline in real-time
+      const latlngs = routePoints.value.map(p => [p.lat, p.lng]);
+      if (polyline) {
+        polyline.setLatLngs(latlngs);
       }
     });
 
-    // Click to delete (except first point if more than 2 points)
+    marker.on('dragend', (e) => {
+      isDraggingVertex = false;
+      draggingVertexIndex = -1;
+
+      const latlng = e.target.getLatLng();
+      routePoints.value[index] = { lat: latlng.lat, lng: latlng.lng };
+
+      // Full update after drag
+      updatePolyline();
+      updateTotalDistance();
+    });
+
+    // Single click handler for all click actions
     marker.on('click', (e) => {
-      if (!isDrawing.value && !isDraggingVertex && routePoints.value.length > 2 && index !== 0) {
-        L.DomEvent.stopPropagation(e);
+      // Ignore clicks during drawing mode
+      if (isDrawing.value) return;
+
+      // Ignore if we just finished dragging
+      if (isDraggingVertex) return;
+
+      L.DomEvent.stopPropagation(e);
+
+      // Ctrl/Cmd + click on last point to continue drawing
+      if (isLast && (e.originalEvent.ctrlKey || e.originalEvent.metaKey)) {
+        startDrawing();
+        showMessage($gettext('Continue drawing from last point'), 'info');
+        return;
+      }
+
+      // Click to delete (except first point, and need at least 2 points remaining)
+      if (!isFirst && routePoints.value.length > 2) {
         deleteVertex(index);
       }
     });
 
-    // Ctrl/Cmd + click on last point to continue drawing
-    marker.on('click', (e) => {
-      if (isLast && (e.originalEvent.ctrlKey || e.originalEvent.metaKey)) {
-        L.DomEvent.stopPropagation(e);
-        startDrawing();
-        showMessage($gettext('Continue drawing from last point'), 'info');
-      }
-    });
-
-    // Tooltip with point info
-    const tooltipContent = isFirst ? $gettext('Start') :
+    // Enhanced tooltip with instructions
+    let tooltipText = isFirst ? $gettext('Start') :
       isLast ? `${$gettext('End')} - ${totalDistance.value.toFixed(1)} km` :
         `${$gettext('Point')} ${index + 1}`;
-    marker.bindTooltip(tooltipContent, { permanent: false, direction: 'top', offset: [0, -8] });
+
+    if (!isFirst) {
+      tooltipText += `\n${$gettext('Drag to move')}`;
+      if (routePoints.value.length > 2) {
+        tooltipText += `\n${$gettext('Click to delete')}`;
+      }
+      if (isLast) {
+        tooltipText += `\n${$gettext('Ctrl/Cmd+click to continue')}`;
+      }
+    }
+
+    marker.bindTooltip(tooltipText, {
+      permanent: false,
+      direction: 'top',
+      offset: [0, -size / 2 - 4],
+      className: 'vertex-tooltip'
+    });
 
     vertexMarkers.push(marker);
   });
@@ -525,7 +594,7 @@ function updateMidpointMarkers() {
   midpointMarkers.forEach(m => map.removeLayer(m));
   midpointMarkers = [];
 
-  if (routePoints.value.length < 2) return;
+  if (routePoints.value.length < 2 || isDrawing.value) return;
 
   // Create midpoint markers for segment insertion
   for (let i = 0; i < routePoints.value.length - 1; i++) {
@@ -534,25 +603,87 @@ function updateMidpointMarkers() {
     const midLat = (p1.lat + p2.lat) / 2;
     const midLng = (p1.lng + p2.lng) / 2;
 
-    const marker = L.circleMarker([midLat, midLng], {
-      radius: 5,
-      fillColor: '#aaa',
-      color: '#fff',
-      weight: 1,
-      fillOpacity: 0.7,
-      className: 'midpoint-marker'
+    // Use L.Marker with DivIcon for proper dragging support
+    // Using squares instead of circles to distinguish from scoring points
+    const icon = L.divIcon({
+      className: 'midpoint-div-icon',
+      html: `<div class="midpoint-point" style="
+        width: 14px; 
+        height: 14px; 
+        background-color: #888; 
+        border: 2px solid white; 
+        border-radius: 2px; 
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        cursor: pointer;
+        opacity: 0.8;
+      "></div>`,
+      iconSize: [12, 12],
+      iconAnchor: [6, 6]
+    });
+
+    const segmentIndex = i;
+    const marker = L.marker([midLat, midLng], {
+      icon: icon,
+      draggable: true,
+      bubblingMouseEvents: false,
+      zIndexOffset: 100
     }).addTo(map);
 
-    // Click to insert a new point
-    const segmentIndex = i;
-    marker.on('mousedown', (e) => {
-      if (!isDrawing.value) {
-        L.DomEvent.stopPropagation(e);
-        startDragMidpoint(segmentIndex, midLat, midLng);
+    // Store segment index
+    marker._segmentIndex = segmentIndex;
+
+    // Handle drag start - insert the point
+    marker.on('dragstart', (e) => {
+      // Insert a new point at current marker position
+      const latlng = e.target.getLatLng();
+      routePoints.value.splice(segmentIndex + 1, 0, { lat: latlng.lat, lng: latlng.lng });
+      isDraggingVertex = true;
+      draggingVertexIndex = segmentIndex + 1;
+    });
+
+    // Handle drag - update the newly inserted point
+    marker.on('drag', (e) => {
+      if (draggingVertexIndex >= 0) {
+        const latlng = e.target.getLatLng();
+        routePoints.value[draggingVertexIndex] = { lat: latlng.lat, lng: latlng.lng };
+
+        // Update polyline in real-time
+        const latlngs = routePoints.value.map(p => [p.lat, p.lng]);
+        if (polyline) {
+          polyline.setLatLngs(latlngs);
+        }
       }
     });
 
-    marker.bindTooltip($gettext('Drag to insert point'), { permanent: false, direction: 'top', offset: [0, -6] });
+    // Handle drag end - finalize and rebuild markers
+    marker.on('dragend', (e) => {
+      if (draggingVertexIndex >= 0) {
+        const latlng = e.target.getLatLng();
+        routePoints.value[draggingVertexIndex] = { lat: latlng.lat, lng: latlng.lng };
+      }
+      isDraggingVertex = false;
+      draggingVertexIndex = -1;
+
+      // Full update to rebuild all markers
+      updatePolyline();
+      updateTotalDistance();
+    });
+
+    // Click to just insert (without drag)
+    marker.on('click', (e) => {
+      L.DomEvent.stopPropagation(e);
+      // Insert a new point at the midpoint
+      routePoints.value.splice(segmentIndex + 1, 0, { lat: midLat, lng: midLng });
+      updatePolyline();
+      updateTotalDistance();
+      showMessage($gettext('Point inserted'), 'info');
+    });
+
+    marker.bindTooltip($gettext('Click or drag to insert point'), {
+      permanent: false,
+      direction: 'top',
+      offset: [0, -8]
+    });
 
     midpointMarkers.push(marker);
   }
@@ -565,7 +696,7 @@ function updateSegmentLabels() {
 
   if (routePoints.value.length < 2) return;
 
-  // Create distance labels for each segment
+  // Create distance labels for each segment with offset to avoid midpoint overlap
   for (let i = 0; i < routePoints.value.length - 1; i++) {
     const p1 = routePoints.value[i];
     const p2 = routePoints.value[i + 1];
@@ -574,9 +705,11 @@ function updateSegmentLabels() {
 
     const segmentDist = calculateDistance(p1.lat, p1.lng, p2.lat, p2.lng);
 
+    // Position label with offset (above the line, not at center)
     const label = L.tooltip({
       permanent: true,
-      direction: 'center',
+      direction: 'top',
+      offset: [0, -15],
       className: 'segment-label'
     })
       .setLatLng([midLat, midLng])
@@ -587,64 +720,7 @@ function updateSegmentLabels() {
   }
 }
 
-function startDragVertex(index) {
-  isDraggingVertex = true;
-  draggingVertexIndex = index;
-  map.getContainer().style.cursor = 'grabbing';
-
-  // Add mousemove and mouseup handlers to map
-  map.on('mousemove', onDragVertex);
-  map.on('mouseup', stopDragVertex);
-}
-
-function onDragVertex(e) {
-  if (!isDraggingVertex || draggingVertexIndex < 0) return;
-
-  // Update the point position
-  routePoints.value[draggingVertexIndex] = {
-    lat: e.latlng.lat,
-    lng: e.latlng.lng
-  };
-
-  // Update polyline in real-time
-  const latlngs = routePoints.value.map(p => [p.lat, p.lng]);
-  if (polyline) {
-    polyline.setLatLngs(latlngs);
-  }
-
-  // Update the vertex marker position
-  if (vertexMarkers[draggingVertexIndex]) {
-    vertexMarkers[draggingVertexIndex].setLatLng([e.latlng.lat, e.latlng.lng]);
-  }
-}
-
-function stopDragVertex() {
-  if (!isDraggingVertex) return;
-
-  isDraggingVertex = false;
-  draggingVertexIndex = -1;
-  map.getContainer().style.cursor = '';
-
-  // Remove drag handlers
-  map.off('mousemove', onDragVertex);
-  map.off('mouseup', stopDragVertex);
-
-  // Full update
-  updatePolyline();
-  updateTotalDistance();
-}
-
-function startDragMidpoint(segmentIndex, lat, lng) {
-  // Insert a new point at the midpoint position
-  routePoints.value.splice(segmentIndex + 1, 0, { lat, lng });
-
-  // Start dragging the newly inserted point
-  updatePolyline();
-  updateTotalDistance();
-
-  // Start dragging the new vertex
-  startDragVertex(segmentIndex + 1);
-}
+// Note: startDragMidpoint is now handled inline in the marker events above
 
 function deleteVertex(index) {
   if (routePoints.value.length <= 2) {
@@ -861,13 +937,13 @@ function toggleMeasure() {
 
 function increaseSpeed() {
   if (speed.value < 50) {
-    speed.value += 5;
+    speed.value += 1;
   }
 }
 
 function decreaseSpeed() {
   if (speed.value > 5) {
-    speed.value -= 5;
+    speed.value -= 1;
   }
 }
 
@@ -1374,29 +1450,58 @@ function clearRouteOnly() {
   color: #333;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
+  pointer-events: none;
 }
 
-/* Vertex marker hover cursor */
-:deep(.vertex-marker) {
-  cursor: grab;
+/* Vertex DivIcon container - remove default Leaflet icon styling */
+:deep(.vertex-div-icon) {
+  background: none !important;
+  border: none !important;
 }
 
-:deep(.vertex-marker:hover) {
-  cursor: grab;
+/* Vertex point styling */
+:deep(.vertex-point) {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* Midpoint marker hover */
-:deep(.midpoint-marker) {
-  cursor: pointer;
-  transition: fill-opacity 0.2s;
+:deep(.vertex-point:hover) {
+  transform: scale(1.2);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4) !important;
 }
 
-:deep(.midpoint-marker:hover) {
-  fill-opacity: 1 !important;
+/* Midpoint DivIcon container */
+:deep(.midpoint-div-icon) {
+  background: none !important;
+  border: none !important;
+}
+
+/* Midpoint point styling */
+:deep(.midpoint-point) {
+  transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+}
+
+:deep(.midpoint-point:hover) {
+  transform: scale(1.3);
+  opacity: 1 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Vertex tooltip with multi-line support */
+:deep(.vertex-tooltip) {
+  white-space: pre-line;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 /* Arrow heads on polyline */
 :deep(.leaflet-interactive) {
   cursor: default;
+}
+
+/* Prevent default icon styling issues */
+:deep(.leaflet-marker-icon.vertex-div-icon),
+:deep(.leaflet-marker-icon.midpoint-div-icon) {
+  margin: 0 !important;
 }
 </style>

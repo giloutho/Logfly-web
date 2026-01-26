@@ -153,8 +153,8 @@ function createFixPoint(timestamp, lat, lng) {
     return {
         timestamp: timestamp,
         time: time,
-        latitude: Number(lat).toFixed(6),
-        longitude: Number(lng).toFixed(6),
+        latitude: Number(parseFloat(lat).toFixed(6)),  // Must be numeric, not string
+        longitude: Number(parseFloat(lng).toFixed(6)), // Must be numeric, not string
         valid: true,
         pressureAltitude: null,
         gpsAltitude: 500, // Arbitrary altitude
