@@ -37,7 +37,7 @@
         </div>
 
         <!-- Full Map Dialog -->
-        <v-dialog v-model="showFullMap" fullscreen transition="dialog-bottom-transition">
+        <v-dialog v-model="showFullMap" fullscreen persistent transition="dialog-bottom-transition">
             <FullMapView v-if="flightData" :flightData="flightData" @close="showFullMap = false" />
         </v-dialog>
 

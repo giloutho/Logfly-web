@@ -117,7 +117,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="showFullMap" fullscreen transition="dialog-bottom-transition">
+    <v-dialog v-model="showFullMap" fullscreen persistent transition="dialog-bottom-transition">
       <FullMapView v-if="dataFlight" :flightData="dataFlight" @close="onFullMapClose" />
     </v-dialog>
 
