@@ -36,7 +36,8 @@
                 <GraphUplot v-if="flightData?.decodedIgc?.fixes && flightData.decodedIgc.fixes.length > 0"
                     :fixes="flightData?.decodedIgc?.fixes" :groundAltitudes="groundAltitudes" :height="150"
                     :cuttingMode="isCutting" :cutStart="cutStartIndex" :cutEnd="cutEndIndex"
-                    @cursor-changed="onGraphCursorChanged" @click-graph="onGraphClick" />
+                    :offsetUTC="flightData?.decodedIgc?.info?.offsetUTC || 0" @cursor-changed="onGraphCursorChanged"
+                    @click-graph="onGraphClick" />
             </div>
             <TraceInfoDialog v-model="infoDialog" :trackData="flightInfo" :anaResult="flightData?.anaTrack"
                 :decodedData="flightData?.decodedIgc" />

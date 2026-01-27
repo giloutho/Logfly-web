@@ -66,7 +66,8 @@
                 <!-- Graph section -->
                 <div class="graph-section">
                     <GraphUplot v-if="fixes && fixes.length > 0" :fixes="fixes" :groundAltitudes="groundAltitudes"
-                        :height="150" :currentIndex="currentFixIndex" @cursor-changed="onGraphCursorChanged"
+                        :height="150" :currentIndex="currentFixIndex"
+                        :offsetUTC="flightData?.decodedIgc?.info?.offsetUTC || 0" @cursor-changed="onGraphCursorChanged"
                         @click-graph="onGraphClick" />
                 </div>
             </div>

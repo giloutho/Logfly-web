@@ -35,6 +35,10 @@ const props = defineProps({
     currentIndex: {
         type: Number,
         default: null
+    },
+    offsetUTC: {
+        type: Number,
+        default: 0  // Offset in minutes from UTC (positive = east of UTC, negative = west)
     }
 })
 
@@ -168,10 +172,17 @@ function createChart() {
         axes: [
             {
                 values: (u, ticks) => {
+                    // Apply the flight's UTC offset to display local time at the flight location
+                    // offsetUTC is in minutes, we need milliseconds for Date addition
+                    const offsetMs = (props.offsetUTC || 0) * 60 * 1000;
                     return ticks.map(sec => {
-                        const t = new Date(fixes[0].timestamp + sec * 1000)
-                        return t.getHours().toString().padStart(2, '0') + ':' + t.getMinutes().toString().padStart(2, '0')
-                    })
+                        // Create date with the flight's local time by adding offset to UTC timestamp
+                        const utcTimestamp = fixes[0].timestamp + sec * 1000;
+                        const localTimestamp = utcTimestamp + offsetMs;
+                        const t = new Date(localTimestamp);
+                        // Use getUTCHours/getUTCMinutes since we've already applied the offset
+                        return t.getUTCHours().toString().padStart(2, '0') + ':' + t.getUTCMinutes().toString().padStart(2, '0');
+                    });
                 }
             },
             { size: 50, label: 'Altitude (m)' }
