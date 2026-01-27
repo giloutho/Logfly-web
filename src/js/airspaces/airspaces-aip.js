@@ -88,6 +88,58 @@ export async function downloadAirspaces(filterValues, feature) {
 }
 
 /**
+ * Downloads airspaces from OpenAIP API using map center point
+ * Used for route planning when no track is available
+ * @param {Object} filterValues { classes: [], radius: number (meters), floor: number }
+ * @param {Object} mapCenter { lat: number, lng: number }
+ */
+export async function downloadAirspacesByCenter(filterValues, mapCenter) {
+    const apiKey = import.meta.env.VITE_OPENAIP_API_KEY;
+    if (!apiKey) {
+        console.error('VITE_OPENAIP_API_KEY is missing in .env')
+        return { success: false, message: 'OpenAIP API Key is missing. Check configuration.' }
+    }
+
+    const airspaces = []
+    let delayMs = 10
+    let page = 1
+    let totalPages = 1
+
+    // Convert class array [0,1,2...] to string "0,1,2"
+    const icaoFilter = filterValues.classes.join(',')
+
+    // Build center string "lat,lon" as required by OpenAIP API
+    const centerStr = mapCenter.lat + ',' + mapCenter.lng
+
+    // Build base URL with center and radius
+    const baseUrl = `https://api.core.openaip.net/api/airspaces?limit=1000&pos=${centerStr}&dist=${filterValues.radius}&icaoClass=${icaoFilter}&apiKey=${apiKey}`
+
+    try {
+        while (page <= totalPages) {
+            const currentUrl = `${baseUrl}&page=${page}`
+
+            const response = await fetch(currentUrl);
+            await new Promise((resolve) => setTimeout(resolve, delayMs));
+
+            if (response.ok) {
+                const info = await response.json();
+                totalPages = info.totalPages;
+                airspaces.push(...info.items);
+                page++;
+                delayMs = 10;
+            } else {
+                delayMs *= 2;
+                console.error(`HTTP status ${response.status}`);
+                if (delayMs > 2000) break; // Safety break
+            }
+        }
+        return { success: true, airspaces };
+    } catch (e) {
+        return { success: false, message: 'Error when downloading openAIP airspaces: ' + e.message };
+    }
+}
+
+/**
  * Process decoding and filtering of airspaces
  * @param {Array} openAipArray Raw items from API
  * @param {boolean} filter enable filtering

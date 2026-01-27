@@ -176,8 +176,8 @@
       </v-card>
     </v-dialog>
 
-    <!-- Airspace Dialog (reused component) -->
-    <!-- TODO: Integrate AirspaceDialog component -->
+    <!-- Airspace Dialog -->
+    <AirspaceRouteDialog v-model="airspaceDialogOpen" :map-center="mapCenter" @display-airspaces="onDisplayAirspaces" />
 
     <!-- Hidden file inputs -->
     <input type="file" ref="routeFileInput" style="display: none" accept=".gpx,.cup,.kml,.xctsk,.wpt"
@@ -192,11 +192,13 @@ import { useGettext } from "vue3-gettext";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-polylinedecorator';
+import '@/js/leaflet/leaflet-measure.css';
 import { navScoring, getScoringTypeLabel } from '@/js/routing/nav-scoring.js';
 import { readRouteFile, getFormatLabel } from '@/js/xcnav/rte-read.js';
 import { exportRoute, downloadFile, getExportFormats } from '@/js/xcnav/rte-write.js';
 import { IGCDecoder } from '@/js/igc/igc-decoder.js';
 import { IgcAnalyze } from '@/js/igc/igc-analyzer.js';
+import AirspaceRouteDialog from '@/modules/Routing/components/AirspaceRouteDialog.vue';
 
 const { $gettext } = useGettext();
 
@@ -235,6 +237,15 @@ let markerGroup = null;
 let trackGroup = null;
 let thermalGroup = null;
 let airspaceGroup = null;
+
+// FAI sectors state
+let faiSectors = [];      // Array of turnpoints { x: lng, y: lat }
+let faiSectorPaths = [];  // Array of L.Polyline for FAI sector shapes
+let currentFlightType = null;  // 'tri', 'fai', 'od', etc.
+
+// Airspace dialog state
+const airspaceDialogOpen = ref(false);
+const mapCenter = ref({ lat: 45.5, lng: 6.5 });  // Default center (Alps)
 
 // Route state
 const routePoints = ref([]);  // Array of { lat, lng }
@@ -413,6 +424,7 @@ function initMap() {
   // Map events
   map.on('click', onMapClick);
   map.on('mousemove', onMouseMove);
+  map.on('moveend', drawFAISectors);  // Redraw FAI sectors when map moves/zooms
 
   // Keyboard events
   document.addEventListener('keydown', onKeyDown);
@@ -983,13 +995,228 @@ window.deleteMarker = (index) => {
 
 // --- Measure ---
 
+// Measure tool state
+let measureLayerGroup = null;
+let measurePoints = [];
+let measureTotalDistance = 0;
+let measureLastPoint = null;
+let measureTempLine = null;
+let measureTooltip = null;
+let measureOldCursor = null;
+
 function toggleMeasure() {
   isMeasuring.value = !isMeasuring.value;
   isDrawing.value = false;
   isAddingMarker.value = false;
-  // TODO: Implement measure tool
+
   if (isMeasuring.value) {
-    showMessage($gettext('Measure tool - Coming soon'), 'info');
+    startMeasuring();
+    showMessage($gettext('Click to add points, double-click to finish'), 'info');
+  } else {
+    stopMeasuring();
+  }
+}
+
+function startMeasuring() {
+  // Save old cursor and set crosshair
+  measureOldCursor = map.getContainer().style.cursor;
+  map.getContainer().style.cursor = 'crosshair';
+
+  // Disable double-click zoom while measuring
+  map.doubleClickZoom.disable();
+
+  // Initialize layer group for measure drawings
+  if (!measureLayerGroup) {
+    measureLayerGroup = L.layerGroup().addTo(map);
+  }
+
+  // Reset state
+  measurePoints = [];
+  measureTotalDistance = 0;
+  measureLastPoint = null;
+
+  // Add event listeners
+  map.on('click', onMeasureClick);
+  map.on('mousemove', onMeasureMouseMove);
+  map.on('dblclick', onMeasureDoubleClick);
+}
+
+function stopMeasuring() {
+  // Restore cursor
+  if (measureOldCursor !== null) {
+    map.getContainer().style.cursor = measureOldCursor;
+  } else {
+    map.getContainer().style.cursor = '';
+  }
+
+  // Re-enable double-click zoom
+  map.doubleClickZoom.enable();
+
+  // Remove event listeners
+  map.off('click', onMeasureClick);
+  map.off('mousemove', onMeasureMouseMove);
+  map.off('dblclick', onMeasureDoubleClick);
+
+  // Clear temporary line
+  if (measureTempLine && measureLayerGroup) {
+    measureLayerGroup.removeLayer(measureTempLine);
+    measureTempLine = null;
+  }
+
+  // Clear measure layer (keeps the last measurement visible until next measure)
+  if (measureLayerGroup) {
+    measureLayerGroup.clearLayers();
+  }
+
+  // Reset state
+  measurePoints = [];
+  measureTotalDistance = 0;
+  measureLastPoint = null;
+  measureTooltip = null;
+}
+
+function onMeasureClick(e) {
+  const latlng = e.latlng;
+
+  if (measureLastPoint) {
+    // Calculate distance from last point
+    const segmentDistance = latlng.distanceTo(measureLastPoint);
+    measureTotalDistance += segmentDistance;
+
+    // Draw permanent line segment
+    const line = L.polyline([measureLastPoint, latlng], {
+      color: '#2196F3',
+      weight: 2,
+      opacity: 1
+    }).addTo(measureLayerGroup);
+
+    // Update tooltip with total distance
+    updateMeasureTooltip(latlng);
+  }
+
+  // Add circle marker at click point
+  L.circleMarker(latlng, {
+    color: '#2196F3',
+    fillColor: 'white',
+    fillOpacity: 1,
+    weight: 2,
+    radius: 5
+  }).addTo(measureLayerGroup);
+
+  // Create initial tooltip
+  createMeasureTooltip(latlng);
+
+  measureLastPoint = latlng;
+  measurePoints.push(latlng);
+}
+
+function onMeasureMouseMove(e) {
+  if (!measureLastPoint) return;
+
+  const latlng = e.latlng;
+
+  // Update or create temporary line
+  if (!measureTempLine) {
+    measureTempLine = L.polyline([measureLastPoint, latlng], {
+      color: '#2196F3',
+      weight: 2,
+      opacity: 0.6,
+      dashArray: '6, 6'
+    }).addTo(measureLayerGroup);
+  } else {
+    measureTempLine.setLatLngs([measureLastPoint, latlng]);
+  }
+
+  // Update tooltip position and distance
+  if (measureTooltip) {
+    measureTooltip.setLatLng(latlng);
+    const segmentDistance = latlng.distanceTo(measureLastPoint);
+    const totalWithSegment = measureTotalDistance + segmentDistance;
+    updateMeasureTooltipContent(totalWithSegment, segmentDistance);
+  }
+}
+
+function onMeasureDoubleClick(e) {
+  L.DomEvent.preventDefault(e);
+  L.DomEvent.stopPropagation(e);
+
+  // Finish measurement
+  if (measureTempLine && measureLayerGroup) {
+    measureLayerGroup.removeLayer(measureTempLine);
+    measureTempLine = null;
+  }
+
+  // Keep the measurement visible but stop measuring mode
+  isMeasuring.value = false;
+
+  // Restore cursor
+  if (measureOldCursor !== null) {
+    map.getContainer().style.cursor = measureOldCursor;
+  } else {
+    map.getContainer().style.cursor = '';
+  }
+
+  // Re-enable double-click zoom
+  map.doubleClickZoom.enable();
+
+  // Remove event listeners
+  map.off('click', onMeasureClick);
+  map.off('mousemove', onMeasureMouseMove);
+  map.off('dblclick', onMeasureDoubleClick);
+
+  // Reset state for next measurement
+  measurePoints = [];
+  measureLastPoint = null;
+  measureTooltip = null;
+
+  if (measureTotalDistance > 0) {
+    showMessage(`${$gettext('Total distance')}: ${formatMeasureDistance(measureTotalDistance)}`, 'success');
+  }
+  measureTotalDistance = 0;
+}
+
+function createMeasureTooltip(latlng) {
+  if (measureTooltip && measureLayerGroup) {
+    measureLayerGroup.removeLayer(measureTooltip);
+  }
+
+  const icon = L.divIcon({
+    className: 'leaflet-measure-tooltip',
+    iconAnchor: [-5, -5]
+  });
+
+  measureTooltip = L.marker(latlng, {
+    icon: icon,
+    interactive: false
+  }).addTo(measureLayerGroup);
+}
+
+function updateMeasureTooltip(latlng) {
+  if (measureTooltip) {
+    measureTooltip.setLatLng(latlng);
+    updateMeasureTooltipContent(measureTotalDistance, 0);
+  }
+}
+
+function updateMeasureTooltipContent(total, segment) {
+  if (!measureTooltip || !measureTooltip._icon) return;
+
+  const totalFormatted = formatMeasureDistance(total);
+  let html = `<div class="leaflet-measure-tooltip-total">${totalFormatted}</div>`;
+
+  if (segment > 0 && total !== segment) {
+    const segmentFormatted = formatMeasureDistance(segment);
+    html += `<div class="leaflet-measure-tooltip-difference">(+${segmentFormatted})</div>`;
+  }
+
+  measureTooltip._icon.innerHTML = html;
+}
+
+function formatMeasureDistance(meters) {
+  if (meters < 1000) {
+    return Math.round(meters) + ' m';
+  } else {
+    return (Math.round(meters / 10) / 100).toFixed(2) + ' km';
   }
 }
 
@@ -1069,10 +1296,34 @@ function clearScoringLayers() {
     scoreGroup.removeLayer(scoringPointsLayer);
     scoringPointsLayer = null;
   }
+  // Clear FAI sectors
+  if (faiSectorPaths.length > 0) {
+    faiSectorPaths.forEach(path => scoreGroup.removeLayer(path));
+    faiSectorPaths = [];
+  }
+  faiSectors = [];
+  currentFlightType = null;
 }
 
 function displayScoringOnMap(geojson) {
   if (!geojson || !geojson.features) return;
+
+  // Reset FAI sectors data
+  faiSectors = [];
+  currentFlightType = null;
+
+  // Store the course type for FAI sector determination
+  // The geojson.course contains the flight type from igc-xc-score
+  if (geojson.course) {
+    const courseLower = geojson.course.toLowerCase();
+    if (courseLower.includes('fai')) {
+      currentFlightType = 'fai';
+    } else if (courseLower.includes('triangle') || courseLower.includes('flat')) {
+      currentFlightType = 'tri';
+    } else {
+      currentFlightType = 'od'; // open distance
+    }
+  }
 
   // Style definitions for scoring elements
   const lineStyle = {
@@ -1112,6 +1363,15 @@ function displayScoringOnMap(geojson) {
       if (feature.properties && feature.properties.popupContent) {
         marker.bindPopup(feature.properties.popupContent);
       }
+      // Extract turnpoints for FAI sectors (tp1, tp2, tp3)
+      const id = feature.properties?.id || '';
+      if (id.startsWith('tp') || id === 'in' || id === 'out') {
+        // Store turnpoints for FAI sector calculation
+        if (id.startsWith('tp')) {
+          const coords = feature.geometry.coordinates;
+          faiSectors.push({ x: coords[0], y: coords[1] });
+        }
+      }
       return marker;
     },
     onEachFeature: function (feature, layer) {
@@ -1127,6 +1387,158 @@ function displayScoringOnMap(geojson) {
   });
 
   scoringLineLayer.addTo(scoreGroup);
+
+  // Draw FAI sectors if we have a triangle with 3 turnpoints
+  if (faiSectors.length === 3 && (currentFlightType === 'tri' || currentFlightType === 'fai')) {
+    drawFAISectors();
+  }
+}
+
+// --- FAI Sectors ---
+
+/**
+ * Draw FAI sectors on the map.
+ * FAI sectors show the valid zones where a turnpoint must be placed
+ * for the triangle to satisfy FAI rules (each side ≥ 28% of total).
+ * 
+ * Colors:
+ * - Green: sector opposite to TP1 (between TP2 and TP3)
+ * - Blue: sector opposite to TP2 (between TP1 and TP3)
+ * - Red: sector opposite to TP3 (between TP1 and TP2)
+ */
+function drawFAISectors() {
+  // Clear existing FAI sector paths
+  if (faiSectorPaths.length > 0) {
+    faiSectorPaths.forEach(path => scoreGroup.removeLayer(path));
+    faiSectorPaths = [];
+  }
+
+  // Only draw for triangles with exactly 3 turnpoints
+  if (faiSectors.length !== 3 || (currentFlightType !== 'tri' && currentFlightType !== 'fai')) {
+    return;
+  }
+
+  // Convert geo coordinates to container points for geometric calculations
+  const pixels = faiSectors.map(pt => map.latLngToContainerPoint(L.latLng(pt.y, pt.x)));
+
+  // Check for degenerate triangles (points too close together)
+  if ((pixels[0].x === pixels[1].x && pixels[0].y === pixels[1].y) ||
+    (pixels[1].x === pixels[2].x && pixels[1].y === pixels[2].y) ||
+    (pixels[0].x === pixels[2].x && pixels[0].y === pixels[2].y)) {
+    return;
+  }
+
+  // Style for FAI sector shapes
+  const sectorStyle = {
+    weight: 1.5,
+    opacity: 0.8,
+    fillOpacity: 0.25
+  };
+
+  // Draw three sectors, each for one pair of turnpoints
+  // Green sector: shows where TP3 should be when TP1-TP2 is the base
+  faiSectorPaths.push(
+    L.polygon(faiSector([pixels[0], pixels[1], pixels[2]]), { ...sectorStyle, color: 'green', fillColor: 'green' })
+  );
+
+  // Blue sector: shows where TP1 should be when TP2-TP3 is the base
+  faiSectorPaths.push(
+    L.polygon(faiSector([pixels[1], pixels[2], pixels[0]]), { ...sectorStyle, color: 'blue', fillColor: 'blue' })
+  );
+
+  // Red sector: shows where TP2 should be when TP3-TP1 is the base
+  faiSectorPaths.push(
+    L.polygon(faiSector([pixels[2], pixels[0], pixels[1]]), { ...sectorStyle, color: 'red', fillColor: 'red' })
+  );
+
+  // Add sectors to score group
+  faiSectorPaths.forEach(path => scoreGroup.addLayer(path));
+}
+
+/**
+ * Calculate the FAI sector shape for a given triangle edge.
+ * The FAI rule requires each side to be at least 28% of the total triangle perimeter.
+ * This function calculates the valid zone where the third point can be placed.
+ * 
+ * @param {Array} pixels - Array of 3 pixel points [{x, y}, ...], 
+ *                         where pixels[0]-pixels[1] is the base edge
+ * @returns {Array} Array of LatLng points forming the sector shape
+ */
+function faiSector(pixels) {
+  const flip = isClockwise(pixels) ? 1 : -1;
+
+  // Vector from point 0 to point 1 (the base of the triangle for this sector)
+  const delta = { x: pixels[1].x - pixels[0].x, y: pixels[1].y - pixels[0].y };
+  const theta = flip * Math.atan2(delta.y, delta.x);
+  const cos_theta = Math.cos(theta);
+  const sin_theta = Math.sin(theta);
+
+  // Length of the base edge
+  const c = Math.sqrt(delta.x * delta.x + delta.y * delta.y);
+
+  const result = [];
+
+  // The FAI rule: each side must be ≥ 28% of total perimeter
+  // We calculate the valid zone by varying the percentage from 28% to 44%
+  // (44% because if one side is 44%, another can still be 28%, leaving 28% for the third)
+
+  // First arc: varying 'a' side percentage
+  for (let ap = 28; ap < 44; ++ap) {
+    const a = c * ap / 28.0;
+    const b = c * (72.0 - ap) / 28.0;
+    const x = (b * b + c * c - a * a) / (2 * c);
+    const y = Math.sqrt(Math.max(0, b * b - x * x));
+    result.push({
+      x: pixels[0].x + x * cos_theta - y * sin_theta,
+      y: pixels[0].y + flip * (x * sin_theta + y * cos_theta)
+    });
+  }
+
+  // Second arc: varying 'c' side percentage (outer boundary)
+  for (let cp = 28; cp < 44; ++cp) {
+    const a = c * (72.0 - cp) / cp;
+    const b = c * 28.0 / cp;
+    const x = (b * b + c * c - a * a) / (2 * c);
+    const y = Math.sqrt(Math.max(0, b * b - x * x));
+    result.push({
+      x: pixels[0].x + x * cos_theta - y * sin_theta,
+      y: pixels[0].y + flip * (x * sin_theta + y * cos_theta)
+    });
+  }
+
+  // Third arc: closing the sector (varying back)
+  for (let cp = 44; cp >= 28; --cp) {
+    const a = c * 28.0 / cp;
+    const b = c * (72.0 - cp) / cp;
+    const x = (b * b + c * c - a * a) / (2 * c);
+    const y = Math.sqrt(Math.max(0, b * b - x * x));
+    result.push({
+      x: pixels[0].x + x * cos_theta - y * sin_theta,
+      y: pixels[0].y + flip * (x * sin_theta + y * cos_theta)
+    });
+  }
+
+  // Clamp to map bounds and convert back to LatLng
+  const bounds = map.getBounds();
+  const maxsize = map.latLngToContainerPoint(L.latLng(bounds.getSouth(), bounds.getEast()));
+
+  return result.map(function (pixel) {
+    pixel.x = Math.min(maxsize.x, Math.max(0, pixel.x));
+    pixel.y = Math.min(maxsize.y, Math.max(0, pixel.y));
+    return map.containerPointToLatLng(L.point(pixel.x, pixel.y));
+  });
+}
+
+/**
+ * Determine if a triangle (defined by 3 pixel points) is clockwise oriented.
+ * Uses the cross product of two edges to determine orientation.
+ * 
+ * @param {Array} pixels - Array of 3 pixel points [{x, y}, ...]
+ * @returns {boolean} True if clockwise, false if counter-clockwise
+ */
+function isClockwise(pixels) {
+  return ((pixels[1].y - pixels[0].y) * (pixels[2].x - pixels[0].x) -
+    (pixels[2].y - pixels[0].y) * (pixels[1].x - pixels[0].x)) < 0;
 }
 
 // --- File I/O ---
@@ -1420,8 +1832,65 @@ async function displayGpxTrack(content) {
 }
 
 function openAirspaceDialog() {
-  // TODO: Integrate AirspaceDialog component
-  showMessage($gettext('Airspace dialog - Coming soon'), 'info');
+  // Update map center before opening the dialog
+  if (map) {
+    const center = map.getCenter();
+    mapCenter.value = { lat: center.lat, lng: center.lng };
+  }
+  airspaceDialogOpen.value = true;
+}
+
+/**
+ * Handle display of airspaces from AirspaceRouteDialog
+ * @param {Array} geojsonArray Array of GeoJSON features for airspaces
+ */
+function onDisplayAirspaces(geojsonArray) {
+  if (!geojsonArray || geojsonArray.length === 0) {
+    showMessage($gettext('No airspaces to display'), 'warning');
+    return;
+  }
+
+  // Clear existing airspaces
+  airspaceGroup.clearLayers();
+
+  // Style function for airspaces
+  function styleAirspace(feature) {
+    const color = feature.properties.Color || '#808080';
+    return {
+      color: color,
+      weight: 2,
+      opacity: 0.8,
+      fillColor: color,
+      fillOpacity: 0.2
+    };
+  }
+
+  // Popup for each airspace
+  function onEachAirspace(feature, layer) {
+    if (feature.properties) {
+      let popupContent = `<b>Class: ${feature.properties.Class}</b><br/>`;
+      popupContent += `${feature.properties.Name}<br/>`;
+      popupContent += `<i class="mdi mdi-arrow-down"></i> Floor: ${feature.properties.FloorLabel} (${feature.properties.Floor}m)<br/>`;
+      popupContent += `<i class="mdi mdi-arrow-up"></i> Ceiling: ${feature.properties.CeilingLabel} (${feature.properties.Ceiling}m)`;
+      layer.bindPopup(popupContent);
+    }
+  }
+
+  // Add each airspace to the layer group
+  for (const aipGeojson of geojsonArray) {
+    const airspaceLayer = L.geoJSON(aipGeojson, {
+      style: styleAirspace,
+      onEachFeature: onEachAirspace
+    });
+    airspaceGroup.addLayer(airspaceLayer);
+  }
+
+  // Make sure airspace layer is visible on map
+  if (!map.hasLayer(airspaceGroup)) {
+    airspaceGroup.addTo(map);
+  }
+
+  showMessage(`${geojsonArray.length} ${$gettext('airspaces displayed')}`, 'success');
 }
 
 // --- Save/Export ---
