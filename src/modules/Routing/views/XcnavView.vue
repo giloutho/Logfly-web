@@ -157,10 +157,16 @@
           {{ $gettext('Save route') }}
         </v-card-title>
         <v-card-text>
-          <v-checkbox v-model="includeMarkers" :label="$gettext('Include markers')" hide-details
-            :disabled="markers.length === 0"></v-checkbox>
           <v-select v-model="selectedExportFormat" :items="exportFormats" item-title="title" item-value="value"
-            :label="$gettext('Export format')" class="mt-4"></v-select>
+            :label="$gettext('Export format')" class="mb-4"></v-select>
+          <v-checkbox v-model="includeMarkers" :label="$gettext('Include markers')" hide-details
+            :disabled="!formatSupportsMarkers || markers.filter(m => m !== null).length === 0">
+            <template v-slot:label>
+              <span :class="{ 'text-grey': !formatSupportsMarkers }">{{ $gettext('Include markers') }}</span>
+              <span v-if="!formatSupportsMarkers" class="text-caption text-grey ml-2">({{ $gettext('not supported')
+                }})</span>
+            </template>
+          </v-checkbox>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -190,6 +196,7 @@ import { navScoring, getScoringTypeLabel } from '@/js/routing/nav-scoring.js';
 import { readRouteFile, getFormatLabel } from '@/js/xcnav/rte-read.js';
 import { exportRoute, downloadFile, getExportFormats } from '@/js/xcnav/rte-write.js';
 import { IGCDecoder } from '@/js/igc/igc-decoder.js';
+import { IgcAnalyze } from '@/js/igc/igc-analyzer.js';
 
 const { $gettext } = useGettext();
 
@@ -268,6 +275,13 @@ const exportFormats = [
 ];
 
 // --- Computed ---
+
+// Formats that support including markers
+const formatSupportsMarkers = computed(() => {
+  const supportsMarkers = ['gpx-markers', 'gpx-wpt', 'kml'];
+  return supportsMarkers.includes(selectedExportFormat.value);
+});
+
 const formattedDuration = computed(() => {
   if (totalDistance.value === 0 || speed.value === 0) return '0:00';
   const hours = totalDistance.value / speed.value;
@@ -311,20 +325,62 @@ function showMessage(msg, color = 'info') {
 function initMap() {
   map = L.map('xcnav-map').setView([45.8326, 6.865], 10);
 
-  // Base layers
+  // Base layers - all available tile providers
   const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 19
   });
+
   const openTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map data: &copy; OpenStreetMap contributors, SRTM'
+    attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a>',
+    maxZoom: 17
+  });
+
+  const ign = L.tileLayer('https://data.geopf.fr/wmts?' +
+    '&REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&TILEMATRIXSET=PM' +
+    '&LAYER={ignLayer}&STYLE={style}&FORMAT={format}' +
+    '&TILECOL={x}&TILEROW={y}&TILEMATRIX={z}',
+    {
+      ignLayer: 'GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2',
+      style: 'normal',
+      format: 'image/png',
+      service: 'WMTS',
+      opacity: 1,
+      attribution: 'Carte © IGN/Geoplateforme'
+    });
+
+  const satellite = L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    {
+      maxZoom: 18,
+      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    }
+  );
+
+  const mtk = L.tileLayer('http://tile2.maptoolkit.net/terrain/{z}/{x}/{y}.png', {
+    attribution: 'MapToolkit'
+  });
+
+  const esriTopo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI'
+  });
+
+  const outdoor = L.tileLayer('https://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=6f5667c1f2d24e5f84ec732c1dbd032e', {
+    maxZoom: 18,
+    attribution: '&copy; <a href="https://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   });
 
   osm.addTo(map);
 
-  // Layer control
+  // Layer control with all base maps
   const baseMaps = {
     "OpenStreetMap": osm,
-    "OpenTopoMap": openTopo
+    "OpenTopoMap": openTopo,
+    "IGN": ign,
+    "Satellite": satellite,
+    "Mtk": mtk,
+    "Esri Topo": esriTopo,
+    "Outdoor": outdoor
   };
 
   // Overlay layers
@@ -336,10 +392,10 @@ function initMap() {
 
   // Thermal overlay (kk7)
   const kk7Layer = L.tileLayer('https://thermal.kk7.ch/tiles/skyways_all_all/{z}/{x}/{y}.png?src=logfly.org', {
-    attribution: 'thermal.kk7.ch',
+    attribution: 'thermal.kk7.ch <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC-BY-NC-SA</a>',
     maxNativeZoom: 13,
     tms: true,
-    opacity: 0.3
+    opacity: 0.4
   });
   const kk7Group = L.layerGroup([kk7Layer]);
 
@@ -617,7 +673,7 @@ function updateMidpointMarkers() {
         cursor: pointer;
         opacity: 0.8;
       "></div>`,
-      iconSize: [12, 12],
+      iconSize: [14, 14],
       iconAnchor: [6, 6]
     });
 
@@ -886,16 +942,18 @@ function toggleMarkerMode() {
   }
 }
 
-function addMarker(lat, lng) {
-  const marker = L.marker([lat, lng], {
-    draggable: true
-  });
-
+function addMarker(lat, lng, name = null, showSuccessMessage = true) {
   const markerIndex = markers.value.length;
+  const markerName = name || `Marker ${markerIndex + 1}`;
+
+  const marker = L.marker([lat, lng], {
+    draggable: true,
+    title: markerName  // Store name in marker options for export
+  });
 
   const popupContent = `
     <div style="text-align: center;">
-      <strong>Marker ${markerIndex + 1}</strong><br/>
+      <strong>${markerName}</strong><br/>
       <button class="marker-delete-btn" onclick="window.deleteMarker(${markerIndex})">
         ${$gettext('Delete')}
       </button>
@@ -910,7 +968,9 @@ function addMarker(lat, lng) {
     markerGroup.addTo(map);
   }
 
-  showMessage($gettext('Marker added'), 'success');
+  if (showSuccessMessage) {
+    showMessage($gettext('Marker added'), 'success');
+  }
 }
 
 // Global function for popup button
@@ -1091,7 +1151,7 @@ async function onRouteFileChange(event) {
     const result = readRouteFile(content, file.name);
 
     if (result.success && result.route.length > 0) {
-      // Clear existing route
+      // Clear existing route (but keep existing markers if user has some)
       clearRouteOnly();
 
       // Add loaded points to route
@@ -1108,12 +1168,26 @@ async function onRouteFileChange(event) {
       updatePolyline();
       updateTotalDistance();
 
+      // Load markers/waypoints if present
+      let markersLoaded = 0;
+      if (result.waypoints && result.waypoints.length > 0) {
+        result.waypoints.forEach(wp => {
+          addMarker(wp.lat, wp.lng, wp.name, false);  // false = don't show individual messages
+          markersLoaded++;
+        });
+      }
+
       // Center on route
       if (polyline) {
         map.fitBounds(polyline.getBounds(), { padding: [50, 50] });
       }
 
-      showMessage(`${$gettext('Route loaded')}: ${result.route.length} ${$gettext('points')} (${getFormatLabel(result.format)})`, 'success');
+      // Build message
+      let message = `${$gettext('Route loaded')}: ${result.route.length} ${$gettext('points')} (${getFormatLabel(result.format)})`;
+      if (markersLoaded > 0) {
+        message += ` + ${markersLoaded} ${$gettext('markers')}`;
+      }
+      showMessage(message, 'success');
     } else {
       showMessage(result.error || $gettext('No route found in file'), 'warning');
     }
@@ -1139,17 +1213,17 @@ async function onTrackFileChange(event) {
     if (fileName.endsWith('.igc')) {
       // Parse IGC file
       const decoder = new IGCDecoder(content);
-      const parseResult = decoder.parse();
+      decoder.parse();  // parse() modifies decoder state, doesn't return anything
 
-      if (parseResult && decoder.fixes && decoder.fixes.length > 0) {
-        displayTrack(decoder.fixes, decoder.info);
+      if (decoder.fixes && decoder.fixes.length > 0) {
+        await displayTrack(decoder.fixes, decoder.info);
         showMessage(`${$gettext('Track loaded')}: ${decoder.info.pilot || 'Unknown pilot'} - ${decoder.info.date}`, 'success');
       } else {
         showMessage($gettext('No valid track data found'), 'warning');
       }
     } else if (fileName.endsWith('.gpx')) {
       // Parse GPX track
-      displayGpxTrack(content);
+      await displayGpxTrack(content);
       showMessage($gettext('GPX track loaded'), 'success');
     } else {
       showMessage($gettext('Unsupported track format'), 'warning');
@@ -1163,19 +1237,31 @@ async function onTrackFileChange(event) {
   }
 }
 
-function displayTrack(fixes, info) {
-  // Clear existing track
+async function displayTrack(fixes, info) {
+  // Clear existing track and thermal layers
   trackGroup.clearLayers();
+  thermalGroup.clearLayers();
 
   // Create track polyline
   const trackPoints = fixes.map(fix => [fix.latitude, fix.longitude]);
   const trackLine = L.polyline(trackPoints, {
-    color: '#ff9800',
+    color: '#e91e63',  // Pink/magenta for track
     weight: 2,
-    opacity: 0.8
+    opacity: 0.85
   });
 
   trackLine.addTo(trackGroup);
+
+  // Analyze track for thermals
+  try {
+    const anaResult = await IgcAnalyze(fixes);
+    if (anaResult.success && anaResult.anaTrack) {
+      displayThermals(fixes, anaResult.anaTrack.thermals);
+      console.log(`[XcnavView] Track analyzed: ${anaResult.anaTrack.thermals.length} thermals detected`);
+    }
+  } catch (error) {
+    console.warn('[XcnavView] Could not analyze track for thermals:', error);
+  }
 
   // Show track layer
   if (!map.hasLayer(trackGroup)) {
@@ -1188,13 +1274,84 @@ function displayTrack(fixes, info) {
   }
 }
 
-function displayGpxTrack(content) {
+/**
+ * Display thermal segments from track analysis
+ * @param {Array} fixes - Array of track fixes
+ * @param {Array} thermals - Array of thermal segments from analyzer
+ */
+function displayThermals(fixes, thermals) {
+  if (!thermals || thermals.length === 0) return;
+
+  // Style for thermal markers (circle markers at thermal top)
+  const thermalMarkerOptions = {
+    radius: 8,
+    fillColor: '#ff9800',
+    color: '#000',
+    weight: 1,
+    opacity: 1,
+    fillOpacity: 0.8
+  };
+
+  // Style for thermal track segments
+  const thermalLineStyle = {
+    color: '#ffeb3b',  // Yellow for thermal segments
+    weight: 4,
+    opacity: 0.9
+  };
+
+  for (const thermal of thermals) {
+    // Create polyline for thermal segment
+    const thermalPoints = [];
+    for (let k = thermal.idxStart; k <= thermal.idxEnd && k < fixes.length; k++) {
+      thermalPoints.push([fixes[k].latitude, fixes[k].longitude]);
+    }
+
+    if (thermalPoints.length > 1) {
+      const thermalLine = L.polyline(thermalPoints, thermalLineStyle);
+      thermalGroup.addLayer(thermalLine);
+    }
+
+    // Create circle marker at thermal top (end of thermal segment)
+    if (thermal.idxEnd < fixes.length) {
+      const topFix = fixes[thermal.idxEnd];
+      const altGain = thermal.deltaAlt || 0;
+      const avgClimb = thermal.climbAverage ? thermal.climbAverage.toFixed(1) : '?';
+
+      const thermalMarker = L.circleMarker(
+        [topFix.latitude, topFix.longitude],
+        thermalMarkerOptions
+      );
+
+      // Popup with thermal info
+      thermalMarker.bindPopup(`
+        <div style="text-align: center;">
+          <strong>${$gettext('Thermal')}</strong><br/>
+          <span style="color: #4caf50;">▲ ${altGain}m</span><br/>
+          <span>${$gettext('Climb')}: ${avgClimb} m/s</span>
+        </div>
+      `);
+
+      thermalGroup.addLayer(thermalMarker);
+    }
+  }
+
+  // Show thermal layer
+  if (thermals.length > 0 && !map.hasLayer(thermalGroup)) {
+    thermalGroup.addTo(map);
+  }
+}
+
+async function displayGpxTrack(content) {
   try {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(content, 'text/xml');
     const tracks = xmlDoc.getElementsByTagName('trk');
 
     trackGroup.clearLayers();
+    thermalGroup.clearLayers();
+
+    // Collect all fixes for thermal analysis
+    const allFixes = [];
 
     for (let t = 0; t < tracks.length; t++) {
       const trkSegs = tracks[t].getElementsByTagName('trkseg');
@@ -1204,20 +1361,48 @@ function displayGpxTrack(content) {
 
         for (let i = 0; i < trkPts.length; i++) {
           const pt = trkPts[i];
-          trackPoints.push([
-            parseFloat(pt.getAttribute('lat')),
-            parseFloat(pt.getAttribute('lon'))
-          ]);
+          const lat = parseFloat(pt.getAttribute('lat'));
+          const lon = parseFloat(pt.getAttribute('lon'));
+          const eleEl = pt.querySelector('ele');
+          const timeEl = pt.querySelector('time');
+
+          const ele = eleEl ? parseFloat(eleEl.textContent) : 0;
+          const timestamp = timeEl ? new Date(timeEl.textContent).getTime() : Date.now() + i * 1000;
+
+          trackPoints.push([lat, lon]);
+
+          // Create IGC-like fix for thermal analysis
+          allFixes.push({
+            latitude: lat,
+            longitude: lon,
+            gpsAltitude: ele,
+            pressureAltitude: ele,
+            timestamp: timestamp,
+            valid: true
+          });
         }
 
         if (trackPoints.length > 0) {
           const trackLine = L.polyline(trackPoints, {
-            color: '#ff9800',
+            color: '#e91e63',  // Pink/magenta for track
             weight: 2,
-            opacity: 0.8
+            opacity: 0.85
           });
           trackLine.addTo(trackGroup);
         }
+      }
+    }
+
+    // Analyze track for thermals if we have enough points
+    if (allFixes.length > 10) {
+      try {
+        const anaResult = await IgcAnalyze(allFixes);
+        if (anaResult.success && anaResult.anaTrack) {
+          displayThermals(allFixes, anaResult.anaTrack.thermals);
+          console.log(`[XcnavView] GPX track analyzed: ${anaResult.anaTrack.thermals.length} thermals detected`);
+        }
+      } catch (error) {
+        console.warn('[XcnavView] Could not analyze GPX track for thermals:', error);
       }
     }
 
@@ -1252,12 +1437,30 @@ function doExportRoute() {
     return;
   }
 
+  // Reset includeMarkers if format doesn't support it
+  const shouldIncludeMarkers = formatSupportsMarkers.value && includeMarkers.value;
+
+  // Extract marker data from Leaflet marker objects
+  const markerData = [];
+  if (shouldIncludeMarkers) {
+    markers.value.forEach((marker, index) => {
+      if (marker && marker.getLatLng) {
+        const latlng = marker.getLatLng();
+        markerData.push({
+          lat: latlng.lat,
+          lng: latlng.lng,
+          name: marker.options?.title || `Marker${index + 1}`
+        });
+      }
+    });
+  }
+
   const result = exportRoute({
     route: routePoints.value,
-    markers: includeMarkers.value ? markers.value.filter(m => m !== null) : [],
+    markers: markerData,
     format: selectedExportFormat.value,
     name: currentFileName.value ? currentFileName.value.replace(/\.[^/.]+$/, '') : 'LogflyRoute',
-    includeMarkers: includeMarkers.value
+    includeMarkers: shouldIncludeMarkers
   });
 
   if (result.success) {

@@ -48,7 +48,9 @@ export function readRouteFile(content, fileName) {
                 routePoints = readCupRoute(content);
                 break;
             case 'KML':
-                routePoints = readKmlRoute(content);
+                const kmlResult = readKmlRoute(content);
+                routePoints = kmlResult.route;
+                waypoints = kmlResult.markers;
                 break;
             case 'XCTRACK':
                 routePoints = readXCTrackRoute(content);
@@ -309,9 +311,11 @@ function readCupRoute(content) {
 
 /**
  * Read KML route (LineString or ordered Placemarks)
+ * Also extracts markers from 'Markers' folder
  */
 function readKmlRoute(content) {
     const route = [];
+    const markers = [];
 
     try {
         const parser = new DOMParser();
@@ -340,9 +344,14 @@ function readKmlRoute(content) {
             }
         }
 
-        // If no LineString, try Placemarks with Points
-        if (route.length === 0) {
-            const placemarks = xmlDoc.getElementsByTagName("Placemark");
+        // Process Folders to find route points and markers separately
+        const folders = xmlDoc.getElementsByTagName("Folder");
+        for (let f = 0; f < folders.length; f++) {
+            const folder = folders[f];
+            const folderNameEl = folder.getElementsByTagName("name")[0];
+            const folderName = folderNameEl ? folderNameEl.textContent.toLowerCase() : '';
+
+            const placemarks = folder.getElementsByTagName("Placemark");
             for (let i = 0; i < placemarks.length; i++) {
                 const pm = placemarks[i];
                 const pointEl = pm.getElementsByTagName("Point")[0];
@@ -357,13 +366,68 @@ function readKmlRoute(content) {
                             const alt = coords.length >= 3 ? parseInt(coords[2]) : 0;
 
                             const nameEl = pm.getElementsByTagName("name")[0];
+                            const name = nameEl ? nameEl.textContent : undefined;
 
-                            route.push({
+                            const point = {
                                 lat,
                                 lng,
-                                name: nameEl ? nameEl.textContent : undefined,
+                                name,
                                 altitude: alt
-                            });
+                            };
+
+                            // Check if this is in the Markers folder
+                            if (folderName === 'markers' || folderName.includes('marker')) {
+                                markers.push(point);
+                            } else if (folderName === 'route points' || folderName.includes('route')) {
+                                // Skip route points if we already have them from LineString
+                                if (route.length === 0) {
+                                    route.push(point);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // If no LineString and no route from folders, try all Placemarks with Points
+        if (route.length === 0) {
+            const placemarks = xmlDoc.getElementsByTagName("Placemark");
+            for (let i = 0; i < placemarks.length; i++) {
+                const pm = placemarks[i];
+                const pointEl = pm.getElementsByTagName("Point")[0];
+
+                // Skip if already processed as marker
+                if (pointEl) {
+                    const coordsEl = pointEl.getElementsByTagName("coordinates")[0];
+                    if (coordsEl) {
+                        const coords = coordsEl.textContent.trim().split(",");
+                        if (coords.length >= 2) {
+                            const lng = parseFloat(coords[0]);
+                            const lat = parseFloat(coords[1]);
+                            const alt = coords.length >= 3 ? parseInt(coords[2]) : 0;
+
+                            const nameEl = pm.getElementsByTagName("name")[0];
+                            const name = nameEl ? nameEl.textContent : undefined;
+
+                            // Check if style is marker style (red circle)
+                            const styleUrl = pm.getElementsByTagName("styleUrl")[0];
+                            const isMarker = styleUrl && styleUrl.textContent.includes('markerStyle');
+
+                            if (isMarker) {
+                                // Check if not already in markers list
+                                const alreadyMarker = markers.some(m => m.lat === lat && m.lng === lng);
+                                if (!alreadyMarker) {
+                                    markers.push({ lat, lng, name, altitude: alt });
+                                }
+                            } else {
+                                route.push({
+                                    lat,
+                                    lng,
+                                    name,
+                                    altitude: alt
+                                });
+                            }
                         }
                     }
                 }
@@ -374,7 +438,7 @@ function readKmlRoute(content) {
         console.error('Error parsing KML route:', error);
     }
 
-    return route;
+    return { route, markers };
 }
 
 /**
