@@ -16,12 +16,15 @@ export async function scanDirectoryForIGC(directoryHandle, basePath = '') {
 
   try {
     for await (const entry of directoryHandle.values()) {
+      // Ignorer les fichiers et dossiers cachés (commençant par un point)
+      if (entry.name.startsWith('.')) continue;
+
       const currentPath = basePath ? `${basePath}/${entry.name}` : entry.name;
 
       try {
         if (entry.kind === 'file') {
           // Vérifier l'extension .igc (insensible à la casse)
-          if (!entry.name.startsWith('._') && entry.name.toLowerCase().endsWith('.igc')) {
+          if (entry.name.toLowerCase().endsWith('.igc')) {
             igcFiles.push({
               handle: entry,
               path: currentPath,
@@ -57,12 +60,13 @@ export async function scanDirectoryForTracks(directoryHandle, basePath = '') {
 
   try {
     for await (const entry of directoryHandle.values()) {
+      // Ignorer les fichiers et dossiers cachés (commençant par un point)
+      if (entry.name.startsWith('.')) continue;
+
       const currentPath = basePath ? `${basePath}/${entry.name}` : entry.name;
 
       try {
         if (entry.kind === 'file') {
-          // Ignorer les fichiers macOS cachés
-          if (entry.name.startsWith('._')) continue;
 
           const lowerName = entry.name.toLowerCase();
 
@@ -97,7 +101,7 @@ export async function scanDirectoryForTracks(directoryHandle, basePath = '') {
       }
     }
   } catch (error) {
-    console.error('Erreur lors du scan du répertoire:', error);
+    console.error(`Erreur lors du scan de ${currentPath}:`, error);
   }
 
   return { igcFiles, gpxFiles };
