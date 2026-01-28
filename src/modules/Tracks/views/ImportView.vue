@@ -204,6 +204,16 @@
 
     <!-- NoTrackDialog for manual flight entry -->
     <NoTrackDialog v-model="showNoTrackDialog" mode="new" @saved="onNoTrackFlightSaved" />
+
+    <!-- Snackbar for completion message -->
+    <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="4000" location="top">
+      {{ snackbarText }}
+      <template v-slot:actions>
+        <v-btn variant="text" @click="snackbar = false">
+          {{ $gettext('Close') }}
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -267,6 +277,11 @@ const showFlightTable = ref(false);
 const showAllFlights = ref(true);
 const currentDevice = ref('');
 const showNoTrackDialog = ref(false);
+
+// Snackbar state
+const snackbar = ref(false);
+const snackbarText = ref('');
+const snackbarColor = ref('success');
 
 // Headers de la table des vols
 const flightTableHeaders = [
@@ -440,6 +455,11 @@ async function importSelectedFlights() {
     // Signale au parent qu'une modification a eu lieu
     emit('db-updated');
 
+    // Afficher le message de confirmation
+    snackbarText.value = `${importedCount} ${$gettext('tracks imported')}`;
+    snackbarColor.value = 'success';
+    snackbar.value = true;
+
     // Fermer la table
     closeFlightTable();
 
@@ -456,6 +476,11 @@ function notraceImport() {
 function onNoTrackFlightSaved(flightData) {
   // Notify parent that database was updated
   emit('db-updated');
+
+  // Afficher le message de confirmation
+  snackbarText.value = $gettext('Flight saved');
+  snackbarColor.value = 'success';
+  snackbar.value = true;
 }
 </script>
 
