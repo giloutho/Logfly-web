@@ -98,7 +98,7 @@
         <LogbookDetails v-if="dataFlight || noTrackFlightDetails" :trackData="dataFlight || noTrackFlightDetails"
           @update:scoreJson="scoreJson = $event" @update:comment="onCommentUpdate" @update:glider="onGliderUpdate"
           @update:site="onSiteUpdate" @update:delete="onFlightDelete" @update:photo="onPhotoUpdate"
-          @update:tag="onTagUpdate" @edit-notrack="openNoTrackEdit" />
+          @update:tag="onTagUpdate" @edit-notrack="openNoTrackEdit" @duplicate-notrack="openNoTrackDuplicate" />
         <div v-else class="no-track-message">
           <p>Sélectionnez un vol pour afficher les détails</p>
         </div>
@@ -127,8 +127,8 @@
     <TraceInfoDialog v-model="showTraceInfoDialog" :decodedData="dataFlight?.decodedIgc"
       :anaResult="dataFlight?.anaTrack" />
 
-    <!-- NoTrackDialog for editing flights without GPS track -->
-    <NoTrackDialog v-model="showNoTrackDialog" mode="edit" :flightData="noTrackFlightData"
+    <!-- NoTrackDialog for editing/duplicating flights without GPS track -->
+    <NoTrackDialog v-model="showNoTrackDialog" :mode="noTrackDialogMode" :flightData="noTrackFlightData"
       @saved="onNoTrackFlightSaved" />
   </div>
 </template>
@@ -193,6 +193,7 @@ const selectedTagFilter = ref(null);
 const showCesiumView = ref(false);
 const showTraceInfoDialog = ref(false);
 const showNoTrackDialog = ref(false);
+const noTrackDialogMode = ref('edit'); // 'edit' or 'duplicate'
 const noTrackFlightData = ref(null);
 const noTrackFlightDetails = ref(null); // Flight details for no-track flights (used by LogbookDetails)
 
@@ -709,6 +710,28 @@ async function mapWithoutIgc(flightId) {
  * Open NoTrackDialog to edit a flight without GPS track
  */
 async function openNoTrackEdit(flightId) {
+  await loadNoTrackFlightData(flightId);
+  if (noTrackFlightData.value) {
+    noTrackDialogMode.value = 'edit';
+    showNoTrackDialog.value = true;
+  }
+}
+
+/**
+ * Open NoTrackDialog to duplicate a flight without GPS track
+ */
+async function openNoTrackDuplicate(flightId) {
+  await loadNoTrackFlightData(flightId);
+  if (noTrackFlightData.value) {
+    noTrackDialogMode.value = 'duplicate';
+    showNoTrackDialog.value = true;
+  }
+}
+
+/**
+ * Load flight data for NoTrackDialog (used by both edit and duplicate)
+ */
+async function loadNoTrackFlightData(flightId) {
   if (!databaseStore.hasOpenDatabase) return;
 
   const reqSQL = `SELECT V_ID, strftime('%Y-%m-%d', V_Date) AS DateFmt, strftime('%H:%M', V_Date) AS TimeFmt, V_sDuree, V_Duree, V_Site, V_Pays, V_Engin, V_Commentaire, V_LatDeco, V_LongDeco, V_AltDeco FROM Vol WHERE V_ID = ${flightId}`;
@@ -736,8 +759,8 @@ async function openNoTrackEdit(flightId) {
       siteLong: row[10],
       siteAlti: row[11]
     };
-
-    showNoTrackDialog.value = true;
+  } else {
+    noTrackFlightData.value = null;
   }
 }
 

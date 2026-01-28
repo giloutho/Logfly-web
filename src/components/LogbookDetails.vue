@@ -104,7 +104,7 @@
                   strAddPhoto }}</v-btn>
               <LogbookPhoto v-model="showPhotoDialog" @save="onPhotoSave" />
               <v-btn v-if="trackData?.hasPhoto" color="error" density="compact" @click="onPhotoDelete">{{ strRemovePhoto
-              }}</v-btn>
+                }}</v-btn>
             </div>
           </div>
         </v-card-text>
@@ -129,7 +129,7 @@
             <!-- Line 1: Change glider and site (only for flights with track) -->
             <div v-if="!isNoTrackFlight" class="modify-line">
               <v-btn color="primary" density="compact" class="mr-2" @click="showGliderDialog = true">{{ strChangeGlider
-              }}</v-btn>
+                }}</v-btn>
               <GliderDialog v-model="showGliderDialog" :gliderList="gliderList" :currentGlider="trackData?.glider"
                 @save="onGliderSave" />
               <v-btn color="primary" density="compact" @click="showSiteDialog = true">{{ strChangeSite }}</v-btn>
@@ -140,11 +140,16 @@
             <div class="modify-line">
               <v-btn color="error" density="compact" @click="onDeleteFlight">{{ strDelete }}</v-btn>
             </div>
-            <!-- Line 3: Edit/Duplicate (only for no-track flights), Merge flights (only for flights with track) -->
+            <!-- Line 3: Edit and Duplicate (only for no-track flights), Merge flights (only for flights with track) -->
             <div class="modify-line">
-              <v-btn v-if="isNoTrackFlight" color="warning" density="compact" class="mr-2" @click="onEditDuplicate">{{
-                strEditDuplicate
-                }}</v-btn>
+              <v-btn v-if="isNoTrackFlight" color="warning" density="compact" class="mr-2" @click="onEdit">
+                <v-icon start>mdi-pencil</v-icon>
+                {{ strEdit }}
+              </v-btn>
+              <v-btn v-if="isNoTrackFlight" color="info" density="compact" class="mr-2" @click="onDuplicate">
+                <v-icon start>mdi-content-copy</v-icon>
+                {{ strDuplicate }}
+              </v-btn>
               <v-btn v-if="!isNoTrackFlight" color="secondary" density="compact">{{ strMergeFlights }}</v-btn>
             </div>
           </div>
@@ -211,7 +216,8 @@ const tagsMap = ref({});
 const strChangeGlider = computed(() => $gettext('Change glider'));
 const strChangeSite = computed(() => $gettext('Change site'));
 const strDelete = computed(() => $gettext('Delete'));
-const strEditDuplicate = computed(() => $gettext('Edit/Duplicate'));
+const strEdit = computed(() => $gettext('Edit'));
+const strDuplicate = computed(() => $gettext('Duplicate'));
 const strMergeFlights = computed(() => $gettext('Merge flights'));
 const strAddPhoto = computed(() => $gettext('Add photo'));
 const strRemovePhoto = computed(() => $gettext('Remove photo'));
@@ -223,7 +229,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['update:scoreJson', 'update:comment', 'update:glider', 'update:site', 'update:delete', 'update:photo', 'update:tag', 'edit-notrack']);
+const emit = defineEmits(['update:scoreJson', 'update:comment', 'update:glider', 'update:site', 'update:delete', 'update:photo', 'update:tag', 'edit-notrack', 'duplicate-notrack']);
 
 // Computed to detect if this is a flight without GPS track
 const isNoTrackFlight = computed(() => {
@@ -338,14 +344,19 @@ function onDeleteFlight() {
   }
 }
 
-function onEditDuplicate() {
+function onEdit() {
   if (!props.trackData) return;
-  // For no-track flights, emit event to open NoTrackDialog
+  // For no-track flights, emit event to open NoTrackDialog in edit mode
   if (isNoTrackFlight.value) {
     emit('edit-notrack', props.trackData.dbId);
-  } else {
-    // For flights with track, future implementation
-    alert($gettext('Edit/Duplicate') + ' - ' + $gettext('Coming soon'));
+  }
+}
+
+function onDuplicate() {
+  if (!props.trackData) return;
+  // For no-track flights, emit event to open NoTrackDialog in duplicate mode
+  if (isNoTrackFlight.value) {
+    emit('duplicate-notrack', props.trackData.dbId);
   }
 }
 

@@ -22,12 +22,16 @@
                     </v-col>
                 </v-row>
 
-                <!-- Line 3: Duration -->
+                <!-- Line 3: Duration with hours and minutes inputs -->
                 <v-row dense class="mb-3">
                     <v-col cols="6">
                         <div class="field-label">{{ $gettext('Duration') }}</div>
-                        <v-text-field v-model="form.duration" type="time" variant="outlined" density="compact"
-                            hide-details max="12:00" placeholder="HH:MM" />
+                        <div class="duration-inputs">
+                            <v-text-field v-model.number="form.durationHours" type="number" variant="outlined"
+                                density="compact" hide-details min="0" max="12" suffix="h" class="duration-field" />
+                            <v-text-field v-model.number="form.durationMinutes" type="number" variant="outlined"
+                                density="compact" hide-details min="0" max="59" suffix="mn" class="duration-field" />
+                        </div>
                     </v-col>
                 </v-row>
 
@@ -114,7 +118,7 @@ const props = defineProps({
         type: Object,
         default: null
     },
-    // Mode: 'new' or 'edit'
+    // Mode: 'new', 'edit', or 'duplicate'
     mode: {
         type: String,
         default: 'new'
@@ -133,6 +137,10 @@ const statusMessage = ref('');
 const statusType = ref('info');
 const lastSavedDateTime = ref('');
 
+// Store original date/time for duplicate mode validation
+const originalDate = ref('');
+const originalTime = ref('');
+
 // Today's date for max date constraint
 const todayDate = computed(() => {
     const today = new Date();
@@ -144,7 +152,8 @@ const form = reactive({
     id: 0,
     date: todayDate.value,
     time: '12:00',
-    duration: '01:00',
+    durationHours: 1,
+    durationMinutes: 0,
     gliderDisplay: '',
     comment: ''
 });
@@ -176,15 +185,33 @@ watch(show, val => emit('update:modelValue', val));
 function initForm() {
     statusMessage.value = '';
     lastSavedDateTime.value = '';
+    originalDate.value = '';
+    originalTime.value = '';
 
-    if (props.mode === 'edit' && props.flightData) {
-        // Edit existing flight
-        form.id = props.flightData.id;
+    if ((props.mode === 'edit' || props.mode === 'duplicate') && props.flightData) {
+        // Edit or Duplicate existing flight
+        form.id = props.mode === 'edit' ? props.flightData.id : 0; // 0 for duplicate (new record)
         form.date = props.flightData.date;
         form.time = props.flightData.time;
-        form.duration = props.flightData.duration || '01:00';
+
+        // Parse duration from HH:MM format
+        if (props.flightData.duration) {
+            const parts = props.flightData.duration.split(':');
+            form.durationHours = parseInt(parts[0]) || 1;
+            form.durationMinutes = parseInt(parts[1]) || 0;
+        } else {
+            form.durationHours = 1;
+            form.durationMinutes = 0;
+        }
+
         form.gliderDisplay = props.flightData.glider || '';
         form.comment = props.flightData.comment || '';
+
+        // Store original date/time for duplicate mode validation
+        if (props.mode === 'duplicate') {
+            originalDate.value = props.flightData.date;
+            originalTime.value = props.flightData.time;
+        }
 
         // Load site from flight data
         if (props.flightData.siteName) {
@@ -204,7 +231,8 @@ function initForm() {
         form.id = 0;
         form.date = todayDate.value;
         form.time = '12:00';
-        form.duration = '01:00';
+        form.durationHours = 1;
+        form.durationMinutes = 0;
         form.gliderDisplay = '';
         form.comment = '';
         selectedSite.value = null;
@@ -320,6 +348,15 @@ function validateForm() {
         return false;
     }
 
+    // For duplicate mode, validate that date and/or time has been changed
+    if (props.mode === 'duplicate') {
+        if (form.date === originalDate.value && form.time === originalTime.value) {
+            statusMessage.value = $gettext('You must change the date and/or time to create a duplicate');
+            statusType.value = 'warning';
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -357,10 +394,9 @@ function checkDuplicate() {
 }
 
 // Calculate duration in seconds and formatted string
-function parseDuration(durationStr) {
-    const parts = durationStr.split(':');
-    const hours = parseInt(parts[0]) || 0;
-    const minutes = parseInt(parts[1]) || 0;
+function parseDuration() {
+    const hours = Math.min(12, Math.max(0, form.durationHours || 0));
+    const minutes = Math.min(59, Math.max(0, form.durationMinutes || 0));
     const totalSeconds = hours * 3600 + minutes * 60;
     const strDuree = `${hours}h${String(minutes).padStart(2, '0')}mn`;
     return { seconds: totalSeconds, formatted: strDuree };
@@ -369,8 +405,9 @@ function parseDuration(durationStr) {
 // Save flight to database
 async function saveToDatabase() {
     const sqlDateTime = form.date + ' ' + form.time + ':00';
-    const duration = parseDuration(form.duration);
+    const duration = parseDuration();
 
+    // In duplicate mode, always perform INSERT (form.id is 0)
     if (props.mode === 'edit' && form.id > 0) {
         // Update existing flight
         const updateSQL = `UPDATE Vol SET V_Date='${sqlDateTime}', V_Duree=${duration.seconds}, V_sDuree='${duration.formatted}', V_LatDeco=${selectedSite.value.S_Latitude}, V_LongDeco=${selectedSite.value.S_Longitude}, V_AltDeco=${selectedSite.value.S_Alti || 0}, V_Site='${selectedSite.value.S_Nom}', V_Pays='${selectedSite.value.S_Pays || ''}', V_Engin='${form.gliderDisplay}', V_Commentaire='${form.comment.replace(/'/g, "''")}' WHERE V_ID = ${form.id}`;
@@ -448,10 +485,13 @@ async function onOk() {
     if (checkDuplicate()) return;
 
     isSaving.value = true;
-    await saveToDatabase();
+    const success = await saveToDatabase();
     isSaving.value = false;
 
-    // Don't close dialog - allow multiple entries by changing date
+    // Close dialog on successful save
+    if (success) {
+        show.value = false;
+    }
 }
 
 // Handle Cancel
@@ -483,5 +523,19 @@ function onCancel() {
 
 .text-grey :deep(input) {
     color: #999 !important;
+}
+
+.duration-inputs {
+    display: flex;
+    gap: 8px;
+}
+
+.duration-field {
+    flex: 1;
+    max-width: 100px;
+}
+
+.duration-field :deep(input) {
+    text-align: center;
 }
 </style>
