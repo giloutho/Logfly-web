@@ -95,7 +95,7 @@
     <div class="content-wrapper">
       <!-- Tools sidebar -->
       <div class="tools-sidebar">
-        <v-tooltip location="right" :text="$gettext('Draw route')">
+        <v-tooltip location="right" :text="$gettext('Draw a route')">
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props" :icon="isDrawing ? 'mdi-pencil-off' : 'mdi-pencil'"
               :color="isDrawing ? 'warning' : 'primary'" variant="flat" size="large" class="tool-btn"
@@ -164,7 +164,7 @@
             <template v-slot:label>
               <span :class="{ 'text-grey': !formatSupportsMarkers }">{{ $gettext('Include markers') }}</span>
               <span v-if="!formatSupportsMarkers" class="text-caption text-grey ml-2">({{ $gettext('not supported')
-                }})</span>
+              }})</span>
             </template>
           </v-checkbox>
         </v-card-text>

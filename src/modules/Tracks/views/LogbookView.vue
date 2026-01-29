@@ -21,8 +21,17 @@
     </div>
     <div class="right-panel">
       <div class="top-block">
-        <v-text-field v-model="search" :label="$gettext('Search')" prepend-inner-icon="mdi-magnify" single-line
-          hide-details clearable density="compact" variant="outlined" class="search-field"></v-text-field>
+        <v-btn color="primary" variant="flat" size="small" prepend-icon="mdi-magnify" class="mr-2"
+          @click="showSearchDialog = true">
+          {{ $gettext('Search') }}
+        </v-btn>
+        <v-btn v-if="isFiltered" color="warning" variant="flat" size="small" prepend-icon="mdi-filter-off" class="mr-4"
+          @click="unfilterFlights">
+          {{ $gettext('Unfilter') }}
+        </v-btn>
+        <v-chip v-if="isFiltered" color="info" size="small" class="mr-4">
+          {{ flights.length }} {{ $gettext('results') }}
+        </v-chip>
         <v-select v-model="selectedTagFilter" :items="tagOptions" :label="$gettext('Filter by tag')" density="compact"
           variant="outlined" hide-details class="tag-filter ml-4" item-title="title" item-value="value">
           <template v-slot:item="{ props, item }">
@@ -42,10 +51,9 @@
         </v-select>
       </div>
       <div class="table-block">
-        <v-data-table v-model="selectedItems" :headers="headers" :items="processedFlights" :search="search"
-          item-value="V_ID" density="compact" class="flights-table" v-model:page="page"
-          v-model:items-per-page="itemsPerPage" @update:model-value="onSelectionChange"
-          @update:current-items="onFilteredItemsUpdate">
+        <v-data-table v-model="selectedItems" :headers="headers" :items="processedFlights" item-value="V_ID"
+          density="compact" class="flights-table" v-model:page="page" v-model:items-per-page="itemsPerPage"
+          @update:model-value="onSelectionChange" @update:current-items="onFilteredItemsUpdate">
           <template v-slot:item="{ item, index, props }">
             <tr v-bind="props" :class="{
               'selected-row': selectedItems.includes(item.V_ID),
@@ -130,6 +138,9 @@
     <!-- NoTrackDialog for editing/duplicating flights without GPS track -->
     <NoTrackDialog v-model="showNoTrackDialog" :mode="noTrackDialogMode" :flightData="noTrackFlightData"
       @saved="onNoTrackFlightSaved" />
+
+    <!-- SearchFlightsDialog for advanced search -->
+    <SearchFlightsDialog v-model="showSearchDialog" @search="onAdvancedSearch" />
   </div>
 </template>
 
@@ -144,6 +155,7 @@ import FullMapView from '@/components/FullMapView.vue';
 import CesiumReplayView from '@/components/CesiumReplayView.vue';
 import TraceInfoDialog from '@/components/TraceInfoDialog.vue';
 import NoTrackDialog from '@/components/NoTrackDialog.vue';
+import SearchFlightsDialog from '@/components/SearchFlightsDialog.vue';
 import { useDatabaseStore } from '@/stores/database';
 import { igcDecoding } from '@/js/igc/igc-decoder.js';
 import { IgcAnalyze } from '@/js/igc/igc-analyzer.js';
@@ -174,7 +186,6 @@ onBeforeUnmount(() => {
 });
 const page = ref(1);
 const itemsPerPage = ref(8);
-const search = ref('');
 const filteredCount = ref(0);
 const decodedTrack = ref(null)
 const analysisTrack = ref(null);
@@ -196,6 +207,8 @@ const showNoTrackDialog = ref(false);
 const noTrackDialogMode = ref('edit'); // 'edit' or 'duplicate'
 const noTrackFlightData = ref(null);
 const noTrackFlightDetails = ref(null); // Flight details for no-track flights (used by LogbookDetails)
+const showSearchDialog = ref(false);
+const isFiltered = ref(false);
 
 const tagOptions = computed(() => {
   const opts = Object.values(tagsMap.value).map(t => ({
@@ -220,15 +233,7 @@ const processedFlights = computed(() => {
 });
 
 const filteredFlights = computed(() => {
-  if (!search.value) return processedFlights.value;
-
-  const searchLower = search.value.toLowerCase();
-  return processedFlights.value.filter(flight => {
-    return Object.values(flight).some(value => {
-      if (value === null || value === undefined) return false;
-      return String(value).toLowerCase().includes(searchLower);
-    });
-  });
+  return processedFlights.value;
 });
 
 const headers = [
@@ -294,6 +299,56 @@ function loadFlights(keepSelection = false) {
   }
 }
 
+/**
+ * Handle advanced search from SearchFlightsDialog
+ * @param {string} whereClause - SQL WHERE clause built by the dialog
+ */
+function onAdvancedSearch(whereClause) {
+  if (!databaseStore.hasOpenDatabase) return;
+
+  let reqSQL = "SELECT V_ID, strftime('%d-%m-%Y',V_date) AS Day, strftime('%H:%M',V_date) AS Hour, replace(V_sDuree,'mn','') AS Duree, V_Site, V_Engin, V_Commentaire, V_Duree, V_Tag, ";
+  reqSQL += "CASE WHEN (V_Photos IS NOT NULL AND V_Photos !='') THEN 'Yes' END Photo ";
+  reqSQL += "FROM Vol WHERE " + whereClause + " ORDER BY V_Date DESC";
+
+  console.log('Advanced search SQL:', reqSQL);
+
+  const result = databaseStore.query(reqSQL);
+
+  if (result.success && result.data && result.data[0] && result.data[0].values.length > 0) {
+    const columns = result.data[0].columns;
+    const values = result.data[0].values;
+
+    // Transform each row into key/value object
+    flights.value = values.map(row => {
+      const obj = {};
+      columns.forEach((col, idx) => {
+        obj[col] = row[idx];
+      });
+      return obj;
+    });
+
+    isFiltered.value = true;
+    page.value = 1;
+    selectFirstVisibleRow();
+
+    // Show result count
+    snackbarMessage.value = `${flights.value.length} ${$gettext('flights found')}`;
+    snackbar.value = true;
+  } else {
+    // No results - show message but keep current data
+    snackbarMessage.value = $gettext('No flights match the search criteria');
+    snackbar.value = true;
+  }
+}
+
+/**
+ * Remove filter and reload all flights
+ */
+function unfilterFlights() {
+  isFiltered.value = false;
+  loadFlights();
+}
+
 function onSelectionChange(newSelection) {
   if (newSelection && newSelection.length > 0) {
     const readIgc = readIgcFromDb(newSelection[0]);
@@ -305,11 +360,10 @@ function onFilteredItemsUpdate(items) {
   // Pour obtenir tous les items filtrés, utiliser filteredFlights.value
   filteredCount.value = filteredFlights.value.length;
 
-  // Afficher les statistiques quand un filtre est actif (recherche OU tag)
-  const hasSearchFilter = search.value && search.value.trim() !== '';
+  // Afficher les statistiques quand un filtre est actif (advanced search OU tag)
   const hasTagFilter = selectedTagFilter.value !== null;
 
-  if (hasSearchFilter || hasTagFilter) {
+  if (isFiltered.value || hasTagFilter) {
     // Compter les lignes filtrées
     const nbLines = filteredFlights.value.length;
 
@@ -327,7 +381,7 @@ function onFilteredItemsUpdate(items) {
     // snackbarLines.value = nbLines;
     // snackbarTotalTime.value = totalTime;
     let msg = `${$gettext('Totals for the selection')}`;
-    msg += ` : ${$gettext('Flights') + ' = ' + nbLines}`;
+    msg += ` : ${nbLines + ' ' + $gettext('flights')}`;
     msg += `  ${$gettext('Flight hours') + ' = ' + totalTime}`;
     snackbarMessage.value = msg;
     snackbar.value = true;
@@ -830,9 +884,14 @@ defineExpose({ openNoTrackEdit });
   border-radius: 10px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   box-sizing: border-box;
   padding: 10px 20px;
+}
+
+.tag-filter {
+  max-width: 180px;
+  flex-shrink: 0;
 }
 
 .table-block {
