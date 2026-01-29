@@ -30,7 +30,7 @@
           {{ $gettext('Unfilter') }}
         </v-btn>
         <v-chip v-if="isFiltered" color="info" size="small" class="mr-4">
-          {{ flights.length }} {{ $gettext('results') }}
+          {{ flights.length }} {{ $gettext('flights') }} - {{ filteredTotalTime }}
         </v-chip>
         <v-select v-model="selectedTagFilter" :items="tagOptions" :label="$gettext('Filter by tag')" density="compact"
           variant="outlined" hide-details class="tag-filter ml-4" item-title="title" item-value="value">
@@ -234,6 +234,15 @@ const processedFlights = computed(() => {
 
 const filteredFlights = computed(() => {
   return processedFlights.value;
+});
+
+const filteredTotalTime = computed(() => {
+  const totalSeconds = flights.value.reduce((sum, flight) => {
+    return sum + (parseInt(flight.V_Duree) || 0);
+  }, 0);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  return `${hours}h${minutes.toString().padStart(2, '0')}mn`;
 });
 
 const headers = [
