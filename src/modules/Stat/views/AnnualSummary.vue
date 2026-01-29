@@ -21,7 +21,7 @@
           <span>{{ $gettext('Hours') }}</span>
           <span class="card-year">{{ refYear }}</span>
         </div>
-        <div class="card-value">{{ formatHoursDecimal(summary.hours) }}</div>
+        <div class="card-value">{{ formatDuration(summary.hours) }}</div>
       </v-card>
       <v-card class="summary-card gliders-card" elevation="4">
         <img src="@/assets/glider.png" class="card-icon" alt="gliders" />
@@ -404,12 +404,13 @@ function formatDuration(seconds) {
 }
 
 /**
- * Format hours as decimal (e.g., 62.50)
+ * Format hours (decimal) as HHhMM (e.g., 1.35 -> 1h21)
  */
-function formatHoursDecimal(seconds) {
-  if (!seconds) return '0.00';
-  const hours = seconds / 3600;
-  return hours.toFixed(2);
+function formatHoursHHhMM(decimalHours) {
+  if (!decimalHours) return '0h00';
+  const hours = Math.floor(decimalHours);
+  const minutes = Math.round((decimalHours - hours) * 60);
+  return `${hours}h${String(minutes).padStart(2, '0')}`;
 }
 
 /**
@@ -433,10 +434,10 @@ function updateChart() {
   const prevTotal = prevData.reduce((a, b) => a + b, 0);
 
   const refLabel = isHoursMode
-    ? `${refYear.value} [${refTotal.toFixed(1)}h]`
+    ? `${refYear.value} [${formatHoursHHhMM(refTotal)}]`
     : `${refYear.value} [${refTotal}]`;
   const prevLabel = isHoursMode
-    ? `${prevYear.value} [${prevTotal.toFixed(1)}h]`
+    ? `${prevYear.value} [${formatHoursHHhMM(prevTotal)}]`
     : `${prevYear.value} [${prevTotal}]`;
 
   chartInstance = new Chart(ctx, {
