@@ -40,7 +40,7 @@ import { useDatabaseStore } from '@/stores/database';
 import { useRouter } from 'vue-router';
 import { saveDatabase } from '@/js/database/sql-manager.js';
 
-const appVersion = '7.0.0'; // À actualiser à chaque build pour production
+const appVersion = '7.0.1'; // À actualiser à chaque build pour production
 const databaseStore = useDatabaseStore();
 // Utilisez storeToRefs pour garder la réactivité sur isDirty
 const { isDirty } = storeToRefs(databaseStore);

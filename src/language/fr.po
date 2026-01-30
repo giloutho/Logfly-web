@@ -255,8 +255,11 @@ msgstr "Ajouter un commentaire"
 msgid "Delete"
 msgstr "Supprimer"
 
-msgid "Edit/Duplicate"
-msgstr "Editer/Dupliquer"
+msgid "Edit"
+msgstr "Editer"
+
+msgid "Duplicate"
+msgstr "Copier"
 
 msgid "Merge flights"
 msgstr "Fusion des vols"
@@ -269,9 +272,6 @@ msgstr "Enlever la photo"
 
 msgid "Delete photo"
 msgstr "Suppirmer la photo"
-
-msgid "Coming soon"
-msgstr "Bientôt disponible"
 
 msgid "Select a photo"
 msgstr "Choisir une photo"
@@ -330,6 +330,9 @@ msgstr "Définir la voile utilisée"
 msgid "Error creating site"
 msgstr "Erreur pendant la création du site"
 
+msgid "You must change the date and/or time to create a duplicate"
+msgstr "Vous devez changer la date et/ou l'heure pour créer la copie"
+
 msgid "A flight at the same date and time was recorded"
 msgstr "Un vol de la même date et même heure a été enregistré"
 
@@ -387,6 +390,54 @@ msgstr "Pas de carnets dans ce dossier"
 msgid "Error reading the file"
 msgstr "Erreur de lecture fichier"
 
+msgid "Advanced search"
+msgstr "Recherche avancée"
+
+msgid "Start date"
+msgstr "Date de départ"
+
+msgid "Start time"
+msgstr "Heure de départ"
+
+msgid "End date"
+msgstr "Date de fin"
+
+msgid "End time"
+msgstr "Heure de fin"
+
+msgid "Min duration"
+msgstr "Durée mini"
+
+msgid "Max duration"
+msgstr "Durée max"
+
+msgid "Search in glider name"
+msgstr "Rechercher avec le nom de la voile"
+
+msgid "Search in site name"
+msgstr "Recherche avec le nom du site"
+
+msgid "Country"
+msgstr "Pays"
+
+msgid "Search in country"
+msgstr "Recherche avec le nom du pays"
+
+msgid "Search in comments"
+msgstr "Recherche dans les commentaires"
+
+msgid "Has photo"
+msgstr "A une photo"
+
+msgid "Reset"
+msgstr "Reset"
+
+msgid "Search"
+msgstr "Chercher"
+
+msgid "Please enter at least one search criterion"
+msgstr "Entrer au moins un critère de recherche"
+
 msgid "Edit site"
 msgstr "Modifier le site"
 
@@ -404,9 +455,6 @@ msgstr "Code postal"
 
 msgid "City"
 msgstr "Ville"
-
-msgid "Country"
-msgstr "Pays"
 
 msgid "Latitude"
 msgstr "Latitude"
@@ -600,9 +648,6 @@ msgstr "Divers"
 msgid "Add"
 msgstr "Ajouter"
 
-msgid "Search"
-msgstr "Chercher"
-
 msgid "Edit record"
 msgstr "Modifier la ligne"
 
@@ -699,9 +744,6 @@ msgstr "Altitude"
 msgid "Updated"
 msgstr "Mise à jour"
 
-msgid "Duplicate"
-msgstr "Doublon"
-
 msgid "Cleaning"
 msgstr "Nettoyage"
 
@@ -756,6 +798,33 @@ msgstr "Doublons supprimés"
 msgid "Error removing duplicates"
 msgstr "Erreur pendant la suppression des doublons"
 
+msgid "Display airspaces"
+msgstr "Afficher les espaces aériens"
+
+msgid "Classes"
+msgstr "Classes"
+
+msgid "Types"
+msgstr "Types"
+
+msgid "Prohibited"
+msgstr "Interdit"
+
+msgid "Restricted"
+msgstr "Restreint"
+
+msgid "Danger"
+msgstr "Danger"
+
+msgid "Gliding"
+msgstr "Vol libre"
+
+msgid "Floor limit"
+msgstr "Limite plnacher"
+
+msgid "Radius"
+msgstr "Rayon"
+
 msgid "Select a file"
 msgstr "Choisir un fichier"
 
@@ -764,9 +833,6 @@ msgstr "Sélection de zone"
 
 msgid "Cancel selection"
 msgstr "Annuler la sélection"
-
-msgid "Reset"
-msgstr "Reset"
 
 msgid "Save"
 msgstr "Enregistrer"
@@ -813,6 +879,201 @@ msgstr "Pas d'espaces dans le rectangle de sélection"
 msgid "Selection cancelled, airspaces restored"
 msgstr "Sélection annulée, espaces aériens rétablis"
 
+msgid "New set"
+msgstr "Nouvel ensemble"
+
+msgid "New waypoint"
+msgstr "Nouveau waypoint"
+
+msgid "Edit waypoint"
+msgstr "Editer le waypoint"
+
+msgid "Short name"
+msgstr "Nom court"
+
+msgid "Click on map to set position"
+msgstr "Cliquez sur la carte pour définir la position"
+
+msgid "New"
+msgstr "Nouveau"
+
+msgid "Center on map"
+msgstr "Centrer sur la carte"
+
+msgid "Error reading file"
+msgstr "Erreur lors de la lecture du fichier"
+
+msgid "No waypoints found"
+msgstr "Pas de waypoints"
+
+msgid "Short"
+msgstr "Court"
+
+msgid "Lat"
+msgstr "Lat"
+
+msgid "Lon"
+msgstr "Lon"
+
+msgid "Waypoint added"
+msgstr "Waypoint ajouté"
+
+msgid "Waypoint updated"
+msgstr "Waypoint modifié"
+
+msgid "Waypoint deleted"
+msgstr "Waypoint supprimé"
+
+msgid "No waypoints selected for export"
+msgstr "Aucun waypoint sélectionné pour l'exportation"
+
+msgid "Export successful"
+msgstr "Export réussi"
+
+msgid "Export failed"
+msgstr "Echec de l'exportation"
+
+msgid "Route"
+msgstr "Route"
+
+msgid "Track"
+msgstr "Trace"
+
+msgid "Total distance"
+msgstr "Distance totale"
+
+msgid "Speed"
+msgstr "Vitesse"
+
+msgid "Scoring"
+msgstr "Score"
+
+msgid "Distance"
+msgstr "Distance"
+
+msgid "Points"
+msgstr "Points"
+
+msgid "Draw a route"
+msgstr "Dessiner une route"
+
+msgid "Add marker"
+msgstr "Ajouter un marqueur"
+
+msgid "Clear route"
+msgstr "Effacer la route"
+
+msgid "Save route"
+msgstr "Enregistrer la route"
+
+msgid "Measure"
+msgstr "Mesure"
+
+msgid "Center on route"
+msgstr "Centrer sur la route"
+
+msgid "Export format"
+msgstr "Format export"
+
+msgid "Include markers"
+msgstr "Inclure les marqueurs"
+
+msgid "not supported"
+msgstr "non supporté"
+
+msgid "Open distance"
+msgstr "Distance libre"
+
+msgid "Tracks"
+msgstr "Traces"
+
+msgid "Click on map to add route points. Press Escape to finish."
+msgstr "Cliquez sur la carte pour ajouter des points. Échap pour terminer."
+
+msgid "Continue drawing from last point"
+msgstr "Continuer le dessin depuis le dernier point"
+
+msgid "Start"
+msgstr "Démarrer"
+
+msgid "End"
+msgstr "Fin"
+
+msgid "Point"
+msgstr "Point"
+
+msgid "Drag to move"
+msgstr "Faites glisser pour déplacer"
+
+msgid "Click to delete"
+msgstr "Cliquer pour supprimer"
+
+msgid "Ctrl/Cmd+click to continue"
+msgstr "Ctrl/Cmd+click pour continuer"
+
+msgid "Point inserted"
+msgstr "Point inséré"
+
+msgid "Click or drag to insert point"
+msgstr "Cliquez ou faites glisser pour insérer un point"
+
+msgid "Cannot delete: minimum 2 points required"
+msgstr "Impossible à supprimer : 2 points minimum requis"
+
+msgid "Cannot delete the start point"
+msgstr "Impossible de supprimer le point de départ"
+
+msgid "Point deleted"
+msgstr "Point supprimé"
+
+msgid "Route cleared"
+msgstr "Route éffacée"
+
+msgid "Click on map to add a marker"
+msgstr "Cliquer sur la carte pour ajouter un marqueur"
+
+msgid "Marker added"
+msgstr "Marqueur ajouté"
+
+msgid "Click to add points, double-click to finish"
+msgstr "Cliquez pour ajouter des points, double clic pour terminer"
+
+msgid "Route loaded"
+msgstr "Route chargée"
+
+msgid "points"
+msgstr "points"
+
+msgid "markers"
+msgstr "marqueurs"
+
+msgid "No route found in file"
+msgstr "Pas de route dans ce fichier"
+
+msgid "Error loading route"
+msgstr "Erreur lors du chargement de la route"
+
+msgid "No valid track data found"
+msgstr "Aucune donnée de trace valide trouvée"
+
+msgid "GPX track loaded"
+msgstr "Trace GPX chargée"
+
+msgid "Unsupported track format"
+msgstr "Format de trace non supportée"
+
+msgid "Error loading track"
+msgstr "Erreur lors du chargement de la trace"
+
+msgid "No airspaces to display"
+msgstr "Pas d'espaces aériens à afficher"
+
+msgid "Route must have at least 2 points"
+msgstr "Une route doit avoir au moins deux points"
+
+msgid "Route exported successfully"
+msgstr "Route exporté avec succès"
+
 msgid "Contact"
 msgstr "Contact"
 
@@ -851,9 +1112,6 @@ msgstr "Nouvelle traduction"
 
 msgid "Select a language"
 msgstr "Choisir une langue"
-
-msgid "Start"
-msgstr "Démarrer"
 
 msgid "Load from file"
 msgstr "Charger un fichier"
@@ -1113,15 +1371,27 @@ msgstr "Erreur pendant la recherche"
 msgid "To rename"
 msgstr "A renommer"
 
+msgid "tracks imported"
+msgstr "traces importées"
+
+msgid "Flight saved"
+msgstr "Vol enregistré"
+
+msgid "Unfilter"
+msgstr "Non filtré"
+
 msgid "Filter by tag"
 msgstr "Filter par tag"
 
 msgid "All flights"
 msgstr "Tous les vols"
 
+msgid "flights found"
+msgstr "vols trouvés"
+
+msgid "No flights match the search criteria"
+msgstr "Aucun vol ne correspond aux critères de recherche"
+
 msgid "Totals for the selection"
 msgstr "Totaux pour la sélection"
-
-msgid "Flight saved"
-msgstr "Vol enregistré"
 

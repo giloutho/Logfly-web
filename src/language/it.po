@@ -166,13 +166,13 @@ msgid "Close"
 msgstr "Chiudi"
 
 msgid "Year"
-msgstr ""
+msgstr "Anno"
 
 msgid "Month"
-msgstr ""
+msgstr "Mese"
 
 msgid "Charts"
-msgstr ""
+msgstr "Grafici"
 
 msgid "Export"
 msgstr "Esporta"
@@ -193,7 +193,7 @@ msgid "Change glider"
 msgstr "Cambia vela"
 
 msgid "Choose an existing glider"
-msgstr ""
+msgstr "Scegli una vela esistente"
 
 msgid "Glider"
 msgstr "Vela"
@@ -211,7 +211,7 @@ msgid "3D View"
 msgstr ""
 
 msgid "Analyze"
-msgstr ""
+msgstr "Analisi"
 
 msgid "No GPS track"
 msgstr ""
@@ -255,8 +255,11 @@ msgstr ""
 msgid "Delete"
 msgstr "Elimina"
 
-msgid "Edit/Duplicate"
-msgstr "Modifica/Duplica"
+msgid "Edit"
+msgstr "Modifica"
+
+msgid "Duplicate"
+msgstr "Duplicato"
 
 msgid "Merge flights"
 msgstr "Unire i voli"
@@ -269,9 +272,6 @@ msgstr ""
 
 msgid "Delete photo"
 msgstr ""
-
-msgid "Coming soon"
-msgstr "In arrivo"
 
 msgid "Select a photo"
 msgstr ""
@@ -328,6 +328,9 @@ msgid "Define the used glider"
 msgstr ""
 
 msgid "Error creating site"
+msgstr ""
+
+msgid "You must change the date and/or time to create a duplicate"
 msgstr ""
 
 msgid "A flight at the same date and time was recorded"
@@ -387,6 +390,54 @@ msgstr ""
 msgid "Error reading the file"
 msgstr ""
 
+msgid "Advanced search"
+msgstr ""
+
+msgid "Start date"
+msgstr ""
+
+msgid "Start time"
+msgstr "Ora inizio"
+
+msgid "End date"
+msgstr ""
+
+msgid "End time"
+msgstr ""
+
+msgid "Min duration"
+msgstr "Durata min"
+
+msgid "Max duration"
+msgstr "Durata max"
+
+msgid "Search in glider name"
+msgstr ""
+
+msgid "Search in site name"
+msgstr ""
+
+msgid "Country"
+msgstr "Nazione"
+
+msgid "Search in country"
+msgstr ""
+
+msgid "Search in comments"
+msgstr ""
+
+msgid "Has photo"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Search"
+msgstr "Ricerca"
+
+msgid "Please enter at least one search criterion"
+msgstr ""
+
 msgid "Edit site"
 msgstr ""
 
@@ -404,9 +455,6 @@ msgstr "Codice CAP"
 
 msgid "City"
 msgstr "Città"
-
-msgid "Country"
-msgstr "Nazione"
 
 msgid "Latitude"
 msgstr "Latitudine"
@@ -600,9 +648,6 @@ msgstr "Varie"
 msgid "Add"
 msgstr "Aggiungi"
 
-msgid "Search"
-msgstr "Ricerca"
-
 msgid "Edit record"
 msgstr ""
 
@@ -699,9 +744,6 @@ msgstr "Altitudine"
 msgid "Updated"
 msgstr ""
 
-msgid "Duplicate"
-msgstr ""
-
 msgid "Cleaning"
 msgstr ""
 
@@ -756,6 +798,33 @@ msgstr ""
 msgid "Error removing duplicates"
 msgstr ""
 
+msgid "Display airspaces"
+msgstr ""
+
+msgid "Classes"
+msgstr ""
+
+msgid "Types"
+msgstr ""
+
+msgid "Prohibited"
+msgstr ""
+
+msgid "Restricted"
+msgstr ""
+
+msgid "Danger"
+msgstr ""
+
+msgid "Gliding"
+msgstr ""
+
+msgid "Floor limit"
+msgstr ""
+
+msgid "Radius"
+msgstr ""
+
 msgid "Select a file"
 msgstr "Seleziona"
 
@@ -764,9 +833,6 @@ msgstr "Totali per la selezione"
 
 msgid "Cancel selection"
 msgstr "Totali per la selezione"
-
-msgid "Reset"
-msgstr ""
 
 msgid "Save"
 msgstr ""
@@ -813,6 +879,201 @@ msgstr ""
 msgid "Selection cancelled, airspaces restored"
 msgstr ""
 
+msgid "New set"
+msgstr ""
+
+msgid "New waypoint"
+msgstr ""
+
+msgid "Edit waypoint"
+msgstr ""
+
+msgid "Short name"
+msgstr ""
+
+msgid "Click on map to set position"
+msgstr ""
+
+msgid "New"
+msgstr ""
+
+msgid "Center on map"
+msgstr ""
+
+msgid "Error reading file"
+msgstr ""
+
+msgid "No waypoints found"
+msgstr ""
+
+msgid "Short"
+msgstr ""
+
+msgid "Lat"
+msgstr ""
+
+msgid "Lon"
+msgstr ""
+
+msgid "Waypoint added"
+msgstr ""
+
+msgid "Waypoint updated"
+msgstr ""
+
+msgid "Waypoint deleted"
+msgstr ""
+
+msgid "No waypoints selected for export"
+msgstr ""
+
+msgid "Export successful"
+msgstr ""
+
+msgid "Export failed"
+msgstr ""
+
+msgid "Route"
+msgstr ""
+
+msgid "Track"
+msgstr ""
+
+msgid "Total distance"
+msgstr ""
+
+msgid "Speed"
+msgstr ""
+
+msgid "Scoring"
+msgstr ""
+
+msgid "Distance"
+msgstr ""
+
+msgid "Points"
+msgstr ""
+
+msgid "Draw a route"
+msgstr ""
+
+msgid "Add marker"
+msgstr ""
+
+msgid "Clear route"
+msgstr ""
+
+msgid "Save route"
+msgstr ""
+
+msgid "Measure"
+msgstr ""
+
+msgid "Center on route"
+msgstr ""
+
+msgid "Export format"
+msgstr ""
+
+msgid "Include markers"
+msgstr ""
+
+msgid "not supported"
+msgstr ""
+
+msgid "Open distance"
+msgstr ""
+
+msgid "Tracks"
+msgstr ""
+
+msgid "Click on map to add route points. Press Escape to finish."
+msgstr ""
+
+msgid "Continue drawing from last point"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "End"
+msgstr ""
+
+msgid "Point"
+msgstr ""
+
+msgid "Drag to move"
+msgstr ""
+
+msgid "Click to delete"
+msgstr ""
+
+msgid "Ctrl/Cmd+click to continue"
+msgstr ""
+
+msgid "Point inserted"
+msgstr ""
+
+msgid "Click or drag to insert point"
+msgstr ""
+
+msgid "Cannot delete: minimum 2 points required"
+msgstr ""
+
+msgid "Cannot delete the start point"
+msgstr ""
+
+msgid "Point deleted"
+msgstr ""
+
+msgid "Route cleared"
+msgstr ""
+
+msgid "Click on map to add a marker"
+msgstr ""
+
+msgid "Marker added"
+msgstr ""
+
+msgid "Click to add points, double-click to finish"
+msgstr ""
+
+msgid "Route loaded"
+msgstr ""
+
+msgid "points"
+msgstr ""
+
+msgid "markers"
+msgstr ""
+
+msgid "No route found in file"
+msgstr ""
+
+msgid "Error loading route"
+msgstr ""
+
+msgid "No valid track data found"
+msgstr ""
+
+msgid "GPX track loaded"
+msgstr ""
+
+msgid "Unsupported track format"
+msgstr ""
+
+msgid "Error loading track"
+msgstr ""
+
+msgid "No airspaces to display"
+msgstr ""
+
+msgid "Route must have at least 2 points"
+msgstr ""
+
+msgid "Route exported successfully"
+msgstr ""
+
 msgid "Contact"
 msgstr ""
 
@@ -850,9 +1111,6 @@ msgid "New translation"
 msgstr ""
 
 msgid "Select a language"
-msgstr ""
-
-msgid "Start"
 msgstr ""
 
 msgid "Load from file"
@@ -1113,15 +1371,27 @@ msgstr ""
 msgid "To rename"
 msgstr "Da rinominare"
 
+msgid "tracks imported"
+msgstr ""
+
+msgid "Flight saved"
+msgstr ""
+
+msgid "Unfilter"
+msgstr ""
+
 msgid "Filter by tag"
 msgstr ""
 
 msgid "All flights"
 msgstr ""
 
+msgid "flights found"
+msgstr ""
+
+msgid "No flights match the search criteria"
+msgstr ""
+
 msgid "Totals for the selection"
 msgstr "Totali per la selezione"
-
-msgid "Flight saved"
-msgstr ""
 
