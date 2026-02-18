@@ -81,7 +81,7 @@ export function createOutdoor() {
  * Create a new KK7 thermal layer instance
  */
 export function createKk7() {
-  return L.tileLayer('https://thermal.kk7.ch/tiles/skyways_all_all/{z}/{x}/{y}.png?src=logfly.org', {
+  return L.tileLayer('https://thermal.kk7.ch/tiles/skyways_all_all/{z}/{x}/{y}.png?src=logfly.app', {
     attribution: 'thermal.kk7.ch <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC-BY-NC-SA>/a>',
     maxNativeZoom: 13,
     tms: true,

@@ -40,7 +40,7 @@ export function getDeviceDescriptions($gettext) {
     ],
     'Syride Usb': [
       $gettext('Using SysPC Tools may be an option'),
-      $gettext('Plug in the NavXL'),
+      $gettext('Plug in the NavXL, select mass storage'),
       clic,
       select,
       $gettext("an 'IGC' folder"),
@@ -68,7 +68,7 @@ export function getDeviceDescriptions($gettext) {
       validate,
     ],
     'Connect': [
-      $gettext('Plug in the Oudie'),
+      $gettext('Plug in the Connect'),
       clic,
       select,
       $gettext('a flights folder and a waypoints folder'),
