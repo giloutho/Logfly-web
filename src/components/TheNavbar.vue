@@ -134,8 +134,119 @@
       </v-btn>
     </div>
 
-    <v-app-bar-nav-icon class="d-sm-none"></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon class="d-sm-none" @click="drawer = !drawer"></v-app-bar-nav-icon>
   </v-app-bar>
+
+  <!-- Navigation Drawer for Mobile -->
+  <v-navigation-drawer v-model="drawer" temporary class="d-sm-none" location="left">
+    <v-list v-model:opened="openedGroups">
+      <!-- Flights & Tracks -->
+      <v-list-group value="flights">
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" :title="$gettext('Flights & Tracks')"
+            prepend-icon="mdi-format-list-bulleted"></v-list-item>
+        </template>
+        <v-list-item :to="{ name: 'logbook-view' }" @click="drawer = false">
+          <v-list-item-title>{{ $gettext('Logbook') }}</v-list-item-title>
+        </v-list-item>
+        <v-list-item :to="{ name: 'import-gps' }" @click="drawer = false">
+          <v-list-item-title>{{ $gettext('Import tracks') }}</v-list-item-title>
+        </v-list-item>
+        <v-list-item :to="{ name: 'external-track' }" @click="drawer = false">
+          <v-list-item-title>{{ $gettext('External track') }}</v-list-item-title>
+        </v-list-item>
+      </v-list-group>
+
+      <!-- Statistics -->
+      <v-list-group value="stats">
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" :title="$gettext('Statistics')" prepend-icon="mdi-chart-bar"></v-list-item>
+        </template>
+        <v-list-item :to="{ name: 'synthese-annee' }" @click="drawer = false">
+          <v-list-item-title>{{ $gettext('Annual summary') }}</v-list-item-title>
+        </v-list-item>
+        <v-list-item :to="{ name: 'synthese-globale' }" @click="drawer = false">
+          <v-list-item-title>{{ $gettext('Global summary') }}</v-list-item-title>
+        </v-list-item>
+      </v-list-group>
+
+      <!-- Routing -->
+      <v-list-group value="routing">
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" :title="$gettext('Routing')" prepend-icon="mdi-map-marker-path"></v-list-item>
+        </template>
+        <v-list-item :to="{ name: 'waypoints-view' }" @click="drawer = false">
+          <v-list-item-title>{{ $gettext('Waypoints') }}</v-list-item-title>
+        </v-list-item>
+        <v-list-item :to="{ name: 'airspaces-view' }" @click="drawer = false">
+          <v-list-item-title>{{ $gettext('Airspaces') }}</v-list-item-title>
+        </v-list-item>
+        <v-list-item :to="{ name: 'xcnav-view' }" @click="drawer = false">
+          <v-list-item-title>{{ $gettext('XC Nav') }}</v-list-item-title>
+        </v-list-item>
+      </v-list-group>
+
+      <!-- Sites -->
+      <v-list-group value="sites">
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" :title="$gettext('Sites')" prepend-icon="mdi-map-marker"></v-list-item>
+        </template>
+        <v-list-item :to="{ name: 'sites-view' }" @click="drawer = false">
+          <v-list-item-title>{{ $gettext('Sites') }}</v-list-item-title>
+        </v-list-item>
+      </v-list-group>
+
+      <!-- Equipment -->
+      <v-list-item :to="{ name: 'equip-base' }" @click="drawer = false" prepend-icon="mdi-paragliding">
+        <v-list-item-title>{{ $gettext('Equipment') }}</v-list-item-title>
+      </v-list-item>
+
+      <!-- Utilities -->
+      <v-list-group value="utilities">
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" :title="$gettext('Utilities')" prepend-icon="mdi-tools"></v-list-item>
+        </template>
+        <v-list-item :to="{ name: 'support-view' }" @click="drawer = false">
+          <v-list-item-title>{{ $gettext('Support') }}</v-list-item-title>
+        </v-list-item>
+        <v-list-item :to="{ name: 'translation-view' }" @click="drawer = false">
+          <v-list-item-title>{{ $gettext('Translation') }}</v-list-item-title>
+        </v-list-item>
+      </v-list-group>
+
+      <v-divider class="my-2"></v-divider>
+
+      <!-- Language selector in drawer -->
+      <v-list-group value="language">
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" :title="$gettext('Language')">
+            <template v-slot:prepend>
+              <span class="flag-emoji mr-2">{{ langFlags[currentLangCode] }}</span>
+            </template>
+          </v-list-item>
+        </template>
+        <v-list-item v-for="(label, code) in availableLangs" :key="code" @click="changeLanguage(code); drawer = false">
+          <template v-slot:prepend>
+            <span class="flag-emoji mr-2">{{ langFlags[code] }}</span>
+          </template>
+          <v-list-item-title>{{ label }}</v-list-item-title>
+        </v-list-item>
+      </v-list-group>
+
+      <!-- Save button in drawer -->
+      <v-list-item v-if="databaseStore.hasOpenDatabase" @click="handleSave(); drawer = false"
+        :base-color="databaseStore.isDirty ? 'warning' : 'success'">
+        <template v-slot:prepend>
+          <v-icon :color="databaseStore.isDirty ? 'warning' : 'success'">
+            {{ databaseStore.isDirty ? 'mdi-alert-outline' : 'mdi-check-bold' }}
+          </v-icon>
+        </template>
+        <v-list-item-title>
+          {{ databaseStore.isDirty ? $gettext('Save') : $gettext('Saved') }}
+        </v-list-item-title>
+      </v-list-item>
+    </v-list>
+  </v-navigation-drawer>
 </template>
 
 <script setup>
@@ -154,6 +265,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['save']);
+
+const drawer = ref(false);
+const openedGroups = ref([]);
 
 // Language management
 const availableLangs = computed(() => gettext.available);
