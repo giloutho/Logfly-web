@@ -1,5 +1,5 @@
 <template>
-  <div class="little-map-wrapper">
+  <div class="little-map-wrapper" :class="{ 'no-radius': noBorderRadius }">
     <div ref="mapContainer" class="map-container"></div>
 
     <div v-if="!hideOverlay" class="map-overlay-bottom">
@@ -85,6 +85,14 @@ const props = defineProps({
   zoomLevel: {
     type: Number,
     default: 12
+  },
+  noBorderRadius: {
+    type: Boolean,
+    default: false
+  },
+  paddingLeft: {
+    type: Number,
+    default: 0
   }
 });
 
@@ -98,8 +106,9 @@ let startMarker = null;
 let endMarker = null;
 
 onMounted(() => {
-  // Initialiser la carte Leaflet
-  map = L.map(mapContainer.value).setView([45.0, 6.0], 10);
+  // Initialiser la carte Leaflet — zoom control to top-right to avoid drawer overlap
+  map = L.map(mapContainer.value, { zoomControl: false }).setView([45.0, 6.0], 10);
+  L.control.zoom({ position: 'topright' }).addTo(map);
 
   // Create fresh tile layer instances for this map (avoid conflicts with other maps)
   const mapBaseLayers = createBaseMaps();
@@ -259,7 +268,11 @@ function fitBoundsToAllLayers() {
     }
 
     if (hasBounds && bounds.isValid()) {
-      map.fitBounds(bounds, { padding: [20, 20] });
+      // paddingLeft accounts for the left drawer width so the track isn't hidden under it
+      map.fitBounds(bounds, {
+        paddingTopLeft: [props.paddingLeft + 20, 20],
+        paddingBottomRight: [20, 20]
+      });
     }
   } catch (error) {
     console.error('Erreur lors de fitBounds:', error);
@@ -366,5 +379,9 @@ onBeforeUnmount(() => {
   background-color: #1976D2 !important;
   /* Vuetify primary blue - or custom */
   color: white !important;
+}
+
+.little-map-wrapper.no-radius {
+  border-radius: 0;
 }
 </style>

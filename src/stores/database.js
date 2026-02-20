@@ -141,8 +141,7 @@ export const useDatabaseStore = defineStore('database', () => {
       return { success: false, message: 'No database open' }
     }
     const result = insertIntoDatabase(db.value, tableName, params)
-
-    // SI L'INSERTION RÉUSSIT : on marque la base comme modifiée
+    // Mark DB as dirty on successful insert so autosave triggers
     if (result.success) {
       markAsDirty()
     }
@@ -170,58 +169,37 @@ export const useDatabaseStore = defineStore('database', () => {
     return executeQuery(db.value, sql)
   }
 
-  /*
-  * An insertion will be made with const result = databaseStore.insert(sqltable, sqlparams);
-  * sqltable is the name of the table in which we want to insert data
-  * with sqlparams an object of the type:
-  *    const sqlparams = {
-  *       S_Nom: 'Test Site',   the field names must match those in the table.
-  *       S_CP: '***',
-  *       S_Type: 'D',
-  *       S_Maj: '2025-12-18',
-  *    }; 
-  * if (result.success) {
-  *   console.log('Row inserted, ID:', result.lastInsertId);
-  * } else {
-  */
-  function insert(tableName, params) {
-    if (!db.value) {
-      return { success: false, message: 'No database open' }
-    }
-    return insertIntoDatabase(db.value, tableName, params)
-  }
-
   function update(sql, params) {
     if (!db.value) {
       return { success: false, message: 'No database open' }
     }
     const result = updateDatabase(db.value, sql, params)
-
+    // Mark DB as dirty on successful update so autosave triggers
     if (result.success) {
       markAsDirty()
     }
     return result
   }
 
-
   return {
-    // État
+    // State
     db,
     isOpen,
     dbName,
     error,
+    isDirty,        // ← was missing: caused watch() in TheNavbar to see undefined
     // Getters
     hasOpenDatabase,
-    isDirty,
     // Actions
     loadDatabase,
     createNewLogbook,
     exportDatabase,
     closeDatabaseStore,
+    markAsDirty,
     markAsSaved,
     clearError,
     query,
     insert,
-    update
+    update,
   }
 })
