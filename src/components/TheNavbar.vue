@@ -23,7 +23,7 @@
             <v-list-item-title>{{ $gettext('Logbook') }}</v-list-item-title>
           </v-list-item>
           <v-list-item :to="{ name: 'import-gps' }">
-            <v-list-item-title>{{ $gettext('Import tracks') }}</v-list-item-title>
+            <v-list-item-title>{{ $gettext('Import') }}</v-list-item-title>
           </v-list-item>
           <v-list-item :to="{ name: 'external-track' }">
             <v-list-item-title>{{ $gettext('External track') }}</v-list-item-title>

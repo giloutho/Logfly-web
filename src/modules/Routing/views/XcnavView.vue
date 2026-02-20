@@ -164,7 +164,7 @@
             <template v-slot:label>
               <span :class="{ 'text-grey': !formatSupportsMarkers }">{{ $gettext('Include markers') }}</span>
               <span v-if="!formatSupportsMarkers" class="text-caption text-grey ml-2">({{ $gettext('not supported')
-              }})</span>
+                }})</span>
             </template>
           </v-checkbox>
         </v-card-text>
@@ -402,7 +402,7 @@ function initMap() {
   airspaceGroup = L.layerGroup();
 
   // Thermal overlay (kk7)
-  const kk7Layer = L.tileLayer('https://thermal.kk7.ch/tiles/skyways_all_all/{z}/{x}/{y}.png?src=logfly.org', {
+  const kk7Layer = L.tileLayer('https://thermal.kk7.ch/tiles/skyways_all_all/{z}/{x}/{y}.png?src=logfly.app', {
     attribution: 'thermal.kk7.ch <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC-BY-NC-SA</a>',
     maxNativeZoom: 13,
     tms: true,

@@ -6,7 +6,8 @@
                 <!-- Section 1: Display Airspaces -->
                 <div class="section-header mb-4">
                     <v-icon color="primary" class="mr-2">mdi-eye</v-icon>
-                    <span class="text-h6 text-primary font-weight-bold">Display airspaces [openAIP]</span>
+                    <span class="text-h6 text-primary font-weight-bold">{{ $gettext('Display airspaces') }}
+                        [openAIP]</span>
                 </div>
 
                 <!-- Classes -->
@@ -85,7 +86,7 @@
                 <!-- Display Button -->
                 <div class="d-flex justify-center mb-6">
                     <v-btn color="primary" @click="displayAirspaces" prepend-icon="mdi-map-search">
-                        Display
+                        {{ $gettext('Display') }}
                     </v-btn>
                 </div>
 
@@ -94,7 +95,7 @@
                 <!-- Section 2: Check the track -->
                 <div class="section-header mb-4 text-center">
                     <v-icon color="primary" class="mr-2">mdi-cloud-check</v-icon>
-                    <span class="text-h6 text-primary font-weight-bold">Check the track</span>
+                    <span class="text-h6 text-primary font-weight-bold">{{ $gettext('Check the track') }}</span>
                 </div>
 
                 <div class="d-flex justify-space-between gap-4 mt-4">
