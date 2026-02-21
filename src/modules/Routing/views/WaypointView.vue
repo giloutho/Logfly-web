@@ -72,9 +72,9 @@
           <div class="edit-panel-content">
             <!-- Type selection -->
             <v-radio-group v-model="editingWaypoint.type" inline density="compact" class="mb-2">
-              <v-radio label="Standard" value="S"></v-radio>
-              <v-radio label="Take Off" value="T"></v-radio>
-              <v-radio label="Landing" value="L"></v-radio>
+              <v-radio :label="$gettext('Standard')" value="S"></v-radio>
+              <v-radio :label="$gettext('Take off')" value="T"></v-radio>
+              <v-radio :label="$gettext('Landing')" value="L"></v-radio>
             </v-radio-group>
 
             <!-- Long name -->
@@ -93,11 +93,11 @@
             <v-row dense>
               <v-col cols="6">
                 <v-text-field v-model.number="editingWaypoint.latitude" :label="$gettext('Latitude')" density="compact"
-                  variant="outlined" type="number" step="0.00001"></v-text-field>
+                  variant="outlined" type="number" step="0.00001" readonly></v-text-field>
               </v-col>
               <v-col cols="6">
                 <v-text-field v-model.number="editingWaypoint.longitude" :label="$gettext('Longitude')"
-                  density="compact" variant="outlined" type="number" step="0.00001"></v-text-field>
+                  density="compact" variant="outlined" type="number" step="0.00001" readonly></v-text-field>
               </v-col>
             </v-row>
 
