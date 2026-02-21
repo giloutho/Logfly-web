@@ -1013,11 +1013,13 @@ function onNoTrackFlightSaved() {
 }
 
 /*
- * On mobile, hide Leaflet zoom control and layer selector when the drawer is open
- * so they don't bleed over the flight list. The attribution (.leaflet-bottom) is
- * preserved (legally required by OSM).
+ * On mobile, hide Leaflet layer selector AND our custom Vue button overlay
+ * when the drawer is open, so they don't bleed over the flight list.
+ * Re-appear automatically when drawer closes (user selects a flight).
+ * Attribution (.leaflet-bottom) is preserved (legally required by OSM).
  */
-.hide-map-controls :deep(.leaflet-top) {
+.hide-map-controls :deep(.leaflet-top),
+.hide-map-controls :deep(.map-overlay-bottomright) {
   display: none;
 }
 

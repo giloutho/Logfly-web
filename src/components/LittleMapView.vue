@@ -2,9 +2,20 @@
   <div class="little-map-wrapper" :class="{ 'no-radius': noBorderRadius }">
     <div ref="mapContainer" class="map-container"></div>
 
-    <div v-if="!hideOverlay" class="map-overlay-bottom">
+    <!-- Custom bottom-right control: zoom + map actions (replaces native Leaflet zoom) -->
+    <div v-if="!hideOverlay" class="map-overlay-bottomright">
       <div class="map-buttons">
-        <v-tooltip :text="$gettext('Full map')" location="top">
+        <v-tooltip :text="$gettext('Zoom in')" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn v-bind="props" icon="mdi-plus" size="36" color="white" class="map-btn" @click="zoomIn"></v-btn>
+          </template>
+        </v-tooltip>
+        <v-tooltip :text="$gettext('Zoom out')" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn v-bind="props" icon="mdi-minus" size="36" color="white" class="map-btn" @click="zoomOut"></v-btn>
+          </template>
+        </v-tooltip>
+        <v-tooltip :text="$gettext('Full map')" location="bottom">
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props" icon="mdi-fullscreen" size="36" color="white" class="map-btn"
               @click="$emit('open-full-map')"></v-btn>
@@ -14,12 +25,6 @@
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props" icon="mdi-video-3d" size="36" color="white" class="map-btn"
               @click="$emit('open-cesium')"></v-btn>
-          </template>
-        </v-tooltip>
-        <v-tooltip v-if="!hideAnalyze" :text="$gettext('Analyze')" location="top">
-          <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" icon="mdi-chart-line" size="36" color="white" class="map-btn"
-              @click="$emit('open-analyze')"></v-btn>
           </template>
         </v-tooltip>
       </div>
@@ -108,7 +113,7 @@ let endMarker = null;
 onMounted(() => {
   // Initialiser la carte Leaflet — zoom control to top-right to avoid drawer overlap
   map = L.map(mapContainer.value, { zoomControl: false }).setView([45.0, 6.0], 10);
-  L.control.zoom({ position: 'topright' }).addTo(map);
+  // Native zoom control removed — replaced by custom [+][-][⛶][3D] button group
 
   // Create fresh tile layer instances for this map (avoid conflicts with other maps)
   const mapBaseLayers = createBaseMaps();
@@ -328,6 +333,14 @@ function displayTakeoffOnly(lat, lon, site, alt, siteType = 'D') {
   startMarker.openPopup();
 }
 
+function zoomIn() {
+  if (map) map.zoomIn();
+}
+
+function zoomOut() {
+  if (map) map.zoomOut();
+}
+
 defineExpose({
   displayTakeoffOnly
 });
@@ -353,7 +366,7 @@ onBeforeUnmount(() => {
   height: 100%;
 }
 
-.map-overlay-bottom {
+.map-overlay-bottomright {
   position: absolute;
   right: 10px;
   bottom: 10px;
@@ -361,7 +374,6 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   pointer-events: none;
-  /* Let clicks pass through empty areas */
 }
 
 .map-buttons {
