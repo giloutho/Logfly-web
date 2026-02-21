@@ -190,6 +190,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { readWaypointFile } from '@/js/waypoints/wayp-read.js';
 import { exportWaypoints, getExportFormats } from '@/js/waypoints/wayp-write.js';
+import { createBaseMaps } from '@/js/leaflet/tiles.js';
 
 const { $gettext } = useGettext();
 
@@ -275,21 +276,10 @@ function calculateListHeight() {
 function initMap() {
   map = L.map('waypoint-map').setView([45.8326, 6.865], 9);
 
-  const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-  });
-  const openTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map data: &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap (CC-BY-SA)'
-  });
+  const mapBaseLayers = createBaseMaps();
+  mapBaseLayers['OpenStreetMap'].addTo(map);
 
-  osm.addTo(map);
-
-  const baseMaps = {
-    "OpenStreetMap": osm,
-    "OpenTopoMap": openTopo
-  };
-
-  L.control.layers(baseMaps).addTo(map);
+  L.control.layers(mapBaseLayers).addTo(map);
 
   // Map click handler for edit mode
   map.on('click', onMapClick);

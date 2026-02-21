@@ -25,7 +25,7 @@
       <div v-if="currentFileName" class="d-flex align-center mx-2 font-weight-bold text-primary">
         {{ currentFileName }}
         <v-chip size="small" class="ml-2" color="primary" variant="outlined">{{ visibleCount }} / {{ totalCount
-          }}</v-chip>
+        }}</v-chip>
       </div>
 
       <!-- Search Name -->
@@ -154,6 +154,7 @@ import 'leaflet/dist/leaflet.css';
 import booleanIntersects from '@turf/boolean-intersects';
 import centroid from '@turf/centroid';
 import { decodeOpenAir, downloadBazile, setCatColor } from '@/js/airspaces/airspaces-open.js';
+import { createBaseMaps } from '@/js/leaflet/tiles.js';
 
 const { $gettext } = useGettext();
 
@@ -299,21 +300,10 @@ function showMessage(msg, color = 'info') {
 function initMap() {
   map = L.map('airspace-map').setView([45.8326, 6.865], 9);
 
-  const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-  });
-  const openTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map data: &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap (CC-BY-SA)'
-  });
+  const mapBaseLayers = createBaseMaps();
+  mapBaseLayers['OpenStreetMap'].addTo(map);
 
-  osm.addTo(map);
-
-  const baseMaps = {
-    "OpenStreetMap": osm,
-    "OpenTopoMap": openTopo
-  };
-
-  L.control.layers(baseMaps).addTo(map);
+  L.control.layers(mapBaseLayers).addTo(map);
 
   map.on('click', onMapClick);
 }
