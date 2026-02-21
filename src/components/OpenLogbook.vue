@@ -145,9 +145,11 @@ async function handleCreateNewLogbook() {
   try {
     // Ajouter .db si non présent
     let filename = newLogbookName.value.trim();
-    if (!filename.toLowerCase().endsWith('.db')) {
-      filename += '.db';
+    const lastDotIndex = filename.lastIndexOf('.');
+    if (lastDotIndex !== -1) {
+      filename = filename.substring(0, lastDotIndex);
     }
+    filename += '.db';
 
     // Créer la nouvelle base de données
     const result = await databaseStore.createNewLogbook(filename);
