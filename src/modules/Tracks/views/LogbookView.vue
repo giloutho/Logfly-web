@@ -18,14 +18,14 @@
         <!-- Fixed Header: Search & Filters -->
         <div class="pa-2 drawer-header">
           <!-- Search & Filter Block -->
-          <v-text-field v-model="searchQuery" :label="$gettext('Search...')" prepend-inner-icon="mdi-magnify"
-            variant="outlined" density="compact" hide-details class="mb-2"
-            @click:append-inner="showSearchDialog = true">
-            <template v-slot:append-inner>
-              <v-btn size="small" variant="text" icon="mdi-tune" @click.stop="showSearchDialog = true"
-                :title="$gettext('Advanced Search')"></v-btn>
-            </template>
-          </v-text-field>
+          <v-card variant="outlined" class="search-trigger mb-2 d-flex align-center" height="40"
+            @click="showSearchDialog = true" style="border-color: rgba(0,0,0,0.38); cursor: pointer;">
+            <v-icon color="grey" class="ml-2">mdi-magnify</v-icon>
+            <span class="ml-2 text-body-2 text-grey-darken-1">{{ $gettext('Search...') }}</span>
+            <v-spacer></v-spacer>
+            <v-btn size="small" variant="text" icon="mdi-tune" @click.stop="showSearchDialog = true"
+              :title="$gettext('Advanced Search')"></v-btn>
+          </v-card>
 
           <v-select v-model="selectedTagFilter" :items="tagOptions" :label="$gettext('Filter by tag')" density="compact"
             variant="outlined" hide-details class="tag-filter" item-title="title" item-value="value">
