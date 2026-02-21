@@ -452,7 +452,9 @@ function onGliderSelected(gliderName) {
             form.comment = statsMsg;
         }
 
-        onClearChoice();
+        // Hide selection UI but keep form.engin
+        showGliderSelect.value = false;
+        selectedGlider.value = null;
     }
 }
 

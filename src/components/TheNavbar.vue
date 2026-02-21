@@ -5,6 +5,7 @@
         <img src="@/assets/Logowebwh.png" alt="Logo Logfly"
           style="vertical-align: middle; margin-right: 8px; height: 48px;" />
         Logfly
+        <span class="app-version ml-1">v{{ version }}</span>
       </router-link>
     </v-toolbar-title>
 
@@ -261,7 +262,8 @@ const databaseStore = useDatabaseStore();
 
 const props = defineProps({
   isDirty: { type: Boolean, default: false },
-  dbPath: { type: String, default: '' }
+  dbPath: { type: String, default: '' },
+  version: { type: String, default: '7.0.0' }
 });
 
 const emit = defineEmits(['save']);
@@ -369,6 +371,15 @@ async function handleSave() {
 .app-title-link {
   color: inherit;
   text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.app-version {
+  font-size: 0.6em;
+  opacity: 0.7;
+  font-weight: 300;
+  vertical-align: super;
 }
 
 .lang-btn {

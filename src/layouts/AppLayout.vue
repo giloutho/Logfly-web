@@ -17,7 +17,7 @@
 </style>
 <template>
     <v-app class="app-container">
-        <TheNavbar :isDirty="isDirty" :dbPath="dbPath" @save="onSave" />
+        <TheNavbar :isDirty="isDirty" :dbPath="dbPath" :version="appVersion" @save="onSave" />
         <v-main class="content-area">
             <router-view @db-updated="onDbUpdated" />
         </v-main>
