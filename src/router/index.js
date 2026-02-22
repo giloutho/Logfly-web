@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-//import HomeView from '../views/HomeView.vue'
+import { get } from 'idb-keyval'
 
 const routes = [
   // Redirection explicite pour index.html
@@ -138,4 +138,36 @@ const router = createRouter({
   routes
 });
 
+// Map startPage setting values to route names
+const startPageRoutes = {
+  home: 'home',
+  logbook: 'logbook-view',
+  import: 'import-gps',
+};
+
+// Flag to ensure we only redirect on the very first navigation (app launch)
+let isFirstNavigation = true;
+
+router.beforeEach(async (to, from, next) => {
+  // Only intercept the first navigation to the home page
+  if (isFirstNavigation && to.name === 'home') {
+    isFirstNavigation = false;
+    try {
+      const saved = await get('logfly_settings');
+      if (saved && saved.startPage && saved.startPage !== 'home') {
+        const targetRoute = startPageRoutes[saved.startPage];
+        if (targetRoute) {
+          next({ name: targetRoute });
+          return;
+        }
+      }
+    } catch (err) {
+      console.error('Error reading startup setting:', err);
+    }
+  }
+  isFirstNavigation = false;
+  next();
+});
+
 export default router
+

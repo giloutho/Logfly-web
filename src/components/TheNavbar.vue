@@ -95,6 +95,9 @@
           </v-btn>
         </template>
         <v-list>
+          <v-list-item :to="{ name: 'settings-view' }">
+            <v-list-item-title>{{ $gettext('Settings') }}</v-list-item-title>
+          </v-list-item>
           <v-list-item :to="{ name: 'support-view' }">
             <v-list-item-title>{{ $gettext('Support') }}</v-list-item-title>
           </v-list-item>
@@ -207,6 +210,9 @@
         <template v-slot:activator="{ props }">
           <v-list-item v-bind="props" :title="$gettext('Utilities')" prepend-icon="mdi-tools"></v-list-item>
         </template>
+        <v-list-item :to="{ name: 'settings-view' }" @click="drawer = false">
+          <v-list-item-title>{{ $gettext('Settings') }}</v-list-item-title>
+        </v-list-item>
         <v-list-item :to="{ name: 'support-view' }" @click="drawer = false">
           <v-list-item-title>{{ $gettext('Support') }}</v-list-item-title>
         </v-list-item>
