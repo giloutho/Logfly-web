@@ -1,4 +1,15 @@
 import L from 'leaflet';
+import markerIcon2x from '@/assets/marker-icon-2x.png';
+import markerIcon from '@/assets/marker-icon.png';
+import markerShadow from '@/assets/marker-shadow.png';
+
+// Fix Leaflet default icon paths for production builds
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
 
 /**
  * Create a new OSM tile layer instance

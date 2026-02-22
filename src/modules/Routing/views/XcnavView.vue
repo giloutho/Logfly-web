@@ -164,7 +164,7 @@
             <template v-slot:label>
               <span :class="{ 'text-grey': !formatSupportsMarkers }">{{ $gettext('Include markers') }}</span>
               <span v-if="!formatSupportsMarkers" class="text-caption text-grey ml-2">({{ $gettext('not supported')
-                }})</span>
+              }})</span>
             </template>
           </v-checkbox>
         </v-card-text>
@@ -199,6 +199,7 @@ import { exportRoute, downloadFile, getExportFormats } from '@/js/xcnav/rte-writ
 import { IGCDecoder } from '@/js/igc/igc-decoder.js';
 import { IgcAnalyze } from '@/js/igc/igc-analyzer.js';
 import AirspaceRouteDialog from '@/modules/Routing/components/AirspaceRouteDialog.vue';
+import { createBaseMaps } from '@/js/leaflet/tiles.js';
 
 const { $gettext } = useGettext();
 
@@ -336,63 +337,8 @@ function showMessage(msg, color = 'info') {
 function initMap() {
   map = L.map('xcnav-map').setView([45.8326, 6.865], 10);
 
-  // Base layers - all available tile providers
-  const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 19
-  });
-
-  const openTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a>',
-    maxZoom: 17
-  });
-
-  const ign = L.tileLayer('https://data.geopf.fr/wmts?' +
-    '&REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&TILEMATRIXSET=PM' +
-    '&LAYER={ignLayer}&STYLE={style}&FORMAT={format}' +
-    '&TILECOL={x}&TILEROW={y}&TILEMATRIX={z}',
-    {
-      ignLayer: 'GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2',
-      style: 'normal',
-      format: 'image/png',
-      service: 'WMTS',
-      opacity: 1,
-      attribution: 'Carte © IGN/Geoplateforme'
-    });
-
-  const satellite = L.tileLayer(
-    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    {
-      maxZoom: 18,
-      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-    }
-  );
-
-  const mtk = L.tileLayer('http://tile2.maptoolkit.net/terrain/{z}/{x}/{y}.png', {
-    attribution: 'MapToolkit'
-  });
-
-  const esriTopo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI'
-  });
-
-  const outdoor = L.tileLayer('https://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=6f5667c1f2d24e5f84ec732c1dbd032e', {
-    maxZoom: 18,
-    attribution: '&copy; <a href="https://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  });
-
-  osm.addTo(map);
-
-  // Layer control with all base maps
-  const baseMaps = {
-    "OpenStreetMap": osm,
-    "OpenTopoMap": openTopo,
-    "IGN": ign,
-    "Satellite": satellite,
-    "Mtk": mtk,
-    "Esri Topo": esriTopo,
-    "Outdoor": outdoor
-  };
+  const mapBaseLayers = createBaseMaps();
+  mapBaseLayers['OpenStreetMap'].addTo(map);
 
   // Overlay layers
   scoreGroup = L.layerGroup().addTo(map);
@@ -419,7 +365,7 @@ function initMap() {
     "Thermal.kk7.ch": kk7Group
   };
 
-  L.control.layers(baseMaps, overlayMaps).addTo(map);
+  L.control.layers(mapBaseLayers, overlayMaps).addTo(map);
 
   // Map events
   map.on('click', onMapClick);

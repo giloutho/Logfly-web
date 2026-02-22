@@ -177,18 +177,6 @@ import 'leaflet/dist/leaflet.css';
 import { Position } from '@/js/geo/position.js';
 import { createBaseMaps } from '@/js/leaflet/tiles.js';
 
-// Fix Leaflet default icon issue
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: markerIcon2x,
-    iconUrl: markerIcon,
-    shadowUrl: markerShadow,
-});
-
 const { $gettext } = useGettext();
 
 // Props
@@ -377,19 +365,8 @@ function initMap() {
     // Add layer control (same as LittleMapView)
     L.control.layers(mapBaseLayers, null, { collapsed: false }).addTo(map);
 
-    // Create custom violet marker icon
-    const violetIcon = L.icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    });
-
     // Add draggable marker
     marker = L.marker([position.latitude, position.longitude], {
-        icon: violetIcon,
         draggable: true
     }).addTo(map);
 
