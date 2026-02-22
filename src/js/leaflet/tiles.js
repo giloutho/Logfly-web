@@ -2,6 +2,7 @@ import L from 'leaflet';
 import markerIcon2x from '@/assets/marker-icon-2x.png';
 import markerIcon from '@/assets/marker-icon.png';
 import markerShadow from '@/assets/marker-shadow.png';
+import { settings } from '@/js/settings/settingsService';
 
 // Fix Leaflet default icon paths for production builds
 delete L.Icon.Default.prototype._getIconUrl;
@@ -114,6 +115,20 @@ export function createBaseMaps() {
     'Esri Topo': createEsriTopo(),
     'Outdoor': createOutdoor()
   };
+}
+
+/**
+ * Get the user's preferred default map layer name from settings.
+ * Falls back to 'OpenStreetMap' if no setting is stored or the key is invalid.
+ * @returns {string} Layer name matching a key in createBaseMaps()
+ */
+export function getDefaultLayerName() {
+  const layerName = settings.value?.defaultMapLayer;
+  const validLayers = ['OpenStreetMap', 'OpenTopoMap', 'IGN', 'Satellite', 'Mtk', 'Esri Topo', 'Outdoor'];
+  if (layerName && validLayers.includes(layerName)) {
+    return layerName;
+  }
+  return 'OpenStreetMap';
 }
 
 // Legacy exports for backward compatibility (singleton instances)

@@ -164,7 +164,7 @@
             <template v-slot:label>
               <span :class="{ 'text-grey': !formatSupportsMarkers }">{{ $gettext('Include markers') }}</span>
               <span v-if="!formatSupportsMarkers" class="text-caption text-grey ml-2">({{ $gettext('not supported')
-              }})</span>
+                }})</span>
             </template>
           </v-checkbox>
         </v-card-text>
@@ -199,7 +199,7 @@ import { exportRoute, downloadFile, getExportFormats } from '@/js/xcnav/rte-writ
 import { IGCDecoder } from '@/js/igc/igc-decoder.js';
 import { IgcAnalyze } from '@/js/igc/igc-analyzer.js';
 import AirspaceRouteDialog from '@/modules/Routing/components/AirspaceRouteDialog.vue';
-import { createBaseMaps } from '@/js/leaflet/tiles.js';
+import { createBaseMaps, getDefaultLayerName, createKk7 } from '@/js/leaflet/tiles.js';
 
 const { $gettext } = useGettext();
 
@@ -338,7 +338,7 @@ function initMap() {
   map = L.map('xcnav-map').setView([45.8326, 6.865], 10);
 
   const mapBaseLayers = createBaseMaps();
-  mapBaseLayers['OpenStreetMap'].addTo(map);
+  mapBaseLayers[getDefaultLayerName()].addTo(map);
 
   // Overlay layers
   scoreGroup = L.layerGroup().addTo(map);

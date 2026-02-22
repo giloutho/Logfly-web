@@ -190,7 +190,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { readWaypointFile } from '@/js/waypoints/wayp-read.js';
 import { exportWaypoints, getExportFormats } from '@/js/waypoints/wayp-write.js';
-import { createBaseMaps } from '@/js/leaflet/tiles.js';
+import { createBaseMaps, getDefaultLayerName } from '@/js/leaflet/tiles.js';
 
 const { $gettext } = useGettext();
 
@@ -277,7 +277,7 @@ function initMap() {
   map = L.map('waypoint-map').setView([45.8326, 6.865], 9);
 
   const mapBaseLayers = createBaseMaps();
-  mapBaseLayers['OpenStreetMap'].addTo(map);
+  mapBaseLayers[getDefaultLayerName()].addTo(map);
 
   L.control.layers(mapBaseLayers).addTo(map);
 

@@ -175,7 +175,7 @@ import { useGettext } from 'vue3-gettext';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Position } from '@/js/geo/position.js';
-import { createBaseMaps } from '@/js/leaflet/tiles.js';
+import { createBaseMaps, getDefaultLayerName } from '@/js/leaflet/tiles.js';
 
 const { $gettext } = useGettext();
 
@@ -360,7 +360,7 @@ function initMap() {
     const mapBaseLayers = createBaseMaps();
 
     // Use the OSM layer from baseMaps so it appears selected in the layer control
-    mapBaseLayers['OpenStreetMap'].addTo(map);
+    mapBaseLayers[getDefaultLayerName()].addTo(map);
 
     // Add layer control (same as LittleMapView)
     L.control.layers(mapBaseLayers, null, { collapsed: false }).addTo(map);

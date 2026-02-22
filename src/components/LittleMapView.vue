@@ -38,7 +38,7 @@ import { useGettext } from "vue3-gettext";
 
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { createBaseMaps } from '@/js/leaflet/tiles.js';
+import { createBaseMaps, getDefaultLayerName } from '@/js/leaflet/tiles.js';
 import { startIcon, endIcon } from '@/js/leaflet/map-utils.js';
 
 // Import site type icons
@@ -119,7 +119,7 @@ onMounted(() => {
   const mapBaseLayers = createBaseMaps();
 
   // Use the OSM layer from baseMaps so it appears selected in the layer control
-  mapBaseLayers['OpenStreetMap'].addTo(map);
+  mapBaseLayers[getDefaultLayerName()].addTo(map);
 
   // Ajouter le contrôleur de couches
   L.control.layers(mapBaseLayers, null, { collapsed: false }).addTo(map);

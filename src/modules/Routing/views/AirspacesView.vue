@@ -25,7 +25,7 @@
       <div v-if="currentFileName" class="d-flex align-center mx-2 font-weight-bold text-primary">
         {{ currentFileName }}
         <v-chip size="small" class="ml-2" color="primary" variant="outlined">{{ visibleCount }} / {{ totalCount
-        }}</v-chip>
+          }}</v-chip>
       </div>
 
       <!-- Search Name -->
@@ -154,7 +154,7 @@ import 'leaflet/dist/leaflet.css';
 import booleanIntersects from '@turf/boolean-intersects';
 import centroid from '@turf/centroid';
 import { decodeOpenAir, downloadBazile, setCatColor } from '@/js/airspaces/airspaces-open.js';
-import { createBaseMaps } from '@/js/leaflet/tiles.js';
+import { createBaseMaps, getDefaultLayerName } from '@/js/leaflet/tiles.js';
 
 const { $gettext } = useGettext();
 
@@ -301,7 +301,7 @@ function initMap() {
   map = L.map('airspace-map').setView([45.8326, 6.865], 9);
 
   const mapBaseLayers = createBaseMaps();
-  mapBaseLayers['OpenStreetMap'].addTo(map);
+  mapBaseLayers[getDefaultLayerName()].addTo(map);
 
   L.control.layers(mapBaseLayers).addTo(map);
 

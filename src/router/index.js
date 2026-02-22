@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { get } from 'idb-keyval'
+import { loadSettings } from '@/js/settings/settingsService'
 
 const routes = [
   // Redirection explicite pour index.html
@@ -153,7 +153,7 @@ router.beforeEach(async (to, from, next) => {
   if (isFirstNavigation && to.name === 'home') {
     isFirstNavigation = false;
     try {
-      const saved = await get('logfly_settings');
+      const saved = await loadSettings();
       if (saved && saved.startPage && saved.startPage !== 'home') {
         const targetRoute = startPageRoutes[saved.startPage];
         if (targetRoute) {
@@ -164,8 +164,15 @@ router.beforeEach(async (to, from, next) => {
     } catch (err) {
       console.error('Error reading startup setting:', err);
     }
+  } else if (isFirstNavigation) {
+    // Even if not going to home, load settings so they are available everywhere
+    isFirstNavigation = false;
+    try {
+      await loadSettings();
+    } catch (err) {
+      console.error('Error loading settings:', err);
+    }
   }
-  isFirstNavigation = false;
   next();
 });
 

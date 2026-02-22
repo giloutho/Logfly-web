@@ -7,7 +7,7 @@ import { onMounted, onBeforeUnmount, watch, ref } from 'vue'
 import { useGettext } from "vue3-gettext";
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { baseMaps, kk7layer } from '@/js/leaflet/tiles.js'
+import { baseMaps, kk7layer, getDefaultLayerName } from '@/js/leaflet/tiles.js'
 import '@/js/leaflet/leaflet-measure.css'
 import { createPopThermal, createPopGlide, thermalIcon, glideIcon, startIcon, endIcon, getLeagueColor } from '@/js/leaflet/map-utils.js'
 
@@ -87,9 +87,10 @@ onMounted(async () => {
         localBaseMaps[key] = L.tileLayer(layer._url, layer.options)
     }
 
-    // Add default layer (OpenStreetMap)
-    if (localBaseMaps['OpenStreetMap']) {
-        localBaseMaps['OpenStreetMap'].addTo(map)
+    // Add default layer
+    const defaultLayer = getDefaultLayerName()
+    if (localBaseMaps[defaultLayer]) {
+        localBaseMaps[defaultLayer].addTo(map)
     }
 
     layerControl = L.control.layers(localBaseMaps, null, { collapsed: false }).addTo(map)
