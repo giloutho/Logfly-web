@@ -55,23 +55,41 @@
           </div>
         </div>
 
+        <!-- Selection Header -->
+        <div v-if="selectedItems.length > 0" class="d-flex align-center justify-space-between px-4 py-2 bg-primary">
+          <span class="text-body-2 font-weight-bold">
+            {{ selectedItems.length }} {{ $gettext('flights selected') }}
+          </span>
+          <div>
+            <v-btn v-if="selectedItems.length > 1" size="small" variant="text" color="white"
+              prepend-icon="mdi-call-merge" @click="mergeFlights" class="mr-2">
+              {{ $gettext('Merge') }}
+            </v-btn>
+            <v-btn size="small" variant="text" icon="mdi-close" color="white" @click="clearSelection"></v-btn>
+          </div>
+        </div>
+
         <v-divider></v-divider>
 
         <!-- Virtual Scroll Flight List: fills remaining drawer height -->
         <v-virtual-scroll :items="filteredFlights" class="flight-virtual-scroll" item-height="68">
           <template v-slot:default="{ item }">
-            <v-list-item :value="item.V_ID" :active="selectedItems.includes(item.V_ID)" @click="onFlightSelect(item)"
-              class="flight-item px-3">
+            <v-list-item :value="item.V_ID" :active="activeFlightId === item.V_ID" @click="onFlightSelect(item)"
+              class="flight-item px-1">
               <!-- Indicators: photo, tag color -->
               <template v-slot:prepend>
-                <div class="flight-indicators mr-2">
-                  <!-- Camera icon: click to VIEW photo (only if photo exists) -->
-                  <v-icon v-if="item.Photo === 'Yes'" size="x-small" color="primary" style="cursor:pointer"
-                    @click.stop="openPhotoViewer(item)">mdi-camera</v-icon>
-                  <v-icon v-if="item.V_Tag && tagsMap[item.V_Tag]" :color="tagsMap[item.V_Tag].color"
-                    size="x-small">mdi-circle</v-icon>
-                  <v-icon v-if="!item.Photo && !(item.V_Tag && tagsMap[item.V_Tag])" size="x-small"
-                    color="transparent">mdi-circle</v-icon>
+                <div class="d-flex align-center mr-2">
+                  <v-checkbox-btn v-model="selectedItems" :value="item.V_ID" @click.stop color="primary"
+                    class="mr-1"></v-checkbox-btn>
+                  <div class="flight-indicators">
+                    <!-- Camera icon: click to VIEW photo (only if photo exists) -->
+                    <v-icon v-if="item.Photo === 'Yes'" size="x-small" color="primary" style="cursor:pointer"
+                      @click.stop="openPhotoViewer(item)">mdi-camera</v-icon>
+                    <v-icon v-if="item.V_Tag && tagsMap[item.V_Tag]" :color="tagsMap[item.V_Tag].color"
+                      size="x-small">mdi-circle</v-icon>
+                    <v-icon v-if="!item.Photo && !(item.V_Tag && tagsMap[item.V_Tag])" size="x-small"
+                      color="transparent">mdi-circle</v-icon>
+                  </div>
                 </div>
               </template>
 
@@ -246,7 +264,8 @@ const { mobile } = useDisplay();
 const drawer = ref(true); // Left drawer (Flight List)
 
 const flights = ref([]);
-const selectedItems = ref([]);
+const selectedItems = ref([]); // Now used for multiple checkboxes
+const activeFlightId = ref(null); // Used for the currently displayed flight track
 const searchQuery = ref('');
 
 // Warn user if leaving with unsaved changes
@@ -411,12 +430,12 @@ function loadFlights(keepSelection = false) {
       return obj;
     });
 
-    if (keepSelection && selectedItems.value.length > 0) {
-      const exists = flights.value.some(f => f.V_ID === selectedItems.value[0]);
+    if (keepSelection && activeFlightId.value) {
+      const exists = flights.value.some(f => f.V_ID === activeFlightId.value);
       if (exists) {
-        readIgcFromDb(selectedItems.value[0]);
+        readIgcFromDb(activeFlightId.value);
       } else {
-        selectedItems.value = [];
+        activeFlightId.value = null;
         // Auto-select first flight if previous selection lost
         if (flights.value.length > 0) {
           onFlightSelect(flights.value[0]);
@@ -424,7 +443,7 @@ function loadFlights(keepSelection = false) {
       }
     } else if (!keepSelection) {
       // Auto-select first flight on initial load
-      if (flights.value.length > 0 && selectedItems.value.length === 0) {
+      if (flights.value.length > 0 && !activeFlightId.value) {
         onFlightSelect(flights.value[0]);
       }
     }
@@ -476,13 +495,23 @@ function unfilterFlights() {
 
 // Called when clicking a flight in the list
 function onFlightSelect(item) {
-  selectedItems.value = [item.V_ID];
+  activeFlightId.value = item.V_ID;
   readIgcFromDb(item.V_ID);
 
   // On mobile, close List drawer to show the map
   if (mobile.value) {
     drawer.value = false;
   }
+}
+
+function clearSelection() {
+  selectedItems.value = [];
+}
+
+function mergeFlights() {
+  // Placeholder for future merge implementation
+  snackbarMessage.value = $gettext('Merge feature coming soon');
+  snackbar.value = true;
 }
 
 
