@@ -4,6 +4,12 @@
 
     <!-- Custom bottom-right control: zoom + map actions (replaces native Leaflet zoom) -->
     <div v-if="!hideOverlay" class="map-overlay-bottomright">
+      <div v-if="flightInfo"
+        class="flight-info bg-white rounded-pill px-4 py-2 mr-3 elevation-2 text-body-2 d-flex align-center">
+        <span class="font-weight-bold text-grey-darken-3">{{ flightInfo.date }}</span>
+        <span class="mx-2 text-grey-lighten-1">|</span>
+        <span class="font-weight-bold text-primary">{{ flightInfo.duration }}</span>
+      </div>
       <div class="map-buttons">
         <v-tooltip :text="$gettext('Zoom in')" location="bottom">
           <template v-slot:activator="{ props }">
@@ -98,6 +104,10 @@ const props = defineProps({
   paddingLeft: {
     type: Number,
     default: 0
+  },
+  flightInfo: {
+    type: Object,
+    default: null
   }
 });
 

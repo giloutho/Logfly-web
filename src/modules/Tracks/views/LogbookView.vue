@@ -82,8 +82,8 @@
         <!-- Virtual Scroll Flight List: fills remaining drawer height -->
         <v-virtual-scroll :items="filteredFlights" class="flight-virtual-scroll" item-height="68">
           <template v-slot:default="{ item }">
-            <v-list-item :value="item.V_ID" :active="activeFlightId === item.V_ID" @click="onFlightSelect(item)"
-              class="flight-item px-1">
+            <v-list-item :active="activeFlightId === item.V_ID" @click="onFlightSelect(item)" class="flight-item px-1"
+              :ripple="false">
               <!-- Indicators: photo, tag color -->
               <template v-slot:prepend>
                 <div class="d-flex align-center mr-2">
@@ -170,9 +170,10 @@
              (controls reappear once the user selects a flight and the drawer closes) -->
         <div class="map-wrapper" :class="{ 'hide-map-controls': mobile && drawer }">
           <LittleMapView v-if="decodedTrack && decodedTrack.GeoJSON" ref="littleMapRef" :geoJson="decodedTrack.GeoJSON"
-            :scoreJson="scoreJson" :paddingLeft="$vuetify.display.mdAndUp ? 400 : 0" @open-full-map="onOpenFullMap"
-            @open-cesium="onOpenCesium" @open-analyze="onOpenAnalyze" />
-          <LittleMapView v-else-if="noIgcFlight" ref="littleMapRef" :hideOverlay="true" />
+            :scoreJson="scoreJson" :paddingLeft="$vuetify.display.mdAndUp ? 400 : 0" :flightInfo="currentFlightInfo"
+            @open-full-map="onOpenFullMap" @open-cesium="onOpenCesium" @open-analyze="onOpenAnalyze" />
+          <LittleMapView v-else-if="noIgcFlight" ref="littleMapRef" :hideOverlay="true"
+            :flightInfo="currentFlightInfo" />
           <div v-else class="no-track-placeholder d-flex align-center justify-center flex-column bg-grey-lighten-4">
             <v-icon size="64" color="grey">mdi-map-marker-off</v-icon>
             <p class="text-h6 text-grey mt-4">{{ $gettext('Select a flight to view track') }}</p>
@@ -323,6 +324,21 @@ const noTrackFlightData = ref(null);
 const noTrackFlightDetails = ref(null);
 const showSearchDialog = ref(false);
 const isFiltered = ref(false);
+
+const currentFlightInfo = computed(() => {
+  if (dataFlight.value && dataFlight.value.day) {
+    return {
+      date: dataFlight.value.day,
+      duration: dataFlight.value.duration
+    };
+  } else if (noTrackFlightDetails.value && noTrackFlightDetails.value.day) {
+    return {
+      date: noTrackFlightDetails.value.day,
+      duration: noTrackFlightDetails.value.durationStr
+    };
+  }
+  return null;
+});
 
 // New dialog states
 const showCommentDialog = ref(false);
@@ -520,6 +536,11 @@ function unfilterFlights() {
 function onFlightSelect(item) {
   activeFlightId.value = item.V_ID;
   readIgcFromDb(item.V_ID);
+
+  // Blur the active element to prevent Vuetify from keeping a stuck "focus" grey highlight
+  if (document.activeElement && document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+  }
 
   // On mobile, close List drawer to show the map
   if (mobile.value) {
