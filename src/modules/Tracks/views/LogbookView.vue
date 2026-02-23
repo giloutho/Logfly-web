@@ -61,6 +61,14 @@
             {{ selectedItems.length }} {{ $gettext('flights selected') }}
           </span>
           <div>
+            <v-btn size="small" variant="text" color="white" prepend-icon="mdi-paragliding" @click="onBulkChangeGlider"
+              class="mr-2">
+              {{ $gettext('Glider') }}
+            </v-btn>
+            <v-btn size="small" variant="text" color="white" prepend-icon="mdi-map-marker-outline"
+              @click="onBulkChangeSite" class="mr-2">
+              {{ $gettext('Site') }}
+            </v-btn>
             <v-btn v-if="selectedItems.length > 1" size="small" variant="text" color="white"
               prepend-icon="mdi-call-merge" @click="mergeFlights" class="mr-2">
               {{ $gettext('Merge') }}
@@ -749,9 +757,16 @@ function changeGlider(item) {
   showGliderDialog.value = true;
 }
 
+function onBulkChangeGlider() {
+  if (selectedItems.value.length === 0) return;
+  gliderDialogData.value = { currentGlider: '', flightId: 'bulk' };
+  showGliderDialog.value = true;
+}
+
 function onGliderDialogSave(glider) {
   const flightId = gliderDialogData.value.flightId;
-  onGliderUpdate({ id: flightId, glider });
+  const ids = flightId === 'bulk' ? selectedItems.value.join(',') : (flightId || dataFlight.value?.decodedIgc?.info?.id);
+  onGliderUpdate({ ids: ids, glider });
 }
 
 function changeSite(item) {
@@ -760,9 +775,16 @@ function changeSite(item) {
   showChangeSiteDialog.value = true;
 }
 
+function onBulkChangeSite() {
+  if (selectedItems.value.length === 0) return;
+  changeSiteDialogData.value = { currentSite: '', flightId: 'bulk' };
+  showChangeSiteDialog.value = true;
+}
+
 function onChangeSiteDialogSave(site) {
   const flightId = changeSiteDialogData.value.flightId;
-  onSiteUpdate({ id: flightId, site });
+  const ids = flightId === 'bulk' ? selectedItems.value.join(',') : (flightId || dataFlight.value?.decodedIgc?.info?.id);
+  onSiteUpdate({ ids: ids, site });
 }
 
 async function exportIgc(item) {
@@ -877,45 +899,51 @@ function onCommentUpdate({ id, comment }) {
   emit('db-updated');
 }
 
-function onGliderUpdate({ id, glider }) {
-  const flightId = id || dataFlight.value?.decodedIgc?.info?.id || selectedItems.value[0];
-  if (!flightId) return;
-  const req = `UPDATE Vol SET V_Engin = '${glider}' WHERE V_ID = ${flightId}`;
+function onGliderUpdate({ ids, glider }) {
+  if (!ids) return;
+  const safeGlider = glider ? glider.replace(/'/g, "''") : '';
+  const req = `UPDATE Vol SET V_Engin = '${safeGlider}' WHERE V_ID IN (${ids})`;
   const result = databaseStore.update(req);
+
   if (!result.success) {
     snackbarMessage.value = 'Erreur lors de la mise à jour de la voile';
     snackbar.value = true;
     return;
   }
-  const idx = flights.value.findIndex(f => f.V_ID === flightId);
-  if (idx !== -1) {
-    flights.value[idx].V_Engin = glider;
-  }
-  if (dataFlight.value) {
+
+  // Refresh data
+  selectedItems.value = [];
+  loadFlights(true);
+
+  if (dataFlight.value && ids.toString().includes(dataFlight.value.dbId)) {
     dataFlight.value.glider = glider;
   }
+
   snackbarMessage.value = 'Voile modifiée';
   snackbar.value = true;
   emit('db-updated');
 }
 
-function onSiteUpdate({ id, site }) {
-  const flightId = id || dataFlight.value?.decodedIgc?.info?.id || selectedItems.value[0];
-  if (!flightId) return;
-  const req = `UPDATE Vol SET V_Site = '${site}' WHERE V_ID = ${flightId}`;
+function onSiteUpdate({ ids, site }) {
+  if (!ids) return;
+  const safeSite = site ? site.replace(/'/g, "''") : '';
+  const req = `UPDATE Vol SET V_Site = '${safeSite}' WHERE V_ID IN (${ids})`;
   const result = databaseStore.update(req);
+
   if (!result.success) {
     snackbarMessage.value = 'Erreur lors de la mise à jour du site';
     snackbar.value = true;
     return;
   }
-  const idx = flights.value.findIndex(f => f.V_ID === flightId);
-  if (idx !== -1) {
-    flights.value[idx].V_Site = site;
-  }
-  if (dataFlight.value) {
+
+  // Refresh data
+  selectedItems.value = [];
+  loadFlights(true);
+
+  if (dataFlight.value && ids.toString().includes(dataFlight.value.dbId)) {
     dataFlight.value.site = site;
   }
+
   snackbarMessage.value = 'Site modifié';
   snackbar.value = true;
   emit('db-updated');
