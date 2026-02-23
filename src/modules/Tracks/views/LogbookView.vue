@@ -106,7 +106,7 @@
                 <span class="flight-date">{{ item.Day }}</span>
                 <span class="flight-time mx-1 text-grey">{{ item.Hour }}</span>
                 <span class="flight-sep mx-1 text-grey">·</span>
-                <span class="flight-duration">{{ item.Duree }}</span>
+                <span class="flight-duration" :class="getDurationColor(item.V_Duree)">{{ item.Duree }}</span>
                 <!-- Comment icon: click to OPEN comment dialog -->
                 <v-icon v-if="item.V_Commentaire" color="amber-darken-2" size="x-small" class="ml-1"
                   style="cursor:pointer" @click.stop="commentFlight(item)">mdi-comment-text</v-icon>
@@ -391,6 +391,19 @@ const filteredTotalTime = computed(() => { // Keep this for stats
   return `${hours}h${minutes.toString().padStart(2, '0')}mn`;
 });
 
+
+function getDurationColor(dureeSec) {
+  const s = parseInt(dureeSec) || 0;
+  if (s < 1800) return 'text-grey-darken-1';     // 0-30mn
+  if (s < 3600) return 'text-blue-grey';         // 30mn-1h
+  if (s < 5400) return 'text-light-blue-darken-2';// 1h-1h30
+  if (s < 7200) return 'text-blue-darken-4';     // 1h30-2h
+  if (s < 10800) return 'text-green-darken-2';   // 2h-3h
+  if (s < 14400) return 'text-orange-darken-3';  // 3h-4h
+  if (s < 18000) return 'text-deep-orange-darken-4'; // 4h-5h
+  if (s < 21600) return 'text-red-darken-3';     // 5h-6h
+  return 'text-purple-darken-4 font-weight-black'; // +6h (epic)
+}
 
 function loadTags() {
   const res = databaseStore.query("SELECT Tag_ID, Tag_Label, Tag_Color FROM Tag");
