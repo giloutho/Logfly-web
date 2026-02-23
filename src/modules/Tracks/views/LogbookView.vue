@@ -104,6 +104,7 @@
               <!-- Line 1: Date + Duration (bold, compact) -->
               <v-list-item-title class="flight-primary">
                 <span class="flight-date">{{ item.Day }}</span>
+                <span class="flight-time mx-1 text-grey">{{ item.Hour }}</span>
                 <span class="flight-sep mx-1 text-grey">·</span>
                 <span class="flight-duration">{{ item.Duree }}</span>
                 <!-- Comment icon: click to OPEN comment dialog -->
