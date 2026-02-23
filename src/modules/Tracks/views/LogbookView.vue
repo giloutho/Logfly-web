@@ -253,6 +253,7 @@ import { igcToGpx } from '@/js/igc/igc-to-gpx.js';
 import { useDatabaseStore } from '@/stores/database';
 import { igcDecoding } from '@/js/igc/igc-decoder.js';
 import { IgcAnalyze } from '@/js/igc/igc-analyzer.js';
+import { mergeIgcTracks } from '@/js/igc/igc-merging.js';
 
 // Déclarer les événements que ce composant peut émettre
 const emit = defineEmits(['db-updated']);
@@ -508,10 +509,119 @@ function clearSelection() {
   selectedItems.value = [];
 }
 
-function mergeFlights() {
-  // Placeholder for future merge implementation
-  snackbarMessage.value = $gettext('Merge feature coming soon');
-  snackbar.value = true;
+async function mergeFlights() {
+  if (selectedItems.value.length < 2) {
+    snackbarMessage.value = $gettext('Select at least 2 flights to merge');
+    snackbar.value = true;
+    return;
+  }
+
+  // 1. Fetch data for all selected flights
+  const ids = selectedItems.value.join(',');
+  const reqSQL = `SELECT V_ID, V_Date, strftime('%Y-%m-%d', V_Date) as DayStr, V_Site, V_Engin, V_Duree, V_IGC, V_Photos FROM Vol WHERE V_ID IN (${ids}) ORDER BY V_Date ASC`;
+  const result = databaseStore.query(reqSQL);
+
+  if (!result.success || !result.data || !result.data[0]) {
+    snackbarMessage.value = $gettext('Error reading flights from database');
+    snackbar.value = true;
+    return;
+  }
+
+  const columns = result.data[0].columns;
+  const values = result.data[0].values;
+  const flightsToMerge = values.map(row => {
+    const obj = {};
+    columns.forEach((col, idx) => obj[col] = row[idx]);
+    return obj;
+  });
+
+  if (flightsToMerge.length !== selectedItems.value.length) {
+    snackbarMessage.value = $gettext('Could not retrieve all selected flights');
+    snackbar.value = true;
+    return;
+  }
+
+  // 2. Validate same day
+  const referenceDay = flightsToMerge[0].DayStr;
+  for (let i = 1; i < flightsToMerge.length; i++) {
+    if (flightsToMerge[i].DayStr !== referenceDay) {
+      snackbarMessage.value = $gettext('Flights must be on the same day to merge');
+      snackbar.value = true;
+      return;
+    }
+  }
+
+  // 3. Validate IGC presence
+  const igcTracks = [];
+  for (let i = 0; i < flightsToMerge.length; i++) {
+    const igc = flightsToMerge[i].V_IGC;
+    if (!igc || igc.trim() === '') {
+      snackbarMessage.value = $gettext('All selected flights must have a valid IGC track');
+      snackbar.value = true;
+      return;
+    }
+    igcTracks.push(igc);
+  }
+
+  // 4. Calculate total time
+  let totalDuree = 0;
+  for (let i = 0; i < flightsToMerge.length; i++) {
+    const duree = parseInt(flightsToMerge[i].V_Duree) || 0;
+    totalDuree += duree;
+  }
+
+  const h = Math.floor(totalDuree / 3600);
+  const mn = Math.floor((totalDuree - (h * 3600)) / 60);
+  const formattedDuree = `${h}h${mn.toString().padStart(2, '0')}mn`;
+  const mergeComment = `${flightsToMerge.length} ${$gettext('merged flights')}`;
+
+  // 5. Merge IGC tracks
+  const mergedIgc = mergeIgcTracks(igcTracks);
+
+  // 6. DB Updates (using the first flight as the base `idRest`)
+  const idRest = flightsToMerge[0].V_ID;
+  const photoBase = flightsToMerge[0].V_Photos || null;
+  const idsToDelete = flightsToMerge.map(f => f.V_ID).filter(id => id !== idRest);
+
+  try {
+    // Delete the other flights
+    if (idsToDelete.length > 0) {
+      const delReq = `DELETE FROM Vol WHERE V_ID IN (${idsToDelete.join(',')})`;
+      const delResult = databaseStore.update(delReq);
+      if (!delResult.success) throw new Error('Failed to delete redundant flights');
+    }
+
+    // Update the base flight
+    // Note: To avoid quoting issues with IGC multiline strings, parameterize if possible.
+    // If we use string concatenation, we must double-quote single quotes (sqlite escape).
+    const safeIgc = mergedIgc.replace(/'/g, "''");
+    const safeComment = mergeComment.replace(/'/g, "''");
+
+    let updReq = `UPDATE Vol SET V_Duree = '${totalDuree}', V_sDuree = '${formattedDuree}', V_Commentaire = '${safeComment}', V_IGC = '${safeIgc}'`;
+    if (photoBase) {
+      const safePhoto = photoBase.replace(/'/g, "''");
+      updReq += `, V_Photos = '${safePhoto}'`;
+    }
+    updReq += ` WHERE V_ID = ${idRest}`;
+
+    const updResult = databaseStore.update(updReq);
+    if (!updResult.success) throw new Error('Failed to update the merged flight');
+
+    // Success
+    snackbarMessage.value = $gettext('Flights merged successfully');
+    snackbar.value = true;
+
+    // Clear selection and reload
+    selectedItems.value = [];
+    activeFlightId.value = idRest;
+    loadFlights(true);
+    emit('db-updated');
+
+  } catch (error) {
+    console.error('Merge Error:', error);
+    snackbarMessage.value = $gettext('An error occurred while merging flights');
+    snackbar.value = true;
+  }
 }
 
 
