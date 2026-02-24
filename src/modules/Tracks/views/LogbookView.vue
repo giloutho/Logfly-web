@@ -21,7 +21,7 @@
           <v-card variant="outlined" class="search-trigger mb-2 d-flex align-center" height="40"
             @click="showSearchDialog = true" style="border-color: rgba(0,0,0,0.38); cursor: pointer;">
             <v-icon color="grey" class="ml-2">mdi-magnify</v-icon>
-            <span class="ml-2 text-body-2 text-grey-darken-1">{{ $gettext('Search...') }}</span>
+            <span class="ml-2 text-body-2 text-grey-darken-1">{{ $gettext('Search') }}...</span>
             <v-spacer></v-spacer>
             <v-btn size="small" variant="text" icon="mdi-tune" @click.stop="showSearchDialog = true"
               :title="$gettext('Advanced Search')"></v-btn>

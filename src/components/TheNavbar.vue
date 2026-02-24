@@ -15,7 +15,7 @@
       <!-- Navigation menus -->
       <v-menu offset-y translate="no">
         <template v-slot:activator="{ props }">
-          <v-btn text v-bind="props">
+          <v-btn variant="text" :ripple="false" class="nav-btn" v-bind="props">
             {{ $gettext('Flights & Tracks') }}
           </v-btn>
         </template>
@@ -34,7 +34,7 @@
 
       <v-menu offset-y translate="no">
         <template v-slot:activator="{ props }">
-          <v-btn text v-bind="props">
+          <v-btn variant="text" :ripple="false" class="nav-btn" v-bind="props">
             {{ $gettext('Statistics') }}
             <v-icon right>mdi-menu-down</v-icon>
           </v-btn>
@@ -51,7 +51,7 @@
 
       <v-menu offset-y translate="no">
         <template v-slot:activator="{ props }">
-          <v-btn text v-bind="props">
+          <v-btn variant="text" :ripple="false" class="nav-btn" v-bind="props">
             {{ $gettext('Routing') }}
             <v-icon right>mdi-menu-down</v-icon>
           </v-btn>
@@ -71,7 +71,7 @@
 
       <v-menu offset-y translate="no">
         <template v-slot:activator="{ props }">
-          <v-btn text v-bind="props">
+          <v-btn variant="text" :ripple="false" class="nav-btn" v-bind="props">
             {{ $gettext('Sites') }}
             <v-icon right>mdi-menu-down</v-icon>
           </v-btn>
@@ -83,13 +83,13 @@
         </v-list>
       </v-menu>
 
-      <v-btn text :to="{ name: 'equip-base' }">
+      <v-btn variant="text" :ripple="false" class="nav-btn" :to="{ name: 'equip-base' }">
         {{ $gettext('Equipment') }}
       </v-btn>
 
       <v-menu offset-y translate="no">
         <template v-slot:activator="{ props }">
-          <v-btn text v-bind="props">
+          <v-btn variant="text" :ripple="false" class="nav-btn" v-bind="props">
             {{ $gettext('Utilities') }}
             <v-icon right>mdi-menu-down</v-icon>
           </v-btn>
@@ -109,6 +109,14 @@
 
       <!-- Divider -->
       <v-divider vertical class="mx-2" style="opacity: 0.3;" />
+
+      <!-- Help button -->
+      <v-tooltip :text="$gettext('Help')" location="bottom">
+        <template v-slot:activator="{ props }">
+          <v-btn v-bind="props" variant="text" size="small" icon="mdi-help-circle-outline" class="mr-1"
+            @click="openHelp"></v-btn>
+        </template>
+      </v-tooltip>
 
       <!-- Language selector -->
       <v-menu offset-y>
@@ -259,9 +267,12 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import { useGettext } from 'vue3-gettext';
+import { useRoute } from 'vue-router';
 import { useDatabaseStore } from '@/stores/database';
 import * as logbookService from '@/js/database/logbookService';
+import { getHelpUrl } from '@/js/config/helpConfig';
 
+const route = useRoute();
 const gettext = useGettext();
 const { $gettext } = gettext;
 const databaseStore = useDatabaseStore();
@@ -298,6 +309,11 @@ const langFlags = {
 function changeLanguage(code) {
   gettext.current = code;
   localStorage.setItem('logfly-language', code);
+}
+
+function openHelp() {
+  const url = getHelpUrl(route.name, gettext.current);
+  window.open(url, '_blank');
 }
 
 onMounted(() => {
@@ -379,6 +395,12 @@ async function handleSave() {
   text-decoration: none;
   display: flex;
   align-items: center;
+}
+
+/* Prevent stuck focus background on navbar buttons */
+:deep(.nav-btn:focus:not(:focus-visible) > .v-btn__overlay),
+:deep(.nav-btn--active:not(:hover) > .v-btn__overlay) {
+  opacity: 0 !important;
 }
 
 .app-version {
