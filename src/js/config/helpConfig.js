@@ -6,31 +6,33 @@ const BASE_URL = "http://127.0.0.1:8000/doc/";
 
 // Map application route names to MkDocs markdown paths (without extension/language suffix)
 const HELP_MAP = {
+    // Home page
+    'home': 'start',
     // Flights & Tracks
-    'logbook-view': 'traces/carnet',
-    'import-gps': 'import',
-    'external-track': 'traces/externe',
+    'logbook-view': 'tracks/logbook',
+    'import-gps': 'tracks/import',
+    'external-track': 'tracks/externe',
 
     // Statistics
     'synthese-annee': 'stat/annuel',
     'synthese-globale': 'stat/global',
 
     // Routing
-    'waypoints-view': 'routage/waypoints',
-    'airspaces-view': 'routage/espaces_aeriens',
-    'xcnav-view': 'routage/xcnav',
+    'waypoints-view': 'wayp',
+    'airspaces-view': 'airspace',
+    'xcnav-view': 'xcnav',
 
     // Sites & Equipment
     'sites-view': 'sites',
-    'equip-base': 'materiel',
+    'equip-base': 'equip',
 
     // Utilities
-    'settings-view': 'utilitaires/configuration',
-    'support-view': 'utilitaires/support',
-    'translation-view': 'utilitaires/traduction',
+    'settings-view': 'support/settings',
+    'support-view': 'support/contact',
+    'translation-view': 'support/traduction',
 
     // Fallback
-    'default': 'index'
+    'default': 'start'
 };
 
 /**

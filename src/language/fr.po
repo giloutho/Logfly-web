@@ -6,6 +6,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Display airspaces"
+msgstr "Afficher les espaces aériens"
+
+msgid "Display"
+msgstr "Afficher"
+
+msgid "Check the track"
+msgstr "Vérifier la trace"
+
 msgid "3D Flight Replay"
 msgstr "Replay du vol 3D"
 
@@ -50,9 +59,6 @@ msgstr "Top 20"
 
 msgid "All"
 msgstr "Tous"
-
-msgid "Display"
-msgstr "Afficher"
 
 msgid "You can select the number of gliders to be displayed in the graph"
 msgstr "Vous pouvez choisir le nombre de voiles affichées dans le graphe"
@@ -150,6 +156,18 @@ msgstr "Transition"
 msgid "Landing"
 msgstr "Atterrissage"
 
+msgid "Comment"
+msgstr "Commentaire"
+
+msgid "Your comment"
+msgstr "Votre commentaire"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Save"
+msgstr "Enregistrer"
+
 msgid "IGC export"
 msgstr "Export IGC"
 
@@ -204,14 +222,17 @@ msgstr "Ou nouvelle voile"
 msgid "Enter new glider name"
 msgstr "Entrer une nouvelle voile"
 
+msgid "Zoom in"
+msgstr "Zoom in"
+
+msgid "Zoom out"
+msgstr "Zoom out"
+
 msgid "Full map"
 msgstr "Carte détaillée"
 
 msgid "3D View"
 msgstr "Vue 3D"
-
-msgid "Analyze"
-msgstr "Analyse"
 
 msgid "No GPS track"
 msgstr "Pas de trace GPS"
@@ -221,9 +242,6 @@ msgstr "Détails du vol"
 
 msgid "About"
 msgstr "A propos"
-
-msgid "Comment"
-msgstr "Commentaire"
 
 msgid "Modify"
 msgstr "Modifier"
@@ -252,9 +270,6 @@ msgstr "Vario mini"
 msgid "Add a comment"
 msgstr "Ajouter un commentaire"
 
-msgid "Delete"
-msgstr "Supprimer"
-
 msgid "Edit"
 msgstr "Editer"
 
@@ -273,8 +288,23 @@ msgstr "Enlever la photo"
 msgid "Delete photo"
 msgstr "Suppirmer la photo"
 
+msgid "Photo"
+msgstr "Photo"
+
+msgid "Current photo"
+msgstr "Photo actuelle"
+
+msgid "Select a replacement photo"
+msgstr "Séléctionner une nouvelle photo"
+
 msgid "Select a photo"
 msgstr "Choisir une photo"
+
+msgid "New photo"
+msgstr "Nouvelle photo"
+
+msgid "Replace photo"
+msgstr "Changer la photo"
 
 msgid "Thermals"
 msgstr "Thermiques"
@@ -389,6 +419,27 @@ msgstr "Pas de carnets dans ce dossier"
 
 msgid "Error reading the file"
 msgstr "Erreur de lecture fichier"
+
+msgid "Scoring"
+msgstr "Score"
+
+msgid "Choose a scoring rule"
+msgstr "Choisir une règle de scoring"
+
+msgid "Computing score..."
+msgstr "Calcul du score..."
+
+msgid "Result"
+msgstr "Résultat"
+
+msgid "Calculate"
+msgstr "Calculer"
+
+msgid "Scoring failed"
+msgstr "Echec du calcul du score"
+
+msgid "An unexpected error occurred"
+msgstr "Erreur inattendue"
 
 msgid "Advanced search"
 msgstr "Recherche avancée"
@@ -516,8 +567,8 @@ msgstr "Vols & Traces"
 msgid "Logbook"
 msgstr "Carnet"
 
-msgid "Import tracks"
-msgstr "Import traces"
+msgid "Import"
+msgstr "Import"
 
 msgid "Statistics"
 msgstr "Statistiques"
@@ -540,9 +591,6 @@ msgstr "XC Nav"
 msgid "Sites"
 msgstr "Sites"
 
-msgid "Paragliding Earth"
-msgstr "Paragliding earth"
-
 msgid "Equipment"
 msgstr "Matériel"
 
@@ -557,6 +605,24 @@ msgstr "Support"
 
 msgid "Translation"
 msgstr "Traduction"
+
+msgid "Help"
+msgstr "Aide"
+
+msgid "Change language"
+msgstr "Changer la langue"
+
+msgid "Unsaved changes – click to save"
+msgstr "Changements non enregistrés - Cliquer pour sauvegarder"
+
+msgid "All changes saved"
+msgstr "Toutes les modifications ont été enregistrées"
+
+msgid "Import tracks"
+msgstr "Import traces"
+
+msgid "Language"
+msgstr "Langue"
 
 msgid "Access your logbook"
 msgstr "Accédez à votre carnet de vol"
@@ -747,9 +813,6 @@ msgstr "Mise à jour"
 msgid "Cleaning"
 msgstr "Nettoyage"
 
-msgid "Import"
-msgstr "Import"
-
 msgid "Select a site to display details"
 msgstr "Sélectionner un site pour afficher les détails"
 
@@ -798,9 +861,6 @@ msgstr "Doublons supprimés"
 msgid "Error removing duplicates"
 msgstr "Erreur pendant la suppression des doublons"
 
-msgid "Display airspaces"
-msgstr "Afficher les espaces aériens"
-
 msgid "Classes"
 msgstr "Classes"
 
@@ -833,9 +893,6 @@ msgstr "Sélection de zone"
 
 msgid "Cancel selection"
 msgstr "Annuler la sélection"
-
-msgid "Save"
-msgstr "Enregistrer"
 
 msgid "Open Air format"
 msgstr "Format Open Air"
@@ -887,6 +944,9 @@ msgstr "Nouveau waypoint"
 
 msgid "Edit waypoint"
 msgstr "Editer le waypoint"
+
+msgid "Standard"
+msgstr "Standard"
 
 msgid "Short name"
 msgstr "Nom court"
@@ -944,9 +1004,6 @@ msgstr "Distance totale"
 
 msgid "Speed"
 msgstr "Vitesse"
-
-msgid "Scoring"
-msgstr "Score"
 
 msgid "Distance"
 msgstr "Distance"
@@ -1073,6 +1130,42 @@ msgstr "Une route doit avoir au moins deux points"
 
 msgid "Route exported successfully"
 msgstr "Route exporté avec succès"
+
+msgid "Configure your preferences"
+msgstr "Configurez vos préférences"
+
+msgid "Startup"
+msgstr "Démarrage"
+
+msgid "Pilot name"
+msgstr "Nom du pilote"
+
+msgid "Glider name"
+msgstr "Nom de la voile"
+
+msgid "Default map layer"
+msgstr "Carte par défaut"
+
+msgid "League"
+msgstr "League"
+
+msgid "Identifier"
+msgstr "Identifiant"
+
+msgid "Password"
+msgstr "Mot de passe"
+
+msgid "Home"
+msgstr "Accueil"
+
+msgid "Settings saved successfully"
+msgstr "Préférences enregistrées"
+
+msgid "Error saving settings"
+msgstr "Erreur d'enregistrement des préférences"
+
+msgid "Settings restored"
+msgstr "Réglages restaurés"
 
 msgid "Contact"
 msgstr "Contact"
@@ -1236,8 +1329,8 @@ msgstr "Brancher le Skytraxx 3/4/5"
 msgid "Using SysPC Tools may be an option"
 msgstr "Utiliser SysPCTools est une option"
 
-msgid "Plug in the NavXL"
-msgstr "Brancher le NavXL"
+msgid "Plug in the NavXL, select mass storage"
+msgstr "Brancher le navXL, sélectionner Mass Storage"
 
 msgid "an 'IGC' folder"
 msgstr "un dossier \"IGC\""
@@ -1256,6 +1349,9 @@ msgstr "un dossier \"tracks\" et un dossier \"display\""
 
 msgid "Plug in the Element"
 msgstr "Brancher l'Element"
+
+msgid "Plug in the Connect"
+msgstr "Brancher le Connect"
 
 msgid "a flights folder and a waypoints folder"
 msgstr "un dossier \"flights\" et un dossier \"waypoints\""
@@ -1377,11 +1473,35 @@ msgstr "traces importées"
 msgid "Flight saved"
 msgstr "Vol enregistré"
 
+msgid "Advanced Search"
+msgstr "Recherche détaillée"
+
+msgid "Filter by tag"
+msgstr "Filtrer par tag"
+
 msgid "Unfilter"
 msgstr "Non filtré"
 
-msgid "Filter by tag"
-msgstr "Filter par tag"
+msgid "flights selected"
+msgstr "vols sélectionnés"
+
+msgid "Merge"
+msgstr "Fusion"
+
+msgid "Analyze"
+msgstr "Analyse"
+
+msgid "Tag"
+msgstr "Tag"
+
+msgid "Export IGC"
+msgstr "Export IGC"
+
+msgid "Export GPX"
+msgstr "Export GPX"
+
+msgid "Select a flight to view track"
+msgstr "Choisissez un vol pour voir la trace"
 
 msgid "All flights"
 msgstr "Tous les vols"
@@ -1392,6 +1512,42 @@ msgstr "vols trouvés"
 msgid "No flights match the search criteria"
 msgstr "Aucun vol ne correspond aux critères de recherche"
 
-msgid "Totals for the selection"
-msgstr "Totaux pour la sélection"
+msgid "Select at least 2 flights to merge"
+msgstr "Sélectionner au moins de vols pour la fusion"
+
+msgid "Error reading flights from database"
+msgstr "Erreur de lecture des vols dans la base de données"
+
+msgid "Could not retrieve all selected flights"
+msgstr "Impossible de retrouver les vols sélectionnés"
+
+msgid "Flights must be on the same day to merge"
+msgstr "Pour fusionner, les vols doivent être du même jour "
+
+msgid "All selected flights must have a valid IGC track"
+msgstr "Tous les vols sélectionnés doivent avoir une trace IGC valide"
+
+msgid "merged flights"
+msgstr "vols fusionnés"
+
+msgid "Flights merged successfully"
+msgstr "Vols fusionnés avec succès"
+
+msgid "An error occurred while merging flights"
+msgstr "Une erreur est survenue pendant la fusion des vols"
+
+msgid "Photo saved"
+msgstr "Photo enregistrée"
+
+msgid "Photo deleted"
+msgstr "Photo supprimée"
+
+msgid "No IGC data for this flight"
+msgstr "Pas de trace IGC pour ce vol"
+
+msgid "Could not decode IGC data"
+msgstr "Impossible de décoder la trace IGC"
+
+msgid "Are you sure you want to delete this flight?"
+msgstr "Etes vous sûr de suppirmer ce vol ?"
 
