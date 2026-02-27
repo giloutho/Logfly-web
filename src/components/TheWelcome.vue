@@ -91,7 +91,7 @@ function closeDemoTrack() {
           <li>
             <a href="#" @click.prevent="loadDemoTrack" class="demo-link">
               <v-icon size="24" class="mr-1">mdi-map-search-outline</v-icon>
-              {{ $gettext('View the demo GPS track, a magnificent tour of Mont Blanc') }}
+              {{ $gettext('View the demo GPS track, a classic return trip Grand Bornand Semnoz Grand Bornand') }}
             </a>
             <v-progress-circular v-if="demoLoading" indeterminate size="16" width="2" class="ml-2" />
           </li>
@@ -160,8 +160,10 @@ function closeDemoTrack() {
         </template>
         <template #heading>{{ $gettext('Utilities') }}</template>
         <ul>
-          <li>{{ $gettext('Manage app preferences') }}</li>
-          <li>{{ $gettext('Access support') }}</li>
+          <li>{{ $gettext('Manage app preferences') }}<router-link :to="{ name: 'settings-view' }">{{
+            $gettext('Settings') }}</router-link></li>
+          <li>{{ $gettext('Access support') }}<router-link :to="{ name: 'support-view' }">{{
+            $gettext('Support') }}</router-link></li>
           <li>{{ $gettext('Help translate Logfly') }}<router-link :to="{ name: 'translation-view' }">{{
             $gettext('Translation') }}</router-link></li>
         </ul>

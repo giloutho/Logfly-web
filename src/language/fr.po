@@ -639,8 +639,8 @@ msgstr "Examiner des traces externes"
 msgid "External GPS track"
 msgstr "Trace externe"
 
-msgid "View the demo GPS track, a magnificent tour of Mont Blanc"
-msgstr "Voir la trace démo, un magnifique tour du Mont Blanc"
+msgid "View the demo GPS track, a classic return trip Grand Bornand Semnoz Grand Bornand"
+msgstr "Voir la trace démo, un classique AR Grand Bornand Semnoz Grand Bornand"
 
 msgid "Consult the annual summary of your flights"
 msgstr "Consulter la synthèse annuelle des vols"
@@ -1303,7 +1303,7 @@ msgid "There are two solutions"
 msgstr "Il y a deux solutions"
 
 msgid "- Install the LogflyGPS import software. It will update the logbook directly"
-msgstr "Installer LogflyGPS. Il mettra à jour le carnet automatiquement"
+msgstr ""
 
 msgid "- use the manufacturer software to download the flight logs"
 msgstr "- Utiliser le logiciel du fabricant pour charger les vols"
@@ -1396,7 +1396,7 @@ msgid "Select the folder defined by Sys PC Tools"
 msgstr "Choisir le dossier utilisé par Sys PC Tools"
 
 msgid "By default, Sys-PC-Tool create a folder in user.home directory called \"parapente\""
-msgstr "Par défaut, Sys-PC-Tools crée un dossier \"Parapente\" à la racine du dossier utilisateur"
+msgstr ""
 
 msgid "Create a manual flight entry without an associated track file."
 msgstr "Créer un vol manuellement sans trace GPS"

@@ -240,7 +240,7 @@ msgstr ""
 #: src/components/NoTrackDialog.vue:56
 #: src/components/NoTrackDialog.vue:62
 #: src/components/SiteForm.vue:16
-#: src/components/TraceInfoDialog.vue:114
+#: src/components/TraceInfoDialog.vue:125
 #: src/components/TraceInfoPanel.vue:90
 #: src/modules/Files/views/SitesView.vue:25
 #: src/modules/Routing/views/WaypointView.vue:76
@@ -293,7 +293,7 @@ msgstr ""
 #: src/components/ChronoView.vue:102
 #: src/components/LogbookDetails.vue:69
 #: src/components/SiteForm.vue:17
-#: src/components/TraceInfoDialog.vue:118
+#: src/components/TraceInfoDialog.vue:129
 #: src/components/TraceInfoPanel.vue:94
 #: src/modules/Files/views/SitesView.vue:26
 #: src/modules/Routing/views/WaypointView.vue:77
@@ -428,7 +428,7 @@ msgstr ""
 #: src/components/LogbookDetails.vue:57
 #: src/components/NoTrackDialog.vue:41
 #: src/components/SearchFlightsDialog.vue:67
-#: src/components/TraceInfoDialog.vue:111
+#: src/components/TraceInfoDialog.vue:122
 #: src/components/TraceInfoPanel.vue:87
 #: src/modules/Equip/views/EquipView.vue:107
 #: src/modules/Stat/views/AnnualSummary.vue:116
@@ -484,7 +484,7 @@ msgstr ""
 
 #: src/components/LogbookDetails.vue:55
 #: src/components/SearchFlightsDialog.vue:76
-#: src/components/TraceInfoDialog.vue:107
+#: src/components/TraceInfoDialog.vue:118
 #: src/components/TraceInfoPanel.vue:83
 #: src/modules/Files/views/SitesView.vue:114
 #: src/modules/Stat/views/AnnualSummary.vue:116
@@ -493,14 +493,14 @@ msgid "Site"
 msgstr ""
 
 #: src/components/LogbookDetails.vue:60
-#: src/components/TraceInfoDialog.vue:110
+#: src/components/TraceInfoDialog.vue:121
 #: src/components/TraceInfoPanel.vue:86
 msgid "Pilot"
 msgstr ""
 
 #: src/components/LogbookDetails.vue:72
 #: src/components/NoTrackDialog.vue:28
-#: src/components/TraceInfoDialog.vue:122
+#: src/components/TraceInfoDialog.vue:133
 #: src/components/TraceInfoPanel.vue:98
 #: src/modules/Routing/views/XcnavView.vue:47
 #: src/modules/Stat/views/AnnualSummary.vue:59
@@ -509,19 +509,19 @@ msgid "Duration"
 msgstr ""
 
 #: src/components/LogbookDetails.vue:77
-#: src/components/TraceInfoDialog.vue:126
+#: src/components/TraceInfoDialog.vue:137
 #: src/components/TraceInfoPanel.vue:102
 msgid "Max GPS alt"
 msgstr ""
 
 #: src/components/LogbookDetails.vue:79
-#: src/components/TraceInfoDialog.vue:130
+#: src/components/TraceInfoDialog.vue:141
 #: src/components/TraceInfoPanel.vue:106
 msgid "Max climb"
 msgstr ""
 
 #: src/components/LogbookDetails.vue:81
-#: src/components/TraceInfoDialog.vue:131
+#: src/components/TraceInfoDialog.vue:142
 #: src/components/TraceInfoPanel.vue:107
 msgid "Max sink"
 msgstr ""
@@ -583,14 +583,14 @@ msgid "Replace photo"
 msgstr ""
 
 #: src/components/MapLeaflet.vue:247
-#: src/components/TraceInfoDialog.vue:177
+#: src/components/TraceInfoDialog.vue:188
 #: src/components/TraceInfoPanel.vue:151
 #: src/modules/Routing/views/XcnavView.vue:363
 msgid "Thermals"
 msgstr ""
 
 #: src/components/MapLeaflet.vue:278
-#: src/components/TraceInfoDialog.vue:187
+#: src/components/TraceInfoDialog.vue:198
 #: src/components/TraceInfoPanel.vue:160
 msgid "Glides"
 msgstr ""
@@ -635,7 +635,7 @@ msgid "Flight without GPS track"
 msgstr ""
 
 #: src/components/NoTrackDialog.vue:14
-#: src/components/TraceInfoDialog.vue:106
+#: src/components/TraceInfoDialog.vue:117
 #: src/components/TraceInfoPanel.vue:82
 #: src/modules/Equip/views/EquipView.vue:95
 #: src/modules/Equip/views/EquipView.vue:222
@@ -1121,7 +1121,7 @@ msgid "External GPS track"
 msgstr ""
 
 #: src/components/TheWelcome.vue:94
-msgid "View the demo GPS track, a magnificent tour of Mont Blanc"
+msgid "View the demo GPS track, a classic return trip Grand Bornand Semnoz Grand Bornand"
 msgstr ""
 
 #: src/components/TheWelcome.vue:107
@@ -1168,64 +1168,64 @@ msgstr ""
 msgid "Help translate Logfly"
 msgstr ""
 
-#: src/components/TraceInfoDialog.vue:115
-#: src/components/TraceInfoDialog.vue:119
+#: src/components/TraceInfoDialog.vue:126
+#: src/components/TraceInfoDialog.vue:130
 #: src/components/TraceInfoPanel.vue:91
 #: src/components/TraceInfoPanel.vue:95
 msgid "GPS alt"
 msgstr ""
 
-#: src/components/TraceInfoDialog.vue:123
+#: src/components/TraceInfoDialog.vue:134
 #: src/components/TraceInfoPanel.vue:99
 msgid "Size"
 msgstr ""
 
-#: src/components/TraceInfoDialog.vue:127
+#: src/components/TraceInfoDialog.vue:138
 #: src/components/TraceInfoPanel.vue:103
 msgid "Min GPS alt"
 msgstr ""
 
-#: src/components/TraceInfoDialog.vue:134
+#: src/components/TraceInfoDialog.vue:145
 #: src/components/TraceInfoPanel.vue:110
 msgid "Max gain"
 msgstr ""
 
-#: src/components/TraceInfoDialog.vue:135
+#: src/components/TraceInfoDialog.vue:146
 #: src/components/TraceInfoPanel.vue:111
 msgid "Max speed"
 msgstr ""
 
-#: src/components/TraceInfoDialog.vue:138
+#: src/components/TraceInfoDialog.vue:149
 #: src/components/TraceInfoPanel.vue:114
 msgid "Best glide"
 msgstr ""
 
-#: src/components/TraceInfoDialog.vue:142
+#: src/components/TraceInfoDialog.vue:153
 #: src/components/TraceInfoPanel.vue:118
 msgid "Avg glide speed"
 msgstr ""
 
-#: src/components/TraceInfoDialog.vue:146
+#: src/components/TraceInfoDialog.vue:157
 #: src/components/TraceInfoPanel.vue:122
 msgid "Average climb"
 msgstr ""
 
-#: src/components/TraceInfoDialog.vue:150
+#: src/components/TraceInfoDialog.vue:161
 #: src/components/TraceInfoPanel.vue:126
 msgid "Extraction time"
 msgstr ""
 
-#: src/components/TraceInfoDialog.vue:154
+#: src/components/TraceInfoDialog.vue:165
 #: src/components/TraceInfoPanel.vue:130
 msgid "Avg th efficiency"
 msgstr ""
 
-#: src/components/TraceInfoDialog.vue:198
+#: src/components/TraceInfoDialog.vue:209
 #: src/components/TraceInfoPanel.vue:170
 msgid "Dives"
 msgstr ""
 
-#: src/components/TraceInfoDialog.vue:209
+#: src/components/TraceInfoDialog.vue:220
 #: src/components/TraceInfoPanel.vue:180
 msgid "Various"
 msgstr ""
