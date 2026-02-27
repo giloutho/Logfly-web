@@ -177,9 +177,49 @@ async function loadPeriodInfo() {
   const startYear = selYearBegin.value;
   const endYear = selYearEnd.value;
 
-  // Calculate years and months
-  const yearsCount = parseInt(endYear) - parseInt(startYear);
-  const monthsCount = (yearsCount * 12) + 1; // +1 for inclusive
+  // Get the exact dates of the first and last flight in the period
+  const datesSQL = `SELECT MIN(V_date) AS FirstFlight, MAX(V_date) AS LastFlight FROM Vol WHERE strftime('%Y-%m', V_date) >= '${startYear}-01' AND strftime('%Y-%m', V_date) <= '${endYear}-12'`;
+  const datesResult = databaseStore.query(datesSQL);
+
+  let yearsCount = 0;
+  let monthsCount = 0;
+
+  if (datesResult.success && datesResult.data?.[0]?.values?.[0]) {
+    const firstDateStr = datesResult.data[0].values[0][0]; // format YYYY-MM-DD
+    const lastDateStr = datesResult.data[0].values[0][1];
+
+    if (firstDateStr && lastDateStr) {
+      const firstDate = new Date(firstDateStr);
+      const lastDate = new Date(lastDateStr);
+
+      const y1 = firstDate.getFullYear();
+      const m1 = firstDate.getMonth(); // 0-11
+      const d1 = firstDate.getDate();
+
+      const y2 = lastDate.getFullYear();
+      const m2 = lastDate.getMonth();
+      const d2 = lastDate.getDate();
+
+      // Calculate total exact months difference
+      let totalMonths = (y2 - y1) * 12 + (m2 - m1);
+
+      // If the last month is started (d2 > d1 or at least half month, etc.), 
+      // the user requested to round up to the started month if it exceeds the exact day
+      // Example: 18/06/1988 to 03/01/2026 -> 37 years, 7 months (math gives 451 absolute months)
+      // (2026 - 1988)*12 = 456; 456 + 0(Jan) - 5(Jun) = 451. 451/12 = 37 rem 7.
+      // So the absolute calendar month difference is exactly what is expected.
+      // Just to be safe, if d2 > d1, we consider it an extra started month as per "Si le dernier mois est entamé, on devrait arrondir à celui ci"
+      if (d2 >= d1) {
+        totalMonths += 1;
+      }
+
+      // Minimum is 1 month if there's any flight
+      if (totalMonths < 1) totalMonths = 1;
+
+      yearsCount = Math.floor(totalMonths / 12);
+      monthsCount = totalMonths % 12;
+    }
+  }
 
   // Get total flights
   const flightsSQL = `SELECT COUNT(V_ID) AS Nb FROM Vol WHERE strftime('%Y-%m', V_date) >= '${startYear}-01' AND strftime('%Y-%m', V_date) <= '${endYear}-12'`;
