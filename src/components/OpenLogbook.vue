@@ -105,7 +105,8 @@ const { $gettext } = useGettext();
 const emit = defineEmits(['db-opened', 'close']);
 
 const fileInput = ref(null);
-const hasFileSystemApi = 'showDirectoryPicker' in window;
+const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+const hasFileSystemApi = 'showDirectoryPicker' in window && !isMobile;
 
 // La modale s'affiche si show est true ET que la base n'est pas ouverte
 const dialog = computed(() => props.show && !databaseStore.hasOpenDatabase);

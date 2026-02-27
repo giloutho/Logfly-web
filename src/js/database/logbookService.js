@@ -12,14 +12,27 @@ export const availableFiles = ref([]);
  * Initialisation : Récupère les handles depuis IndexedDB
  */
 export async function initPersistence() {
-  const savedDir = await get("dossier_parent");
-  const savedFile = await get("fichier_base");
+  try {
+    const savedDir = await get("dossier_parent");
+    const savedFile = await get("fichier_base");
 
-  if (savedDir && savedFile) {
-    dirHandle.value = savedDir;
-    currentFile.value = savedFile;
-    const status = await savedDir.queryPermission({ mode: 'readwrite' });
-    isReady.value = (status === 'granted');
+    if (savedDir && savedFile) {
+      dirHandle.value = savedDir;
+      currentFile.value = savedFile;
+      const status = await savedDir.queryPermission({ mode: 'readwrite' });
+      isReady.value = (status === 'granted');
+    }
+  } catch (err) {
+    // On Android Chrome (and some other platforms), restoring
+    // FileSystemFileHandle / DirectoryHandle from IndexedDB is not
+    // allowed.  Silently clear the saved handles so the user gets the
+    // normal file-picker flow instead.
+    console.warn('initPersistence: unable to restore handles –', err.message);
+    dirHandle.value = null;
+    currentFile.value = null;
+    isReady.value = false;
+    await set("dossier_parent", null);
+    await set("fichier_base", null);
   }
 }
 
