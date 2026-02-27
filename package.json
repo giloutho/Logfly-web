@@ -1,6 +1,6 @@
 {
   "name": "logfly-web",
-  "version": "0.0.0",
+  "version": "7.0.3",
   "private": true,
   "type": "module",
   "engines": {
