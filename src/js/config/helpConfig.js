@@ -2,7 +2,7 @@
  * Configuration for contextual help linking to MkDocs (with i18n support).
  */
 
-const BASE_URL = "http://127.0.0.1:8000/doc/";
+const BASE_URL = "https://logfly.org/logflydoc/";
 
 // Map application route names to MkDocs markdown paths (without extension/language suffix)
 const HELP_MAP = {
@@ -46,7 +46,7 @@ export function getHelpUrl(routeName, langCode = 'fr') {
     const path = HELP_MAP[routeName] || HELP_MAP['default'];
 
     // If the language is not French, point to the /en/ subfolder version of the documentation
-    const finalLangCode = langCode === 'fr' ? '' : 'en/';
+    const finalLangCode = langCode === 'fr' ? 'doc/' : 'en/doc/';
 
     return `${BASE_URL}${finalLangCode}${path}/`;
 }
