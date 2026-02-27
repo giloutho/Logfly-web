@@ -4,22 +4,22 @@ const miniIgcPoints = 5
 let scoringModule = null;
 
 async function getScoringModule() {
-  if (!scoringModule) {
-    scoringModule = await import('igc-xc-score');
-  }
-  return scoringModule;
+    if (!scoringModule) {
+        scoringModule = await import('igc-xc-score');
+    }
+    return scoringModule;
 }
 
 export async function igcScoring(argsScoring) {
     // Import dynamique pour éviter les effets de bord au chargement du module
-    const { scoringRules, solver } = await getScoringModule(); 
+    const { scoringRules, solver } = await getScoringModule();
     /*
     * argsScoring contiendra 
     * const date = issue de IGCparser 
     * const fixes = array fixes issu de IGCparser
     * const league = argsScoring.league
-    */    
-   // Date must be in format 'YYYY-MM-DD'
+    */
+    // Date must be in format 'YYYY-MM-DD'
     const args = {
         date: argsScoring.date,
         fixes: argsScoring.fixes,
@@ -37,7 +37,7 @@ export async function igcScoring(argsScoring) {
             date: flightDate,
             fixes: args.fixes,
             league: args.league
-        })        
+        })
         if (!scoringResult.success) {
             console.log('igc:scoring failed : ', scoringResult.message);
             return { success: false, message: scoringResult.message };
@@ -46,7 +46,7 @@ export async function igcScoring(argsScoring) {
     } catch (error) {
         console.log('Error in iigcScoring:', error);
         return { success: false, message: error.message };
-    }    
+    }
 
 }
 
@@ -60,16 +60,16 @@ async function scoring(argsScoring) {
         const flight = {
             date: date,
             fixes: fixes
-        }        
+        }
         const rule = scoringRules[league]
-       // console.log('[igc-scoring.js] Scoring flight for date :', flight.date, 'with league :', league, 'with ',flight.fixes.length,' fixes')
+        // console.log('[igc-scoring.js] Scoring flight for date :', flight.date, 'with league :', league, 'with ',flight.fixes.length,' fixes')
         // noflight true pour ne pas générer la trace du vol dans le geojson
-        const result = solver(flight, rule,{ noflight : true }).next().value;
+        const result = solver(flight, rule, { noflight: true }).next().value;
         if (result.optimal) {
             const geojson = result.geojson()
             const data = JSON.parse(JSON.stringify(geojson))
-            const arrData   = Object.values(data)
-            if (arrData.length == 3) {        
+            const arrData = Object.values(data)
+            if (arrData.length == 3) {
                 scoringGeoJSON.type = "FeatureCollection"
                 scoringGeoJSON.name = "EPSG:3857"
                 scoringGeoJSON.league = league
@@ -97,7 +97,7 @@ async function scoring(argsScoring) {
                     switch (elemType) {
                         case "Point":
                             if (elemSelected) {
-                                properties.id = element.properties.id 
+                                properties.id = element.properties.id
                                 properties.r = element.properties.r
                                 properties.timestamp = element.properties.timestamp
                                 // version locale
@@ -105,9 +105,9 @@ async function scoring(argsScoring) {
                                 //const hElement = date.toLocaleTimeString('fr-FR', { hour12: false });
                                 const date = new Date(element.properties.timestamp);
                                 const hElement = date.toISOString().slice(11, 19); // "HH:mm:ss"
-                                properties.popupContent = String(element.properties.id).toUpperCase()+'</br>'+hElement
+                                properties.popupContent = String(element.properties.id).toUpperCase() + '</br>' + hElement
                                 geometry.type = element.geometry.type
-                                geometry.coordinates = [element.geometry.coordinates[0],element.geometry.coordinates[1]]
+                                geometry.coordinates = [element.geometry.coordinates[0], element.geometry.coordinates[1]]
                                 feature.type = "Feature"
                                 feature.id = element.id
                                 feature.properties = properties
@@ -116,28 +116,28 @@ async function scoring(argsScoring) {
                             }
                             break;
                         case "LineString":
-                            properties.id = element.properties.id 
+                            properties.id = element.properties.id
                             properties.d = element.properties.d
-                            const dist =  (Math.round(element.properties.d * 100) / 100).toFixed(2);
-                            properties.popupContent = dist+' km'
+                            const dist = (Math.round(element.properties.d * 100) / 100).toFixed(2);
+                            properties.popupContent = dist + ' km'
                             geometry.type = element.geometry.type
                             coord.push(element.geometry.coordinates[0])
                             coord.push(element.geometry.coordinates[1])
-                            geometry.coordinates = coord                 
+                            geometry.coordinates = coord
                             feature.type = "Feature"
                             feature.id = element.id
                             feature.properties = properties
                             feature.geometry = geometry
-                            scoringGeoJSON.features.push(feature)                
-                        break;
+                            scoringGeoJSON.features.push(feature)
+                            break;
                     }
                 }
                 return { success: true, geojson: scoringGeoJSON };
-            } 
+            }
         } else {
             return { success: false, message: 'No optimal solution found for the IGC file' };
-        }            
+        }
     } catch (error) {
         return { success: false, message: '[igc-scoring.js] Error while scoring the IGC file' };
-    }       
+    }
 }
