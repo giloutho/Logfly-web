@@ -12,10 +12,13 @@
 
         <!-- Right panel: Info + Details -->
         <div class="right-panel">
-            <!-- Top title: FileName -->
+            <!-- Top title: FileName + Close -->
             <div class="top-title">
-                <span class="title-label">{{ $gettext('External track') }} :</span><span class="filename-text">{{
-                    fileName }}</span>
+                <span class="title-label">{{ $gettext('External track') }} :</span>
+                <span class="filename-text">{{ fileName }}</span>
+                <v-btn icon density="compact" variant="text" class="close-icon" @click="onClose">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
             </div>
 
             <!-- Top block: TraceInfoPanel -->
@@ -28,12 +31,6 @@
                 <ExternalDetails :decodedData="decodedTrack" :anaResult="analysisTrack" :rawIgcContent="rawIgcContent"
                     @score-computed="onScoreComputed" />
             </div>
-
-            <!-- Close button -->
-            <v-btn class="close-btn" color="error" density="compact" @click="onClose">
-                <v-icon start>mdi-close-circle-outline</v-icon>
-                {{ $gettext('Close') }}
-            </v-btn>
         </div>
 
         <!-- Full Map Dialog -->
@@ -169,6 +166,7 @@ function onClose() {
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
+    position: relative;
 }
 
 .filename-text {
@@ -207,28 +205,30 @@ function onClose() {
     color: #666;
 }
 
-.close-btn {
-    align-self: center;
-    margin-top: auto;
-    margin-bottom: 20px;
-    z-index: 100;
+.close-icon {
+    position: absolute;
+    right: 4px;
 }
 
 @media (max-width: 900px) {
     .external-layout {
         flex-direction: column;
-        height: auto;
+        /* Use calc to subtract the navbar height (~56px) */
+        height: calc(100vh - 60px);
         padding: 2vw 1vw;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
-    .left-panel,
+    .left-panel {
+        width: 100%;
+        height: 60vh;
+        flex-shrink: 0;
+    }
+
     .right-panel {
         width: 100%;
         height: auto;
-        min-height: 40vh;
-    }
-
-    .right-panel {
         padding-right: 0;
         gap: 2vw;
     }
@@ -237,6 +237,7 @@ function onClose() {
     .bottom-block {
         height: auto;
         min-height: 200px;
+        overflow: visible;
     }
 }
 </style>

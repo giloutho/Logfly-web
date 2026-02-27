@@ -173,6 +173,9 @@
             <v-btn color="primary" size="large" prepend-icon="mdi-folder-open" @click="selectDirectory">
               {{ $gettext('Select') }}
             </v-btn>
+            <!-- Fallback file input for mobile (Android/iOS) -->
+            <input ref="importFileInput" type="file" multiple accept=".igc,.gpx,.IGC,.GPX" style="display: none"
+              @change="handleMobileFileSelection">
             <p v-if="selectedDirectory" class="mt-4 text-success">
               <v-icon color="success">mdi-check-circle</v-icon>
               {{ selectedDirectory }}
@@ -270,6 +273,9 @@ const selectedDevice = ref('');
 const importType = ref(''); // 'usb', 'serial', 'folder', 'notrace'
 const selectedDirectory = ref('');
 const selectedDirectoryHandle = ref(null);
+const mobileSelectedFiles = ref([]);  // For mobile fallback
+const importFileInput = ref(null);
+const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 const error = ref('');
 const isScanning = ref(false);
 const scannedFlights = ref([]);
@@ -331,10 +337,24 @@ function closeImportDialog() {
 }
 
 function getDeviceDescription() {
-  return deviceDescriptions[selectedDevice.value] || [$gettext('Not yet available')];
+  const desc = deviceDescriptions[selectedDevice.value] || [$gettext('Not yet available')];
+  // On mobile the directory picker is replaced by a file picker
+  if (isMobile && selectedDevice.value === $gettext('Folder')) {
+    return [
+      $gettext('Select a folder and choose track files (IGC or GPX)'),
+      desc[desc.length - 1] // keep the "Validate and click Import" line
+    ];
+  }
+  return desc;
 }
 
 async function selectDirectory() {
+  // On mobile, use file input fallback because getFile() on directory entries fails
+  if (isMobile) {
+    importFileInput.value.click();
+    return;
+  }
+
   try {
     if ('showDirectoryPicker' in window) {
       // API moderne File System Access
@@ -357,6 +377,22 @@ async function selectDirectory() {
   }
 }
 
+/**
+ * Mobile fallback: handle files selected via <input type="file" multiple>
+ */
+function handleMobileFileSelection(event) {
+  const files = Array.from(event.target.files || []);
+  if (files.length === 0) return;
+
+  mobileSelectedFiles.value = files;
+  selectedDirectory.value = files.length + ' ' + $gettext('files selected');
+  // Set a sentinel so startImport knows to use the mobile path
+  selectedDirectoryHandle.value = '__mobile__';
+  error.value = '';
+  // Reset input for re-selection
+  event.target.value = '';
+}
+
 async function startImport() {
   if (!selectedDirectoryHandle.value) {
     error.value = $gettext('No directory selected');
@@ -367,8 +403,34 @@ async function startImport() {
   error.value = '';
 
   try {
-    // 1. Scanner le répertoire pour trouver tous les fichiers IGC et GPX
-    const { igcFiles, gpxFiles } = await scanDirectoryForTracks(selectedDirectoryHandle.value);
+    let igcFiles, gpxFiles;
+
+    if (selectedDirectoryHandle.value === '__mobile__') {
+      // Mobile path: files come from <input type="file" multiple>
+      igcFiles = [];
+      gpxFiles = [];
+      for (const file of mobileSelectedFiles.value) {
+        const lowerName = file.name.toLowerCase();
+        // Build a mock fileInfo compatible with processTrackFiles
+        const mockFileInfo = {
+          handle: { getFile: () => Promise.resolve(file) },
+          path: file.name,
+          name: file.name,
+          baseName: getBaseNameFromFileName(file.name),
+          lastModified: file.lastModified
+        };
+        if (lowerName.endsWith('.igc')) {
+          igcFiles.push(mockFileInfo);
+        } else if (lowerName.endsWith('.gpx')) {
+          gpxFiles.push(mockFileInfo);
+        }
+      }
+    } else {
+      // Desktop path: scan directory handle
+      const scanResult = await scanDirectoryForTracks(selectedDirectoryHandle.value);
+      igcFiles = scanResult.igcFiles;
+      gpxFiles = scanResult.gpxFiles;
+    }
 
     if (igcFiles.length === 0 && gpxFiles.length === 0) {
       error.value = $gettext('No tracks in this folder');
@@ -395,6 +457,12 @@ async function startImport() {
   } finally {
     isScanning.value = false;
   }
+}
+
+/** Helper to extract base name without extension */
+function getBaseNameFromFileName(fileName) {
+  const lastDot = fileName.lastIndexOf('.');
+  return lastDot > 0 ? fileName.substring(0, lastDot).toLowerCase() : fileName.toLowerCase();
 }
 
 function closeFlightTable() {

@@ -119,6 +119,7 @@ let geoJsonLayer = null;
 let scoreLayer = null;
 let startMarker = null;
 let endMarker = null;
+let resizeObserver = null;
 
 onMounted(() => {
   // Initialiser la carte Leaflet — zoom control to top-right to avoid drawer overlap
@@ -138,6 +139,20 @@ onMounted(() => {
   setTimeout(() => {
     map.invalidateSize();
   }, 100);
+
+  // Second invalidateSize for mobile: the container may still be resizing
+  // after a CSS layout switch (e.g. v-if toggling ExternalLayout into view)
+  setTimeout(() => {
+    if (map) map.invalidateSize();
+  }, 500);
+
+  // ResizeObserver: recalculate map size whenever the container dimensions change
+  if (window.ResizeObserver && mapContainer.value) {
+    resizeObserver = new ResizeObserver(() => {
+      if (map) map.invalidateSize();
+    });
+    resizeObserver.observe(mapContainer.value);
+  }
 
   // Afficher le GeoJSON si disponible (trace du vol)
   if (props.geoJson) {
@@ -356,6 +371,10 @@ defineExpose({
 });
 
 onBeforeUnmount(() => {
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+    resizeObserver = null;
+  }
   if (map) {
     map.remove();
   }
