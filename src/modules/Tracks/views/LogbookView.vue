@@ -206,7 +206,7 @@
     <CesiumReplayView v-model="showCesiumView" :flightData="dataFlight" @close="showCesiumView = false" />
 
     <TraceInfoDialog v-model="showTraceInfoDialog" :decodedData="dataFlight?.decodedIgc"
-      :anaResult="dataFlight?.anaTrack" />
+      :anaResult="dataFlight?.anaTrack" :siteName="dataFlight?.site" :gliderName="dataFlight?.glider" />
 
     <NoTrackDialog v-model="showNoTrackDialog" :mode="noTrackDialogMode" :flightData="noTrackFlightData"
       @saved="onNoTrackFlightSaved" />

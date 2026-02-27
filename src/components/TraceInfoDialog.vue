@@ -41,6 +41,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useGettext } from "vue3-gettext";
+import { settings } from '@/js/settings/settingsService.js'
 
 const { $gettext } = useGettext();
 
@@ -48,7 +49,9 @@ const props = defineProps({
     modelValue: Boolean,
     decodedData: Object,
     anaResult: Object,
-    trackData: Object // Legacy/alternative source if needed
+    trackData: Object, // Legacy/alternative source if needed
+    siteName: String,
+    gliderName: String
 })
 
 defineEmits(['update:modelValue'])
@@ -89,9 +92,17 @@ const displayFields = computed(() => {
     const sDisplay = s > 0 ? s + (s == 1 ? "s" : "s") : ""
     const hExtractTime = hDisplay + mDisplay + sDisplay
 
-    // Site - placeholder or from input
-    // In logfly-web we might check ana.site or info.site
-    const fSite = info.site || 'PLANFAIT FRANCE' // Placeholder as in reference, can be updated later
+    // Site from list selection
+    const fSite = props.siteName || ''
+
+    // Pilot from info or settings
+    let fPilot = info.pilot
+    if (!fPilot) {
+        fPilot = settings.value.pilotName || null
+    }
+
+    // Glider from list selection or info
+    const fGliderType = props.gliderName || info.gliderType || ''
 
     // Fields definition matching reference order for two columns
     // The grid CSS will handle the layout (2 columns) naturally if we just list them in order?
@@ -107,8 +118,8 @@ const displayFields = computed(() => {
         { id: 'site', label: $gettext('Site'), value: fSite }
     ]
     const r2 = [
-        { id: 'pilot', label: $gettext('Pilot'), value: info.pilot },
-        { id: 'glider', label: $gettext('Glider'), value: info.gliderType }
+        { id: 'pilot', label: $gettext('Pilot'), value: fPilot },
+        { id: 'glider', label: $gettext('Glider'), value: fGliderType }
     ]
     const r3 = [
         { id: 'tkofftime', label: $gettext('Take off'), value: hTkoff },
