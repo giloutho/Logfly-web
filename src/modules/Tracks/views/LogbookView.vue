@@ -125,30 +125,32 @@
                   <template v-slot:activator="{ props }">
                     <v-btn icon="mdi-dots-vertical" variant="text" size="small" v-bind="props" @click.stop></v-btn>
                   </template>
-                  <v-list density="compact" min-width="200">
-                    <v-list-item prepend-icon="mdi-chart-line" :title="$gettext('Analyze')"
-                      @click="analyzeFlight(item)"></v-list-item>
+                  <v-list density="compact" min-width="200" class="text-caption">
+                    <v-list-item prepend-icon="mdi-chart-line" :title="$gettext('Analyze')" @click="analyzeFlight(item)"
+                      class="text-caption"></v-list-item>
                     <v-list-item prepend-icon="mdi-trophy-outline" :title="$gettext('Scoring')"
-                      @click="scoreFlight(item)"></v-list-item>
+                      @click="scoreFlight(item)" class="text-caption"></v-list-item>
                     <v-divider></v-divider>
-                    <v-list-item prepend-icon="mdi-tag-outline" :title="$gettext('Tag')"
-                      @click="tagFlight(item)"></v-list-item>
-                    <v-list-item prepend-icon="mdi-camera" :title="$gettext('Photo')"
-                      @click="openPhotoDialog(item)"></v-list-item>
+                    <v-list-item prepend-icon="mdi-tag-outline" :title="$gettext('Tag')" @click="tagFlight(item)"
+                      class="text-caption"></v-list-item>
+                    <v-list-item prepend-icon="mdi-camera" :title="$gettext('Photo')" @click="openPhotoDialog(item)"
+                      class="text-caption"></v-list-item>
                     <v-list-item prepend-icon="mdi-comment-text-outline" :title="$gettext('Comment')"
-                      @click="commentFlight(item)"></v-list-item>
+                      @click="commentFlight(item)" class="text-caption"></v-list-item>
                     <v-divider></v-divider>
                     <v-list-item prepend-icon="mdi-paragliding" :title="$gettext('Change glider')"
-                      @click="changeGlider(item)"></v-list-item>
+                      @click="changeGlider(item)" class="text-caption"></v-list-item>
                     <v-list-item prepend-icon="mdi-map-marker-outline" :title="$gettext('Change site')"
-                      @click="changeSite(item)"></v-list-item>
-                    <v-list-item prepend-icon="mdi-export" :title="$gettext('Export IGC')"
-                      @click="exportIgc(item)"></v-list-item>
-                    <v-list-item prepend-icon="mdi-routes" :title="$gettext('Export GPX')"
-                      @click="exportGpx(item)"></v-list-item>
+                      @click="changeSite(item)" class="text-caption"></v-list-item>
+                    <v-list-item prepend-icon="mdi-export" :title="$gettext('Export IGC')" @click="exportIgc(item)"
+                      class="text-caption"></v-list-item>
+                    <v-list-item prepend-icon="mdi-routes" :title="$gettext('Export GPX')" @click="exportGpx(item)"
+                      class="text-caption"></v-list-item>
+                    <v-list-item prepend-icon="mdi-timer-outline" :title="$gettext('Glider flight time')"
+                      @click="gliderFlightTime(item)" class="text-caption"></v-list-item>
                     <v-divider></v-divider>
                     <v-list-item prepend-icon="mdi-delete" :title="$gettext('Delete')" base-color="error"
-                      @click="confirmDelete(item)"></v-list-item>
+                      @click="confirmDelete(item)" class="text-caption"></v-list-item>
                   </v-list>
                 </v-menu>
               </template>
@@ -669,6 +671,34 @@ async function mergeFlights() {
 
 
 // --- Action Menu Handlers ---
+function gliderFlightTime(item) {
+  const glider = item.V_Engin;
+  if (!glider) {
+    snackbarMessage.value = $gettext('No glider associated with this flight');
+    snackbar.value = true;
+    return;
+  }
+  const res = databaseStore.query(
+    `SELECT SUM(V_Duree) AS seconds, COUNT(V_ID) AS flights FROM Vol WHERE V_Engin = '${glider.replace(/'/g, "''")}' AND V_Duree IS NOT NULL AND V_Duree > 0`
+  );
+  if (res.success && res.data && res.data[0] && res.data[0].values.length > 0) {
+    const row = res.data[0].values[0];
+    const seconds = row[0];
+    const flightCount = row[1];
+    if (seconds && seconds > 0) {
+      const nbHours = Math.floor(seconds / 3600);
+      const nbMin = Math.floor((seconds - nbHours * 3600) / 60);
+      const minutes = String(nbMin).padStart(2, '0');
+      snackbarMessage.value = `${glider} — ${$gettext('Flights')}: ${flightCount}  |  ${$gettext('Flight hours')}: ${nbHours}h${minutes}mn`;
+    } else {
+      snackbarMessage.value = $gettext('No flights counted for this glider');
+    }
+  } else {
+    snackbarMessage.value = $gettext('No flights counted for this glider');
+  }
+  snackbar.value = true;
+}
+
 function analyzeFlight(item) {
   // Need to load flight data first if not loaded
   if (!dataFlight.value || dataFlight.value.dbId !== item.V_ID) {
