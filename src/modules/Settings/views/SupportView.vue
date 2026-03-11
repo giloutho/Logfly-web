@@ -51,14 +51,16 @@
 <script setup>
 import { useGettext } from "vue3-gettext";
 
-const { $gettext } = useGettext();
-
-const contactUrl = 'https://logfly.org/logflydoc/contact/request/';
+const gettext = useGettext();
+const { $gettext } = gettext;
 
 /**
  * Open contact form in a new browser tab
  */
 function openContactForm() {
+  const contactUrl = gettext.current === 'fr'
+    ? 'https://logfly.org/logflydoc/contact/request/'
+    : 'https://logfly.org/logflydoc/en/contact/request/';
   window.open(contactUrl, '_blank', 'noopener,noreferrer');
 }
 </script>
