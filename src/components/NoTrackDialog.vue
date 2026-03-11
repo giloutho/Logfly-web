@@ -197,8 +197,10 @@ function initForm() {
         // Parse duration from HH:MM format
         if (props.flightData.duration) {
             const parts = props.flightData.duration.split(':');
-            form.durationHours = parseInt(parts[0]) || 1;
-            form.durationMinutes = parseInt(parts[1]) || 0;
+            const h = parseInt(parts[0]);
+            const m = parseInt(parts[1]);
+            form.durationHours = isNaN(h) ? 1 : h;
+            form.durationMinutes = isNaN(m) ? 0 : m;
         } else {
             form.durationHours = 1;
             form.durationMinutes = 0;
@@ -214,10 +216,11 @@ function initForm() {
         }
 
         // Load site from flight data
-        if (props.flightData.siteName) {
+        const rawSiteName = props.flightData.siteName || props.flightData.site || null;
+        if (rawSiteName) {
             selectedSite.value = {
                 S_ID: props.flightData.siteId || 0,
-                S_Nom: props.flightData.siteName,
+                S_Nom: rawSiteName,
                 S_Pays: props.flightData.sitePays || '',
                 S_Alti: props.flightData.siteAlti || 0,
                 S_Latitude: props.flightData.siteLat || 0,

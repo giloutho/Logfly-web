@@ -149,6 +149,14 @@
                     <v-list-item prepend-icon="mdi-timer-outline" :title="$gettext('Glider flight time')"
                       @click="gliderFlightTime(item)" class="text-caption"></v-list-item>
                     <v-divider></v-divider>
+                    <!-- Edit/Duplicate: only for flights without GPS track -->
+                    <template v-if="!item.HasIgc">
+                      <v-list-item prepend-icon="mdi-pencil" :title="$gettext('Edit')" base-color="warning"
+                        @click="openNoTrackEdit(item.V_ID)" class="text-caption"></v-list-item>
+                      <v-list-item prepend-icon="mdi-content-copy" :title="$gettext('Duplicate')" base-color="info"
+                        @click="openNoTrackDuplicate(item.V_ID)" class="text-caption"></v-list-item>
+                      <v-divider></v-divider>
+                    </template>
                     <v-list-item prepend-icon="mdi-delete" :title="$gettext('Delete')" base-color="error"
                       @click="confirmDelete(item)" class="text-caption"></v-list-item>
                   </v-list>
@@ -466,7 +474,8 @@ function loadFlights(keepSelection = false) {
   loadSiteList();
 
   let reqSQL = "SELECT V_ID, strftime('%d-%m-%Y',V_date) AS Day, strftime('%H:%M',V_date) AS Hour, replace(V_sDuree,'mn','') AS Duree, V_Site, V_Engin, V_Commentaire, V_Duree, V_Tag, ";
-  reqSQL += "CASE WHEN (V_Photos IS NOT NULL AND V_Photos !='') THEN 'Yes' END Photo ";
+  reqSQL += "CASE WHEN (V_Photos IS NOT NULL AND V_Photos !='') THEN 'Yes' END Photo, ";
+  reqSQL += "CASE WHEN (V_IGC IS NOT NULL AND V_IGC != '') THEN 1 ELSE 0 END HasIgc ";
   reqSQL += "FROM Vol ORDER BY V_Date DESC";
 
   const result = databaseStore.query(reqSQL);
@@ -512,7 +521,8 @@ function onAdvancedSearch(whereClause) {
   if (!databaseStore.hasOpenDatabase) return;
 
   let reqSQL = "SELECT V_ID, strftime('%d-%m-%Y',V_date) AS Day, strftime('%H:%M',V_date) AS Hour, replace(V_sDuree,'mn','') AS Duree, V_Site, V_Engin, V_Commentaire, V_Duree, V_Tag, ";
-  reqSQL += "CASE WHEN (V_Photos IS NOT NULL AND V_Photos !='') THEN 'Yes' END Photo ";
+  reqSQL += "CASE WHEN (V_Photos IS NOT NULL AND V_Photos !='') THEN 'Yes' END Photo, ";
+  reqSQL += "CASE WHEN (V_IGC IS NOT NULL AND V_IGC != '') THEN 1 ELSE 0 END HasIgc ";
   reqSQL += "FROM Vol WHERE " + whereClause + " ORDER BY V_Date DESC";
 
   const result = databaseStore.query(reqSQL);
@@ -1210,19 +1220,28 @@ async function loadNoTrackFlightData(flightId) {
   const result = databaseStore.query(reqSQL);
   if (result.success && result.data && result.data[0] && result.data[0].values[0]) {
     const row = result.data[0].values[0];
+    // Convert duration from seconds to HH:MM format expected by NoTrackDialog
+    const durationSec = row[4] || 0;
+    const durationHM = String(Math.floor(durationSec / 3600)).padStart(2, '0') + ':' +
+      String(Math.floor((durationSec % 3600) / 60)).padStart(2, '0');
     noTrackFlightData.value = {
       id: row[0],
       date: row[1],
       time: row[2],
       durationStr: row[3],
-      duration: row[4],
+      duration: durationHM,   // HH:MM format for NoTrackDialog parser
       site: row[5],
+      siteName: row[5],       // NoTrackDialog uses siteName to pre-fill the site field
+      sitePays: row[6],       // country — needed to rebuild the selectedSite object
       country: row[6],
       glider: row[7],
       comment: row[8],
       lat: row[9],
       lon: row[10],
-      alt: row[11]
+      alt: row[11],
+      siteLat: row[9],        // coordinates kept so the map still works if site is unchanged
+      siteLong: row[10],
+      siteAlti: row[11]
     };
   }
 }
