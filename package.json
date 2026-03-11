@@ -29,6 +29,7 @@
     "array-smooth": "^1.0.0",
     "chart.js": "^4.5.1",
     "firebase": "^12.7.0",
+    "flag-icons": "^7.5.0",
     "iana-tz-data": "^2019.1.0",
     "idb-keyval": "^6.2.2",
     "igc-parser": "^2.0.0",

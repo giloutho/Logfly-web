@@ -303,7 +303,9 @@ function toggleCutting() {
         isCutting.value = true
         cutStartIndex.value = null
         cutEndIndex.value = null
-        alert('Sélectionner par un clic sur la courbe d\'altitude le point de départ et le point de fin de la portion à conserver')
+        let msg = $gettext('Select the start and end points of the section')
+        msg += ' ' + $gettext('to be retained by clicking on the elevation chart')
+        alert(msg)
     }
 }
 

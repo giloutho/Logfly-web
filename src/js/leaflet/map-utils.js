@@ -1,52 +1,52 @@
 import L from 'leaflet'
 
-export function createPopThermal(feature, layer) {
+export function createPopThermal(feature, layer, $gettext) {
     const props = feature.properties
     const htmlTable = `
     <table style="width:100%; border-collapse: collapse; font-size: 0.9rem;">
         <tr style="background-color: #e8f5e9;">
-            <td>Gain d'altitude</td><td style="font-weight:bold">${props.alt_gain} m</td>
+            <td>${$gettext("Altitude gain")}</td><td style="font-weight:bold">${props.alt_gain} m</td>
         </tr>
         <tr style="background-color: #e8f5e9;">
-            <td>Taux moyen</td><td style="font-weight:bold">${props.avg_climb} m/s</td>
+            <td>${$gettext("Average climb")}</td><td style="font-weight:bold">${props.avg_climb} m/s</td>
         </tr>
-        <tr><td>Taux maxi</td><td>${props.max_climb} m/s</td></tr>
-        <tr><td>Taux instantané</td><td>${props.peak_climb} m/s</td></tr>
-        <tr><td>Efficacité</td><td>${props.efficiency} %</td></tr>
-        <tr><td>Altitude départ</td><td>${props.start_alt} m</td></tr>
-        <tr><td>Altitude arrivée</td><td>${props.finish_alt} m</td></tr>
-        <tr><td>Heure départ</td><td>${props.start_time}</td></tr>
-        <tr><td>Heure arrivée</td><td>${props.finish_time}</td></tr>
-        <tr><td>Durée</td><td>${props.duration}</td></tr>
-        <tr><td>Gain cumulé</td><td>${props.acc_gain} m</td></tr>
-        <tr><td>Perte cumulée</td><td>${props.acc_loss} m</td></tr>
-        <tr><td>Dérive</td><td>${props.drift}</td></tr>
+        <tr><td>${$gettext("Maximum climb")}</td><td>${props.max_climb} m/s</td></tr>
+        <tr><td>${$gettext("Peak climb")}</td><td>${props.peak_climb} m/s</td></tr>
+        <tr><td>${$gettext("Efficiency")}</td><td>${props.efficiency} %</td></tr>
+        <tr><td>${$gettext("Start altitude")}</td><td>${props.start_alt} m</td></tr>
+        <tr><td>${$gettext("Finish altitude")}</td><td>${props.finish_alt} m</td></tr>
+        <tr><td>${$gettext("Start time")}</td><td>${props.start_time}</td></tr>
+        <tr><td>${$gettext("Finish time")}</td><td>${props.finish_time}</td></tr>
+        <tr><td>${$gettext("Duration")}</td><td>${props.duration}</td></tr>
+        <tr><td>${$gettext("Cumulative gain")}</td><td>${props.acc_gain} m</td></tr>
+        <tr><td>${$gettext("Cumulative loss")}</td><td>${props.acc_loss} m</td></tr>
+        <tr><td>${$gettext("Drift")}</td><td>${props.drift}</td></tr>
     </table>`
     layer.bindPopup(htmlTable)
 }
 
-export function createPopGlide(feature, layer) {
+export function createPopGlide(feature, layer, $gettext) {
     const props = feature.properties
     const htmlTable = `
     <table style="width:100%; border-collapse: collapse; font-size: 0.9rem;">
         <tr style="background-color: #fff3e0;">
-            <td>Distance</td><td style="font-weight:bold">${props.distance} km</td>
+            <td>${$gettext("Distance")}</td><td style="font-weight:bold">${props.distance} km</td>
         </tr>
         <tr style="background-color: #fff3e0;">
-            <td>Finesse moyenne</td><td style="font-weight:bold">${props.avg_glide}:1</td>
+            <td>${$gettext("Average glide")}</td><td style="font-weight:bold">${props.avg_glide}:1</td>
         </tr>
         <tr style="background-color: #fff3e0;">
-            <td>Vitesse moyenne</td><td style="font-weight:bold">${props.avg_speed} km/h</td>
+            <td>${$gettext("Average speed")}</td><td style="font-weight:bold">${props.avg_speed} km/h</td>
         </tr>
-        <tr><td>Changement d'alt</td><td>${props.alt_change} m</td></tr>
-        <tr><td>Descente moyenne</td><td>${props.avg_descent} m/s</td></tr>
-        <tr><td>Altitude départ</td><td>${props.start_alt} m</td></tr>
-        <tr><td>Altitude arrivée</td><td>${props.finish_alt} m</td></tr>
-        <tr><td>Heure départ</td><td>${props.start_time}</td></tr>
-        <tr><td>Heure arrivée</td><td>${props.finish_time}</td></tr>
-        <tr><td>Durée</td><td>${props.duration}</td></tr>
-        <tr><td>Gain cumulé</td><td>${props.acc_gain} m</td></tr>
-        <tr><td>Perte cumulée</td><td>${props.acc_loss} m</td></tr>
+        <tr><td>${$gettext("Altitude change")}</td><td>${props.alt_change} m</td></tr>
+        <tr><td>${$gettext("Average descent")}</td><td>${props.avg_descent} m/s</td></tr>
+        <tr><td>${$gettext("Start altitude")}</td><td>${props.start_alt} m</td></tr>
+        <tr><td>${$gettext("Finish altitude")}</td><td>${props.finish_alt} m</td></tr>
+        <tr><td>${$gettext("Start time")}</td><td>${props.start_time}</td></tr>
+        <tr><td>${$gettext("Finish time")}</td><td>${props.finish_time}</td></tr>
+        <tr><td>${$gettext("Duration")}</td><td>${props.duration}</td></tr>
+        <tr><td>${$gettext("Cumulative gain")}</td><td>${props.acc_gain} m</td></tr>
+        <tr><td>${$gettext("Cumulative loss")}</td><td>${props.acc_loss} m</td></tr>
     </table>`
     layer.bindPopup(htmlTable)
 }

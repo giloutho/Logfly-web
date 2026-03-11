@@ -238,7 +238,7 @@ function displayThermals(geoThermals) {
         pointToLayer: (feature, latlng) => L.marker(latlng, { icon: thermalIcon }),
         onEachFeature: (feature, layer) => {
             if (feature.geometry.type === 'Point') {
-                createPopThermal(feature, layer)
+                createPopThermal(feature, layer, $gettext)
             }
         }
     })
@@ -269,7 +269,7 @@ function displayGlides(geoGlides) {
         pointToLayer: (feature, latlng) => L.marker(latlng, { icon: glideIcon }),
         onEachFeature: (feature, layer) => {
             if (feature.geometry.type === 'Point') {
-                createPopGlide(feature, layer)
+                createPopGlide(feature, layer, $gettext)
             }
         }
     })

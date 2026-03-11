@@ -122,15 +122,15 @@
       <v-menu offset-y>
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props" variant="text" size="small" class="lang-btn" :title="$gettext('Change language')">
-            <span class="flag-emoji">{{ langFlags[currentLangCode] }}</span>
-            <span class="lang-code">{{ currentLangCode.toUpperCase() }}</span>
+            <span :class="['fi', `fi-${langFlags[currentLangCode]}`]" class="flag-icon"></span>
+            <span class="lang-code ml-1">{{ currentLangCode.toUpperCase() }}</span>
           </v-btn>
         </template>
         <v-list density="compact">
           <v-list-item v-for="(label, code) in availableLangs" :key="code" :value="code"
             :class="{ 'v-list-item--active': code === currentLangCode }" @click="changeLanguage(code)">
             <template v-slot:prepend>
-              <span class="flag-emoji mr-2">{{ langFlags[code] }}</span>
+              <span :class="['fi', `fi-${langFlags[code]}`]" class="flag-icon mr-2"></span>
             </template>
             <v-list-item-title>{{ label }}</v-list-item-title>
           </v-list-item>
@@ -138,8 +138,12 @@
       </v-menu>
 
       <!-- Save button (when DB open) -->
-      <v-btn v-if="databaseStore.hasOpenDatabase" :color="databaseStore.isDirty ? 'warning' : 'success'" variant="tonal"
-        size="small" class="ml-1 save-btn" :loading="isSaving" @click="handleSave"
+      <v-chip v-if="databaseStore.hasOpenDatabase" class="ml-2 font-weight-medium" size="small" color="secondary"
+        variant="flat">
+        {{ databaseStore.dbName }}
+      </v-chip>
+      <v-btn v-if="databaseStore.hasOpenDatabase" :color="databaseStore.isDirty ? 'warning' : 'success'"
+        variant="elevated" size="small" class="ml-1 save-btn" :loading="isSaving" @click="handleSave"
         :title="databaseStore.isDirty ? $gettext('Unsaved changes – click to save') : $gettext('All changes saved')">
         <v-icon start>{{ databaseStore.isDirty ? 'mdi-alert-outline' : 'mdi-check-bold' }}</v-icon>
         {{ databaseStore.isDirty ? $gettext('Save') : $gettext('Saved') }}
@@ -236,13 +240,13 @@
         <template v-slot:activator="{ props }">
           <v-list-item v-bind="props" :title="$gettext('Language')">
             <template v-slot:prepend>
-              <span class="flag-emoji mr-2">{{ langFlags[currentLangCode] }}</span>
+              <span :class="['fi', `fi-${langFlags[currentLangCode]}`]" class="flag-icon mr-2"></span>
             </template>
           </v-list-item>
         </template>
         <v-list-item v-for="(label, code) in availableLangs" :key="code" @click="changeLanguage(code); drawer = false">
           <template v-slot:prepend>
-            <span class="flag-emoji mr-2">{{ langFlags[code] }}</span>
+            <span :class="['fi', `fi-${langFlags[code]}`]" class="flag-icon mr-2"></span>
           </template>
           <v-list-item-title>{{ label }}</v-list-item-title>
         </v-list-item>
@@ -293,17 +297,17 @@ const availableLangs = computed(() => gettext.available);
 const currentLangCode = computed(() => gettext.current);
 
 const langFlags = {
-  en: '🇬🇧',
-  fr: '🇫🇷',
-  de: '🇩🇪',
-  es: '🇪🇸',
-  it: '🇮🇹',
-  pt: '🇵🇹',
-  nl: '🇳🇱',
-  pl: '🇵🇱',
-  ru: '🇷🇺',
-  ja: '🇯🇵',
-  zh: '🇨🇳'
+  en: 'gb',
+  fr: 'fr',
+  de: 'de',
+  es: 'es',
+  it: 'it',
+  pt: 'pt',
+  nl: 'nl',
+  pl: 'pl',
+  ru: 'ru',
+  ja: 'jp',
+  zh: 'cn'
 };
 
 function changeLanguage(code) {
@@ -416,9 +420,9 @@ async function handleSave() {
   min-width: 70px;
 }
 
-.flag-emoji {
+.flag-icon {
   font-size: 1.1em;
-  margin-right: 4px;
+  border-radius: 2px;
 }
 
 .lang-code {

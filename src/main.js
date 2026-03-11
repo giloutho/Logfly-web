@@ -12,6 +12,7 @@ import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import '@mdi/font/css/materialdesignicons.css'; // Importe la police d'icônes MDI
 import { mdi } from 'vuetify/iconsets/mdi'; // Pour les icônes Material Design
+import 'flag-icons/css/flag-icons.min.css'; // Pour les icônes de drapeaux Windows
 
 // Imports pour vue3-gettext
 import { createGettext } from "vue3-gettext";

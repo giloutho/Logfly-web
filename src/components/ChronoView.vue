@@ -4,7 +4,7 @@
         <v-card>
             <v-card-title class="pa-0">
                 <v-toolbar color="primary" density="compact" height="40">
-                    <v-toolbar-title class="text-subtitle-1">Chronologie du vol</v-toolbar-title>
+                    <v-toolbar-title class="text-subtitle-1">{{ $gettext('Pathway') }}</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn icon size="small" @click="$emit('update:modelValue', false)">
                         <v-icon>mdi-close</v-icon>
