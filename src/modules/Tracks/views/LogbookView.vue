@@ -58,7 +58,7 @@
         <!-- Selection Header -->
         <div v-if="selectedItems.length > 0" class="d-flex align-center justify-space-between px-4 py-2 bg-primary">
           <span class="text-body-2 font-weight-bold">
-            {{ selectedItems.length }} {{ $gettext('flights selected') }}
+            {{ selectedItems.length }} {{ $gettext('flights') }} &nbsp;{{ selectedTotalTime }}
           </span>
           <div>
             <v-btn size="small" variant="text" color="white" prepend-icon="mdi-paragliding" @click="onBulkChangeGlider"
@@ -407,6 +407,17 @@ const filteredTotalTime = computed(() => { // Keep this for stats
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   return `${hours}h${minutes.toString().padStart(2, '0')}mn`;
+});
+
+const selectedTotalTime = computed(() => {
+  const idSet = new Set(selectedItems.value);
+  const totalSeconds = flights.value
+    .filter(f => idSet.has(f.V_ID))
+    .reduce((sum, f) => sum + (parseInt(f.V_Duree) || 0), 0);
+  if (totalSeconds === 0) return '';
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  return `${hours}h${minutes.toString().padStart(2, '0')}`;
 });
 
 
