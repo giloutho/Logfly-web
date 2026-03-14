@@ -60,12 +60,34 @@ export const thermalIcon = L.divIcon({
     popupAnchor: [0, -12]
 })
 
+export const bestThermalIcon = L.divIcon({
+    html: `<div style="position:relative; width:32px; height:32px;">
+        <i class="mdi mdi-cloud-check-variant" style="font-size: 32px; color: #43a047; text-shadow: 1px 1px 3px black;"></i>
+        <i class="mdi mdi-star" style="position:absolute; top:-4px; right:-4px; font-size: 14px; color: gold; text-shadow: 0 0 2px black;"></i>
+    </div>`,
+    className: 'best-thermal-icon',
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -16]
+})
+
 export const glideIcon = L.divIcon({
     html: '<i class="mdi mdi-chevron-down-box" style="font-size: 24px; color: #848484; text-shadow: 1px 1px 2px white;"></i>',
     className: 'glide-icon',
     iconSize: [24, 24],
     iconAnchor: [12, 12],
     popupAnchor: [0, -12]
+})
+
+export const bestGlideIcon = L.divIcon({
+    html: `<div style="position:relative; width:32px; height:32px;">
+        <i class="mdi mdi-chevron-down-box" style="font-size: 32px; color: #fb8c00; text-shadow: 1px 1px 3px white;"></i>
+        <i class="mdi mdi-star" style="position:absolute; top:-4px; right:-4px; font-size: 14px; color: gold; text-shadow: 0 0 2px black;"></i>
+    </div>`,
+    className: 'best-glide-icon',
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -16]
 })
 
 export const startIcon = L.divIcon({

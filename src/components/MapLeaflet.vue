@@ -9,7 +9,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { baseMaps, kk7layer, getDefaultLayerName } from '@/js/leaflet/tiles.js'
 import '@/js/leaflet/leaflet-measure.css'
-import { createPopThermal, createPopGlide, thermalIcon, glideIcon, startIcon, endIcon, getLeagueColor } from '@/js/leaflet/map-utils.js'
+import { createPopThermal, createPopGlide, thermalIcon, glideIcon, bestThermalIcon, bestGlideIcon, startIcon, endIcon, getLeagueColor } from '@/js/leaflet/map-utils.js'
 
 const { $gettext } = useGettext()
 
@@ -227,6 +227,10 @@ function displayThermals(geoThermals) {
 
     if (!geoThermals) return
 
+    // Find the best thermal (max alt_gain) to give it a distinct icon
+    const points = geoThermals.features ? geoThermals.features.filter(f => f.geometry.type === 'Point') : []
+    const maxAltGain = points.reduce((max, f) => Math.max(max, Number(f.properties.alt_gain) || 0), 0)
+
     thermalLayer = L.geoJSON(geoThermals, {
         renderer: mainCanvas,
         style: (feature) => {
@@ -235,7 +239,10 @@ function displayThermals(geoThermals) {
                 interactive: feature.geometry.type !== 'LineString'
             }
         },
-        pointToLayer: (feature, latlng) => L.marker(latlng, { icon: thermalIcon }),
+        pointToLayer: (feature, latlng) => {
+            const isBest = maxAltGain > 0 && Number(feature.properties.alt_gain) === maxAltGain
+            return L.marker(latlng, { icon: isBest ? bestThermalIcon : thermalIcon })
+        },
         onEachFeature: (feature, layer) => {
             if (feature.geometry.type === 'Point') {
                 createPopThermal(feature, layer, $gettext)
@@ -258,6 +265,10 @@ function displayGlides(geoGlides) {
 
     if (!geoGlides) return
 
+    // Find the best glide (max distance) to give it a distinct icon
+    const points = geoGlides.features ? geoGlides.features.filter(f => f.geometry.type === 'Point') : []
+    const maxDistance = points.reduce((max, f) => Math.max(max, Number(f.properties.distance) || 0), 0)
+
     glideLayer = L.geoJSON(geoGlides, {
         renderer: mainCanvas,
         style: (feature) => {
@@ -266,7 +277,10 @@ function displayGlides(geoGlides) {
                 interactive: feature.geometry.type !== 'LineString'
             }
         },
-        pointToLayer: (feature, latlng) => L.marker(latlng, { icon: glideIcon }),
+        pointToLayer: (feature, latlng) => {
+            const isBest = maxDistance > 0 && Number(feature.properties.distance) === maxDistance
+            return L.marker(latlng, { icon: isBest ? bestGlideIcon : glideIcon })
+        },
         onEachFeature: (feature, layer) => {
             if (feature.geometry.type === 'Point') {
                 createPopGlide(feature, layer, $gettext)
