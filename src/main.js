@@ -34,6 +34,9 @@ const vuetify = createVuetify({
 const availableLanguages = {
   en: "English",
   fr: "Français",
+  de: "Deutsch",
+  it: "Italiano",
+  es: "Español",
 };
 
 // Detect browser language and use it if available, otherwise fallback to 'en'

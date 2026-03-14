@@ -6,32 +6,41 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Display airspaces"
+msgstr "Mostrar espacios aéreos"
+
+msgid "Display"
+msgstr "Mostrar"
+
+msgid "Check the track"
+msgstr "Verificar el track"
+
 msgid "3D Flight Replay"
-msgstr ""
+msgstr "Repetición de vuelo en 3D"
 
 msgid "Hover over the graph to see details"
-msgstr ""
+msgstr "Pase el cursor sobre el gráfico para ver los detalles"
 
 msgid "3D Flight View"
-msgstr ""
+msgstr "Vista de vuelo en 3D"
 
 msgid "Change site"
-msgstr ""
+msgstr "Cambiar lugar"
 
 msgid "Switch to an existing site"
-msgstr ""
+msgstr "Cambiar a un lugar existente"
 
 msgid "Choose an existing site"
-msgstr ""
+msgstr "Elegir un lugar existente"
 
 msgid "Update name"
-msgstr ""
+msgstr "Actualizar nombre"
 
 msgid "Enter new site name"
-msgstr ""
+msgstr "Introducir nuevo nombre de lugar"
 
 msgid "becomes"
-msgstr ""
+msgstr "pasa a ser"
 
 msgid "Cancel"
 msgstr "Cancelar"
@@ -39,47 +48,140 @@ msgstr "Cancelar"
 msgid "OK"
 msgstr "OK"
 
+msgid "Top 5"
+msgstr "Top 5"
+
+msgid "Top 10"
+msgstr "Top 10"
+
+msgid "Top 20"
+msgstr "Top 20"
+
+msgid "All"
+msgstr "Todos"
+
+msgid "You can select the number of gliders to be displayed in the graph"
+msgstr "Puede seleccionar el número de velas a mostrar en el gráfico"
+
+msgid "Flight hours"
+msgstr "Horas de vuelo"
+
+msgid "Flights"
+msgstr "Vuelos"
+
+msgid "Jan"
+msgstr "Ene"
+
+msgid "Feb"
+msgstr "Feb"
+
+msgid "Mar"
+msgstr "Mar"
+
+msgid "Apr"
+msgstr "Abr"
+
+msgid "May"
+msgstr "May"
+
+msgid "Jun"
+msgstr "Jun"
+
+msgid "Jul"
+msgstr "Jul"
+
+msgid "Aug"
+msgstr "Ago"
+
+msgid "Sep"
+msgstr "Sep"
+
+msgid "Oct"
+msgstr "Oct"
+
+msgid "Nov"
+msgstr "Nov"
+
+msgid "Dec"
+msgstr "Dic"
+
+msgid "Monthly comparison"
+msgstr "Comparación mensual"
+
+msgid "You can select one or more months or the whole year"
+msgstr "Puede seleccionar uno o más meses o el año completo"
+
+msgid "You can select the number of sites to be displayed in the graph"
+msgstr "Puede seleccionar el número de lugares a mostrar en el gráfico"
+
+msgid "flights"
+msgstr "vuelos"
+
+msgid "Number of flights"
+msgstr "Número de vuelos"
+
+msgid "Take off"
+msgstr "Despegue"
+
+msgid "Choose a logbook site"
+msgstr "Elegir un lugar del libro de vuelo"
+
+msgid "Or create a new site"
+msgstr "O crear un nuevo lugar"
+
+msgid "Create a new site"
+msgstr "Crear un nuevo lugar"
+
 msgid "Time"
-msgstr ""
+msgstr "Hora"
 
 msgid "Elapsed"
-msgstr ""
+msgstr "Transcurrido"
 
 msgid "Alt"
 msgstr "Alt"
 
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 msgid "Infos"
-msgstr ""
-
-msgid "Take off"
-msgstr "Despegue"
+msgstr "Info"
 
 msgid "Thermal"
-msgstr ""
+msgstr "Térmica"
 
 msgid "Glide"
-msgstr ""
+msgstr "Transición"
 
 msgid "Landing"
 msgstr "Aterrizaje"
 
+msgid "Comment"
+msgstr "Comentario"
+
+msgid "Your comment"
+msgstr "Su comentario"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+msgid "Save"
+msgstr "Guardar"
+
 msgid "IGC export"
-msgstr ""
+msgstr "Exportar IGC"
 
 msgid "GPX export"
-msgstr ""
+msgstr "Exportar GPX"
 
 msgid "Site not defined"
-msgstr ""
+msgstr "Lugar no definido"
 
 msgid "External track"
-msgstr ""
+msgstr "Track externo"
 
 msgid "Close"
-msgstr ""
+msgstr "Cerrar"
 
 msgid "Year"
 msgstr "Año"
@@ -88,593 +190,1364 @@ msgid "Month"
 msgstr "Mes"
 
 msgid "Charts"
-msgstr ""
+msgstr "Gráficos"
 
 msgid "Export"
 msgstr "Exportar"
 
 msgid "Pathway"
-msgstr ""
+msgstr "Recorrido"
 
 msgid "Airspaces"
-msgstr ""
+msgstr "Espacios aéreos"
 
 msgid "Score"
-msgstr ""
+msgstr "Puntuación"
 
 msgid "Cut"
-msgstr ""
+msgstr "Cortar"
 
 msgid "Change glider"
-msgstr ""
+msgstr "Cambiar vela"
 
 msgid "Choose an existing glider"
-msgstr ""
+msgstr "Elegir una vela existente"
 
 msgid "Glider"
-msgstr "Planeador"
+msgstr "Vela"
 
 msgid "Or new glider"
-msgstr ""
+msgstr "O nueva vela"
 
 msgid "Enter new glider name"
-msgstr ""
+msgstr "Introducir nombre de la nueva vela"
+
+msgid "Zoom in"
+msgstr "Acercar"
+
+msgid "Zoom out"
+msgstr "Alejar"
 
 msgid "Full map"
-msgstr ""
+msgstr "Mapa completo"
 
 msgid "3D View"
-msgstr ""
+msgstr "Vista 3D"
 
-msgid "Analyze"
-msgstr "Analizar"
+msgid "No GPS track"
+msgstr "Sin track GPS"
 
 msgid "Flight Details"
-msgstr ""
+msgstr "Detalles del vuelo"
 
 msgid "About"
 msgstr "Acerca de"
 
-msgid "Comment"
-msgstr "Comentario"
-
 msgid "Modify"
-msgstr ""
-
-msgid "Share"
-msgstr ""
+msgstr "Modificar"
 
 msgid "More"
-msgstr ""
+msgstr "Más"
 
 msgid "Site"
 msgstr "Lugar"
 
 msgid "Pilot"
-msgstr ""
+msgstr "Piloto"
 
 msgid "Duration"
 msgstr "Duración"
 
 msgid "Max GPS alt"
-msgstr ""
+msgstr "Alt GPS máx."
 
 msgid "Max climb"
-msgstr ""
+msgstr "Ascenso máx."
 
 msgid "Max sink"
-msgstr ""
+msgstr "Descenso máx."
 
 msgid "Add a comment"
-msgstr ""
+msgstr "Añadir comentario"
 
-msgid "Delete"
-msgstr "Eliminar"
+msgid "Edit"
+msgstr "Editar"
 
-msgid "Edit/Duplicate"
-msgstr ""
+msgid "Duplicate"
+msgstr "Duplicar"
 
 msgid "Merge flights"
 msgstr "Combinar vuelos"
 
 msgid "Add photo"
-msgstr ""
+msgstr "Añadir foto"
 
 msgid "Remove photo"
-msgstr ""
+msgstr "Quitar foto"
 
 msgid "Delete photo"
-msgstr ""
+msgstr "Eliminar foto"
+
+msgid "Photo"
+msgstr "Foto"
+
+msgid "Current photo"
+msgstr "Foto actual"
+
+msgid "Select a replacement photo"
+msgstr "Seleccionar foto de reemplazo"
 
 msgid "Select a photo"
-msgstr ""
+msgstr "Seleccionar una foto"
+
+msgid "New photo"
+msgstr "Nueva foto"
+
+msgid "Replace photo"
+msgstr "Reemplazar foto"
 
 msgid "Thermals"
-msgstr ""
+msgstr "Térmicas"
 
 msgid "Glides"
-msgstr ""
+msgstr "Transiciones"
 
 msgid "Class"
-msgstr ""
+msgstr "Clase"
 
 msgid "Floor"
-msgstr ""
+msgstr "Base"
 
 msgid "Ceiling"
-msgstr ""
+msgstr "Techo"
 
 msgid "Checking"
-msgstr ""
+msgstr "Verificando"
 
 msgid "Airspaces involved"
-msgstr ""
+msgstr "Espacios aéreos afectados"
 
 msgid "violation(s)"
-msgstr ""
+msgstr "infracción/infracciones"
 
 msgid "No violations in the selected airspace file"
-msgstr ""
+msgstr "No hay infracciones en el archivo de espacios aéreos seleccionado"
 
 msgid "Click on an airspace to display the description"
-msgstr ""
+msgstr "Haga clic en un espacio aéreo para ver la descripción"
+
+msgid "Flight without GPS track"
+msgstr "Vuelo sin track GPS"
+
+msgid "Date"
+msgstr "Fecha"
+
+msgid "Take-off time"
+msgstr "Hora de despegue"
+
+msgid "No glider selected"
+msgstr "Ningúna vela seleccionada"
+
+msgid "Define a glider"
+msgstr "Definir una vela"
+
+msgid "No site selected"
+msgstr "Ningún lugar seleccionado"
+
+msgid "Define the used glider"
+msgstr "Definir la vela utilizada"
+
+msgid "Error creating site"
+msgstr "Error al crear el lugar"
+
+msgid "You must change the date and/or time to create a duplicate"
+msgstr "Debe cambiar la fecha y/o la hora para crear un duplicado"
+
+msgid "A flight at the same date and time was recorded"
+msgstr "Ya se ha registrado un vuelo con la misma fecha y hora"
+
+msgid "A flight at the same date and time already exists"
+msgstr "Ya existe un vuelo con la misma fecha y hora"
+
+msgid "Flight"
+msgstr "Vuelo"
+
+msgid "saved"
+msgstr "guardado"
+
+msgid "Inserting in the flights file failed"
+msgstr "Error al insertar en el archivo de vuelos"
 
 msgid "Existing logbook"
-msgstr ""
+msgstr "Libro de vuelo existente"
 
 msgid "Choose a folder"
-msgstr ""
+msgstr "Elegir una carpeta"
 
 msgid "Open a .db file"
-msgstr ""
+msgstr "Abrir un archivo .db"
 
 msgid "Reopen"
-msgstr ""
+msgstr "Reabrir"
 
 msgid "Logbooks detected"
-msgstr ""
+msgstr "Libros de vuelo detectados"
 
 msgid "Select a logbook"
-msgstr ""
+msgstr "Seleccionar un libro de vuelo"
 
 msgid "New logbook"
-msgstr ""
+msgstr "Nuevo libro de vuelo"
 
 msgid "Enter a name and click the Create button"
-msgstr ""
+msgstr "Introduzca un nombre y haga clic en Crear"
 
 msgid "Create new logbook"
-msgstr "Crear un nuevo libro de registro"
+msgstr "Crear un nuevo libro de vuelos"
 
 msgid "In previous versions of Logfly"
-msgstr ""
+msgstr "En versiones anteriores de Logfly"
 
 msgid "The default logbook was logfly.db"
-msgstr ""
+msgstr "El libro de vuelos predeterminado era logfly.db"
 
 msgid "Error creating the logbook"
-msgstr ""
+msgstr "Error al crear el libro de vuelos"
 
 msgid "No logbook found in this folder"
-msgstr ""
+msgstr "No se encontró ningún libro de vuelos en esta carpeta"
 
 msgid "Error reading the file"
-msgstr ""
+msgstr "Error al leer el archivo"
+
+msgid "Scoring"
+msgstr "Puntuación XC"
+
+msgid "Choose a scoring rule"
+msgstr "Elegir un reglamento de puntuación"
+
+msgid "Computing score..."
+msgstr "Calculando puntuación..."
+
+msgid "Result"
+msgstr "Resultado"
+
+msgid "Calculate"
+msgstr "Calcular"
+
+msgid "Scoring failed"
+msgstr "Error en el cálculo de puntuación"
+
+msgid "An unexpected error occurred"
+msgstr "Se ha producido un error inesperado"
+
+msgid "Advanced search"
+msgstr "Búsqueda avanzada"
+
+msgid "Start date"
+msgstr "Fecha de inicio"
+
+msgid "Start time"
+msgstr "Hora de inicio"
+
+msgid "End date"
+msgstr "Fecha de fin"
+
+msgid "End time"
+msgstr "Hora de fin"
+
+msgid "Min duration"
+msgstr "Duración mínima"
+
+msgid "Max duration"
+msgstr "Duración máxima"
+
+msgid "Search in glider name"
+msgstr "Buscar por nombre de parapente"
+
+msgid "Search in site name"
+msgstr "Buscar por nombre de lugar"
+
+msgid "Country"
+msgstr "País"
+
+msgid "Search in country"
+msgstr "Buscar por país"
+
+msgid "Search in comments"
+msgstr "Buscar en comentarios"
+
+msgid "Has photo"
+msgstr "Con foto"
+
+msgid "Reset"
+msgstr "Restablecer"
+
+msgid "Search"
+msgstr "Buscar"
+
+msgid "Please enter at least one search criterion"
+msgstr "Introduzca al menos un criterio de búsqueda"
+
+msgid "Edit site"
+msgstr "Editar lugar"
+
+msgid "New site"
+msgstr "Nuevo lugar"
+
+msgid "Name"
+msgstr "Nombre"
+
+msgid "Orientation"
+msgstr "Orientación"
+
+msgid "ZIP code"
+msgstr "Código postal"
+
+msgid "City"
+msgstr "Ciudad"
+
+msgid "Latitude"
+msgstr "Latitud"
+
+msgid "Longitude"
+msgstr "Longitud"
+
+msgid "Move marker to change coordinates"
+msgstr "Mueva el marcador para cambiar las coordenadas"
+
+msgid "Name must not be null"
+msgstr "El nombre no puede estar vacío"
+
+msgid "Latitude must not be null"
+msgstr "La latitud no puede estar vacía"
+
+msgid "Longitude must not be null"
+msgstr "La longitud no puede estar vacía"
 
 msgid "Click on the colored button and then OK"
-msgstr ""
+msgstr "Haga clic en el botón de color y luego en OK"
 
 msgid "Remove tag"
-msgstr ""
+msgstr "Quitar etiqueta"
 
 msgid "No tag selected"
-msgstr ""
+msgstr "Ninguna etiqueta seleccionada"
 
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 msgid "Tag selection"
-msgstr ""
+msgstr "Selección de etiqueta"
 
 msgid "No logbook opened"
-msgstr ""
+msgstr "Ningún libro de vuelos abierto"
 
 msgid "To be saved"
-msgstr ""
+msgstr "Por guardar"
 
 msgid "Saved"
-msgstr ""
+msgstr "Guardado"
 
 msgid "Auto-saved logbook"
-msgstr ""
+msgstr "Libro de vuelos guardado automáticamente"
 
 msgid "File successfully downloaded"
-msgstr ""
+msgstr "Archivo descargado correctamente"
 
 msgid "Error downloading file"
-msgstr ""
+msgstr "Error al descargar el archivo"
 
 msgid "Backup copy created"
-msgstr ""
+msgstr "Copia de seguridad creada"
 
 msgid "Flights & Tracks"
-msgstr ""
+msgstr "Vuelos y tracks"
 
 msgid "Logbook"
-msgstr ""
+msgstr "Libro de vuelos"
 
-msgid "Import tracks"
-msgstr ""
+msgid "Import"
+msgstr "Importar"
 
 msgid "Statistics"
-msgstr ""
+msgstr "Estadísticas"
 
 msgid "Annual summary"
-msgstr ""
+msgstr "Resumen anual"
 
 msgid "Global summary"
-msgstr ""
+msgstr "Resumen global"
 
 msgid "Routing"
-msgstr ""
+msgstr "Rutas"
 
 msgid "Waypoints"
 msgstr "Waypoints"
 
 msgid "XC Nav"
-msgstr ""
+msgstr "XC Nav"
 
 msgid "Sites"
-msgstr "Sitios"
-
-msgid "Paragliding Earth"
-msgstr ""
+msgstr "Lugares"
 
 msgid "Equipment"
-msgstr ""
+msgstr "Material"
 
 msgid "Utilities"
-msgstr ""
+msgstr "Utilidades"
 
 msgid "Settings"
 msgstr "Ajustes"
 
 msgid "Support"
-msgstr ""
+msgstr "Soporte"
 
 msgid "Translation"
-msgstr ""
+msgstr "Traducción"
+
+msgid "Help"
+msgstr "Ayuda"
+
+msgid "Change language"
+msgstr "Cambiar idioma"
+
+msgid "Unsaved changes – click to save"
+msgstr "Cambios sin guardar – haga clic para guardar"
+
+msgid "All changes saved"
+msgstr "Todos los cambios guardados"
+
+msgid "Import tracks"
+msgstr "Importar tracks"
+
+msgid "Language"
+msgstr "Idioma"
 
 msgid "Access your logbook"
-msgstr ""
+msgstr "Acceder a su libro de vuelos"
 
 msgid "Import new flights with or without GPS tracks"
-msgstr ""
+msgstr "Importar nuevos vuelos con o sin tracks GPS"
 
 msgid "Import flights"
-msgstr ""
+msgstr "Importar vuelos"
 
 msgid "Review external GPS tracks"
-msgstr ""
+msgstr "Revisar tracks GPS externos"
 
 msgid "External GPS track"
-msgstr ""
+msgstr "Track GPS externo"
+
+msgid "View the demo GPS track, a classic return trip Grand Bornand Semnoz Grand Bornand"
+msgstr "Ver el track GPS de demostración, un recorrido clásico Grand Bornand Semnoz Grand Bornand"
 
 msgid "Consult the annual summary of your flights"
-msgstr ""
+msgstr "Consultar el resumen anual de sus vuelos"
 
 msgid "Obtain global statistics of your logbook"
-msgstr ""
+msgstr "Obtener estadísticas globales de su libro de vuelos"
 
 msgid "Manage your waypoints"
-msgstr ""
+msgstr "Gestionar sus waypoints"
 
 msgid "Visualize and edit airspaces"
-msgstr ""
+msgstr "Visualizar y editar espacios aéreos"
 
 msgid "Program XC flights"
-msgstr ""
+msgstr "Planificar vuelos de XC"
 
 msgid "Manage the sites file of your logbook"
-msgstr ""
+msgstr "Gestionar el archivo de lugares de su libro de vuelos"
 
 msgid "Consult the Paragliding Earth database"
-msgstr ""
+msgstr "Consultar la base de datos de Paragliding Earth"
 
 msgid "Manage your equipment : purchase, revision..."
-msgstr ""
+msgstr "Gestionar su material: compra, revisión..."
 
 msgid "Manage app preferences"
-msgstr ""
+msgstr "Gestionar las preferencias de la aplicación"
 
 msgid "Access support"
-msgstr ""
+msgstr "Acceder al soporte"
 
-msgid "Date"
-msgstr "Fecha"
+msgid "Help translate Logfly"
+msgstr "Ayudar a traducir Logfly"
 
 msgid "GPS alt"
-msgstr ""
+msgstr "Alt GPS"
 
 msgid "Size"
-msgstr ""
+msgstr "Tamaño"
 
 msgid "Min GPS alt"
-msgstr ""
+msgstr "Alt GPS mín."
 
 msgid "Max gain"
 msgstr "Ganancia máxima"
 
 msgid "Max speed"
-msgstr ""
+msgstr "Velocidad máxima"
 
 msgid "Best glide"
 msgstr "Mejor Transición"
 
 msgid "Avg glide speed"
-msgstr ""
+msgstr "Velocidad media en transición"
 
 msgid "Average climb"
-msgstr ""
+msgstr "Ascenso medio"
 
 msgid "Extraction time"
-msgstr ""
+msgstr "Tiempo de extracción"
 
 msgid "Avg th efficiency"
-msgstr ""
+msgstr "Eficiencia media en térmica"
 
 msgid "Dives"
-msgstr ""
+msgstr "Picados"
 
 msgid "Various"
-msgstr ""
+msgstr "Varios"
 
-msgid "Translation Editor"
-msgstr ""
+msgid "Add"
+msgstr "Añadir"
 
-msgid "Continue a translation"
-msgstr ""
+msgid "Edit record"
+msgstr "Editar registro"
 
-msgid "New translation"
-msgstr ""
+msgid "New record"
+msgstr "Nuevo registro"
 
-msgid "Select a language"
-msgstr ""
+msgid "Click on Glider button or Other button"
+msgstr "Haga clic en Parapente u Otro"
+
+msgid "Other"
+msgstr "Otro"
+
+msgid "Select a glider"
+msgstr "Seleccionar un parapente"
+
+msgid "Enter equipment"
+msgstr "Introducir material"
+
+msgid "Clear"
+msgstr "Limpiar"
+
+msgid "Operation"
+msgstr "Operación"
+
+msgid "Price"
+msgstr "Precio"
+
+msgid "You can record all operations"
+msgstr "Puede registrar todas las operaciones"
+
+msgid "purchase"
+msgstr "compra"
+
+msgid "sale"
+msgstr "venta"
+
+msgid "overhaul"
+msgstr "revisión técnica"
+
+msgid "emergency folding"
+msgstr "plegado de emergencia"
+
+msgid "chocking"
+msgstr "calzado"
+
+msgid "etc"
+msgstr "etc."
+
+msgid "Are you sure you want to delete this record?"
+msgstr "¿Está seguro de que desea eliminar este registro?"
+
+msgid "Record deleted"
+msgstr "Registro eliminado"
+
+msgid "Error deleting record"
+msgstr "Error al eliminar el registro"
+
+msgid "registered"
+msgstr "registrado"
+
+msgid "for"
+msgstr "para"
+
+msgid "Date is required"
+msgstr "La fecha es obligatoria"
+
+msgid "Equipment is required"
+msgstr "El material es obligatorio"
+
+msgid "Operation is required"
+msgstr "La operación es obligatoria"
+
+msgid "Record updated"
+msgstr "Registro actualizado"
+
+msgid "Record created"
+msgstr "Registro creado"
+
+msgid "Error saving record"
+msgstr "Error al guardar el registro"
+
+msgid "Not defined"
+msgstr "No definido"
+
+msgid "Site details"
+msgstr "Detalles del lugar"
+
+msgid "Locality"
+msgstr "Localidad"
+
+msgid "Altitude"
+msgstr "Altitud"
+
+msgid "Updated"
+msgstr "Actualizado"
+
+msgid "Cleaning"
+msgstr "Limpieza"
+
+msgid "Select a site to display details"
+msgstr "Seleccione un lugar para ver los detalles"
+
+msgid "ZIP"
+msgstr "C.P."
+
+msgid "Site created successfully"
+msgstr "Lugar creado correctamente"
+
+msgid "Site updated successfully"
+msgstr "Lugar actualizado correctamente"
+
+msgid "Error updating site"
+msgstr "Error al actualizar el lugar"
+
+msgid "Delete site"
+msgstr "Eliminar lugar"
+
+msgid "Site deleted"
+msgstr "Lugar eliminado"
+
+msgid "Error deleting site"
+msgstr "Error al eliminar el lugar"
+
+msgid "Comment saved"
+msgstr "Comentario guardado"
+
+msgid "Comment deleted"
+msgstr "Comentario eliminado"
+
+msgid "Displaying duplicates"
+msgstr "Mostrando duplicados"
+
+msgid "sites"
+msgstr "lugares"
+
+msgid "No duplicates found"
+msgstr "No se encontraron duplicados"
+
+msgid "Delete all duplicate sites? This action cannot be undone."
+msgstr "¿Eliminar todos los lugares duplicados? Esta acción no se puede deshacer."
+
+msgid "Duplicates removed successfully"
+msgstr "Duplicados eliminados correctamente"
+
+msgid "Error removing duplicates"
+msgstr "Error al eliminar los duplicados"
+
+msgid "Classes"
+msgstr "Clases"
+
+msgid "Types"
+msgstr "Tipos"
+
+msgid "Prohibited"
+msgstr "Prohibido"
+
+msgid "Restricted"
+msgstr "Restringido"
+
+msgid "Danger"
+msgstr "Peligro"
+
+msgid "Gliding"
+msgstr "Vuelo libre"
+
+msgid "Floor limit"
+msgstr "Límite de base"
+
+msgid "Radius"
+msgstr "Radio"
+
+msgid "Select a file"
+msgstr "Seleccionar un archivo"
+
+msgid "Zone selection"
+msgstr "Selección de zona"
+
+msgid "Cancel selection"
+msgstr "Cancelar selección"
+
+msgid "Open Air format"
+msgstr "Formato Open Air"
+
+msgid "GPX Format"
+msgstr "Formato GPX"
+
+msgid "No airspace file loaded"
+msgstr "Ningún archivo de espacios aéreos cargado"
+
+msgid "No airspace found"
+msgstr "No se encontró ningún espacio aéreo"
+
+msgid "Bazile file loaded successfully"
+msgstr "Archivo Bazile cargado correctamente"
+
+msgid "Error downloading Bazile file"
+msgstr "Error al descargar el archivo Bazile"
+
+msgid "Error"
+msgstr "Error"
+
+msgid "No valid airspaces found in file"
+msgstr "No se encontraron espacios aéreos válidos en el archivo"
+
+msgid "No airspaces selected"
+msgstr "Ningún espacio aéreo seleccionado"
+
+msgid "Click and drag to draw a selection rectangle"
+msgstr "Haga clic y arrastre para trazar un rectángulo de selección"
+
+msgid "Selection too small, please draw a larger rectangle"
+msgstr "Selección demasiado pequeña, trace un rectángulo más grande"
+
+msgid "Selection cancelled"
+msgstr "Selección cancelada"
+
+msgid "No airspaces in selection area"
+msgstr "No hay espacios aéreos en el área seleccionada"
+
+msgid "Selection cancelled, airspaces restored"
+msgstr "Selección cancelada, espacios aéreos restaurados"
+
+msgid "New set"
+msgstr "Nuevo conjunto"
+
+msgid "New waypoint"
+msgstr "Nuevo waypoint"
+
+msgid "Edit waypoint"
+msgstr "Editar waypoint"
+
+msgid "Standard"
+msgstr "Estándar"
+
+msgid "Short name"
+msgstr "Nombre corto"
+
+msgid "Click on map to set position"
+msgstr "Haga clic en el mapa para definir la posición"
+
+msgid "New"
+msgstr "Nuevo"
+
+msgid "Center on map"
+msgstr "Centrar en el mapa"
+
+msgid "Error reading file"
+msgstr "Error al leer el archivo"
+
+msgid "No waypoints found"
+msgstr "No se encontraron waypoints"
+
+msgid "Short"
+msgstr "Corto"
+
+msgid "Lat"
+msgstr "Lat"
+
+msgid "Lon"
+msgstr "Lon"
+
+msgid "Waypoint added"
+msgstr "Waypoint añadido"
+
+msgid "Waypoint updated"
+msgstr "Waypoint actualizado"
+
+msgid "Waypoint deleted"
+msgstr "Waypoint eliminado"
+
+msgid "No waypoints selected for export"
+msgstr "Ningún waypoint seleccionado para exportar"
+
+msgid "Export successful"
+msgstr "Exportación correcta"
+
+msgid "Export failed"
+msgstr "Error en la exportación"
+
+msgid "Route"
+msgstr "Ruta"
+
+msgid "Track"
+msgstr "Track"
+
+msgid "Total distance"
+msgstr "Distancia total"
+
+msgid "Speed"
+msgstr "Velocidad"
+
+msgid "Distance"
+msgstr "Distancia"
+
+msgid "Points"
+msgstr "Puntos"
+
+msgid "Draw a route"
+msgstr "Trazar una ruta"
+
+msgid "Add marker"
+msgstr "Añadir marcador"
+
+msgid "Clear route"
+msgstr "Borrar ruta"
+
+msgid "Save route"
+msgstr "Guardar ruta"
+
+msgid "Measure"
+msgstr "Medir"
+
+msgid "Center on route"
+msgstr "Centrar en la ruta"
+
+msgid "Export format"
+msgstr "Formato de exportación"
+
+msgid "Include markers"
+msgstr "Incluir marcadores"
+
+msgid "not supported"
+msgstr "no compatible"
+
+msgid "Open distance"
+msgstr "Distancia libre"
+
+msgid "Tracks"
+msgstr "Tracks"
+
+msgid "Click on map to add route points. Press Escape to finish."
+msgstr "Haga clic en el mapa para añadir puntos de ruta. Pulse Escape para terminar."
+
+msgid "Continue drawing from last point"
+msgstr "Continuar trazando desde el último punto"
 
 msgid "Start"
-msgstr ""
+msgstr "Inicio"
+
+msgid "End"
+msgstr "Fin"
+
+msgid "Point"
+msgstr "Punto"
+
+msgid "Drag to move"
+msgstr "Arrastrar para mover"
+
+msgid "Click to delete"
+msgstr "Clic para eliminar"
+
+msgid "Ctrl/Cmd+click to continue"
+msgstr "Ctrl/Cmd+clic para continuar"
+
+msgid "Point inserted"
+msgstr "Punto insertado"
+
+msgid "Click or drag to insert point"
+msgstr "Clic o arrastrar para insertar punto"
+
+msgid "Cannot delete: minimum 2 points required"
+msgstr "No se puede eliminar: se requieren al menos 2 puntos"
+
+msgid "Cannot delete the start point"
+msgstr "No se puede eliminar el punto de inicio"
+
+msgid "Point deleted"
+msgstr "Punto eliminado"
+
+msgid "Route cleared"
+msgstr "Ruta borrada"
+
+msgid "Click on map to add a marker"
+msgstr "Haga clic en el mapa para añadir un marcador"
+
+msgid "Marker added"
+msgstr "Marcador añadido"
+
+msgid "Click to add points, double-click to finish"
+msgstr "Clic para añadir puntos, doble clic para terminar"
+
+msgid "Route loaded"
+msgstr "Ruta cargada"
+
+msgid "points"
+msgstr "puntos"
+
+msgid "markers"
+msgstr "marcadores"
+
+msgid "No route found in file"
+msgstr "No se encontró ninguna ruta en el archivo"
+
+msgid "Error loading route"
+msgstr "Error al cargar la ruta"
+
+msgid "No valid track data found"
+msgstr "No se encontraron datos de track válidos"
+
+msgid "GPX track loaded"
+msgstr "Track GPX cargado"
+
+msgid "Unsupported track format"
+msgstr "Formato de track no compatible"
+
+msgid "Error loading track"
+msgstr "Error al cargar el track"
+
+msgid "No airspaces to display"
+msgstr "No hay espacios aéreos para mostrar"
+
+msgid "Route must have at least 2 points"
+msgstr "La ruta debe tener al menos 2 puntos"
+
+msgid "Route exported successfully"
+msgstr "Ruta exportada correctamente"
+
+msgid "Configure your preferences"
+msgstr "Configurar sus preferencias"
+
+msgid "Startup"
+msgstr "Inicio"
+
+msgid "Pilot name"
+msgstr "Nombre del piloto"
+
+msgid "Glider name"
+msgstr "Nombre del parapente"
+
+msgid "Default map layer"
+msgstr "Capa de mapa predeterminada"
+
+msgid "League"
+msgstr "Liga"
+
+msgid "Identifier"
+msgstr "Identificador"
+
+msgid "Password"
+msgstr "Contraseña"
+
+msgid "Home"
+msgstr "Inicio"
+
+msgid "Settings saved successfully"
+msgstr "Ajustes guardados correctamente"
+
+msgid "Error saving settings"
+msgstr "Error al guardar los ajustes"
+
+msgid "Settings restored"
+msgstr "Ajustes restaurados"
+
+msgid "Contact"
+msgstr "Contacto"
+
+msgid "Need help"
+msgstr "¿Necesita ayuda?"
+
+msgid "Have a question or suggestion"
+msgstr "¿Tiene alguna pregunta o sugerencia?"
+
+msgid "Contact the Logfly support our online form"
+msgstr "Contacte con el soporte de Logfly mediante el formulario en línea"
+
+msgid "Open Contact Form"
+msgstr "Abrir formulario de contacto"
+
+msgid "Bug reports"
+msgstr "Informe de errores"
+
+msgid "Languages"
+msgstr "Idiomas"
+
+msgid "French"
+msgstr "Francés"
+
+msgid "English"
+msgstr "Inglés"
+
+msgid "Translation Editor"
+msgstr "Editor de traducción"
+
+msgid "Continue a translation"
+msgstr "Continuar una traducción"
+
+msgid "New translation"
+msgstr "Nueva traducción"
+
+msgid "Select a language"
+msgstr "Seleccionar un idioma"
 
 msgid "Load from file"
-msgstr ""
+msgstr "Cargar desde archivo"
 
 msgid "Loading translations"
-msgstr ""
-
-msgid "Search"
-msgstr "Buscar"
+msgstr "Cargando traducciones"
 
 msgid "Already translated"
-msgstr ""
+msgstr "Ya traducido"
 
 msgid "Change"
-msgstr ""
+msgstr "Cambiar"
 
 msgid "Untranslated"
-msgstr ""
+msgstr "Sin traducir"
 
 msgid "Download"
-msgstr ""
+msgstr "Descargar"
 
 msgid "Save to server"
-msgstr ""
+msgstr "Guardar en el servidor"
 
 msgid "Firebase not configured. Using local mode only."
-msgstr ""
+msgstr "Firebase no configurado. Usando solo modo local."
 
 msgid "Could not connect to server"
-msgstr ""
+msgstr "No se pudo conectar al servidor"
 
 msgid "Translation saved successfully!"
-msgstr ""
+msgstr "¡Traducción guardada correctamente!"
 
 msgid "Error saving translation"
-msgstr ""
+msgstr "Error al guardar la traducción"
+
+msgid "Hours"
+msgstr "Horas"
+
+msgid "Gliders"
+msgstr "Parapentes"
+
+msgid "Reference"
+msgstr "Referencia"
+
+msgid "Months"
+msgstr "Meses"
+
+msgid "Compare"
+msgstr "Comparar"
+
+msgid "Fl."
+msgstr "Vl."
+
+msgid "Flight time comparison"
+msgstr "Comparación de tiempo de vuelo"
+
+msgid "Flight comparison"
+msgstr "Comparación de vuelos"
+
+msgid "Yearly chart"
+msgstr "Gráfico anual"
+
+msgid "Monthly chart"
+msgstr "Gráfico mensual"
+
+msgid "Gliders chart"
+msgstr "Gráfico de parapentes"
+
+msgid "Sites chart"
+msgstr "Gráfico de lugares"
+
+msgid "YEARS"
+msgstr "AÑOS"
+
+msgid "MONTHES"
+msgstr "MESES"
+
+msgid "year"
+msgstr "año"
+
+msgid "Select a chart type to display statistics"
+msgstr "Seleccione un tipo de gráfico para mostrar estadísticas"
 
 msgid "Click Select and from the USB drives"
-msgstr ""
+msgstr "Haga clic en Seleccionar y elija entre las unidades USB"
 
 msgid "select the one containing"
-msgstr ""
+msgstr "seleccione la que contiene"
 
 msgid "Validate and click Import"
-msgstr ""
+msgstr "Valide y haga clic en Importar"
 
 msgid "The browser cannot read this type of GPS directly"
-msgstr ""
+msgstr "El navegador no puede leer este tipo de GPS directamente"
 
 msgid "There are two solutions"
-msgstr ""
+msgstr "Hay dos soluciones"
 
 msgid "- Install the LogflyGPS import software. It will update the logbook directly"
-msgstr ""
+msgstr "- Instale el software de importación LogflyGPS. Actualizará el libro de vuelos directamente"
 
 msgid "- use the manufacturer software to download the flight logs"
-msgstr ""
+msgstr "- Use el software del fabricante para descargar los registros de vuelo"
 
 msgid "then import the downloaded files with the \"Import from Folder\" option"
-msgstr ""
+msgstr "luego importe los archivos descargados con la opción \"Importar desde carpeta\""
 
 msgid "Plug in the XCTracer and briefly press the button"
-msgstr ""
+msgstr "Conecte el XCTracer y pulse brevemente el botón"
 
 msgid "a XC**.txt file and files in igc format"
-msgstr ""
+msgstr "un archivo XC**.txt y archivos en formato igc"
 
 msgid "Plug in the Skytraax 2"
-msgstr ""
+msgstr "Conecte el Skytraax 2"
 
 msgid "a 'flights' folder and a 'waypoints' folder"
-msgstr ""
+msgstr "una carpeta 'flights' y una carpeta 'waypoints'"
 
 msgid "Plug in the Skytraax 3/4/5"
-msgstr ""
+msgstr "Conecte el Skytraax 3/4/5"
 
 msgid "Using SysPC Tools may be an option"
-msgstr ""
+msgstr "El uso de SysPC Tools puede ser una opción"
 
-msgid "Plug in the NavXL"
-msgstr ""
+msgid "Plug in the NavXL, select mass storage"
+msgstr "Conecte el NavXL, seleccione almacenamiento masivo"
 
 msgid "an 'IGC' folder"
-msgstr ""
+msgstr "una carpeta 'IGC'"
 
 msgid "Plug in the Oudie"
-msgstr ""
+msgstr "Conecte el Oudie"
 
 msgid "a 'Flights' folder, a 'Waypoints' folder"
-msgstr ""
+msgstr "una carpeta 'Flights', una carpeta 'Waypoints'"
 
 msgid "Plug in the CPilot"
-msgstr ""
+msgstr "Conecte el CPilot"
 
 msgid "a 'tracks' folder, a 'display' folder"
-msgstr ""
+msgstr "una carpeta 'tracks', una carpeta 'display'"
 
 msgid "Plug in the Element"
-msgstr ""
+msgstr "Conecte el Element"
+
+msgid "Plug in the Connect"
+msgstr "Conecte el Connect"
 
 msgid "a flights folder and a waypoints folder"
-msgstr ""
+msgstr "una carpeta de vuelos y una carpeta de waypoints"
 
 msgid "Plug in the Reversale"
-msgstr ""
+msgstr "Conecte el Reversale"
 
 msgid "a 'LOG' folder and a 'PARAM.VGP' file"
-msgstr ""
+msgstr "una carpeta 'LOG' y un archivo 'PARAM.VGP'"
 
 msgid "Plug in the Skydrop"
-msgstr ""
+msgstr "Conecte el Skydrop"
 
 msgid "a 'LOGS' folder and a 'AIR' folder"
-msgstr ""
+msgstr "una carpeta 'LOGS' y una carpeta 'AIR'"
 
 msgid "Plug in the Varduino"
-msgstr ""
+msgstr "Conecte el Varduino"
 
 msgid "a 'igc' folder and an 'audio' folder"
-msgstr ""
+msgstr "una carpeta 'igc' y una carpeta 'audio'"
 
 msgid "Plug in the Flynet"
-msgstr ""
+msgstr "Conecte el Flynet"
 
 msgid "a CONFIG.TXT file and files in igc format"
-msgstr ""
+msgstr "un archivo CONFIG.TXT y archivos en formato igc"
 
 msgid "Plug in the Sensbox"
-msgstr ""
+msgstr "Conecte el Sensbox"
 
 msgid "a 'tracks' folder and a 'system' folder"
-msgstr ""
+msgstr "una carpeta 'tracks' y una carpeta 'system'"
 
 msgid "Folder"
-msgstr ""
+msgstr "Carpeta"
 
 msgid "Select a folder containing track files (IGC or GPX)"
-msgstr ""
+msgstr "Seleccione una carpeta que contenga archivos de track (IGC o GPX)"
 
 msgid "Select the folder defined by Sys PC Tools"
-msgstr ""
+msgstr "Seleccione la carpeta definida por Sys PC Tools"
 
 msgid "By default, Sys-PC-Tool create a folder in user.home directory called \"parapente\""
-msgstr ""
-
-msgid "Flight without GPS track"
-msgstr ""
+msgstr "Por defecto, Sys-PC-Tool crea una carpeta en el directorio de usuario llamada \"parapente\""
 
 msgid "Create a manual flight entry without an associated track file."
-msgstr ""
+msgstr "Crear una entrada de vuelo manual sin archivo de track asociado."
 
 msgid "Analyze a track file without importing it into your logbook"
-msgstr ""
+msgstr "Analizar un archivo de track sin importarlo al libro de vuelos"
 
 msgid "Drag and drop your file here"
-msgstr ""
+msgstr "Arrastre y suelte su archivo aquí"
 
 msgid "or click to select"
-msgstr ""
+msgstr "o haga clic para seleccionar"
 
 msgid "Analyse of"
-msgstr ""
+msgstr "Análisis de"
 
 msgid "Decoding in progress"
-msgstr ""
+msgstr "Decodificación en curso"
 
 msgid "GPX or IGC format only"
-msgstr ""
+msgstr "Solo formato GPX o IGC"
 
 msgid "GPX decoding error"
-msgstr ""
+msgstr "Error de decodificación GPX"
 
 msgid "GPX to IGC conversion failed"
-msgstr ""
+msgstr "Error en la conversión de GPX a IGC"
 
 msgid "Decoding problem in track file"
-msgstr ""
+msgstr "Problema de decodificación en el archivo de track"
 
 msgid "USB GPS"
-msgstr ""
+msgstr "GPS USB"
 
 msgid "Serial GPS"
-msgstr ""
+msgstr "GPS serie"
 
 msgid "tracks decoded"
-msgstr ""
-
-msgid "Import"
-msgstr ""
+msgstr "tracks decodificados"
 
 msgid "Already in the logbook"
-msgstr ""
+msgstr "Ya está en el libro de vuelos"
 
 msgid "Invalid"
-msgstr ""
+msgstr "No válido"
 
 msgid "Select"
 msgstr "Seleccionar"
 
 msgid "Scanning"
-msgstr ""
+msgstr "Escaneando"
 
 msgid "Not yet available"
-msgstr ""
+msgstr "Aún no disponible"
 
 msgid "Error while selecting the folder"
-msgstr ""
+msgstr "Error al seleccionar la carpeta"
 
 msgid "No directory selected"
-msgstr ""
+msgstr "Ningún directorio seleccionado"
 
 msgid "No tracks in this folder"
-msgstr ""
+msgstr "No hay tracks en esta carpeta"
 
 msgid "Error during scanning"
-msgstr ""
+msgstr "Error durante el escaneo"
 
 msgid "To rename"
 msgstr "Para renombrar"
 
+msgid "tracks imported"
+msgstr "tracks importados"
+
+msgid "Flight saved"
+msgstr "Vuelo guardado"
+
+msgid "Advanced Search"
+msgstr "Búsqueda avanzada"
+
 msgid "Filter by tag"
-msgstr ""
+msgstr "Filtrar por etiqueta"
+
+msgid "Unfilter"
+msgstr "Quitar filtro"
+
+msgid "flights selected"
+msgstr "vuelos seleccionados"
+
+msgid "Merge"
+msgstr "Combinar"
+
+msgid "Analyze"
+msgstr "Analizar"
+
+msgid "Tag"
+msgstr "Etiqueta"
+
+msgid "Export IGC"
+msgstr "Exportar IGC"
+
+msgid "Export GPX"
+msgstr "Exportar GPX"
+
+msgid "Select a flight to view track"
+msgstr "Seleccione un vuelo para ver el track"
 
 msgid "All flights"
-msgstr ""
+msgstr "Todos los vuelos"
 
-msgid "Totals for the selection"
-msgstr ""
+msgid "flights found"
+msgstr "vuelos encontrados"
 
-msgid "Flights"
-msgstr ""
+msgid "No flights match the search criteria"
+msgstr "Ningún vuelo coincide con los criterios de búsqueda"
 
-msgid "Flight hours"
-msgstr ""
+msgid "Select at least 2 flights to merge"
+msgstr "Seleccione al menos 2 vuelos para combinar"
+
+msgid "Error reading flights from database"
+msgstr "Error al leer los vuelos de la base de datos"
+
+msgid "Could not retrieve all selected flights"
+msgstr "No se pudieron recuperar todos los vuelos seleccionados"
+
+msgid "Flights must be on the same day to merge"
+msgstr "Los vuelos deben ser del mismo día para combinarlos"
+
+msgid "All selected flights must have a valid IGC track"
+msgstr "Todos los vuelos seleccionados deben tener un track IGC válido"
+
+msgid "merged flights"
+msgstr "vuelos combinados"
+
+msgid "Flights merged successfully"
+msgstr "Vuelos combinados correctamente"
+
+msgid "An error occurred while merging flights"
+msgstr "Se ha producido un error al combinar los vuelos"
+
+msgid "Photo saved"
+msgstr "Foto guardada"
+
+msgid "Photo deleted"
+msgstr "Foto eliminada"
+
+msgid "No IGC data for this flight"
+msgstr "No hay datos IGC para este vuelo"
+
+msgid "Could not decode IGC data"
+msgstr "No se pudieron decodificar los datos IGC"
+
+msgid "Are you sure you want to delete this flight?"
+msgstr "¿Está seguro de que desea eliminar este vuelo?"
 
