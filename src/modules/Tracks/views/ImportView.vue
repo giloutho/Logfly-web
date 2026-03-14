@@ -53,6 +53,16 @@
                         @click="openImportDialog(option, 'folder')">
                         <v-list-item-title>{{ option }}</v-list-item-title>
                       </v-list-item>
+                      <!-- Reopen last folder (desktop only, when a handle is remembered) -->
+                      <template v-if="lastImportDirHandle && !isMobile">
+                        <v-divider></v-divider>
+                        <v-list-item @click="reopenLastImportFolder">
+                          <v-list-item-title class="text-primary">
+                            <v-icon start size="small">mdi-history</v-icon>
+                            {{ $gettext('Reopen') }} {{ lastImportDirName }}
+                          </v-list-item-title>
+                        </v-list-item>
+                      </template>
                     </v-list>
                   </v-menu>
                 </v-col>
@@ -221,8 +231,9 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useGettext } from 'vue3-gettext';
+import { get, set } from 'idb-keyval';
 import OpenLogbook from '@/components/OpenLogbook.vue';
 import NoTrackDialog from '@/components/NoTrackDialog.vue';
 import { useDatabaseStore } from '@/stores/database';
@@ -283,6 +294,26 @@ const showFlightTable = ref(false);
 const showAllFlights = ref(true);
 const currentDevice = ref('');
 const showNoTrackDialog = ref(false);
+
+// Last import folder persistence (desktop only)
+const IMPORT_DIR_KEY = 'import_folder_handle';
+const lastImportDirHandle = ref(null);
+const lastImportDirName = ref('');
+
+onMounted(async () => {
+  if (!isMobile && 'showDirectoryPicker' in window) {
+    try {
+      const saved = await get(IMPORT_DIR_KEY);
+      if (saved) {
+        lastImportDirHandle.value = saved;
+        lastImportDirName.value = saved.name || '';
+      }
+    } catch (e) {
+      // IndexedDB may not support storing directory handles on some platforms
+      lastImportDirHandle.value = null;
+    }
+  }
+});
 
 // Snackbar state
 const snackbar = ref(false);
@@ -362,6 +393,12 @@ async function selectDirectory() {
       selectedDirectory.value = directoryHandle.name;
       selectedDirectoryHandle.value = directoryHandle;
       error.value = '';
+      // Persist for next session
+      try {
+        await set(IMPORT_DIR_KEY, directoryHandle);
+        lastImportDirHandle.value = directoryHandle;
+        lastImportDirName.value = directoryHandle.name;
+      } catch (e) { /* storage not supported, ignore */ }
     } else {
       // Fallback pour navigateurs non supportés
       let errMsg = 'The File System Access API is not supported by this browser' + '. ';
@@ -374,6 +411,29 @@ async function selectDirectory() {
       error.value = $gettext('Error while selecting the folder') + ':' + err.message;
       console.error('Erreur showDirectoryPicker:', err);
     }
+  }
+}
+
+/**
+ * Reopen the last remembered import folder directly (no picker)
+ */
+async function reopenLastImportFolder() {
+  if (!lastImportDirHandle.value) return;
+  try {
+    const status = await lastImportDirHandle.value.requestPermission({ mode: 'read' });
+    if (status === 'granted') {
+      // Open dialog pre-filled with the persisted folder — use the first folderOption (generic)
+      selectedDevice.value = folderOptions[0];
+      importType.value = 'folder';
+      selectedDirectory.value = lastImportDirHandle.value.name;
+      selectedDirectoryHandle.value = lastImportDirHandle.value;
+      error.value = '';
+      importDialog.value = true;
+    }
+  } catch (e) {
+    lastImportDirHandle.value = null;
+    lastImportDirName.value = '';
+    await set(IMPORT_DIR_KEY, null);
   }
 }
 
