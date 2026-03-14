@@ -28,6 +28,17 @@
                     <span class="text-grey">{{ $gettext('No tag selected') }}</span>
                 </div>
 
+                <!-- Warning shown when saving without selecting a tag -->
+                <v-alert v-if="showNoTagWarning" type="warning" variant="tonal" density="compact" class="mt-4">
+                    {{ $gettext('No tags checked, continue?') }}
+                    <div class="d-flex justify-end gap-2 mt-2">
+                        <v-btn size="small" variant="text" @click="showNoTagWarning = false">{{ $gettext('Cancel')
+                            }}</v-btn>
+                        <v-btn size="small" color="warning" variant="flat" @click="confirmSave">{{ $gettext('OK')
+                            }}</v-btn>
+                    </div>
+                </v-alert>
+
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
@@ -61,7 +72,7 @@ const props = defineProps({
     flightSite: String
 })
 
-const emit = defineEmits(['update:modelValue', 'save'])
+const emit = defineEmits(['update:modelValue', 'save', 'tags-updated'])
 
 const dialog = computed({
     get: () => props.modelValue,
@@ -70,6 +81,7 @@ const dialog = computed({
 
 const tags = ref([])
 const currentTagId = ref(null)
+const showNoTagWarning = ref(false)
 
 const title = computed(() => {
     if (props.flightDate && props.flightSite) {
@@ -95,6 +107,7 @@ watch(() => props.modelValue, (val) => {
     if (val) {
         loadTags()
         currentTagId.value = props.currentTag
+        showNoTagWarning.value = false
     }
 })
 
@@ -111,12 +124,22 @@ function close() {
 }
 
 function save() {
+    // If no tag selected, show warning first
+    if (!currentTagId.value) {
+        showNoTagWarning.value = true
+        return
+    }
+    confirmSave()
+}
+
+function confirmSave() {
     // 1. Save all labels
     tags.value.forEach(tag => {
         databaseStore.query(`UPDATE Tag SET Tag_Label = '${tag.Tag_Label.replace(/'/g, "''")}' WHERE Tag_ID = ${tag.Tag_ID}`)
     })
-
-    // 2. Emit selected tag
+    // 2. Notify parent that tag labels may have changed
+    emit('tags-updated')
+    // 3. Emit selected tag
     emit('save', currentTagId.value)
     close()
 }

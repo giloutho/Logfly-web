@@ -69,6 +69,10 @@
               @click="onBulkChangeSite" class="mr-2">
               {{ $gettext('Site') }}
             </v-btn>
+            <v-btn size="small" variant="text" color="white" prepend-icon="mdi-tag-outline" @click="tagBulk"
+              class="mr-2">
+              {{ $gettext('Tag') }}
+            </v-btn>
             <v-btn v-if="selectedItems.length > 1" size="small" variant="text" color="white"
               prepend-icon="mdi-call-merge" @click="mergeFlights" class="mr-2">
               {{ $gettext('Merge') }}
@@ -246,7 +250,7 @@
 
     <!-- Tag Dialog -->
     <TagDialog v-model="showTagDialog" :tags="Object.values(tagsMap)" :currentTag="tagDialogData.currentTag"
-      @save="onTagDialogSave" />
+      @save="onTagDialogSave" @tags-updated="onTagsUpdated" />
 
   </v-layout>
 </template>
@@ -774,13 +778,29 @@ function open3DView(item) {
 
 function tagFlight(item) {
   selectedItems.value = [item.V_ID];
-  tagDialogData.value = { currentTag: item.V_Tag, flightId: item.V_ID };
+  tagDialogData.value = { currentTag: item.V_Tag, flightId: item.V_ID, bulk: false };
+  showTagDialog.value = true;
+}
+
+function tagBulk() {
+  // Open TagDialog in bulk mode: no pre-selected tag (mixed selection)
+  tagDialogData.value = { currentTag: null, flightId: null, bulk: true };
   showTagDialog.value = true;
 }
 
 function onTagDialogSave(tag) {
-  const flightId = tagDialogData.value.flightId;
-  onTagUpdate({ id: flightId, tag });
+  if (tagDialogData.value.bulk) {
+    // Apply tag to all selected flights
+    selectedItems.value.forEach(id => onTagUpdate({ id, tag }));
+  } else {
+    const flightId = tagDialogData.value.flightId;
+    onTagUpdate({ id: flightId, tag });
+  }
+}
+
+function onTagsUpdated() {
+  // Refresh tagsMap so the filter dropdown reflects any label changes made in TagDialog
+  loadTags();
 }
 
 // Opens LogbookPhoto dialog (from context menu "Photo" option) - add/manage/remove
