@@ -85,13 +85,19 @@
       <v-row>
         <v-col cols="12">
           <v-card>
-            <v-card-title class="d-flex justify-space-between align-center">
-              <div>
-                <span><b>{{ currentDevice }}</b> : {{ filteredFlights.length }} {{ $gettext('tracks decoded') }}</span>
-                <v-checkbox v-model="showAllFlights" label="Display all tracks" hide-details density="compact"
-                  class="mt-2" />
+            <v-card-text class="d-flex justify-space-between align-center py-2 px-4">
+              <div class="d-flex align-center ga-7">
+                <span class="text-body-1 font-weight-bold">
+                  <b>{{ currentDevice }}</b> : {{ filteredFlights.length }} {{ $gettext('tracks decoded') }}
+                </span>
+                <v-checkbox v-model="showAllFlights" :label="$gettext('Display all tracks')" hide-details
+                  density="compact" class="flex-grow-0" />
+                <v-btn v-if="hasSelectedFlights" size="small" variant="outlined" color="error"
+                  prepend-icon="mdi-checkbox-blank-off-outline" @click="unselectAll" style="text-transform: none;">
+                  {{ $gettext('Unselect') }}
+                </v-btn>
               </div>
-              <div>
+              <div class="d-flex align-center">
                 <v-btn color="success" @click="importSelectedFlights" :disabled="!hasSelectedFlights" class="mr-2">
                   <v-icon start>mdi-database-import</v-icon>
                   {{ $gettext('Import') }} {{ selectedFlightsCount }}
@@ -100,7 +106,7 @@
                   {{ $gettext('Close') }}
                 </v-btn>
               </div>
-            </v-card-title>
+            </v-card-text>
             <v-card-text>
               <v-data-table-virtual :headers="flightTableHeaders" :items="filteredFlights" height="400"
                 class="elevation-1">
@@ -345,8 +351,8 @@ const filteredFlights = computed(() => {
   if (showAllFlights.value) {
     return scannedFlights.value;
   }
-  // Afficher uniquement les vols à incorporer (toStore = true)
-  return scannedFlights.value.filter(f => f.toStore);
+  // Afficher uniquement les vols non encore présents dans le carnet
+  return scannedFlights.value.filter(f => !f.existsInDB);
 });
 
 // Descriptions des appareils (utilise $gettext pour l'internationalisation)
@@ -365,6 +371,10 @@ function closeImportDialog() {
   selectedDevice.value = '';
   selectedDirectory.value = '';
   error.value = '';
+}
+
+function unselectAll() {
+  scannedFlights.value.forEach(f => { f.toStore = false })
 }
 
 function getDeviceDescription() {
