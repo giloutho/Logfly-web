@@ -102,7 +102,7 @@
               </div>
             </v-card-title>
             <v-card-text>
-              <v-data-table :headers="flightTableHeaders" :items="filteredFlights" :items-per-page="6"
+              <v-data-table-virtual :headers="flightTableHeaders" :items="filteredFlights" height="400"
                 class="elevation-1">
                 <!-- Checkbox to-store -->
                 <template v-slot:item.toStore="{ item }">
@@ -159,7 +159,7 @@
                   <v-btn icon="mdi-map" size="small" variant="text" color="primary" @click="showFlightOnMap(item)"
                     :disabled="!item.isValid" />
                 </template>
-              </v-data-table>
+              </v-data-table-virtual>
             </v-card-text>
           </v-card>
         </v-col>
