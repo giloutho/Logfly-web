@@ -56,28 +56,28 @@
         </div>
 
         <!-- Selection Header -->
-        <div v-if="selectedItems.length > 0" class="d-flex align-center justify-space-between px-4 py-2 bg-primary">
-          <span class="text-body-2 font-weight-bold">
+        <div v-if="selectedItems.length > 0" class="d-flex align-center justify-space-between px-4 py-2 bg-red">
+          <span class="text-body-2 font-weight-bold" style="color: yellow;">
             {{ selectedItems.length }} {{ $gettext('flights') }} &nbsp;{{ selectedTotalTime }}
           </span>
           <div>
-            <v-btn size="small" variant="text" color="white" prepend-icon="mdi-paragliding" @click="onBulkChangeGlider"
-              class="mr-2">
-              {{ $gettext('Glider') }}
+            <v-btn size="x-small" variant="outlined" color="white" prepend-icon="mdi-paragliding"
+              @click="onBulkChangeGlider" class="mr-2">
+              {{ $gettext('Change glider') }}
             </v-btn>
-            <v-btn size="small" variant="text" color="white" prepend-icon="mdi-map-marker-outline"
-              @click="onBulkChangeSite" class="mr-2">
-              {{ $gettext('Site') }}
-            </v-btn>
-            <v-btn size="small" variant="text" color="white" prepend-icon="mdi-tag-outline" @click="tagBulk"
+            <v-btn size="x-small" variant="outlined" color="white" prepend-icon="mdi-tag-outline" @click="tagBulk"
               class="mr-2">
               {{ $gettext('Tag') }}
             </v-btn>
-            <v-btn v-if="selectedItems.length > 1" size="small" variant="text" color="white"
+            <v-btn size="x-small" variant="outlined" color="white" prepend-icon="mdi-map-marker-outline"
+              @click="onBulkChangeSite" class="mr-2">
+              {{ $gettext('Change site') }}
+            </v-btn>
+            <v-btn v-if="selectedItems.length > 1" size="x-small" variant="outlined" color="white"
               prepend-icon="mdi-call-merge" @click="mergeFlights" class="mr-2">
               {{ $gettext('Merge') }}
             </v-btn>
-            <v-btn size="small" variant="text" icon="mdi-close" color="white" @click="clearSelection"></v-btn>
+            <v-btn size="x-small" variant="outlined" icon="mdi-close" color="white" @click="clearSelection"></v-btn>
           </div>
         </div>
 
