@@ -184,7 +184,6 @@ const languagesList = [
     { code: 'da', label: 'dansk', flag: '🇩🇰' },
     { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
     { code: 'el', label: 'ελληνικά', flag: '🇬🇷' },
-    { code: 'en', label: 'English', flag: '🇬🇧' },
     { code: 'es', label: 'Español', flag: '🇪🇸' },
     { code: 'et', label: 'eesti', flag: '🇪🇪' },
     { code: 'fi', label: 'suomi', flag: '🇫🇮' },

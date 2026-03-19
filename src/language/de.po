@@ -132,6 +132,9 @@ msgstr "Oder ein neues Fluggebiet anlegen"
 msgid "Create a new site"
 msgstr "Neues Fluggebiet anlegen"
 
+msgid "Pathway"
+msgstr "Flugweg"
+
 msgid "Time"
 msgstr "Zeit"
 
@@ -180,9 +183,6 @@ msgstr "Fluggebiet nicht bekannt"
 msgid "External track"
 msgstr "Externer Track"
 
-msgid "Close"
-msgstr "Schliessen"
-
 msgid "Year"
 msgstr "Jahr"
 
@@ -195,9 +195,6 @@ msgstr "Grafiken"
 msgid "Export"
 msgstr "Exportieren"
 
-msgid "Pathway"
-msgstr "Flugweg"
-
 msgid "Airspaces"
 msgstr "Lufträume"
 
@@ -206,6 +203,12 @@ msgstr "Wertung"
 
 msgid "Cut"
 msgstr "Ausschneiden"
+
+msgid "Select the start and end points of the section"
+msgstr ""
+
+msgid "to be retained by clicking on the elevation chart"
+msgstr ""
 
 msgid "Change glider"
 msgstr "Gleitschirm ändern"
@@ -241,7 +244,7 @@ msgid "Flight Details"
 msgstr "Flugdetails"
 
 msgid "About"
-msgstr "Über"
+msgstr "Infos"
 
 msgid "Modify"
 msgstr "Bearbeiten"
@@ -405,6 +408,9 @@ msgstr "Namen eingeben und auf Erstellen klicken"
 msgid "Create new logbook"
 msgstr "Neues Flugbuch erstellen"
 
+msgid "Close"
+msgstr "Schliessen"
+
 msgid "In previous versions of Logfly"
 msgstr "In früheren Versionen von Logfly"
 
@@ -532,7 +538,10 @@ msgid "Remove tag"
 msgstr "Schlagwort entfernen"
 
 msgid "No tag selected"
-msgstr "Kein Tag ausgewählt"
+msgstr "Kein Schlagwort ausgewählt"
+
+msgid "No tags checked, continue?"
+msgstr ""
 
 msgid "Ok"
 msgstr "Ok"
@@ -646,7 +655,7 @@ msgid "Consult the annual summary of your flights"
 msgstr "Jährliche Zusammenfassung deiner Flüge aufrufen"
 
 msgid "Obtain global statistics of your logbook"
-msgstr "Allgemeine Statistik deines Flugbuchs aufrufen"
+msgstr "Gesamte Statistik deines Flugbuchs aufrufen"
 
 msgid "Manage your waypoints"
 msgstr "Deine Wegpunkte verwalten"
@@ -679,7 +688,7 @@ msgid "GPS alt"
 msgstr "GPS-Höhe"
 
 msgid "Size"
-msgstr "Länge"
+msgstr "Distanz"
 
 msgid "Min GPS alt"
 msgstr "Min GPS-Höhe"
@@ -710,6 +719,51 @@ msgstr "Dives"
 
 msgid "Various"
 msgstr "Verschiedenes"
+
+msgid "Altitude gain"
+msgstr "Höhengewinn"
+
+msgid "Maximum climb"
+msgstr "Maximales Steigen"
+
+msgid "Peak climb"
+msgstr "Spitze Steigen"
+
+msgid "Efficiency"
+msgstr "Effizienz"
+
+msgid "Start altitude"
+msgstr "Starthöhe"
+
+msgid "Finish altitude"
+msgstr "Ankunftshöhe"
+
+msgid "Finish time"
+msgstr "Ankunftszeit"
+
+msgid "Cumulative gain"
+msgstr "Kumulierter Höhengewinn"
+
+msgid "Cumulative loss"
+msgstr "Kumulierter Höhenverlust"
+
+msgid "Drift"
+msgstr "Drift"
+
+msgid "Distance"
+msgstr "Distanz"
+
+msgid "Average glide"
+msgstr "Durschnittl. Gleitzahl"
+
+msgid "Average speed"
+msgstr "Durschnittsgeschwindigkeit"
+
+msgid "Altitude change"
+msgstr "Höhenveränderung"
+
+msgid "Average descent"
+msgstr "Durschnittl. Sinken"
 
 msgid "Add"
 msgstr "Hinzufügen"
@@ -811,7 +865,7 @@ msgid "Updated"
 msgstr "Aktualisiert"
 
 msgid "Cleaning"
-msgstr "Cleaning"
+msgstr "Bereinigen"
 
 msgid "Select a site to display details"
 msgstr "Fluggebiet wählen, um Details anzuzeigen"
@@ -1004,9 +1058,6 @@ msgstr "Gesamtdistanz"
 
 msgid "Speed"
 msgstr "Geschwindigkeit"
-
-msgid "Distance"
-msgstr "Distanz"
 
 msgid "Points"
 msgstr "Punkte"
@@ -1437,6 +1488,12 @@ msgstr "Serielles GPS-Gerät"
 msgid "tracks decoded"
 msgstr "Tracks dekodiert"
 
+msgid "Display all tracks"
+msgstr ""
+
+msgid "Unselect"
+msgstr "Abwählen"
+
 msgid "Already in the logbook"
 msgstr "Bereits im Flugbuch"
 
@@ -1452,8 +1509,14 @@ msgstr "Scanning"
 msgid "Not yet available"
 msgstr "Noch nicht verfügbar"
 
+msgid "Select a folder and choose track files (IGC or GPX)"
+msgstr ""
+
 msgid "Error while selecting the folder"
 msgstr "Fehler bei der Ordnerauswahl"
+
+msgid "files selected"
+msgstr ""
 
 msgid "No directory selected"
 msgstr "Kein Ordner ausgewählt"
@@ -1482,8 +1545,8 @@ msgstr "Filter per Schlagwort"
 msgid "Unfilter"
 msgstr "Filter löschen"
 
-msgid "flights selected"
-msgstr "Flüge ausgewählt"
+msgid "Tag"
+msgstr "Schlagwort"
 
 msgid "Merge"
 msgstr "Zusammenführen"
@@ -1491,14 +1554,14 @@ msgstr "Zusammenführen"
 msgid "Analyze"
 msgstr "Analysieren"
 
-msgid "Tag"
-msgstr "Schlagwort"
-
 msgid "Export IGC"
 msgstr "IGC exportieren"
 
 msgid "Export GPX"
 msgstr "GPX exportieren"
+
+msgid "Glider flight time"
+msgstr "Gleitschirm"
 
 msgid "Select a flight to view track"
 msgstr "Flug auswählen, um den Track darzustellen"
@@ -1535,6 +1598,12 @@ msgstr "Flüge erfolgreich zusammengeführt"
 
 msgid "An error occurred while merging flights"
 msgstr "Fehler beim Zusammenführen der Flüge"
+
+msgid "No glider associated with this flight"
+msgstr ""
+
+msgid "No flights counted for this glider"
+msgstr ""
 
 msgid "Photo saved"
 msgstr "Foto gespeichert"

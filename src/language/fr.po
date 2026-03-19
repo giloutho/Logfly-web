@@ -132,6 +132,9 @@ msgstr "Ou créer un nouveau site"
 msgid "Create a new site"
 msgstr "Créer un nouveau site"
 
+msgid "Pathway"
+msgstr "Chronologie"
+
 msgid "Time"
 msgstr "Heure"
 
@@ -180,9 +183,6 @@ msgstr "Site non défini"
 msgid "External track"
 msgstr "Trace externe"
 
-msgid "Close"
-msgstr "Fermer"
-
 msgid "Year"
 msgstr "Année"
 
@@ -195,9 +195,6 @@ msgstr "Graphique"
 msgid "Export"
 msgstr "Export"
 
-msgid "Pathway"
-msgstr "Chronologie"
-
 msgid "Airspaces"
 msgstr "Espaces aériens"
 
@@ -206,6 +203,12 @@ msgstr "Score"
 
 msgid "Cut"
 msgstr "Couper"
+
+msgid "Select the start and end points of the section"
+msgstr "Sélectionnez les points de départ et d'arrivée de la section"
+
+msgid "to be retained by clicking on the elevation chart"
+msgstr "à conserver en cliquant sur la courbe d'altitude"
 
 msgid "Change glider"
 msgstr "Changer la voile"
@@ -405,6 +408,9 @@ msgstr "Saisir un nom et cliquer sur Créer"
 msgid "Create new logbook"
 msgstr "Créer un nouveau carnet"
 
+msgid "Close"
+msgstr "Fermer"
+
 msgid "In previous versions of Logfly"
 msgstr "Dans les versions précédentes de Logfly"
 
@@ -533,6 +539,9 @@ msgstr "Enlever le tag"
 
 msgid "No tag selected"
 msgstr "Pas de tag sélectionné"
+
+msgid "No tags checked, continue?"
+msgstr "Aucun tag sélectionné, continuer ?"
 
 msgid "Ok"
 msgstr "Valider"
@@ -710,6 +719,51 @@ msgstr "Descentes"
 
 msgid "Various"
 msgstr "Divers"
+
+msgid "Altitude gain"
+msgstr "Gain d’altitude"
+
+msgid "Maximum climb"
+msgstr "Taux de montée max"
+
+msgid "Peak climb"
+msgstr "Taux de montée instant"
+
+msgid "Efficiency"
+msgstr "Efficacité"
+
+msgid "Start altitude"
+msgstr "Altitude de départ"
+
+msgid "Finish altitude"
+msgstr "Altitude d'arrivée"
+
+msgid "Finish time"
+msgstr "Heure d’arrivée"
+
+msgid "Cumulative gain"
+msgstr "Gain d’altitude cumulé"
+
+msgid "Cumulative loss"
+msgstr "Perte d’altitude cumulée"
+
+msgid "Drift"
+msgstr "Dérive"
+
+msgid "Distance"
+msgstr "Distance"
+
+msgid "Average glide"
+msgstr "Finesse moyenne"
+
+msgid "Average speed"
+msgstr "Vitesse moyenne"
+
+msgid "Altitude change"
+msgstr "Changement d’altitude"
+
+msgid "Average descent"
+msgstr "Descente moyenne"
 
 msgid "Add"
 msgstr "Ajouter"
@@ -1004,9 +1058,6 @@ msgstr "Distance totale"
 
 msgid "Speed"
 msgstr "Vitesse"
-
-msgid "Distance"
-msgstr "Distance"
 
 msgid "Points"
 msgstr "Points"
@@ -1303,7 +1354,7 @@ msgid "There are two solutions"
 msgstr "Il y a deux solutions"
 
 msgid "- Install the LogflyGPS import software. It will update the logbook directly"
-msgstr ""
+msgstr "- Installer le logiciel LogflyGPS, il met à jour le carnet directement"
 
 msgid "- use the manufacturer software to download the flight logs"
 msgstr "- Utiliser le logiciel du fabricant pour charger les vols"
@@ -1396,7 +1447,7 @@ msgid "Select the folder defined by Sys PC Tools"
 msgstr "Choisir le dossier utilisé par Sys PC Tools"
 
 msgid "By default, Sys-PC-Tool create a folder in user.home directory called \"parapente\""
-msgstr ""
+msgstr "Par défaut, Sys-PC-Tool créé un dossier \"parapente\" dans à le dossier utilisateur"
 
 msgid "Create a manual flight entry without an associated track file."
 msgstr "Créer un vol manuellement sans trace GPS"
@@ -1437,6 +1488,12 @@ msgstr "GPS liaison série"
 msgid "tracks decoded"
 msgstr "traces décodées"
 
+msgid "Display all tracks"
+msgstr "Affiche toutes les traces"
+
+msgid "Unselect"
+msgstr "Décocher"
+
 msgid "Already in the logbook"
 msgstr "Déja présentes dans le carnet"
 
@@ -1452,8 +1509,14 @@ msgstr "Recherche"
 msgid "Not yet available"
 msgstr "Pas encore disponible"
 
+msgid "Select a folder and choose track files (IGC or GPX)"
+msgstr "Sélectionner un dossier et choisir les traces (IGC ou GPX) "
+
 msgid "Error while selecting the folder"
 msgstr "Erreur de sélection du fichier"
+
+msgid "files selected"
+msgstr "fichiers sélectionnés"
 
 msgid "No directory selected"
 msgstr "Pas de dossier sélectionné"
@@ -1482,8 +1545,8 @@ msgstr "Filtrer par tag"
 msgid "Unfilter"
 msgstr "Non filtré"
 
-msgid "flights selected"
-msgstr "vols sélectionnés"
+msgid "Tag"
+msgstr "Tag"
 
 msgid "Merge"
 msgstr "Fusion"
@@ -1491,14 +1554,14 @@ msgstr "Fusion"
 msgid "Analyze"
 msgstr "Analyse"
 
-msgid "Tag"
-msgstr "Tag"
-
 msgid "Export IGC"
 msgstr "Export IGC"
 
 msgid "Export GPX"
 msgstr "Export GPX"
+
+msgid "Glider flight time"
+msgstr "Total horaire de la voile"
 
 msgid "Select a flight to view track"
 msgstr "Choisissez un vol pour voir la trace"
@@ -1535,6 +1598,12 @@ msgstr "Vols fusionnés avec succès"
 
 msgid "An error occurred while merging flights"
 msgstr "Une erreur est survenue pendant la fusion des vols"
+
+msgid "No glider associated with this flight"
+msgstr "Pas de voile attachée à ce vol"
+
+msgid "No flights counted for this glider"
+msgstr "Pas de vols comptabilisés pour cette voile"
 
 msgid "Photo saved"
 msgstr "Photo enregistrée"

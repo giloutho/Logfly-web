@@ -132,6 +132,9 @@ msgstr "Oppure crea un nuovo sito"
 msgid "Create a new site"
 msgstr "Crea un nuovo sito"
 
+msgid "Pathway"
+msgstr "Percorso"
+
 msgid "Time"
 msgstr "Ora"
 
@@ -180,9 +183,6 @@ msgstr "Sito non definito"
 msgid "External track"
 msgstr "Traccia esterna"
 
-msgid "Close"
-msgstr "Chiudi"
-
 msgid "Year"
 msgstr "Anno"
 
@@ -195,9 +195,6 @@ msgstr "Grafici"
 msgid "Export"
 msgstr "Esporta"
 
-msgid "Pathway"
-msgstr "Percorso"
-
 msgid "Airspaces"
 msgstr "Spazi aerei"
 
@@ -206,6 +203,12 @@ msgstr "Punteggio"
 
 msgid "Cut"
 msgstr "Taglio"
+
+msgid "Select the start and end points of the section"
+msgstr ""
+
+msgid "to be retained by clicking on the elevation chart"
+msgstr ""
 
 msgid "Change glider"
 msgstr "Cambia vela"
@@ -405,6 +408,9 @@ msgstr "Inserisci un nome e clicca sul pulsante Crea"
 msgid "Create new logbook"
 msgstr "Crea un nuovo diario di volo"
 
+msgid "Close"
+msgstr "Chiudi"
+
 msgid "In previous versions of Logfly"
 msgstr "Nelle versioni precedenti di Logfly"
 
@@ -533,6 +539,9 @@ msgstr "Rimuovi tag"
 
 msgid "No tag selected"
 msgstr "Nessun tag selezionato"
+
+msgid "No tags checked, continue?"
+msgstr ""
 
 msgid "Ok"
 msgstr "Ok"
@@ -710,6 +719,51 @@ msgstr "Dives"
 
 msgid "Various"
 msgstr "Varie"
+
+msgid "Altitude gain"
+msgstr "Altezza guadagnata"
+
+msgid "Maximum climb"
+msgstr "Max salita"
+
+msgid "Peak climb"
+msgstr "Picco di salita"
+
+msgid "Efficiency"
+msgstr "Efficienza"
+
+msgid "Start altitude"
+msgstr "Altitudine iniziale"
+
+msgid "Finish altitude"
+msgstr "Altitudine finale"
+
+msgid "Finish time"
+msgstr "Ora fine"
+
+msgid "Cumulative gain"
+msgstr "Guadagno di quota accumulata"
+
+msgid "Cumulative loss"
+msgstr "Perdita di quota accumulata"
+
+msgid "Drift"
+msgstr "Deriva"
+
+msgid "Distance"
+msgstr "Distanza"
+
+msgid "Average glide"
+msgstr "Rapporto medio di planata"
+
+msgid "Average speed"
+msgstr "Velocità media"
+
+msgid "Altitude change"
+msgstr "Cambio di altitudine"
+
+msgid "Average descent"
+msgstr "Discesa media"
 
 msgid "Add"
 msgstr "Aggiungi"
@@ -1004,9 +1058,6 @@ msgstr "Distanza totale"
 
 msgid "Speed"
 msgstr "Velocità"
-
-msgid "Distance"
-msgstr "Distanza"
 
 msgid "Points"
 msgstr "Punti"
@@ -1437,6 +1488,12 @@ msgstr "Seriale GPS"
 msgid "tracks decoded"
 msgstr "tracce decodificate"
 
+msgid "Display all tracks"
+msgstr ""
+
+msgid "Unselect"
+msgstr "Deselezionare"
+
 msgid "Already in the logbook"
 msgstr "Già nel diario di volo"
 
@@ -1452,8 +1509,14 @@ msgstr "Scansione"
 msgid "Not yet available"
 msgstr "Non ancora disponibile"
 
+msgid "Select a folder and choose track files (IGC or GPX)"
+msgstr ""
+
 msgid "Error while selecting the folder"
 msgstr "Errore durante la selezione della cartella"
+
+msgid "files selected"
+msgstr ""
 
 msgid "No directory selected"
 msgstr "Nessuna directory selezionata"
@@ -1482,8 +1545,8 @@ msgstr "Filtra per tag"
 msgid "Unfilter"
 msgstr "Non filtrare"
 
-msgid "flights selected"
-msgstr "flights selected"
+msgid "Tag"
+msgstr "Tag"
 
 msgid "Merge"
 msgstr "Unisci"
@@ -1491,14 +1554,14 @@ msgstr "Unisci"
 msgid "Analyze"
 msgstr "Analisi"
 
-msgid "Tag"
-msgstr "Tag"
-
 msgid "Export IGC"
 msgstr "Esporta IGC"
 
 msgid "Export GPX"
 msgstr "Esporta GPX"
+
+msgid "Glider flight time"
+msgstr "Tempo di volo con la vela"
 
 msgid "Select a flight to view track"
 msgstr "Seleziona un volo per visualizzarne la traccia"
@@ -1535,6 +1598,12 @@ msgstr "Voli uniti con successo"
 
 msgid "An error occurred while merging flights"
 msgstr "Si è verificato un errore durante l'unione dei voli"
+
+msgid "No glider associated with this flight"
+msgstr ""
+
+msgid "No flights counted for this glider"
+msgstr ""
 
 msgid "Photo saved"
 msgstr "Foto salvata"
