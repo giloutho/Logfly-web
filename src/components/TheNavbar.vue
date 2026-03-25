@@ -80,6 +80,9 @@
           <v-list-item :to="{ name: 'sites-view' }">
             <v-list-item-title>{{ $gettext('Sites') }}</v-list-item-title>
           </v-list-item>
+          <v-list-item :to="{ name: 'hike-view' }">
+            <v-list-item-title>{{ $gettext('Hike') }}</v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
 

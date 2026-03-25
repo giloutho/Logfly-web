@@ -93,6 +93,11 @@ const routes = [
         component: () => import('../modules/Files/views/SitesView.vue'),
       },
       {
+        path: 'hike',
+        name: 'hike-view',
+        component: () => import('../modules/Files/views/HikeView.vue'),
+      },
+      {
         path: 'pgearth',
         name: 'pgearth-view',
         component: () => import('../modules/Files/views/PgearthView.vue'),
