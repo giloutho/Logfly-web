@@ -366,8 +366,95 @@ function zoomOut() {
   if (map) map.zoomOut();
 }
 
+/**
+ * Display a hike GPS track (GeoJSON LineString)
+ * @param {Object} geoJson - GeoJSON FeatureCollection with LineString feature
+ */
+function displayHikeTrack(geoJson) {
+  if (!map || !geoJson) return;
+
+  // Clear existing layers
+  if (geoJsonLayer) { map.removeLayer(geoJsonLayer); geoJsonLayer = null; }
+  if (scoreLayer) { map.removeLayer(scoreLayer); scoreLayer = null; }
+  if (startMarker) { map.removeLayer(startMarker); startMarker = null; }
+  if (endMarker) { map.removeLayer(endMarker); endMarker = null; }
+
+  // Display track
+  geoJsonLayer = L.geoJSON(geoJson, {
+    style: { color: '#3388ff', weight: 3, opacity: 0.8 }
+  }).addTo(map);
+
+  // Add start/end markers from first/last coordinate
+  const feature = geoJson.features && geoJson.features.find(f => f.geometry && f.geometry.type === 'LineString');
+  if (feature && feature.geometry.coordinates.length > 0) {
+    const coords = feature.geometry.coordinates;
+    const s = coords[0];
+    const e = coords[coords.length - 1];
+    startMarker = L.marker([s[1], s[0]], { icon: startIcon }).addTo(map);
+    endMarker = L.marker([e[1], e[0]], { icon: endIcon }).addTo(map);
+  }
+
+  // Fit bounds
+  try {
+    const bounds = geoJsonLayer.getBounds();
+    if (bounds.isValid()) {
+      map.fitBounds(bounds, { padding: [20, 20] });
+    }
+  } catch (_) { /* ignore */ }
+
+  setTimeout(() => { if (map) map.invalidateSize(); }, 50);
+}
+
+/**
+ * Display two markers (start and end) for a hike without GPS track
+ * @param {number} latStart - Start latitude
+ * @param {number} lonStart - Start longitude
+ * @param {number} latEnd - End latitude
+ * @param {number} lonEnd - End longitude
+ * @param {string} name - Hike name for popup
+ */
+function displayHikePoints(latStart, lonStart, latEnd, lonEnd, name) {
+  if (!map) return;
+
+  // Clear existing layers
+  if (geoJsonLayer) { map.removeLayer(geoJsonLayer); geoJsonLayer = null; }
+  if (scoreLayer) { map.removeLayer(scoreLayer); scoreLayer = null; }
+  if (startMarker) { map.removeLayer(startMarker); startMarker = null; }
+  if (endMarker) { map.removeLayer(endMarker); endMarker = null; }
+
+  const hasStart = latStart && lonStart;
+  const hasEnd = latEnd && lonEnd;
+
+  if (hasStart) {
+    startMarker = L.marker([latStart, lonStart], { icon: startIcon })
+      .bindPopup(`${name || ''} - Start`)
+      .addTo(map);
+  }
+
+  if (hasEnd && (latEnd !== latStart || lonEnd !== lonStart)) {
+    endMarker = L.marker([latEnd, lonEnd], { icon: endIcon })
+      .bindPopup(`${name || ''} - End`)
+      .addTo(map);
+  }
+
+  // Fit map to show both markers
+  if (hasStart && hasEnd) {
+    const bounds = L.latLngBounds([[latStart, lonStart], [latEnd, lonEnd]]);
+    if (bounds.isValid()) {
+      map.fitBounds(bounds, { padding: [40, 40] });
+    }
+  } else if (hasStart) {
+    map.setView([latStart, lonStart], props.zoomLevel);
+    if (startMarker) startMarker.openPopup();
+  }
+
+  setTimeout(() => { if (map) map.invalidateSize(); }, 50);
+}
+
 defineExpose({
-  displayTakeoffOnly
+  displayTakeoffOnly,
+  displayHikeTrack,
+  displayHikePoints
 });
 
 onBeforeUnmount(() => {

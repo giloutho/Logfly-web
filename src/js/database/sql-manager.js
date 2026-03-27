@@ -168,6 +168,79 @@ export function updateDatabase(db, sql, params) {
  * Crée une nouvelle base de données vide avec le schéma complet Logfly
  * @returns {Object} Instance de la base de données SQL.js
  */
+/**
+ * Vérifie l'existence de la table Rando et la crée si nécessaire
+ * @param {Object} db - Instance de la base de données SQL.js
+ * @returns {boolean} true si la table a été créée, false si elle existait déjà
+ */
+export function checkRandoTable(db) {
+  if (!db) return false;
+  try {
+    const res = executeQuery(db, "SELECT name FROM sqlite_master WHERE type='table' AND name='Rando'")
+    if (res.success && res.data.length === 0) {
+      // La table n'existe pas, on la crée
+      db.run(`CREATE TABLE Rando (
+        R_ID integer NOT NULL PRIMARY KEY,
+        R_Nom varchar(50),
+        R_Depart varchar(50),
+        R_Arrivee varchar(50),
+        R_Deniv integer,
+        R_sDuree varchar(20),
+        R_Duree integer,
+        R_Track Long Text,
+        R_Lat_Depart double,
+        R_Long_Depart double,
+        R_Lat_Fin double,
+        R_Long_Fin double,
+        R_Commentaire Long Text
+      )`)
+      console.log('Table Rando créée avec succès')
+      return true
+    }
+    return false
+  } catch (error) {
+    console.error('Erreur lors de la vérification/création de la table Rando:', error)
+    return false
+  }
+}
+
+/**
+ * Vérifie que la table Vol possède les colonnes de liaison avec Rando
+ * et les ajoute si nécessaire (migration).
+ * @param {Object} db - Instance de la base de données SQL.js
+ * @returns {boolean} true si au moins une colonne a été ajoutée
+ */
+export function checkVolHikeColumns(db) {
+  if (!db) return false;
+  try {
+    const res = executeQuery(db, 'PRAGMA table_info(Vol)')
+    if (!res.success || !res.data || !res.data[0]) return false
+
+    const existing = res.data[0].values.map(row => row[1]) // column names
+    const needed = [
+      { name: 'V_R_ID', type: 'integer' },
+      { name: 'V_R_Nom', type: 'varchar(50)' },
+      { name: 'V_R_Deniv', type: 'integer' },
+      { name: 'V_R_sDuree', type: 'varchar(20)' },
+      { name: 'V_R_Duree', type: 'integer' }
+    ]
+
+    let added = false
+    for (const col of needed) {
+      if (!existing.includes(col.name)) {
+        executeQuery(db, `ALTER TABLE Vol ADD COLUMN ${col.name} ${col.type}`)
+        console.log(`Migration : colonne ${col.name} ajoutée à Vol`)
+        added = true
+      }
+    }
+    return added
+  } catch (error) {
+    console.error('Erreur checkVolHikeColumns:', error)
+    return false
+  }
+}
+
+
 export async function createNewDatabase() {
   const sql = await initSqlite();
   const db = new sql.Database();
@@ -191,8 +264,14 @@ export async function createNewDatabase() {
     V_Engin Varchar(10),
     V_League integer,
     V_Score Long Text,
-    V_Tag INTEGER
+    V_Tag INTEGER,
+    V_R_ID integer,
+    V_R_Nom varchar(50),
+    V_R_Deniv integer,
+    V_R_sDuree varchar(20),
+    V_R_Duree integer
   )`);
+
 
   // Création de la table Site
   db.run(`CREATE TABLE Site (
@@ -225,6 +304,23 @@ export async function createNewDatabase() {
     Tag_ID INTEGER PRIMARY KEY,
     Tag_Label TEXT,
     Tag_Color TEXT
+  )`);
+
+  // Création de la table Rando
+  db.run(`CREATE TABLE Rando (
+    R_ID integer NOT NULL PRIMARY KEY,
+    R_Nom varchar(50),
+    R_Depart varchar(50),
+    R_Arrivee varchar(50),
+    R_Deniv integer,
+    R_sDuree varchar(20),
+    R_Duree integer,
+    R_Track Long Text,
+    R_Lat_Depart double,
+    R_Long_Depart double,
+    R_Lat_Fin double,
+    R_Long_Fin double,
+    R_Commentaire Long Text
   )`);
 
   // Insertion des tags par défaut

@@ -114,6 +114,9 @@
                 <!-- Comment icon: click to OPEN comment dialog -->
                 <v-icon v-if="item.V_Commentaire" color="amber-darken-2" size="x-small" class="ml-1"
                   style="cursor:pointer" @click.stop="commentFlight(item)">mdi-comment-text</v-icon>
+                <!-- Hike icon: click to OPEN HikePicker -->
+                <v-icon v-if="item.V_R_ID" color="green-darken-2" size="large" class="ml-1" style="cursor:pointer"
+                  @click.stop="openHikePickerForFlight(item)" :title="item.V_R_Nom">mdi-hiking</v-icon>
               </v-list-item-title>
 
               <!-- Line 2: Site + Glider -->
@@ -141,6 +144,8 @@
                       class="text-caption"></v-list-item>
                     <v-list-item prepend-icon="mdi-comment-text-outline" :title="$gettext('Comment')"
                       @click="commentFlight(item)" class="text-caption"></v-list-item>
+                    <v-list-item prepend-icon="mdi-hiking" :title="$gettext('Hike')"
+                      @click="openHikePickerForFlight(item)" class="text-caption"></v-list-item>
                     <v-divider></v-divider>
                     <v-list-item prepend-icon="mdi-paragliding" :title="$gettext('Change glider')"
                       @click="changeGlider(item)" class="text-caption"></v-list-item>
@@ -252,6 +257,12 @@
     <TagDialog v-model="showTagDialog" :tags="Object.values(tagsMap)" :currentTag="tagDialogData.currentTag"
       @save="onTagDialogSave" @tags-updated="onTagsUpdated" />
 
+    <!-- HikePicker Dialog -->
+    <HikePickerDialog v-model="showHikePickerDialog" :flightId="hikePickerFlight?.V_ID"
+      :currentRandoId="hikePickerFlight?.V_R_ID" :currentRandoNom="hikePickerFlight?.V_R_Nom || ''"
+      :currentRandosDuree="hikePickerFlight?.V_R_sDuree || ''" @saved="onHikePickerSaved" @removed="onHikePickerRemoved"
+      @cancel="showHikePickerDialog = false" />
+
   </v-layout>
 </template>
 
@@ -272,6 +283,7 @@ import ChangeSiteDialog from '@/components/ChangeSiteDialog.vue';
 import ScoreDialog from '@/components/ScoreDialog.vue';
 import TagDialog from '@/components/TagDialog.vue';
 import LogbookPhoto from '@/components/LogbookPhoto.vue';
+import HikePickerDialog from '@/components/HikePickerDialog.vue';
 import { igcScoring } from '@/js/igc/igc-scoring';
 import { igcToGpx } from '@/js/igc/igc-to-gpx.js';
 import { useDatabaseStore } from '@/stores/database';
@@ -376,6 +388,10 @@ const tagDialogData = ref({ currentTag: null, flightId: null });
 const showPhotoDialog = ref(false);
 const photoDialogData = ref({ hasPhoto: false, currentPhotoUrl: null, flightId: null });
 
+// HikePicker dialog state
+const showHikePickerDialog = ref(false);
+const hikePickerFlight = ref(null); // flight item being edited
+
 const tagOptions = computed(() => {
   const opts = Object.values(tagsMap.value).map(t => ({
     title: t.label,
@@ -479,7 +495,8 @@ function loadFlights(keepSelection = false) {
 
   let reqSQL = "SELECT V_ID, strftime('%d-%m-%Y',V_date) AS Day, strftime('%H:%M',V_date) AS Hour, replace(V_sDuree,'mn','') AS Duree, V_Site, V_Engin, V_Commentaire, V_Duree, V_Tag, ";
   reqSQL += "CASE WHEN (V_Photos IS NOT NULL AND V_Photos !='') THEN 'Yes' END Photo, ";
-  reqSQL += "CASE WHEN (V_IGC IS NOT NULL AND V_IGC != '') THEN 1 ELSE 0 END HasIgc ";
+  reqSQL += "CASE WHEN (V_IGC IS NOT NULL AND V_IGC != '') THEN 1 ELSE 0 END HasIgc, ";
+  reqSQL += "V_R_ID, V_R_Nom, V_R_Deniv, V_R_sDuree, V_R_Duree ";
   reqSQL += "FROM Vol ORDER BY V_Date DESC";
 
   const result = databaseStore.query(reqSQL);
@@ -526,7 +543,8 @@ function onAdvancedSearch(whereClause) {
 
   let reqSQL = "SELECT V_ID, strftime('%d-%m-%Y',V_date) AS Day, strftime('%H:%M',V_date) AS Hour, replace(V_sDuree,'mn','') AS Duree, V_Site, V_Engin, V_Commentaire, V_Duree, V_Tag, ";
   reqSQL += "CASE WHEN (V_Photos IS NOT NULL AND V_Photos !='') THEN 'Yes' END Photo, ";
-  reqSQL += "CASE WHEN (V_IGC IS NOT NULL AND V_IGC != '') THEN 1 ELSE 0 END HasIgc ";
+  reqSQL += "CASE WHEN (V_IGC IS NOT NULL AND V_IGC != '') THEN 1 ELSE 0 END HasIgc, ";
+  reqSQL += "V_R_ID, V_R_Nom, V_R_Deniv, V_R_sDuree, V_R_Duree ";
   reqSQL += "FROM Vol WHERE " + whereClause + " ORDER BY V_Date DESC";
 
   const result = databaseStore.query(reqSQL);
@@ -840,6 +858,72 @@ function onPhotoDialogDelete() {
   snackbar.value = true;
   emit('db-updated');
 }
+
+// --- HikePicker handlers ---
+function openHikePickerForFlight(item) {
+  hikePickerFlight.value = item;
+  showHikePickerDialog.value = true;
+}
+
+function onHikePickerSaved({ randoId, randoNom, randoDeniv, sDuree, duree }) {
+  const flight = hikePickerFlight.value;
+  if (!flight) return;
+
+  const safeName = (randoNom || '').replace(/'/g, "''");
+  const safesDuree = (sDuree || '').replace(/'/g, "''");
+  const sql = `UPDATE Vol SET
+    V_R_ID = ${randoId},
+    V_R_Nom = '${safeName}',
+    V_R_Deniv = ${randoDeniv || 0},
+    V_R_sDuree = '${safesDuree}',
+    V_R_Duree = ${duree || 0}
+    WHERE V_ID = ${flight.V_ID}`;
+
+  const result = databaseStore.update(sql);
+  if (result.success) {
+    // Reactive update of the local flight item
+    const idx = flights.value.findIndex(f => f.V_ID === flight.V_ID);
+    if (idx !== -1) {
+      flights.value[idx].V_R_ID = randoId;
+      flights.value[idx].V_R_Nom = randoNom;
+      flights.value[idx].V_R_Deniv = randoDeniv;
+      flights.value[idx].V_R_sDuree = sDuree;
+      flights.value[idx].V_R_Duree = duree;
+    }
+    showHikePickerDialog.value = false;
+    hikePickerFlight.value = null;
+    snackbarMessage.value = $gettext('Hike associated successfully');
+    snackbar.value = true;
+    emit('db-updated');
+  }
+}
+
+function onHikePickerRemoved() {
+  const flight = hikePickerFlight.value;
+  if (!flight) return;
+
+  const sql = `UPDATE Vol SET
+    V_R_ID = NULL, V_R_Nom = NULL, V_R_Deniv = NULL, V_R_sDuree = NULL, V_R_Duree = NULL
+    WHERE V_ID = ${flight.V_ID}`;
+
+  const result = databaseStore.update(sql);
+  if (result.success) {
+    const idx = flights.value.findIndex(f => f.V_ID === flight.V_ID);
+    if (idx !== -1) {
+      flights.value[idx].V_R_ID = null;
+      flights.value[idx].V_R_Nom = null;
+      flights.value[idx].V_R_Deniv = null;
+      flights.value[idx].V_R_sDuree = null;
+      flights.value[idx].V_R_Duree = null;
+    }
+    showHikePickerDialog.value = false;
+    hikePickerFlight.value = null;
+    snackbarMessage.value = $gettext('Hike removed');
+    snackbar.value = true;
+    emit('db-updated');
+  }
+}
+
 
 function commentFlight(item) {
   selectedItems.value = [item.V_ID];

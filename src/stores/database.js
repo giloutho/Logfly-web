@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { readSqliteFile, openDatabase, executeQuery, closeDatabase, insertIntoDatabase, updateDatabase, createNewDatabase } from '@/js/database/sql-manager.js'
+import { readSqliteFile, openDatabase, executeQuery, closeDatabase, insertIntoDatabase, updateDatabase, createNewDatabase, checkRandoTable, checkVolHikeColumns } from '@/js/database/sql-manager.js'
 
 export const useDatabaseStore = defineStore('database', () => {
     // État
@@ -73,6 +73,18 @@ export const useDatabaseStore = defineStore('database', () => {
                 const resEquip = executeQuery(db.value, "SELECT name FROM sqlite_master WHERE type='table' AND name='Equip'")
                 if (resEquip.success && resEquip.data.length === 0) {
                     executeQuery(db.value, 'CREATE TABLE Equip (M_ID integer NOT NULL PRIMARY KEY, M_Date TimeStamp, M_Engin varchar(30), M_Event varchar(30), M_Price double, M_Comment Long Text)')
+                    markAsDirty()
+                }
+
+                // Vérification / Création de la table Rando
+                const randoCreated = checkRandoTable(db.value)
+                if (randoCreated) {
+                    markAsDirty()
+                }
+
+                // Vérification / Ajout des colonnes hike dans Vol
+                const hikeColAdded = checkVolHikeColumns(db.value)
+                if (hikeColAdded) {
                     markAsDirty()
                 }
 
