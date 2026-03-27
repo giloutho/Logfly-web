@@ -12,7 +12,7 @@
 
                     <!-- Row 1: GPS File selector -->
                     <v-row dense class="mb-2">
-                        <v-col cols="8">
+                        <v-col cols="12">
                             <div class="field-label">{{ $gettext('GPS track (IGC or GPX)') }}</div>
                             <div class="gps-file-row">
                                 <v-text-field v-model="gpsFileName" :label="$gettext('No file selected')"
@@ -33,7 +33,7 @@
 
                     <!-- Row 2: Name -->
                     <v-row dense class="mt-2">
-                        <v-col cols="8">
+                        <v-col cols="12">
                             <v-text-field v-model="form.nom" :label="$gettext('Name')" density="compact"
                                 variant="outlined" hide-details class="uppercase-input"
                                 @input="forceUppercase('nom')" />
@@ -42,7 +42,7 @@
 
                     <!-- Row 3: Start -->
                     <v-row dense class="mt-2">
-                        <v-col cols="8">
+                        <v-col cols="12">
                             <v-text-field v-model="form.depart" :label="$gettext('Start')" density="compact"
                                 variant="outlined" hide-details class="uppercase-input"
                                 @input="forceUppercase('depart')" />
@@ -51,7 +51,7 @@
 
                     <!-- Row 4: End -->
                     <v-row dense class="mt-2">
-                        <v-col cols="8">
+                        <v-col cols="12">
                             <v-text-field v-model="form.arrivee" :label="$gettext('End')" density="compact"
                                 variant="outlined" hide-details class="uppercase-input"
                                 @input="forceUppercase('arrivee')" />
@@ -60,7 +60,7 @@
 
                     <!-- Row 5: Elevation gain -->
                     <v-row dense class="mt-2">
-                        <v-col cols="3">
+                        <v-col cols="6">
                             <v-text-field v-model.number="form.deniv" :label="$gettext('Elevation gain') + ' (m)'"
                                 density="compact" variant="outlined" hide-details type="number" min="0" />
                         </v-col>
@@ -85,15 +85,15 @@
                         <v-col cols="12">
                             <div class="field-label">{{ $gettext('Starting coordinates') }}</div>
                         </v-col>
-                        <v-col cols="3">
+                        <v-col cols="5">
                             <v-text-field v-model="form.latDepart" :label="$gettext('Latitude')" density="compact"
                                 variant="outlined" hide-details readonly />
                         </v-col>
-                        <v-col cols="3">
+                        <v-col cols="5">
                             <v-text-field v-model="form.longDepart" :label="$gettext('Longitude')" density="compact"
                                 variant="outlined" hide-details readonly />
                         </v-col>
-                        <v-col cols="1">
+                        <v-col cols="2">
                             <v-btn :color="mapClickMode === 'start' ? 'warning' : 'primary'" variant="flat" size="small"
                                 @click="activateMapClick('start')" :title="$gettext('Click on map to set start point')">
                                 <v-icon>mdi-map-marker</v-icon>
@@ -106,15 +106,15 @@
                         <v-col cols="12">
                             <div class="field-label">{{ $gettext('End coordinates') }}</div>
                         </v-col>
-                        <v-col cols="3">
+                        <v-col cols="5">
                             <v-text-field v-model="form.latFin" :label="$gettext('Latitude')" density="compact"
                                 variant="outlined" hide-details readonly />
                         </v-col>
-                        <v-col cols="3">
+                        <v-col cols="5">
                             <v-text-field v-model="form.longFin" :label="$gettext('Longitude')" density="compact"
                                 variant="outlined" hide-details readonly />
                         </v-col>
-                        <v-col cols="1">
+                        <v-col cols="2">
                             <v-btn :color="mapClickMode === 'end' ? 'warning' : 'primary'" variant="flat" size="small"
                                 @click="activateMapClick('end')" :title="$gettext('Click on map to set end point')">
                                 <v-icon>mdi-map-marker-check</v-icon>
@@ -123,17 +123,13 @@
                     </v-row>
 
                     <!-- Row 9: Actions -->
-                    <v-row class="mt-4" justify="center">
-                        <v-col cols="4">
-                            <v-btn color="error" size="small" variant="flat" @click="onCancel">
-                                {{ $gettext('Cancel') }}
-                            </v-btn>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-btn color="success" size="small" variant="flat" @click="onSubmit">
-                                {{ $gettext('OK') }}
-                            </v-btn>
-                        </v-col>
+                    <v-row class="mt-4" justify="end" no-gutters>
+                        <v-btn color="error" size="small" variant="flat" @click="onCancel" class="mr-2">
+                            {{ $gettext('Cancel') }}
+                        </v-btn>
+                        <v-btn color="success" size="small" variant="flat" @click="onSubmit">
+                            {{ $gettext('OK') }}
+                        </v-btn>
                     </v-row>
                 </v-col>
 
@@ -610,7 +606,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .hike-form-card {
-    width: min(1100px, 90vw);
+    width: 900px;
     margin: 0 auto;
 }
 

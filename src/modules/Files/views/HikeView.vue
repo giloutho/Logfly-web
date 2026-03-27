@@ -187,7 +187,7 @@
         </div>
 
         <!-- HikeForm Dialog -->
-        <v-dialog v-model="showHikeDialog" max-width="1100" persistent>
+        <v-dialog v-model="showHikeDialog" max-width="920" persistent>
             <HikeForm v-if="showHikeDialog" :hike="hikeFormData" @submit="handleHikeSubmit"
                 @cancel="showHikeDialog = false" />
         </v-dialog>
