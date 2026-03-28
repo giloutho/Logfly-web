@@ -139,14 +139,13 @@
                     <div v-if="mapClickMode" class="map-info-banner">
                         <v-chip :color="mapClickMode === 'start' ? 'warning' : 'success'" size="small" variant="flat">
                             <v-icon start size="small">mdi-cursor-default-click</v-icon>
-                            {{ mapClickMode === "start" ? $gettext("Click map to set starting point") :
-                                $gettext("Click map to set end point") }}
+                            {{ mapClickMode === "start" ? $gettext("Click on map to set start point") :
+                                $gettext("Click on map to set end point") }}
                         </v-chip>
                     </div>
                     <div v-else class="map-info-banner">
                         <v-chip color="secondary" size="small" variant="flat">
-                            <v-icon start size="small">mdi-map</v-icon>
-                            {{ $gettext('Use Map buttons to set coordinates by clicking on map') }}
+                            {{ $gettext('If no GPS track, enter start and end coordinates by clicking on the map') }}
                         </v-chip>
                     </div>
                 </v-col>
@@ -254,7 +253,7 @@ async function onFileSelected(event) {
     if (!file) return;
 
     gpsFileName.value = file.name;
-    gpsStatus.value = $gettext('Reading file...');
+    gpsStatus.value = $gettext('Reading file') + '...';
     gpsStatusType.value = 'status-info';
 
     const ext = file.name.split('.').pop().toLowerCase();
@@ -265,7 +264,7 @@ async function onFileSelected(event) {
     } else if (ext === 'gpx') {
         await processGPX(text);
     } else {
-        gpsStatus.value = $gettext('Unsupported format (use IGC or GPX)');
+        gpsStatus.value = $gettext('Unsupported track format');
         gpsStatusType.value = 'status-error';
     }
 
@@ -280,7 +279,7 @@ async function processIGC(igcText) {
     try {
         const result = await igcDecoding(igcText);
         if (!result.success) {
-            gpsStatus.value = $gettext('IGC decoding error: ') + result.message;
+            gpsStatus.value = $gettext('IGC decoding error') + ': ' + result.message;
             gpsStatusType.value = 'status-error';
             return;
         }
@@ -313,7 +312,7 @@ async function processIGC(igcText) {
         gpsStatus.value = `IGC: ${fixes.length} ${$gettext('points')}`;
         gpsStatusType.value = 'status-ok';
     } catch (err) {
-        gpsStatus.value = $gettext('IGC read error: ') + err.message;
+        gpsStatus.value = $gettext('IGC read error') + ': ' + err.message;
         gpsStatusType.value = 'status-error';
     }
 }
@@ -325,14 +324,14 @@ async function processGPX(gpxText) {
     try {
         const gpxData = parseGPX(gpxText);
         if (!gpxData.success) {
-            gpsStatus.value = $gettext('GPX parsing error: ') + gpxData.message;
+            gpsStatus.value = $gettext('GPX parsing error') + ': ' + gpxData.message;
             gpsStatusType.value = 'status-error';
             return;
         }
 
         const igcResult = gpxToIgc(gpxData);
         if (!igcResult.success) {
-            gpsStatus.value = $gettext('GPX→IGC conversion error: ') + igcResult.message;
+            gpsStatus.value = $gettext('GPX→IGC conversion error') + ': ' + igcResult.message;
             gpsStatusType.value = 'status-error';
             return;
         }
@@ -378,7 +377,7 @@ async function processGPX(gpxText) {
         gpsStatus.value = `GPX→IGC: ${igcResult.nbPoints} ${$gettext('points')}`;
         gpsStatusType.value = 'status-ok';
     } catch (err) {
-        gpsStatus.value = $gettext('GPX read error: ') + err.message;
+        gpsStatus.value = $gettext('GPX read error') + ': ' + err.message;
         gpsStatusType.value = 'status-error';
     }
 }

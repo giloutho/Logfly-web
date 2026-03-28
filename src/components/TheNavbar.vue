@@ -72,7 +72,7 @@
       <v-menu offset-y translate="no">
         <template v-slot:activator="{ props }">
           <v-btn variant="text" :ripple="false" class="nav-btn" v-bind="props">
-            {{ $gettext('Sites') }}
+            {{ $gettext('Sites & Hikes') }}
             <v-icon right>mdi-menu-down</v-icon>
           </v-btn>
         </template>
@@ -81,7 +81,7 @@
             <v-list-item-title>{{ $gettext('Sites') }}</v-list-item-title>
           </v-list-item>
           <v-list-item :to="{ name: 'hike-view' }">
-            <v-list-item-title>{{ $gettext('Hike') }}</v-list-item-title>
+            <v-list-item-title>{{ $gettext('Hikes') }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>

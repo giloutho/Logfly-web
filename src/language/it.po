@@ -1,1622 +1,2643 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Logfly\n"
-"Language: it\n"
 "Language-Team: Italiano\n"
+"Language: it\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: src/components/AirspaceDialog.vue:9
+#: src/modules/Routing/components/AirspaceRouteDialog.vue:9
 msgid "Display airspaces"
 msgstr "Visualizza spazi aerei"
 
+#: src/components/AirspaceDialog.vue:89
+#: src/components/charts/GlidersChart.vue:14
+#: src/components/charts/MonthlyChart.vue:24
+#: src/components/charts/SitesChart.vue:14
+#: src/modules/Routing/components/AirspaceRouteDialog.vue:90
 msgid "Display"
 msgstr "Visualizza"
 
+#: src/components/AirspaceDialog.vue:98
 msgid "Check the track"
 msgstr "Controlla la traccia"
 
+#: src/components/CesiumReplayView.vue:6
 msgid "3D Flight Replay"
 msgstr "Riproduzione del volo in 3D"
 
+#: src/components/CesiumReplayView.vue:63 src/components/FullMapView.vue:33
 msgid "Hover over the graph to see details"
 msgstr "Passa il mouse sul grafico per vedere i dettagli"
 
+#: src/components/CesiumView.vue:5
 msgid "3D Flight View"
 msgstr "Vista di volo 3D"
 
+#: src/components/ChangeSiteDialog.vue:4 src/components/LogbookDetails.vue:217
+#: src/modules/Tracks/views/LogbookView.vue:74
+#: src/modules/Tracks/views/LogbookView.vue:152
 msgid "Change site"
 msgstr "Cambia sito"
 
+#: src/components/ChangeSiteDialog.vue:7
 msgid "Switch to an existing site"
 msgstr "Passa a un sito esistente"
 
+#: src/components/ChangeSiteDialog.vue:9 src/components/ChooseSiteDialog.vue:10
 msgid "Choose an existing site"
 msgstr "Scegli un sito esistente"
 
+#: src/components/ChangeSiteDialog.vue:18
 msgid "Update name"
 msgstr "Aggiorna nome"
 
+#: src/components/ChangeSiteDialog.vue:19
 msgid "Enter new site name"
 msgstr "Inserisci il nome del nuovo sito"
 
+#: src/components/ChangeSiteDialog.vue:25
 msgid "becomes"
 msgstr "diventa"
 
+#: src/components/ChangeSiteDialog.vue:31
+#: src/components/ChooseSiteDialog.vue:41 src/components/CommentDialog.vue:13
+#: src/components/FullMapView.vue:11 src/components/GliderDialog.vue:18
+#: src/components/HikeForm.vue:128 src/components/HikePickerDialog.vue:73
+#: src/components/LogbookPhoto.vue:41 src/components/NoTrackDialog.vue:86
+#: src/components/OpenLogbook.vue:65 src/components/SearchFlightsDialog.vue:121
+#: src/components/SiteForm.vue:141 src/components/TagDialog.vue:35
+#: src/components/TagDialog.vue:47 src/modules/Equip/views/EquipView.vue:155
+#: src/modules/Routing/views/WaypointView.vue:113
+#: src/modules/Routing/views/XcnavView.vue:173
+#: src/modules/Settings/views/TranslationView.vue:67
+#: src/modules/Tracks/views/ImportView.vue:213
 msgid "Cancel"
 msgstr "Annulla"
 
+#: src/components/ChangeSiteDialog.vue:32
+#: src/components/ChooseSiteDialog.vue:42 src/components/GliderDialog.vue:19
+#: src/components/HikeForm.vue:131 src/components/HikePickerDialog.vue:75
+#: src/components/LogbookDetails.vue:120 src/components/LogbookPhoto.vue:48
+#: src/components/NoTrackDialog.vue:89 src/components/SiteForm.vue:146
+#: src/components/TagDialog.vue:37 src/modules/Equip/views/EquipView.vue:160
+#: src/modules/Files/views/HikeView.vue:139
+#: src/modules/Files/views/SitesView.vue:157
+#: src/modules/Routing/views/WaypointView.vue:116
 msgid "OK"
 msgstr "OK"
 
+#: src/components/charts/GlidersChart.vue:8
+#: src/components/charts/SitesChart.vue:8
 msgid "Top 5"
 msgstr "Migliori 5"
 
+#: src/components/charts/GlidersChart.vue:9
+#: src/components/charts/SitesChart.vue:9
 msgid "Top 10"
 msgstr "Migliori 10"
 
+#: src/components/charts/GlidersChart.vue:10
+#: src/components/charts/SitesChart.vue:10
 msgid "Top 20"
 msgstr "Migliori 20"
 
+#: src/components/charts/GlidersChart.vue:11
+#: src/components/charts/MonthlyChart.vue:21
+#: src/components/charts/SitesChart.vue:11
+#: src/modules/Files/views/SitesView.vue:24
+#: src/modules/Routing/views/WaypointView.vue:128
 msgid "All"
 msgstr "Tutti"
 
+#: src/components/charts/GlidersChart.vue:57
 msgid "You can select the number of gliders to be displayed in the graph"
 msgstr "È possibile selezionare il numero di vele da visualizzare nel grafico"
 
+#: src/components/charts/GlidersChart.vue:161
+#: src/components/charts/GlidersChart.vue:171
+#: src/components/charts/MonthlyChart.vue:238
+#: src/components/charts/YearlyChart.vue:119
+#: src/components/charts/YearlyChart.vue:179
+#: src/modules/Tracks/views/LogbookView.vue:735
 msgid "Flight hours"
 msgstr "Ore di volo"
 
+#: src/components/charts/GlidersChart.vue:161
+#: src/components/charts/YearlyChart.vue:130
+#: src/modules/Stat/views/AnnualSummary.vue:10
+#: src/modules/Stat/views/AnnualSummary.vue:58
+#: src/modules/Stat/views/AnnualSummary.vue:71
+#: src/modules/Stat/views/AnnualSummary.vue:86
+#: src/modules/Stat/views/AnnualSummary.vue:496
+#: src/modules/Stat/views/GlobalSummary.vue:55
+#: src/modules/Stat/views/GlobalSummary.vue:65
+#: src/modules/Tracks/views/LogbookView.vue:735
 msgid "Flights"
 msgstr "Voli"
 
+#: src/components/charts/MonthlyChart.vue:9
+#: src/components/charts/MonthlyChart.vue:69
+#: src/modules/Stat/views/AnnualSummary.vue:197
 msgid "Jan"
 msgstr "Gen"
 
+#: src/components/charts/MonthlyChart.vue:10
+#: src/components/charts/MonthlyChart.vue:69
+#: src/modules/Stat/views/AnnualSummary.vue:197
 msgid "Feb"
 msgstr "Feb"
 
+#: src/components/charts/MonthlyChart.vue:11
+#: src/components/charts/MonthlyChart.vue:69
+#: src/modules/Stat/views/AnnualSummary.vue:197
 msgid "Mar"
 msgstr "Mar"
 
+#: src/components/charts/MonthlyChart.vue:12
+#: src/components/charts/MonthlyChart.vue:69
+#: src/modules/Stat/views/AnnualSummary.vue:197
 msgid "Apr"
 msgstr "Apr"
 
+#: src/components/charts/MonthlyChart.vue:13
+#: src/components/charts/MonthlyChart.vue:70
+#: src/modules/Stat/views/AnnualSummary.vue:198
 msgid "May"
 msgstr "Mag"
 
+#: src/components/charts/MonthlyChart.vue:14
+#: src/components/charts/MonthlyChart.vue:70
+#: src/modules/Stat/views/AnnualSummary.vue:198
 msgid "Jun"
 msgstr "Giu"
 
+#: src/components/charts/MonthlyChart.vue:15
+#: src/components/charts/MonthlyChart.vue:70
+#: src/modules/Stat/views/AnnualSummary.vue:198
 msgid "Jul"
 msgstr "Lug"
 
+#: src/components/charts/MonthlyChart.vue:16
+#: src/components/charts/MonthlyChart.vue:70
+#: src/modules/Stat/views/AnnualSummary.vue:198
 msgid "Aug"
 msgstr "Ago"
 
+#: src/components/charts/MonthlyChart.vue:17
+#: src/components/charts/MonthlyChart.vue:71
+#: src/modules/Stat/views/AnnualSummary.vue:199
 msgid "Sep"
 msgstr "Set"
 
+#: src/components/charts/MonthlyChart.vue:18
+#: src/components/charts/MonthlyChart.vue:71
+#: src/modules/Stat/views/AnnualSummary.vue:199
 msgid "Oct"
 msgstr "Ott"
 
+#: src/components/charts/MonthlyChart.vue:19
+#: src/components/charts/MonthlyChart.vue:71
+#: src/modules/Stat/views/AnnualSummary.vue:199
 msgid "Nov"
 msgstr "Nov"
 
+#: src/components/charts/MonthlyChart.vue:20
+#: src/components/charts/MonthlyChart.vue:71
+#: src/modules/Stat/views/AnnualSummary.vue:199
 msgid "Dec"
 msgstr "Dic"
 
+#: src/components/charts/MonthlyChart.vue:76
 msgid "Monthly comparison"
 msgstr "Confronto mensile"
 
+#: src/components/charts/MonthlyChart.vue:76
 msgid "You can select one or more months or the whole year"
 msgstr "È possibile selezionare uno o più mesi o l'intero anno"
 
+#: src/components/charts/SitesChart.vue:57
 msgid "You can select the number of sites to be displayed in the graph"
 msgstr "È possibile selezionare il numero di siti da visualizzare nel grafico"
 
+#: src/components/charts/SitesChart.vue:161
+#: src/components/charts/YearlyChart.vue:163
+#: src/modules/Equip/views/EquipView.vue:447
+#: src/modules/Tracks/views/LogbookView.vue:50
+#: src/modules/Tracks/views/LogbookView.vue:61
 msgid "flights"
 msgstr "voli"
 
+#: src/components/charts/SitesChart.vue:171
+#: src/components/charts/YearlyChart.vue:197
 msgid "Number of flights"
 msgstr "Numero di voli"
 
+#: src/components/ChooseSiteDialog.vue:4 src/components/ChronoView.vue:99
+#: src/components/LogbookDetails.vue:66 src/components/NoTrackDialog.vue:56
+#: src/components/NoTrackDialog.vue:62 src/components/SiteForm.vue:16
+#: src/components/TraceInfoDialog.vue:125 src/components/TraceInfoPanel.vue:90
+#: src/modules/Files/views/SitesView.vue:25
+#: src/modules/Routing/views/WaypointView.vue:76
 msgid "Take off"
 msgstr "Decollo"
 
+#: src/components/ChooseSiteDialog.vue:8
 msgid "Choose a logbook site"
 msgstr "Scegli un sito per il diario di volo"
 
+#: src/components/ChooseSiteDialog.vue:21
 msgid "Or create a new site"
 msgstr "Oppure crea un nuovo sito"
 
+#: src/components/ChooseSiteDialog.vue:23
 msgid "Create a new site"
 msgstr "Crea un nuovo sito"
 
+#: src/components/ChronoView.vue:7 src/components/FullMapView.vue:7
 msgid "Pathway"
 msgstr "Percorso"
 
+#: src/components/ChronoView.vue:18
 msgid "Time"
 msgstr "Ora"
 
+#: src/components/ChronoView.vue:19
 msgid "Elapsed"
 msgstr "Trascorso"
 
+#: src/components/ChronoView.vue:20 src/components/SiteForm.vue:40
+#: src/modules/Files/views/SitesView.vue:244
 msgid "Alt"
 msgstr "Alt"
 
+#: src/components/ChronoView.vue:21
 msgid "Type"
 msgstr "Tipo"
 
+#: src/components/ChronoView.vue:22 src/components/FullMapView.vue:6
 msgid "Infos"
 msgstr "Informazioni"
 
+#: src/components/ChronoView.vue:100
 msgid "Thermal"
 msgstr "Termica"
 
+#: src/components/ChronoView.vue:101
 msgid "Glide"
 msgstr "Planata"
 
+#: src/components/ChronoView.vue:102 src/components/LogbookDetails.vue:69
+#: src/components/SiteForm.vue:17 src/components/TraceInfoDialog.vue:129
+#: src/components/TraceInfoPanel.vue:94
+#: src/modules/Files/views/SitesView.vue:26
+#: src/modules/Routing/views/WaypointView.vue:77
 msgid "Landing"
 msgstr "Atterraggio"
 
+#: src/components/CommentDialog.vue:4 src/components/LogbookDetails.vue:29
+#: src/components/NoTrackDialog.vue:70
+#: src/components/SearchFlightsDialog.vue:94 src/components/SiteForm.vue:131
+#: src/modules/Equip/views/EquipView.vue:146
+#: src/modules/Equip/views/EquipView.vue:225
+#: src/modules/Files/views/HikeView.vue:83
+#: src/modules/Files/views/SitesView.vue:99
+#: src/modules/Tracks/views/LogbookView.vue:145
 msgid "Comment"
 msgstr "Commento"
 
+#: src/components/CommentDialog.vue:9
 msgid "Your comment"
 msgstr "Il tuo commento"
 
+#: src/components/CommentDialog.vue:14 src/components/LogbookDetails.vue:218
+#: src/components/LogbookPhoto.vue:44 src/modules/Files/views/HikeView.vue:118
+#: src/modules/Files/views/HikeView.vue:136
+#: src/modules/Files/views/SitesView.vue:138
+#: src/modules/Files/views/SitesView.vue:155
+#: src/modules/Routing/views/WaypointView.vue:168
+#: src/modules/Routing/views/XcnavView.vue:916
+#: src/modules/Tracks/views/LogbookView.vue:169
 msgid "Delete"
 msgstr "Elimina"
 
+#: src/components/CommentDialog.vue:16 src/components/TheNavbar.vue:152
+#: src/components/TheNavbar.vue:267
+#: src/modules/Routing/views/AirspacesView.vue:75
+#: src/modules/Routing/views/WaypointView.vue:40
+#: src/modules/Routing/views/XcnavView.vue:174
+#: src/modules/Settings/views/SettingsView.vue:83
 msgid "Save"
 msgstr "Salva"
 
+#: src/components/ExternalDetails.vue:26 src/components/LogbookDetails.vue:165
 msgid "IGC export"
 msgstr "Esportazione IGC"
 
+#: src/components/ExternalDetails.vue:30 src/components/LogbookDetails.vue:169
 msgid "GPX export"
 msgstr "Esportazione GPX"
 
+#: src/components/ExternalDetails.vue:60
 msgid "Site not defined"
 msgstr "Sito non definito"
 
+#: src/components/ExternalLayout.vue:17 src/components/TheNavbar.vue:30
+#: src/components/TheNavbar.vue:175
+#: src/modules/Tracks/views/ExternalView.vue:12
 msgid "External track"
 msgstr "Traccia esterna"
 
+#: src/components/FullmapTrack.vue:5
 msgid "Year"
 msgstr "Anno"
 
+#: src/components/FullmapTrack.vue:6
 msgid "Month"
 msgstr "Mese"
 
+#: src/components/FullmapTrack.vue:7
 msgid "Charts"
 msgstr "Grafici"
 
+#: src/components/FullmapTrack.vue:8 src/components/LogbookDetails.vue:38
+#: src/modules/Files/views/SitesView.vue:176
+#: src/modules/Routing/views/AirspacesView.vue:75
+#: src/modules/Routing/views/WaypointView.vue:40
 msgid "Export"
 msgstr "Esporta"
 
+#: src/components/FullMapView.vue:8 src/components/TheNavbar.vue:64
+#: src/components/TheNavbar.vue:201 src/components/TheWelcome.vue:126
+#: src/modules/Routing/views/XcnavView.vue:22
+#: src/modules/Routing/views/XcnavView.vue:364
 msgid "Airspaces"
 msgstr "Spazi aerei"
 
+#: src/components/FullMapView.vue:9 src/modules/Routing/views/XcnavView.vue:360
 msgid "Score"
 msgstr "Punteggio"
 
+#: src/components/FullMapView.vue:11
 msgid "Cut"
 msgstr "Taglio"
 
+#: src/components/FullMapView.vue:306
 msgid "Select the start and end points of the section"
 msgstr ""
 
+#: src/components/FullMapView.vue:307
 msgid "to be retained by clicking on the elevation chart"
 msgstr ""
 
+#: src/components/GliderDialog.vue:4 src/components/LogbookDetails.vue:216
+#: src/modules/Tracks/views/LogbookView.vue:66
+#: src/modules/Tracks/views/LogbookView.vue:150
 msgid "Change glider"
 msgstr "Cambia vela"
 
+#: src/components/GliderDialog.vue:7
 msgid "Choose an existing glider"
 msgstr "Scegli una vela esistente"
 
+#: src/components/GliderDialog.vue:8 src/components/LogbookDetails.vue:57
+#: src/components/NoTrackDialog.vue:41
+#: src/components/SearchFlightsDialog.vue:67
+#: src/components/TraceInfoDialog.vue:122 src/components/TraceInfoPanel.vue:87
+#: src/modules/Equip/views/EquipView.vue:107
+#: src/modules/Stat/views/AnnualSummary.vue:116
 msgid "Glider"
 msgstr "Vela"
 
+#: src/components/GliderDialog.vue:12
 msgid "Or new glider"
 msgstr "O una nuova vela"
 
+#: src/components/GliderDialog.vue:13
 msgid "Enter new glider name"
 msgstr "Inserisci una nuova vela"
 
-msgid "Zoom in"
-msgstr "Zoom avanti"
-
-msgid "Zoom out"
-msgstr "Zoom indietro"
-
-msgid "Full map"
-msgstr "Mappa completa"
-
-msgid "3D View"
-msgstr "Vista 3D"
-
-msgid "No GPS track"
-msgstr "Nessuna traccia GPS"
-
-msgid "Flight Details"
-msgstr "Dettagli del volo"
-
-msgid "About"
-msgstr "About"
-
-msgid "Modify"
-msgstr "Modifica"
-
-msgid "More"
-msgstr "Di più"
-
-msgid "Site"
-msgstr "Sito"
-
-msgid "Pilot"
-msgstr "Pilota"
-
-msgid "Duration"
-msgstr "Durata"
-
-msgid "Max GPS alt"
-msgstr "Massima alt. GPS"
-
-msgid "Max climb"
-msgstr "Massima salita"
-
-msgid "Max sink"
-msgstr "Massima discesa"
-
-msgid "Add a comment"
-msgstr "Aggiungi un commento"
-
-msgid "Edit"
-msgstr "Modifica"
-
-msgid "Duplicate"
-msgstr "Duplicato"
-
-msgid "Merge flights"
-msgstr "Unire i voli"
-
-msgid "Add photo"
-msgstr "Aggiungi foto"
-
-msgid "Remove photo"
-msgstr "Rimuovi foto"
-
-msgid "Delete photo"
-msgstr "Cancella foto"
-
-msgid "Photo"
-msgstr "Foto"
-
-msgid "Current photo"
-msgstr "Foto attuale"
-
-msgid "Select a replacement photo"
-msgstr "Seleziona una foto sostitutiva"
-
-msgid "Select a photo"
-msgstr "Seleziona una foto"
-
-msgid "New photo"
-msgstr "Nuova foto"
-
-msgid "Replace photo"
-msgstr "Sostituisci foto"
-
-msgid "Thermals"
-msgstr "Termiche"
-
-msgid "Glides"
-msgstr "Planate"
-
-msgid "Class"
-msgstr "Classe"
-
-msgid "Floor"
-msgstr "Piano"
-
-msgid "Ceiling"
-msgstr "Soffitto"
-
-msgid "Checking"
-msgstr "Verifica"
-
-msgid "Airspaces involved"
-msgstr "Spazi aerei coinvolti"
-
-msgid "violation(s)"
-msgstr "violazione/i"
-
-msgid "No violations in the selected airspace file"
-msgstr "Nessuna violazione nel file dello spazio aereo selezionato"
-
-msgid "Click on an airspace to display the description"
-msgstr "Fare clic su uno spazio aereo per visualizzare la descrizione"
-
-msgid "Flight without GPS track"
-msgstr "Volo senza traccia GPS"
-
-msgid "Date"
-msgstr "Data"
-
-msgid "Take-off time"
-msgstr "Ora decollo"
-
-msgid "No glider selected"
-msgstr "Non è stata selezionata alcuna vela"
-
-msgid "Define a glider"
-msgstr "Definisci una vela"
-
-msgid "No site selected"
-msgstr "Nessun sito selezionato"
-
-msgid "Define the used glider"
-msgstr "Definisci una vela utilizzata"
-
-msgid "Error creating site"
-msgstr "Errone nella creazione del sito"
-
-msgid "You must change the date and/or time to create a duplicate"
-msgstr "È necessario modificare la data e/o l'ora per creare un duplicato"
-
-msgid "A flight at the same date and time was recorded"
-msgstr "È stato registrato un volo alla stessa data e ora"
-
-msgid "A flight at the same date and time already exists"
-msgstr "Esiste già un volo alla stessa data e ora"
-
-msgid "Flight"
-msgstr "Volo"
-
-msgid "saved"
-msgstr "salvato"
-
-msgid "Inserting in the flights file failed"
-msgstr "Inserimento fallito nel file dei voli"
-
-msgid "Existing logbook"
-msgstr "Registro di volo esistente"
-
-msgid "Choose a folder"
-msgstr "Seleziona una cartella"
-
-msgid "Open a .db file"
-msgstr "Apri il file .db"
-
-msgid "Reopen"
-msgstr "Riaprire"
-
-msgid "Logbooks detected"
-msgstr "Diari di volo rilevati"
-
-msgid "Select a logbook"
-msgstr "Seleziona un diario di volo"
-
-msgid "New logbook"
-msgstr "Nuovo diario di volo"
-
-msgid "Enter a name and click the Create button"
-msgstr "Inserisci un nome e clicca sul pulsante Crea"
-
-msgid "Create new logbook"
-msgstr "Crea un nuovo diario di volo"
-
-msgid "Close"
-msgstr "Chiudi"
-
-msgid "In previous versions of Logfly"
-msgstr "Nelle versioni precedenti di Logfly"
-
-msgid "The default logbook was logfly.db"
-msgstr "Il registro predefinito era logfly.db"
-
-msgid "Error creating the logbook"
-msgstr "Errore durante la creazione del registro"
-
-msgid "No logbook found in this folder"
-msgstr "Nessun registro trovato in questa cartella"
-
-msgid "Error reading the file"
-msgstr "Errore durante la lettura del file"
-
-msgid "Scoring"
-msgstr "Punteggio"
-
-msgid "Choose a scoring rule"
-msgstr "Scegli una regola di punteggio"
-
-msgid "Computing score..."
-msgstr "Calcolo del punteggio..."
-
-msgid "Result"
-msgstr "Risultato"
-
-msgid "Calculate"
-msgstr "Calcolare"
-
-msgid "Scoring failed"
-msgstr "Punteggio fallito"
-
-msgid "An unexpected error occurred"
-msgstr "Si è verificato un errore imprevisto"
-
-msgid "Advanced search"
-msgstr "Ricerca avanzata"
-
-msgid "Start date"
-msgstr "Data di inizio"
-
-msgid "Start time"
-msgstr "Ora inizio"
-
-msgid "End date"
-msgstr "Fine data"
-
-msgid "End time"
-msgstr "Fine orario"
-
-msgid "Min duration"
-msgstr "Durata minima"
-
-msgid "Max duration"
-msgstr "Durata massima"
-
-msgid "Search in glider name"
-msgstr "Cerca il nome dalla vela"
-
-msgid "Search in site name"
-msgstr "Cerca il nome del sito"
-
-msgid "Country"
-msgstr "Nazione"
-
-msgid "Search in country"
-msgstr "Cerca nel paese"
-
-msgid "Search in comments"
-msgstr "Cerca nei commenti"
-
-msgid "Has photo"
-msgstr "Ha una foto"
-
-msgid "Reset"
-msgstr "Reset"
-
-msgid "Search"
-msgstr "Ricerca"
-
-msgid "Please enter at least one search criterion"
-msgstr "Inserisci almeno un criterio di ricerca"
-
-msgid "Edit site"
+#: src/components/HikeForm.vue:5
+#, fuzzy
+msgid "Edit hike"
 msgstr "Modifica sito"
 
-msgid "New site"
+#: src/components/HikeForm.vue:5
+#, fuzzy
+msgid "New hike"
 msgstr "Nuovo sito"
 
-msgid "Name"
-msgstr "Nome"
-
-msgid "Orientation"
-msgstr "Orientamento"
-
-msgid "ZIP code"
-msgstr "Codice CAP"
-
-msgid "City"
-msgstr "Città"
-
-msgid "Latitude"
-msgstr "Latitudine"
-
-msgid "Longitude"
-msgstr "Longitudine"
-
-msgid "Move marker to change coordinates"
-msgstr "Spostare il marcatore per cambiare le coordinate"
-
-msgid "Name must not be null"
-msgstr "Il nome non deve essere nullo"
-
-msgid "Latitude must not be null"
-msgstr "La latitudine non deve essere nulla"
-
-msgid "Longitude must not be null"
-msgstr "La longitudine non deve essere nulla"
-
-msgid "Click on the colored button and then OK"
-msgstr "Fare clic sul pulsante colorato e quindi su OK"
-
-msgid "Remove tag"
-msgstr "Rimuovi tag"
-
-msgid "No tag selected"
-msgstr "Nessun tag selezionato"
-
-msgid "No tags checked, continue?"
+#: src/components/HikeForm.vue:16
+msgid "GPS track (IGC or GPX)"
 msgstr ""
 
-msgid "Ok"
-msgstr "Ok"
+#: src/components/HikeForm.vue:18
+#, fuzzy
+msgid "No file selected"
+msgstr "Nessun sito selezionato"
 
-msgid "Tag selection"
-msgstr "Selezione dei tag"
-
-msgid "No logbook opened"
-msgstr "Nessun registro aperto"
-
-msgid "To be saved"
-msgstr "Per essere salvati"
-
-msgid "Saved"
-msgstr "Salvato"
-
-msgid "Auto-saved logbook"
-msgstr "Registro salvato automaticamente"
-
-msgid "File successfully downloaded"
-msgstr "File scaricato con successo"
-
-msgid "Error downloading file"
-msgstr "Errore durante il download del file"
-
-msgid "Backup copy created"
-msgstr "Copia di backup creata"
-
-msgid "Flights & Tracks"
-msgstr "Voli e tracce"
-
-msgid "Logbook"
-msgstr "Diario di volo"
-
+#: src/components/HikeForm.vue:23 src/components/TheNavbar.vue:27
+#: src/modules/Files/views/SitesView.vue:180
+#: src/modules/Settings/views/SettingsView.vue:139
+#: src/modules/Tracks/views/ImportView.vue:103
+#: src/modules/Tracks/views/ImportView.vue:218
 msgid "Import"
 msgstr "Importazione"
 
-msgid "Statistics"
-msgstr "Statistiche"
-
-msgid "Annual summary"
-msgstr "Sommario annuale"
-
-msgid "Global summary"
-msgstr "Sommario globale"
-
-msgid "Routing"
-msgstr "Instradamento"
-
-msgid "Waypoints"
-msgstr "Waypoints"
-
-msgid "XC Nav"
-msgstr "XC Nav"
-
-msgid "Sites"
-msgstr "Siti di volo"
-
-msgid "Equipment"
-msgstr "Equipaggiamento"
-
-msgid "Utilities"
-msgstr "Servizi"
-
-msgid "Settings"
-msgstr "Impostazioni"
-
-msgid "Support"
-msgstr "Supporto"
-
-msgid "Translation"
-msgstr "Traduzione"
-
-msgid "Help"
-msgstr "Aiuto"
-
-msgid "Change language"
-msgstr "Cambia lingua"
-
-msgid "Unsaved changes – click to save"
-msgstr "Modifiche non salvate: fare clic per salvare"
-
-msgid "All changes saved"
-msgstr "Tutte le modifiche salvate"
-
-msgid "Import tracks"
-msgstr "Importa tracce"
-
-msgid "Language"
-msgstr "Lingua"
-
-msgid "Access your logbook"
-msgstr "Accedi al tuo diario di volo"
-
-msgid "Import new flights with or without GPS tracks"
-msgstr "Importa nuovi voli con o senza tracce GPS"
-
-msgid "Import flights"
-msgstr "Importa voli"
-
-msgid "Review external GPS tracks"
-msgstr "Esaminare le tracce GPS esterne"
-
-msgid "External GPS track"
-msgstr "Traccia GPS esterna"
-
-msgid "View the demo GPS track, a classic return trip Grand Bornand Semnoz Grand Bornand"
-msgstr "Visualizza la traccia GPS dimostrativa, un classico viaggio di andata e ritorno Grand Bornand Semnoz Grand Bornand"
-
-msgid "Consult the annual summary of your flights"
-msgstr "Consulta il riepilogo annuale dei tuoi voli"
-
-msgid "Obtain global statistics of your logbook"
-msgstr "Ottieni statistiche globali del tuo diario di volo"
-
-msgid "Manage your waypoints"
-msgstr "Gestisci i tuoi waypoint"
-
-msgid "Visualize and edit airspaces"
-msgstr "Visualizza e modifica gli spazi aerei"
-
-msgid "Program XC flights"
-msgstr "Programma voli XC"
-
-msgid "Manage the sites file of your logbook"
-msgstr "Gestisci il file dei siti del tuo registro"
-
-msgid "Consult the Paragliding Earth database"
-msgstr "Consulta il database di Paragliding Earth"
-
-msgid "Manage your equipment : purchase, revision..."
-msgstr "Gestisci la tua attrezzatura: acquisto, revisione..."
-
-msgid "Manage app preferences"
-msgstr "Gestisci le preferenze dell'app"
-
-msgid "Access support"
-msgstr "Supporto di accesso"
-
-msgid "Help translate Logfly"
-msgstr "Aiuta a tradurre Logfly"
-
-msgid "GPS alt"
-msgstr "Alt GPS"
-
-msgid "Size"
-msgstr "Dimensione"
-
-msgid "Min GPS alt"
-msgstr "Min alt. GPS"
-
-msgid "Max gain"
-msgstr "Massimo guadagno"
-
-msgid "Max speed"
-msgstr "Massima velocità"
-
-msgid "Best glide"
-msgstr "Miglior planata"
-
-msgid "Avg glide speed"
-msgstr "Velocità media di planata"
-
-msgid "Average climb"
-msgstr "Salita media"
-
-msgid "Extraction time"
-msgstr "Tempo di estrazione"
-
-msgid "Avg th efficiency"
-msgstr "Avg th efficenza"
-
-msgid "Dives"
-msgstr "Dives"
-
-msgid "Various"
-msgstr "Varie"
-
-msgid "Altitude gain"
-msgstr "Altezza guadagnata"
-
-msgid "Maximum climb"
-msgstr "Max salita"
-
-msgid "Peak climb"
-msgstr "Picco di salita"
-
-msgid "Efficiency"
-msgstr "Efficienza"
-
-msgid "Start altitude"
-msgstr "Altitudine iniziale"
-
-msgid "Finish altitude"
-msgstr "Altitudine finale"
-
-msgid "Finish time"
-msgstr "Ora fine"
-
-msgid "Cumulative gain"
-msgstr "Guadagno di quota accumulata"
-
-msgid "Cumulative loss"
-msgstr "Perdita di quota accumulata"
-
-msgid "Drift"
-msgstr "Deriva"
-
-msgid "Distance"
-msgstr "Distanza"
-
-msgid "Average glide"
-msgstr "Rapporto medio di planata"
-
-msgid "Average speed"
-msgstr "Velocità media"
-
-msgid "Altitude change"
-msgstr "Cambio di altitudine"
-
-msgid "Average descent"
-msgstr "Discesa media"
-
-msgid "Add"
-msgstr "Aggiungi"
-
-msgid "Edit record"
-msgstr "Modifica record"
-
-msgid "New record"
-msgstr "Nuovo record"
-
-msgid "Click on Glider button or Other button"
-msgstr "Fare clic sul pulsante Vela o sul pulsante Altro"
-
-msgid "Other"
-msgstr "Altro"
-
-msgid "Select a glider"
-msgstr "Seleziona una vela"
-
-msgid "Enter equipment"
-msgstr "Inserisci l'attrezzatura"
-
-msgid "Clear"
-msgstr "Clear"
-
-msgid "Operation"
-msgstr "Operazione"
-
-msgid "Price"
-msgstr "Prezzo"
-
-msgid "You can record all operations"
-msgstr "È possibile registrare tutte le operazioni"
-
-msgid "purchase"
-msgstr "acquisto"
-
-msgid "sale"
-msgstr "vendita"
-
-msgid "overhaul"
-msgstr "revisione"
-
-msgid "emergency folding"
-msgstr "ripiegamento emergenza"
-
-msgid "chocking"
-msgstr "bloccaggio"
-
-msgid "etc"
-msgstr "etc"
-
-msgid "Are you sure you want to delete this record?"
-msgstr "Sei sicuro di voler eliminare questo record?"
-
-msgid "Record deleted"
-msgstr "Record eliminato"
-
-msgid "Error deleting record"
-msgstr "Errore durante l'eliminazione del record"
-
-msgid "registered"
-msgstr "registrato"
-
-msgid "for"
-msgstr "per"
-
-msgid "Date is required"
-msgstr "La data è obbligatoria"
-
-msgid "Equipment is required"
-msgstr "È richiesta l'attrezzatura"
-
-msgid "Operation is required"
-msgstr "È richiesta l'operazione"
-
-msgid "Record updated"
-msgstr "Record aggiornato"
-
-msgid "Record created"
-msgstr "Record creato"
-
-msgid "Error saving record"
-msgstr "Errore durante il salvataggio del record"
-
-msgid "Not defined"
-msgstr "Non definito"
-
-msgid "Site details"
-msgstr "Dettagli sito"
-
-msgid "Locality"
-msgstr "Località"
-
-msgid "Altitude"
-msgstr "Altitudine"
-
-msgid "Updated"
-msgstr "Aggiornato"
-
-msgid "Cleaning"
-msgstr "Pulizia"
-
-msgid "Select a site to display details"
-msgstr "Seleziona un sito per visualizzare i dettagli"
-
-msgid "ZIP"
-msgstr "CAP"
-
-msgid "Site created successfully"
-msgstr "Sito creato con successo"
-
-msgid "Site updated successfully"
-msgstr "Sito aggiornato con successo"
-
-msgid "Error updating site"
-msgstr "Errore durante l'aggiornamento del sito"
-
-msgid "Delete site"
-msgstr "Cancella sito"
-
-msgid "Site deleted"
-msgstr "Sito cancellato"
-
-msgid "Error deleting site"
-msgstr "Errore durante l'eliminazione del sito"
-
-msgid "Comment saved"
-msgstr "Commento salvato"
-
-msgid "Comment deleted"
-msgstr "Commento cancellato"
-
-msgid "Displaying duplicates"
-msgstr "Visualizzazione dei duplicati"
-
-msgid "sites"
-msgstr "siti"
-
-msgid "No duplicates found"
-msgstr "Nessun duplicato trovato"
-
-msgid "Delete all duplicate sites? This action cannot be undone."
-msgstr "Vuoi eliminare tutti i siti duplicati? Questa azione non può essere annullata."
-
-msgid "Duplicates removed successfully"
-msgstr "Duplicati rimossi con successo"
-
-msgid "Error removing duplicates"
-msgstr "Errore durante la rimozione dei duplicati"
-
-msgid "Classes"
-msgstr "Classi"
-
-msgid "Types"
-msgstr "Tipi"
-
-msgid "Prohibited"
-msgstr "Proibita"
-
-msgid "Restricted"
-msgstr "Limitata"
-
-msgid "Danger"
-msgstr "Pericolo"
-
-msgid "Gliding"
-msgstr "Gliding"
-
-msgid "Floor limit"
-msgstr "Limite di terra"
-
-msgid "Radius"
-msgstr "Raggio"
-
-msgid "Select a file"
-msgstr "Seleziona il file"
-
-msgid "Zone selection"
-msgstr "Totali per la selezione"
-
-msgid "Cancel selection"
-msgstr "Totali per la selezione"
-
-msgid "Open Air format"
-msgstr "Formato Open Air"
-
-msgid "GPX Format"
-msgstr "Esportazione GPX"
-
-msgid "No airspace file loaded"
-msgstr "Nessun file di spazio aereo caricato"
-
-msgid "No airspace found"
-msgstr "Nessuno spazio aereo trovato"
-
-msgid "Bazile file loaded successfully"
-msgstr "File Bazile caricato correttamente"
-
-msgid "Error downloading Bazile file"
-msgstr "Errore durante il download del file Bazile"
-
-msgid "Error"
-msgstr "Errore"
-
-msgid "No valid airspaces found in file"
-msgstr "Nessuno spazio aereo valido trovato nel file"
-
-msgid "No airspaces selected"
-msgstr "Nessuno spazio aereo selezionato"
-
-msgid "Click and drag to draw a selection rectangle"
-msgstr "Fare clic e trascinare per disegnare un rettangolo di selezione"
-
-msgid "Selection too small, please draw a larger rectangle"
-msgstr "Selezione troppo piccola, disegna un rettangolo più grande"
-
-msgid "Selection cancelled"
-msgstr "Selezione annullata"
-
-msgid "No airspaces in selection area"
-msgstr "Nessuno spazio aereo nell'area di selezione"
-
-msgid "Selection cancelled, airspaces restored"
-msgstr "Selezione annullata, spazi aerei ripristinati"
-
-msgid "New set"
-msgstr "Nuovo set"
-
-msgid "New waypoint"
-msgstr "Nuovo waypoint"
-
-msgid "Edit waypoint"
-msgstr "Modifica waypoint"
-
-msgid "Standard"
-msgstr "Standard"
-
-msgid "Short name"
-msgstr "Nome breve"
-
-msgid "Click on map to set position"
-msgstr "Clicca sulla mappa per impostare la posizione"
-
-msgid "New"
-msgstr "Nuovo"
-
-msgid "Center on map"
-msgstr "Centra sulla mappa"
-
-msgid "Error reading file"
-msgstr "Errore durante la lettura del file"
-
-msgid "No waypoints found"
-msgstr "Nessun waypoint trovato"
-
-msgid "Short"
-msgstr "Breve"
-
-msgid "Lat"
-msgstr "Latitudine"
-
-msgid "Lon"
-msgstr "Longitudine"
-
-msgid "Waypoint added"
-msgstr "Waypoint aggiunto"
-
-msgid "Waypoint updated"
-msgstr "Waypoint aggiornato"
-
-msgid "Waypoint deleted"
-msgstr "Waypoint cancellato"
-
-msgid "No waypoints selected for export"
-msgstr "Nessun waypoint selezionato per l'esportazione"
-
-msgid "Export successful"
-msgstr "Esportazione riuscita"
-
-msgid "Export failed"
-msgstr "Esportazione fallita"
-
-msgid "Route"
-msgstr "Strada"
-
-msgid "Track"
-msgstr "Traccia"
-
-msgid "Total distance"
-msgstr "Distanza totale"
-
-msgid "Speed"
-msgstr "Velocità"
-
-msgid "Points"
-msgstr "Punti"
-
-msgid "Draw a route"
-msgstr "Disegna un percorso"
-
-msgid "Add marker"
-msgstr "Aggiungi marcatore"
-
-msgid "Clear route"
-msgstr "Percorso libero"
-
-msgid "Save route"
-msgstr "Salva percorso"
-
-msgid "Measure"
-msgstr "Misura"
-
-msgid "Center on route"
-msgstr "Centro sul percorso"
-
-msgid "Export format"
-msgstr "Formato di esportazione"
-
-msgid "Include markers"
-msgstr "Includi marcatori"
-
-msgid "not supported"
-msgstr "non supportato"
-
-msgid "Open distance"
-msgstr "Distanza aperta"
-
-msgid "Tracks"
-msgstr "Tracce"
-
-msgid "Click on map to add route points. Press Escape to finish."
-msgstr "Clicca sulla mappa per aggiungere punti del percorso. Premi Esc per terminare."
-
-msgid "Continue drawing from last point"
-msgstr "Continua a disegnare dall'ultimo punto"
-
+#: src/components/HikeForm.vue:37 src/components/SiteForm.vue:25
+#: src/modules/Files/views/HikeView.vue:97
+#: src/modules/Files/views/HikeView.vue:211
+#: src/modules/Files/views/SitesView.vue:241
+#: src/modules/Routing/views/WaypointView.vue:81
+msgid "Name"
+msgstr "Nome"
+
+#: src/components/HikeForm.vue:46 src/modules/Files/views/HikeView.vue:99
+#: src/modules/Files/views/HikeView.vue:212
+#: src/modules/Routing/views/XcnavView.vue:581
+#: src/modules/Settings/views/TranslationView.vue:52
 msgid "Start"
 msgstr "Start"
 
+#: src/components/HikeForm.vue:55 src/modules/Files/views/HikeView.vue:101
+#: src/modules/Files/views/HikeView.vue:213
+#: src/modules/Routing/views/XcnavView.vue:582
 msgid "End"
 msgstr "End"
 
-msgid "Point"
-msgstr "Punto"
+#: src/components/HikeForm.vue:64 src/modules/Files/views/HikeView.vue:105
+#, fuzzy
+msgid "Elevation gain"
+msgstr "Guadagno di quota accumulata"
 
-msgid "Drag to move"
-msgstr "Trascina per spostare"
+#: src/components/HikeForm.vue:72 src/components/LogbookDetails.vue:72
+#: src/components/NoTrackDialog.vue:28 src/components/TraceInfoDialog.vue:133
+#: src/components/TraceInfoPanel.vue:98 src/js/leaflet/map-utils.js:20
+#: src/js/leaflet/map-utils.js:47 src/modules/Files/views/HikeView.vue:107
+#: src/modules/Files/views/HikeView.vue:215
+#: src/modules/Routing/views/XcnavView.vue:47
+#: src/modules/Stat/views/AnnualSummary.vue:59
+#: src/modules/Stat/views/AnnualSummary.vue:118
+msgid "Duration"
+msgstr "Durata"
 
-msgid "Click to delete"
-msgstr "Clicca per cancellare"
+#: src/components/HikeForm.vue:86
+#, fuzzy
+msgid "Starting coordinates"
+msgstr "Data di inizio"
 
-msgid "Ctrl/Cmd+click to continue"
-msgstr "Ctrl/Cmd+clic per continuare"
+#: src/components/HikeForm.vue:89 src/components/HikeForm.vue:110
+#: src/components/SiteForm.vue:77 src/components/SiteForm.vue:96
+#: src/components/SiteForm.vue:115
+#: src/modules/Routing/views/WaypointView.vue:95
+msgid "Latitude"
+msgstr "Latitudine"
 
-msgid "Point inserted"
-msgstr "Punto inserito"
+#: src/components/HikeForm.vue:93 src/components/HikeForm.vue:114
+#: src/components/SiteForm.vue:83 src/components/SiteForm.vue:102
+#: src/components/SiteForm.vue:121
+#: src/modules/Routing/views/WaypointView.vue:99
+msgid "Longitude"
+msgstr "Longitudine"
 
-msgid "Click or drag to insert point"
-msgstr "Fare clic o trascinare per inserire il punto"
+#: src/components/HikeForm.vue:98 src/components/HikeForm.vue:142
+#, fuzzy
+msgid "Click on map to set start point"
+msgstr "Clicca sulla mappa per impostare la posizione"
 
-msgid "Cannot delete: minimum 2 points required"
-msgstr "Impossibile eliminare: sono richiesti almeno 2 punti"
+#: src/components/HikeForm.vue:107
+#, fuzzy
+msgid "End coordinates"
+msgstr "Fine data"
 
-msgid "Cannot delete the start point"
-msgstr "Impossibile eliminare il punto di partenza"
+#: src/components/HikeForm.vue:119 src/components/HikeForm.vue:143
+#, fuzzy
+msgid "Click on map to set end point"
+msgstr "Clicca sulla mappa per impostare la posizione"
 
-msgid "Point deleted"
-msgstr "Punto cancellato"
+#: src/components/HikeForm.vue:148
+msgid "If no GPS track, enter start and end coordinates by clicking on the map"
+msgstr ""
 
-msgid "Route cleared"
-msgstr "Percorso liberato"
+#: src/components/HikeForm.vue:256
+#, fuzzy
+msgid "Reading file"
+msgstr "Errore durante la lettura del file"
 
-msgid "Click on map to add a marker"
-msgstr "Clicca sulla mappa per aggiungere un marcatore"
-
-msgid "Marker added"
-msgstr "Marcatore aggiunto"
-
-msgid "Click to add points, double-click to finish"
-msgstr "Fare clic per aggiungere punti, fare doppio clic per terminare"
-
-msgid "Route loaded"
-msgstr "Percorso caricato"
-
-msgid "points"
-msgstr "punti"
-
-msgid "markers"
-msgstr "marcatori"
-
-msgid "No route found in file"
-msgstr "Nessun percorso trovato nel file"
-
-msgid "Error loading route"
-msgstr "Errore durante il caricamento del percorso"
-
-msgid "No valid track data found"
-msgstr "Nessun dato di traccia valido trovato"
-
-msgid "GPX track loaded"
-msgstr "Traccia GPX caricata"
-
+#: src/components/HikeForm.vue:267 src/modules/Routing/views/XcnavView.vue:1587
 msgid "Unsupported track format"
 msgstr "Formato traccia non supportato"
 
-msgid "Error loading track"
-msgstr "Errore durante il caricamento della traccia"
-
-msgid "No airspaces to display"
-msgstr "Nessuno spazio aereo da visualizzare"
-
-msgid "Route must have at least 2 points"
-msgstr "Il percorso deve avere almeno 2 punti"
-
-msgid "Route exported successfully"
-msgstr "Percorso esportato con successo"
-
-msgid "Configure your preferences"
-msgstr "Configura le tue preferenze"
-
-msgid "Startup"
-msgstr "Avvio"
-
-msgid "Pilot name"
-msgstr "Nome pilota"
-
-msgid "Glider name"
-msgstr "Nome vela"
-
-msgid "Default map layer"
-msgstr "Livello mappa predefinito"
-
-msgid "League"
-msgstr "Lega"
-
-msgid "Identifier"
-msgstr "Identificatore"
-
-msgid "Password"
-msgstr "Password"
-
-msgid "Home"
-msgstr "Home"
-
-msgid "Settings saved successfully"
-msgstr "Impostazioni salvate correttamente"
-
-msgid "Error saving settings"
-msgstr "Errore durante il salvataggio delle impostazioni"
-
-msgid "Settings restored"
-msgstr "Impostazioni ripristinate"
-
-msgid "Contact"
-msgstr "Contatto"
-
-msgid "Need help"
-msgstr "Hai bisogno di aiuto?"
-
-msgid "Have a question or suggestion"
-msgstr "Hai una domanda o un suggerimento?"
-
-msgid "Contact the Logfly support our online form"
-msgstr "Contatta il supporto Logfly tramite il nostro modulo online"
-
-msgid "Open Contact Form"
-msgstr "Apri il modulo di contatto"
-
-msgid "Bug reports"
-msgstr "Segnalazioni di bug"
-
-msgid "Languages"
-msgstr "Linguaggio"
-
-msgid "French"
-msgstr "Francese"
-
-msgid "English"
-msgstr "Inglese"
-
-msgid "Translation Editor"
-msgstr "Editor di traduzione"
-
-msgid "Continue a translation"
-msgstr "Continua una traduzione"
-
-msgid "New translation"
-msgstr "Nuova traduzione"
-
-msgid "Select a language"
-msgstr "Seleziona linguaggio"
-
-msgid "Load from file"
-msgstr "Carica da file"
-
-msgid "Loading translations"
-msgstr "Caricamento delle traduzioni"
-
-msgid "Already translated"
-msgstr "Già tradotto"
-
-msgid "Change"
-msgstr "Modificare"
-
-msgid "Untranslated"
-msgstr "Non tradotto"
-
-msgid "Download"
-msgstr "Download"
-
-msgid "Save to server"
-msgstr "Salva sul server"
-
-msgid "Firebase not configured. Using local mode only."
-msgstr "Firebase non configurato. Utilizzo solo della modalità locale."
-
-msgid "Could not connect to server"
-msgstr "Impossibile connettersi al server"
-
-msgid "Translation saved successfully!"
-msgstr "Traduzione salvata con successo!"
-
-msgid "Error saving translation"
-msgstr "Errore durante il salvataggio della traduzione"
-
-msgid "Hours"
-msgstr "Ore"
-
-msgid "Gliders"
-msgstr "Vele"
-
-msgid "Reference"
-msgstr "Riferimento"
-
-msgid "Months"
-msgstr "Mesi"
-
-msgid "Compare"
-msgstr "Confrontare"
-
-msgid "Fl."
-msgstr "Vl."
-
-msgid "Flight time comparison"
-msgstr "Confronto dei tempi di volo"
-
-msgid "Flight comparison"
-msgstr "Confronto voli"
-
-msgid "Yearly chart"
-msgstr "Grafico annuale"
-
-msgid "Monthly chart"
-msgstr "Grafico mensile"
-
-msgid "Gliders chart"
-msgstr "Tabella vele"
-
-msgid "Sites chart"
-msgstr "Grafico dei siti"
-
-msgid "YEARS"
-msgstr "ANNI"
-
-msgid "MONTHES"
-msgstr "MESI"
-
-msgid "year"
-msgstr "anno"
-
-msgid "Select a chart type to display statistics"
-msgstr "Seleziona un tipo di grafico per visualizzare le statistiche"
-
-msgid "Click Select and from the USB drives"
-msgstr "Fare clic su Seleziona e dalle unità USB"
-
-msgid "select the one containing"
-msgstr "seleziona quello contenente"
-
-msgid "Validate and click Import"
-msgstr "Convalida e fai clic su Importa"
-
-msgid "The browser cannot read this type of GPS directly"
-msgstr "Il browser non può leggere direttamente questo tipo di GPS"
-
-msgid "There are two solutions"
-msgstr "Ci sono due soluzioni"
-
-msgid "- Install the LogflyGPS import software. It will update the logbook directly"
-msgstr "- Installa il software di importazione LogflyGPS. Aggiornerà direttamente il registro"
-
-msgid "- use the manufacturer software to download the flight logs"
-msgstr "- utilizzare il software del produttore per scaricare i registri di volo"
-
-msgid "then import the downloaded files with the \"Import from Folder\" option"
-msgstr "quindi importare i file scaricati con l'opzione \"Importa da cartella\""
-
-msgid "Plug in the XCTracer and briefly press the button"
-msgstr "Collegare l'XCTracer e premere brevemente il pulsante"
-
-msgid "a XC**.txt file and files in igc format"
-msgstr "un file XC**.txt e file in formato igc"
-
-msgid "Plug in the Skytraax 2"
-msgstr "Collega Skytraax 2"
-
-msgid "a 'flights' folder and a 'waypoints' folder"
-msgstr "una cartella "voli" e una cartella "waypoint""
-
-msgid "Plug in the Skytraax 3/4/5"
-msgstr "Collega Skytraax 3/4/5"
-
-msgid "Using SysPC Tools may be an option"
-msgstr "L'utilizzo di SysPC Tools potrebbe essere un'opzione"
-
-msgid "Plug in the NavXL, select mass storage"
-msgstr "Collega il NavXL, seleziona l'archiviazione di massa"
-
-msgid "an 'IGC' folder"
-msgstr "una cartella 'IGC'"
-
-msgid "Plug in the Oudie"
-msgstr "Collega l'Oudie"
-
-msgid "a 'Flights' folder, a 'Waypoints' folder"
-msgstr "una cartella 'Voli', una cartella 'Waypoint'"
-
-msgid "Plug in the CPilot"
-msgstr "Collega il CPilot"
-
-msgid "a 'tracks' folder, a 'display' folder"
-msgstr "una cartella 'tracce', una cartella 'visualizzazione'"
-
-msgid "Plug in the Element"
-msgstr "Collega l'elemento"
-
-msgid "Plug in the Connect"
-msgstr "Collega Connect"
-
-msgid "a flights folder and a waypoints folder"
-msgstr "una cartella dei voli e una cartella dei waypoint"
-
-msgid "Plug in the Reversale"
-msgstr "Collega l'inversione"
-
-msgid "a 'LOG' folder and a 'PARAM.VGP' file"
-msgstr "una cartella 'LOG' e un file 'PARAM.VGP'"
-
-msgid "Plug in the Skydrop"
-msgstr "Collega Skydrop"
-
-msgid "a 'LOGS' folder and a 'AIR' folder"
-msgstr "una cartella 'LOGS' e una cartella 'AIR'"
-
-msgid "Plug in the Varduino"
-msgstr "Collega il Varduino"
-
-msgid "a 'igc' folder and an 'audio' folder"
-msgstr "una cartella 'igc' e una cartella 'audio'"
-
-msgid "Plug in the Flynet"
-msgstr "Collega Flynet"
-
-msgid "a CONFIG.TXT file and files in igc format"
-msgstr "un file CONFIG.TXT e file in formato igc"
-
-msgid "Plug in the Sensbox"
-msgstr "Collega il Sensbox"
-
-msgid "a 'tracks' folder and a 'system' folder"
-msgstr "una cartella "tracce" e una cartella "sistema""
-
-msgid "Folder"
-msgstr "Cartella"
-
-msgid "Select a folder containing track files (IGC or GPX)"
-msgstr "Seleziona una cartella contenente i file traccia (IGC o GPX)"
-
-msgid "Select the folder defined by Sys PC Tools"
-msgstr "Selezionare la cartella definita da Sys PC Tools"
-
-msgid "By default, Sys-PC-Tool create a folder in user.home directory called \"parapente\""
-msgstr "Per impostazione predefinita, Sys-PC-Tool crea una cartella nella directory user.home chiamata \"parapente\""
-
-msgid "Create a manual flight entry without an associated track file."
-msgstr "Crea una voce di volo manuale senza un file di traccia associato."
-
-msgid "Analyze a track file without importing it into your logbook"
-msgstr "Analizza un file di traccia senza importarlo nel tuo diario di bordo"
-
-msgid "Drag and drop your file here"
-msgstr "Trascina e rilascia il tuo file qui"
-
-msgid "or click to select"
-msgstr "oppure clicca per selezionare"
-
-msgid "Analyse of"
-msgstr "Analisi di"
-
-msgid "Decoding in progress"
-msgstr "Decodifica in corso"
-
-msgid "GPX or IGC format only"
-msgstr "Solo formato GPX o IGC"
-
-msgid "GPX decoding error"
+#: src/components/HikeForm.vue:282
+#, fuzzy
+msgid "IGC decoding error"
 msgstr "Errore di decodifica GPX"
 
-msgid "GPX to IGC conversion failed"
+#: src/components/HikeForm.vue:312 src/components/HikeForm.vue:377
+#: src/modules/Routing/views/XcnavView.vue:1544
+msgid "points"
+msgstr "punti"
+
+#: src/components/HikeForm.vue:315
+#, fuzzy
+msgid "IGC read error"
+msgstr "Errore di decodifica GPX"
+
+#: src/components/HikeForm.vue:327
+#, fuzzy
+msgid "GPX parsing error"
+msgstr "Errore di decodifica GPX"
+
+#: src/components/HikeForm.vue:334
+#, fuzzy
+msgid "GPX→IGC conversion error"
 msgstr "Conversione da GPX a IGC non riuscita"
 
-msgid "Decoding problem in track file"
-msgstr "Problema di decodifica nel file della traccia"
+#: src/components/HikeForm.vue:380
+#, fuzzy
+msgid "GPX read error"
+msgstr "Errore di decodifica GPX"
 
-msgid "USB GPS"
-msgstr "USB GPS"
+#: src/components/HikeForm.vue:483 src/components/SiteForm.vue:387
+msgid "Name must not be null"
+msgstr "Il nome non deve essere nullo"
 
-msgid "Serial GPS"
-msgstr "Seriale GPS"
+#: src/components/HikeForm.vue:558
+#, fuzzy
+msgid "Track loaded"
+msgstr "Traccia GPX caricata"
 
-msgid "tracks decoded"
-msgstr "tracce decodificate"
-
-msgid "Display all tracks"
+#: src/components/HikePickerDialog.vue:7
+msgid "Associate a hike"
 msgstr ""
 
-msgid "Unselect"
-msgstr "Deselezionare"
+#: src/components/HikePickerDialog.vue:25
+#, fuzzy
+msgid "Current hike"
+msgstr "Foto attuale"
 
-msgid "Already in the logbook"
-msgstr "Già nel diario di volo"
+#: src/components/HikePickerDialog.vue:46
+#, fuzzy
+msgid "Today's duration"
+msgstr "Durata massima"
 
-msgid "Invalid"
-msgstr "Non valido"
+#: src/components/HikePickerDialog.vue:54
+#, fuzzy
+msgid "Reference duration"
+msgstr "Durata minima"
 
-msgid "Select"
-msgstr "Seleziona"
+#: src/components/HikePickerDialog.vue:61
+#, fuzzy
+msgid "Create a new hike"
+msgstr "Crea un nuovo sito"
 
-msgid "Scanning"
-msgstr "Scansione"
+#: src/components/HikePickerDialog.vue:70
+#, fuzzy
+msgid "Remove hike"
+msgstr "Rimuovi foto"
 
-msgid "Not yet available"
-msgstr "Non ancora disponibile"
+#: src/components/LittleMapView.vue:14
+msgid "Zoom in"
+msgstr "Zoom avanti"
 
-msgid "Select a folder and choose track files (IGC or GPX)"
-msgstr ""
+#: src/components/LittleMapView.vue:19
+msgid "Zoom out"
+msgstr "Zoom indietro"
 
-msgid "Error while selecting the folder"
-msgstr "Errore durante la selezione della cartella"
+#: src/components/LittleMapView.vue:24
+msgid "Full map"
+msgstr "Mappa completa"
 
-msgid "files selected"
-msgstr ""
+#: src/components/LittleMapView.vue:30
+msgid "3D View"
+msgstr "Vista 3D"
 
-msgid "No directory selected"
-msgstr "Nessuna directory selezionata"
+#: src/components/LogbookDetails.vue:15
+msgid "No GPS track"
+msgstr "Nessuna traccia GPS"
 
-msgid "No tracks in this folder"
-msgstr "Nessuna traccia in questa cartella"
+#: src/components/LogbookDetails.vue:19
+msgid "Flight Details"
+msgstr "Dettagli del volo"
 
-msgid "Error during scanning"
-msgstr "Errore durante la scansione"
+#: src/components/LogbookDetails.vue:25 src/modules/Files/views/HikeView.vue:79
+#: src/modules/Files/views/SitesView.vue:95
+msgid "About"
+msgstr "About"
 
-msgid "To rename"
-msgstr "Da rinominare"
+#: src/components/LogbookDetails.vue:33
+#: src/modules/Files/views/HikeView.vue:122
+#: src/modules/Files/views/SitesView.vue:142
+msgid "Modify"
+msgstr "Modifica"
 
-msgid "tracks imported"
-msgstr "tracce importate"
+#: src/components/LogbookDetails.vue:43
+msgid "More"
+msgstr "Di più"
 
-msgid "Flight saved"
-msgstr "Volo salvato"
+#: src/components/LogbookDetails.vue:55
+#: src/components/SearchFlightsDialog.vue:76
+#: src/components/TraceInfoDialog.vue:118 src/components/TraceInfoPanel.vue:83
+#: src/modules/Files/views/SitesView.vue:114
+#: src/modules/Stat/views/AnnualSummary.vue:116
+msgid "Site"
+msgstr "Sito"
 
-msgid "Advanced Search"
+#: src/components/LogbookDetails.vue:60 src/components/TraceInfoDialog.vue:121
+#: src/components/TraceInfoPanel.vue:86
+msgid "Pilot"
+msgstr "Pilota"
+
+#: src/components/LogbookDetails.vue:77 src/components/TraceInfoDialog.vue:137
+#: src/components/TraceInfoPanel.vue:102
+msgid "Max GPS alt"
+msgstr "Massima alt. GPS"
+
+#: src/components/LogbookDetails.vue:79 src/components/TraceInfoDialog.vue:141
+#: src/components/TraceInfoPanel.vue:106
+msgid "Max climb"
+msgstr "Massima salita"
+
+#: src/components/LogbookDetails.vue:81 src/components/TraceInfoDialog.vue:142
+#: src/components/TraceInfoPanel.vue:107
+msgid "Max sink"
+msgstr "Massima discesa"
+
+#: src/components/LogbookDetails.vue:116
+#: src/modules/Files/views/HikeView.vue:132
+#: src/modules/Files/views/SitesView.vue:152
+msgid "Add a comment"
+msgstr "Aggiungi un commento"
+
+#: src/components/LogbookDetails.vue:219
+#: src/modules/Routing/views/WaypointView.vue:162
+#: src/modules/Tracks/views/LogbookView.vue:163
+msgid "Edit"
+msgstr "Modifica"
+
+#: src/components/LogbookDetails.vue:220
+#: src/modules/Files/views/SitesView.vue:168
+#: src/modules/Tracks/views/LogbookView.vue:165
+msgid "Duplicate"
+msgstr "Duplicato"
+
+#: src/components/LogbookDetails.vue:221
+msgid "Merge flights"
+msgstr "Unire i voli"
+
+#: src/components/LogbookDetails.vue:222
+msgid "Add photo"
+msgstr "Aggiungi foto"
+
+#: src/components/LogbookDetails.vue:223
+msgid "Remove photo"
+msgstr "Rimuovi foto"
+
+#: src/components/LogbookDetails.vue:331
+msgid "Delete photo"
+msgstr "Cancella foto"
+
+#: src/components/LogbookPhoto.vue:5
+#: src/modules/Tracks/views/LogbookView.vue:143
+msgid "Photo"
+msgstr "Foto"
+
+#: src/components/LogbookPhoto.vue:14
+msgid "Current photo"
+msgstr "Foto attuale"
+
+#: src/components/LogbookPhoto.vue:19
+msgid "Select a replacement photo"
+msgstr "Seleziona una foto sostitutiva"
+
+#: src/components/LogbookPhoto.vue:19
+msgid "Select a photo"
+msgstr "Seleziona una foto"
+
+#: src/components/LogbookPhoto.vue:28
+msgid "New photo"
+msgstr "Nuova foto"
+
+#: src/components/LogbookPhoto.vue:34
+msgid "Replace photo"
+msgstr "Sostituisci foto"
+
+#: src/components/MapLeaflet.vue:254 src/components/TraceInfoDialog.vue:188
+#: src/components/TraceInfoPanel.vue:151
+#: src/modules/Routing/views/XcnavView.vue:363
+msgid "Thermals"
+msgstr "Termiche"
+
+#: src/components/MapLeaflet.vue:292 src/components/TraceInfoDialog.vue:198
+#: src/components/TraceInfoPanel.vue:160
+msgid "Glides"
+msgstr "Planate"
+
+#: src/components/MapLeaflet.vue:336
+msgid "Class"
+msgstr "Classe"
+
+#: src/components/MapLeaflet.vue:337
+#: src/modules/Routing/views/AirspacesView.vue:42
+msgid "Floor"
+msgstr "Piano"
+
+#: src/components/MapLeaflet.vue:338
+msgid "Ceiling"
+msgstr "Soffitto"
+
+#: src/components/MapLeaflet.vue:374
+msgid "Checking"
+msgstr "Verifica"
+
+#: src/components/MapLeaflet.vue:480
+msgid "Airspaces involved"
+msgstr "Spazi aerei coinvolti"
+
+#: src/components/MapLeaflet.vue:499
+msgid "violation(s)"
+msgstr "violazione/i"
+
+#: src/components/MapLeaflet.vue:501
+msgid "No violations in the selected airspace file"
+msgstr "Nessuna violazione nel file dello spazio aereo selezionato"
+
+#: src/components/MapLeaflet.vue:509
+msgid "Click on an airspace to display the description"
+msgstr "Fare clic su uno spazio aereo per visualizzare la descrizione"
+
+#: src/components/NoTrackDialog.vue:7
+#: src/modules/Tracks/js/device-descriptions.js:126
+#: src/modules/Tracks/views/ImportView.vue:73
+msgid "Flight without GPS track"
+msgstr "Volo senza traccia GPS"
+
+#: src/components/NoTrackDialog.vue:14 src/components/TraceInfoDialog.vue:117
+#: src/components/TraceInfoPanel.vue:82
+#: src/modules/Equip/views/EquipView.vue:95
+#: src/modules/Equip/views/EquipView.vue:222
+msgid "Date"
+msgstr "Data"
+
+#: src/components/NoTrackDialog.vue:19
+msgid "Take-off time"
+msgstr "Ora decollo"
+
+#: src/components/NoTrackDialog.vue:43 src/components/NoTrackDialog.vue:343
+msgid "No glider selected"
+msgstr "Non è stata selezionata alcuna vela"
+
+#: src/components/NoTrackDialog.vue:48
+msgid "Define a glider"
+msgstr "Definisci una vela"
+
+#: src/components/NoTrackDialog.vue:58 src/components/NoTrackDialog.vue:349
+msgid "No site selected"
+msgstr "Nessun sito selezionato"
+
+#: src/components/NoTrackDialog.vue:97
+msgid "Define the used glider"
+msgstr "Definisci una vela utilizzata"
+
+#: src/components/NoTrackDialog.vue:335
+#: src/modules/Files/views/SitesView.vue:464
+msgid "Error creating site"
+msgstr "Errone nella creazione del sito"
+
+#: src/components/NoTrackDialog.vue:357
+msgid "You must change the date and/or time to create a duplicate"
+msgstr "È necessario modificare la data e/o l'ora per creare un duplicato"
+
+#: src/components/NoTrackDialog.vue:371
+msgid "A flight at the same date and time was recorded"
+msgstr "È stato registrato un volo alla stessa data e ora"
+
+#: src/components/NoTrackDialog.vue:385 src/components/NoTrackDialog.vue:390
+msgid "A flight at the same date and time already exists"
+msgstr "Esiste già un volo alla stessa data e ora"
+
+#: src/components/NoTrackDialog.vue:422 src/components/NoTrackDialog.vue:463
+msgid "Flight"
+msgstr "Volo"
+
+#: src/components/NoTrackDialog.vue:422 src/components/NoTrackDialog.vue:463
+msgid "saved"
+msgstr "salvato"
+
+#: src/components/NoTrackDialog.vue:437 src/components/NoTrackDialog.vue:478
+msgid "Inserting in the flights file failed"
+msgstr "Inserimento fallito nel file dei voli"
+
+#: src/components/OpenLogbook.vue:13
+msgid "Existing logbook"
+msgstr "Registro di volo esistente"
+
+#: src/components/OpenLogbook.vue:22
+msgid "Choose a folder"
+msgstr "Seleziona una cartella"
+
+#: src/components/OpenLogbook.vue:22
+msgid "Open a .db file"
+msgstr "Apri il file .db"
+
+#: src/components/OpenLogbook.vue:27 src/modules/Tracks/views/ImportView.vue:62
+msgid "Reopen"
+msgstr "Riaprire"
+
+#: src/components/OpenLogbook.vue:36
+msgid "Logbooks detected"
+msgstr "Diari di volo rilevati"
+
+#: src/components/OpenLogbook.vue:37
+msgid "Select a logbook"
+msgstr "Seleziona un diario di volo"
+
+#: src/components/OpenLogbook.vue:48
+msgid "New logbook"
+msgstr "Nuovo diario di volo"
+
+#: src/components/OpenLogbook.vue:51
+msgid "Enter a name and click the Create button"
+msgstr "Inserisci un nome e clicca sul pulsante Crea"
+
+#: src/components/OpenLogbook.vue:56
+msgid "Create new logbook"
+msgstr "Crea un nuovo diario di volo"
+
+#: src/components/OpenLogbook.vue:74 src/components/ScoreDialog.vue:47
+#: src/components/TraceInfoDialog.vue:35
+#: src/modules/Routing/components/AirspaceRouteDialog.vue:103
+#: src/modules/Routing/views/AirspacesView.vue:6
+#: src/modules/Routing/views/WaypointView.vue:7
+#: src/modules/Routing/views/XcnavView.vue:7
+#: src/modules/Settings/views/SettingsView.vue:96
+#: src/modules/Tracks/views/ImportView.vue:106
+#: src/modules/Tracks/views/ImportView.vue:232
+msgid "Close"
+msgstr "Chiudi"
+
+#: src/components/OpenLogbook.vue:132
+msgid "In previous versions of Logfly"
+msgstr "Nelle versioni precedenti di Logfly"
+
+#: src/components/OpenLogbook.vue:134
+msgid "The default logbook was logfly.db"
+msgstr "Il registro predefinito era logfly.db"
+
+#: src/components/OpenLogbook.vue:158 src/components/OpenLogbook.vue:209
+msgid "Error creating the logbook"
+msgstr "Errore durante la creazione del registro"
+
+#: src/components/OpenLogbook.vue:232
+msgid "No logbook found in this folder"
+msgstr "Nessun registro trovato in questa cartella"
+
+#: src/components/OpenLogbook.vue:260 src/components/OpenLogbook.vue:288
+msgid "Error reading the file"
+msgstr "Errore durante la lettura del file"
+
+#: src/components/ScoreDialog.vue:5 src/modules/Routing/views/XcnavView.vue:62
+#: src/modules/Tracks/views/LogbookView.vue:138
+msgid "Scoring"
+msgstr "Punteggio"
+
+#: src/components/ScoreDialog.vue:16
+msgid "Choose a scoring rule"
+msgstr "Scegli una regola di punteggio"
+
+#: src/components/ScoreDialog.vue:22
+msgid "Computing score..."
+msgstr "Calcolo del punteggio..."
+
+#: src/components/ScoreDialog.vue:27
+msgid "Result"
+msgstr "Risultato"
+
+#: src/components/ScoreDialog.vue:50
+msgid "Calculate"
+msgstr "Calcolare"
+
+#: src/components/ScoreDialog.vue:131
+msgid "Scoring failed"
+msgstr "Punteggio fallito"
+
+#: src/components/ScoreDialog.vue:135
+msgid "An unexpected error occurred"
+msgstr "Si è verificato un errore imprevisto"
+
+#: src/components/SearchFlightsDialog.vue:6
+msgid "Advanced search"
 msgstr "Ricerca avanzata"
 
-msgid "Filter by tag"
-msgstr "Filtra per tag"
+#: src/components/SearchFlightsDialog.vue:13
+msgid "Start date"
+msgstr "Data di inizio"
 
-msgid "Unfilter"
-msgstr "Non filtrare"
+#: src/components/SearchFlightsDialog.vue:18 src/js/leaflet/map-utils.js:18
+#: src/js/leaflet/map-utils.js:45
+msgid "Start time"
+msgstr "Ora inizio"
 
-msgid "Tag"
-msgstr "Tag"
+#: src/components/SearchFlightsDialog.vue:27
+msgid "End date"
+msgstr "Fine data"
 
-msgid "Merge"
-msgstr "Unisci"
+#: src/components/SearchFlightsDialog.vue:32
+msgid "End time"
+msgstr "Fine orario"
 
-msgid "Analyze"
-msgstr "Analisi"
+#: src/components/SearchFlightsDialog.vue:41
+msgid "Min duration"
+msgstr "Durata minima"
 
+#: src/components/SearchFlightsDialog.vue:52
+msgid "Max duration"
+msgstr "Durata massima"
+
+#: src/components/SearchFlightsDialog.vue:69
+msgid "Search in glider name"
+msgstr "Cerca il nome dalla vela"
+
+#: src/components/SearchFlightsDialog.vue:78
+msgid "Search in site name"
+msgstr "Cerca il nome del sito"
+
+#: src/components/SearchFlightsDialog.vue:85 src/components/SiteForm.vue:64
+#: src/modules/Files/views/SitesView.vue:118
+#: src/modules/Files/views/SitesView.vue:245
+msgid "Country"
+msgstr "Nazione"
+
+#: src/components/SearchFlightsDialog.vue:87
+msgid "Search in country"
+msgstr "Cerca nel paese"
+
+#: src/components/SearchFlightsDialog.vue:96
+msgid "Search in comments"
+msgstr "Cerca nei commenti"
+
+#: src/components/SearchFlightsDialog.vue:103
+msgid "Has photo"
+msgstr "Ha una foto"
+
+#: src/components/SearchFlightsDialog.vue:117
+#: src/modules/Routing/views/AirspacesView.vue:69
+#: src/modules/Routing/views/WaypointView.vue:52
+#: src/modules/Settings/views/SettingsView.vue:86
+msgid "Reset"
+msgstr "Reset"
+
+#: src/components/SearchFlightsDialog.vue:125
+#: src/modules/Equip/views/EquipView.vue:26
+#: src/modules/Files/views/HikeView.vue:23
+#: src/modules/Files/views/SitesView.vue:33
+#: src/modules/Routing/views/AirspacesView.vue:32
+#: src/modules/Settings/views/TranslationView.vue:84
+#: src/modules/Tracks/views/LogbookView.vue:24
+msgid "Search"
+msgstr "Ricerca"
+
+#: src/components/SearchFlightsDialog.vue:240
+msgid "Please enter at least one search criterion"
+msgstr "Inserisci almeno un criterio di ricerca"
+
+#: src/components/SiteForm.vue:5
+msgid "Edit site"
+msgstr "Modifica sito"
+
+#: src/components/SiteForm.vue:5
+msgid "New site"
+msgstr "Nuovo sito"
+
+#: src/components/SiteForm.vue:34 src/modules/Files/views/SitesView.vue:125
+msgid "Orientation"
+msgstr "Orientamento"
+
+#: src/components/SiteForm.vue:49
+msgid "ZIP code"
+msgstr "Codice CAP"
+
+#: src/components/SiteForm.vue:55
+msgid "City"
+msgstr "Città"
+
+#: src/components/SiteForm.vue:158
+msgid "Move marker to change coordinates"
+msgstr "Spostare il marcatore per cambiare le coordinate"
+
+#: src/components/SiteForm.vue:394
+msgid "Latitude must not be null"
+msgstr "La latitudine non deve essere nulla"
+
+#: src/components/SiteForm.vue:401
+msgid "Longitude must not be null"
+msgstr "La longitudine non deve essere nulla"
+
+#: src/components/TagDialog.vue:10
+msgid "Click on the colored button and then OK"
+msgstr "Fare clic sul pulsante colorato e quindi su OK"
+
+#: src/components/TagDialog.vue:24
+msgid "Remove tag"
+msgstr "Rimuovi tag"
+
+#: src/components/TagDialog.vue:28
+msgid "No tag selected"
+msgstr "Nessun tag selezionato"
+
+#: src/components/TagDialog.vue:33
+msgid "No tags checked, continue?"
+msgstr ""
+
+#: src/components/TagDialog.vue:50
+msgid "Ok"
+msgstr "Ok"
+
+#: src/components/TagDialog.vue:90
+msgid "Tag selection"
+msgstr "Selezione dei tag"
+
+#: src/components/TheFooter.vue:27 src/modules/Stat/views/AnnualSummary.vue:149
+#: src/modules/Stat/views/GlobalSummary.vue:93
+msgid "No logbook opened"
+msgstr "Nessun registro aperto"
+
+#: src/components/TheFooter.vue:33
+msgid "To be saved"
+msgstr "Per essere salvati"
+
+#: src/components/TheFooter.vue:33 src/components/TheNavbar.vue:152
+#: src/components/TheNavbar.vue:267
+msgid "Saved"
+msgstr "Salvato"
+
+#: src/components/TheFooter.vue:118
+msgid "Auto-saved logbook"
+msgstr "Registro salvato automaticamente"
+
+#: src/components/TheFooter.vue:153
+msgid "File successfully downloaded"
+msgstr "File scaricato con successo"
+
+#: src/components/TheFooter.vue:157
+msgid "Error downloading file"
+msgstr "Errore durante il download del file"
+
+#: src/components/TheFooter.vue:175
+msgid "Backup copy created"
+msgstr "Copia di backup creata"
+
+#: src/components/TheNavbar.vue:19 src/components/TheNavbar.vue:165
+#: src/components/TheWelcome.vue:81
+msgid "Flights & Tracks"
+msgstr "Voli e tracce"
+
+#: src/components/TheNavbar.vue:24 src/components/TheNavbar.vue:169
+#: src/components/TheWelcome.vue:83
+#: src/modules/Settings/views/SettingsView.vue:138
+msgid "Logbook"
+msgstr "Diario di volo"
+
+#: src/components/TheNavbar.vue:38 src/components/TheNavbar.vue:182
+#: src/components/TheWelcome.vue:105
+msgid "Statistics"
+msgstr "Statistiche"
+
+#: src/components/TheNavbar.vue:44 src/components/TheNavbar.vue:185
+#: src/components/TheWelcome.vue:109
+msgid "Annual summary"
+msgstr "Sommario annuale"
+
+#: src/components/TheNavbar.vue:47 src/components/TheNavbar.vue:188
+#: src/components/TheWelcome.vue:112
+msgid "Global summary"
+msgstr "Sommario globale"
+
+#: src/components/TheNavbar.vue:55 src/components/TheNavbar.vue:195
+#: src/components/TheWelcome.vue:120
+msgid "Routing"
+msgstr "Instradamento"
+
+#: src/components/TheNavbar.vue:61 src/components/TheNavbar.vue:198
+#: src/components/TheWelcome.vue:123
+#: src/modules/Routing/views/XcnavView.vue:361
+msgid "Waypoints"
+msgstr "Waypoints"
+
+#: src/components/TheNavbar.vue:67 src/components/TheNavbar.vue:204
+#: src/components/TheWelcome.vue:127
+msgid "XC Nav"
+msgstr "XC Nav"
+
+#: src/components/TheNavbar.vue:75
+msgid "Sites & Hikes"
+msgstr ""
+
+#: src/components/TheNavbar.vue:81 src/components/TheNavbar.vue:211
+#: src/components/TheNavbar.vue:214 src/components/TheWelcome.vue:136
+#: src/components/TheWelcome.vue:139
+#: src/modules/Stat/views/AnnualSummary.vue:37
+#: src/modules/Stat/views/AnnualSummary.vue:109
+#: src/modules/Stat/views/AnnualSummary.vue:136
+#: src/modules/Stat/views/GlobalSummary.vue:76
+msgid "Sites"
+msgstr "Siti di volo"
+
+#: src/components/TheNavbar.vue:84
+msgid "Hikes"
+msgstr ""
+
+#: src/components/TheNavbar.vue:90 src/components/TheNavbar.vue:220
+#: src/components/TheWelcome.vue:150 src/components/TheWelcome.vue:154
+#: src/modules/Equip/views/EquipView.vue:18
+#: src/modules/Equip/views/EquipView.vue:99
+#: src/modules/Equip/views/EquipView.vue:223
+msgid "Equipment"
+msgstr "Equipaggiamento"
+
+#: src/components/TheNavbar.vue:96 src/components/TheNavbar.vue:226
+#: src/components/TheWelcome.vue:161 src/modules/Files/views/HikeView.vue:87
+#: src/modules/Files/views/SitesView.vue:103
+msgid "Utilities"
+msgstr "Servizi"
+
+#: src/components/TheNavbar.vue:102 src/components/TheNavbar.vue:229
+#: src/components/TheWelcome.vue:164
+#: src/modules/Settings/views/SettingsView.vue:9
+msgid "Settings"
+msgstr "Impostazioni"
+
+#: src/components/TheNavbar.vue:105 src/components/TheNavbar.vue:232
+#: src/components/TheWelcome.vue:166
+#: src/modules/Settings/views/SupportView.vue:11
+msgid "Support"
+msgstr "Supporto"
+
+#: src/components/TheNavbar.vue:108 src/components/TheNavbar.vue:235
+#: src/components/TheWelcome.vue:168
+msgid "Translation"
+msgstr "Traduzione"
+
+#: src/components/TheNavbar.vue:117
+msgid "Help"
+msgstr "Aiuto"
+
+#: src/components/TheNavbar.vue:127
+msgid "Change language"
+msgstr "Cambia lingua"
+
+#: src/components/TheNavbar.vue:150
+msgid "Unsaved changes – click to save"
+msgstr "Modifiche non salvate: fare clic per salvare"
+
+#: src/components/TheNavbar.vue:150
+msgid "All changes saved"
+msgstr "Tutte le modifiche salvate"
+
+#: src/components/TheNavbar.vue:172
+msgid "Import tracks"
+msgstr "Importa tracce"
+
+#: src/components/TheNavbar.vue:244
+#: src/modules/Settings/views/SettingsView.vue:26
+msgid "Language"
+msgstr "Lingua"
+
+#: src/components/TheWelcome.vue:83
+msgid "Access your logbook"
+msgstr "Accedi al tuo diario di volo"
+
+#: src/components/TheWelcome.vue:85
+msgid "Import new flights with or without GPS tracks"
+msgstr "Importa nuovi voli con o senza tracce GPS"
+
+#: src/components/TheWelcome.vue:87
+msgid "Import flights"
+msgstr "Importa voli"
+
+#: src/components/TheWelcome.vue:89
+msgid "Review external GPS tracks"
+msgstr "Esaminare le tracce GPS esterne"
+
+#: src/components/TheWelcome.vue:90
+msgid "External GPS track"
+msgstr "Traccia GPS esterna"
+
+#: src/components/TheWelcome.vue:94
+msgid ""
+"View the demo GPS track, a classic return trip Grand Bornand Semnoz Grand "
+"Bornand"
+msgstr ""
+"Visualizza la traccia GPS dimostrativa, un classico viaggio di andata e "
+"ritorno Grand Bornand Semnoz Grand Bornand"
+
+#: src/components/TheWelcome.vue:107
+msgid "Consult the annual summary of your flights"
+msgstr "Consulta il riepilogo annuale dei tuoi voli"
+
+#: src/components/TheWelcome.vue:110
+msgid "Obtain global statistics of your logbook"
+msgstr "Ottieni statistiche globali del tuo diario di volo"
+
+#: src/components/TheWelcome.vue:122
+msgid "Manage your waypoints"
+msgstr "Gestisci i tuoi waypoint"
+
+#: src/components/TheWelcome.vue:125
+msgid "Visualize and edit airspaces"
+msgstr "Visualizza e modifica gli spazi aerei"
+
+#: src/components/TheWelcome.vue:127
+msgid "Program XC flights"
+msgstr "Programma voli XC"
+
+#: src/components/TheWelcome.vue:138
+msgid "Manage the sites file of your logbook"
+msgstr "Gestisci il file dei siti del tuo registro"
+
+#: src/components/TheWelcome.vue:142
+msgid "Consult the Paragliding Earth database"
+msgstr "Consulta il database di Paragliding Earth"
+
+#: src/components/TheWelcome.vue:152
+msgid "Manage your equipment : purchase, revision..."
+msgstr "Gestisci la tua attrezzatura: acquisto, revisione..."
+
+#: src/components/TheWelcome.vue:163
+msgid "Manage app preferences"
+msgstr "Gestisci le preferenze dell'app"
+
+#: src/components/TheWelcome.vue:165
+msgid "Access support"
+msgstr "Supporto di accesso"
+
+#: src/components/TheWelcome.vue:167
+msgid "Help translate Logfly"
+msgstr "Aiuta a tradurre Logfly"
+
+#: src/components/TraceInfoDialog.vue:126
+#: src/components/TraceInfoDialog.vue:130 src/components/TraceInfoPanel.vue:91
+#: src/components/TraceInfoPanel.vue:95
+msgid "GPS alt"
+msgstr "Alt GPS"
+
+#: src/components/TraceInfoDialog.vue:134 src/components/TraceInfoPanel.vue:99
+msgid "Size"
+msgstr "Dimensione"
+
+#: src/components/TraceInfoDialog.vue:138 src/components/TraceInfoPanel.vue:103
+msgid "Min GPS alt"
+msgstr "Min alt. GPS"
+
+#: src/components/TraceInfoDialog.vue:145 src/components/TraceInfoPanel.vue:110
+msgid "Max gain"
+msgstr "Massimo guadagno"
+
+#: src/components/TraceInfoDialog.vue:146 src/components/TraceInfoPanel.vue:111
+msgid "Max speed"
+msgstr "Massima velocità"
+
+#: src/components/TraceInfoDialog.vue:149 src/components/TraceInfoPanel.vue:114
+msgid "Best glide"
+msgstr "Miglior planata"
+
+#: src/components/TraceInfoDialog.vue:153 src/components/TraceInfoPanel.vue:118
+msgid "Avg glide speed"
+msgstr "Velocità media di planata"
+
+#: src/components/TraceInfoDialog.vue:157 src/components/TraceInfoPanel.vue:122
+#: src/js/leaflet/map-utils.js:11
+msgid "Average climb"
+msgstr "Salita media"
+
+#: src/components/TraceInfoDialog.vue:161 src/components/TraceInfoPanel.vue:126
+msgid "Extraction time"
+msgstr "Tempo di estrazione"
+
+#: src/components/TraceInfoDialog.vue:165 src/components/TraceInfoPanel.vue:130
+msgid "Avg th efficiency"
+msgstr "Avg th efficenza"
+
+#: src/components/TraceInfoDialog.vue:209 src/components/TraceInfoPanel.vue:170
+msgid "Dives"
+msgstr "Dives"
+
+#: src/components/TraceInfoDialog.vue:220 src/components/TraceInfoPanel.vue:180
+msgid "Various"
+msgstr "Varie"
+
+#: src/js/leaflet/map-utils.js:8
+msgid "Altitude gain"
+msgstr "Altezza guadagnata"
+
+#: src/js/leaflet/map-utils.js:13
+msgid "Maximum climb"
+msgstr "Max salita"
+
+#: src/js/leaflet/map-utils.js:14
+msgid "Peak climb"
+msgstr "Picco di salita"
+
+#: src/js/leaflet/map-utils.js:15
+msgid "Efficiency"
+msgstr "Efficienza"
+
+#: src/js/leaflet/map-utils.js:16 src/js/leaflet/map-utils.js:43
+msgid "Start altitude"
+msgstr "Altitudine iniziale"
+
+#: src/js/leaflet/map-utils.js:17 src/js/leaflet/map-utils.js:44
+msgid "Finish altitude"
+msgstr "Altitudine finale"
+
+#: src/js/leaflet/map-utils.js:19 src/js/leaflet/map-utils.js:46
+msgid "Finish time"
+msgstr "Ora fine"
+
+#: src/js/leaflet/map-utils.js:21 src/js/leaflet/map-utils.js:48
+msgid "Cumulative gain"
+msgstr "Guadagno di quota accumulata"
+
+#: src/js/leaflet/map-utils.js:22 src/js/leaflet/map-utils.js:49
+msgid "Cumulative loss"
+msgstr "Perdita di quota accumulata"
+
+#: src/js/leaflet/map-utils.js:23
+msgid "Drift"
+msgstr "Deriva"
+
+#: src/js/leaflet/map-utils.js:33 src/modules/Routing/views/XcnavView.vue:79
+msgid "Distance"
+msgstr "Distanza"
+
+#: src/js/leaflet/map-utils.js:36
+msgid "Average glide"
+msgstr "Rapporto medio di planata"
+
+#: src/js/leaflet/map-utils.js:39
+msgid "Average speed"
+msgstr "Velocità media"
+
+#: src/js/leaflet/map-utils.js:41
+msgid "Altitude change"
+msgstr "Cambio di altitudine"
+
+#: src/js/leaflet/map-utils.js:42
+msgid "Average descent"
+msgstr "Discesa media"
+
+#: src/modules/Equip/views/EquipView.vue:24
+#: src/modules/Files/views/HikeView.vue:36
+#: src/modules/Files/views/HikeView.vue:114
+#: src/modules/Files/views/SitesView.vue:134
+msgid "Add"
+msgstr "Aggiungi"
+
+#: src/modules/Equip/views/EquipView.vue:89
+msgid "Edit record"
+msgstr "Modifica record"
+
+#: src/modules/Equip/views/EquipView.vue:89
+msgid "New record"
+msgstr "Nuovo record"
+
+#: src/modules/Equip/views/EquipView.vue:101
+msgid "Click on Glider button or Other button"
+msgstr "Fare clic sul pulsante Vela o sul pulsante Altro"
+
+#: src/modules/Equip/views/EquipView.vue:112
+#: src/modules/Routing/components/AirspaceRouteDialog.vue:54
+msgid "Other"
+msgstr "Altro"
+
+#: src/modules/Equip/views/EquipView.vue:117
+msgid "Select a glider"
+msgstr "Seleziona una vela"
+
+#: src/modules/Equip/views/EquipView.vue:123
+msgid "Enter equipment"
+msgstr "Inserisci l'attrezzatura"
+
+#: src/modules/Equip/views/EquipView.vue:130
+msgid "Clear"
+msgstr "Clear"
+
+#: src/modules/Equip/views/EquipView.vue:138
+#: src/modules/Equip/views/EquipView.vue:224
+msgid "Operation"
+msgstr "Operazione"
+
+#: src/modules/Equip/views/EquipView.vue:142
+msgid "Price"
+msgstr "Prezzo"
+
+#: src/modules/Equip/views/EquipView.vue:210
+msgid "You can record all operations"
+msgstr "È possibile registrare tutte le operazioni"
+
+#: src/modules/Equip/views/EquipView.vue:211
+msgid "purchase"
+msgstr "acquisto"
+
+#: src/modules/Equip/views/EquipView.vue:212
+msgid "sale"
+msgstr "vendita"
+
+#: src/modules/Equip/views/EquipView.vue:213
+msgid "overhaul"
+msgstr "revisione"
+
+#: src/modules/Equip/views/EquipView.vue:214
+msgid "emergency folding"
+msgstr "ripiegamento emergenza"
+
+#: src/modules/Equip/views/EquipView.vue:215
+msgid "chocking"
+msgstr "bloccaggio"
+
+#: src/modules/Equip/views/EquipView.vue:216
+msgid "etc"
+msgstr "etc"
+
+#: src/modules/Equip/views/EquipView.vue:406
+msgid "Are you sure you want to delete this record?"
+msgstr "Sei sicuro di voler eliminare questo record?"
+
+#: src/modules/Equip/views/EquipView.vue:411
+msgid "Record deleted"
+msgstr "Record eliminato"
+
+#: src/modules/Equip/views/EquipView.vue:416
+msgid "Error deleting record"
+msgstr "Errore durante l'eliminazione del record"
+
+#: src/modules/Equip/views/EquipView.vue:447
+msgid "registered"
+msgstr "registrato"
+
+#: src/modules/Equip/views/EquipView.vue:447
+msgid "for"
+msgstr "per"
+
+#: src/modules/Equip/views/EquipView.vue:473
+msgid "Date is required"
+msgstr "La data è obbligatoria"
+
+#: src/modules/Equip/views/EquipView.vue:478
+msgid "Equipment is required"
+msgstr "È richiesta l'attrezzatura"
+
+#: src/modules/Equip/views/EquipView.vue:483
+msgid "Operation is required"
+msgstr "È richiesta l'operazione"
+
+#: src/modules/Equip/views/EquipView.vue:506
+msgid "Record updated"
+msgstr "Record aggiornato"
+
+#: src/modules/Equip/views/EquipView.vue:506
+msgid "Record created"
+msgstr "Record creato"
+
+#: src/modules/Equip/views/EquipView.vue:513
+msgid "Error saving record"
+msgstr "Errore durante il salvataggio del record"
+
+#: src/modules/Files/views/HikeView.vue:30
+#, fuzzy
+msgid "No hike recorded"
+msgstr "Nuovo record"
+
+#: src/modules/Files/views/HikeView.vue:31
+msgid "Would you like to add a new hike"
+msgstr ""
+
+#: src/modules/Files/views/HikeView.vue:72
+#, fuzzy
+msgid "Hike details"
+msgstr "Dettagli sito"
+
+#: src/modules/Files/views/HikeView.vue:151
+#: src/modules/Tracks/views/LogbookView.vue:154
 msgid "Export IGC"
 msgstr "Esporta IGC"
 
+#: src/modules/Files/views/HikeView.vue:155
+#: src/modules/Tracks/views/LogbookView.vue:156
 msgid "Export GPX"
 msgstr "Esporta GPX"
 
+#: src/modules/Files/views/HikeView.vue:164
+#, fuzzy
+msgid "Select a hike to display details"
+msgstr "Seleziona un sito per visualizzare i dettagli"
+
+#: src/modules/Files/views/HikeView.vue:214
+msgid "Elev. (m)"
+msgstr ""
+
+#: src/modules/Files/views/HikeView.vue:420
+#, fuzzy
+msgid "Hike created successfully"
+msgstr "Sito creato con successo"
+
+#: src/modules/Files/views/HikeView.vue:425
+#, fuzzy
+msgid "Error creating hike"
+msgstr "Errone nella creazione del sito"
+
+#: src/modules/Files/views/HikeView.vue:450
+#, fuzzy
+msgid "Hike updated successfully"
+msgstr "Sito aggiornato con successo"
+
+#: src/modules/Files/views/HikeView.vue:457
+#, fuzzy
+msgid "Error updating hike"
+msgstr "Errore durante l'aggiornamento del sito"
+
+#: src/modules/Files/views/HikeView.vue:472
+#, fuzzy
+msgid "Hike deleted"
+msgstr "Sito cancellato"
+
+#: src/modules/Files/views/HikeView.vue:477
+#, fuzzy
+msgid "Error deleting hike"
+msgstr "Errore durante l'eliminazione del sito"
+
+#: src/modules/Files/views/HikeView.vue:502
+#: src/modules/Files/views/SitesView.vue:557
+msgid "Comment saved"
+msgstr "Commento salvato"
+
+#: src/modules/Files/views/HikeView.vue:502
+#: src/modules/Files/views/SitesView.vue:557
+msgid "Comment deleted"
+msgstr "Commento cancellato"
+
+#: src/modules/Files/views/SitesView.vue:27
+msgid "Not defined"
+msgstr "Non definito"
+
+#: src/modules/Files/views/SitesView.vue:88
+msgid "Site details"
+msgstr "Dettagli sito"
+
+#: src/modules/Files/views/SitesView.vue:116
+#: src/modules/Files/views/SitesView.vue:242
+msgid "Locality"
+msgstr "Località"
+
+#: src/modules/Files/views/SitesView.vue:123
+#: src/modules/Routing/views/WaypointView.vue:89
+#: src/modules/Routing/views/WaypointView.vue:374
+msgid "Altitude"
+msgstr "Altitudine"
+
+#: src/modules/Files/views/SitesView.vue:127
+msgid "Updated"
+msgstr "Aggiornato"
+
+#: src/modules/Files/views/SitesView.vue:172
+msgid "Cleaning"
+msgstr "Pulizia"
+
+#: src/modules/Files/views/SitesView.vue:189
+msgid "Select a site to display details"
+msgstr "Seleziona un sito per visualizzare i dettagli"
+
+#: src/modules/Files/views/SitesView.vue:243
+msgid "ZIP"
+msgstr "CAP"
+
+#: src/modules/Files/views/SitesView.vue:459
+msgid "Site created successfully"
+msgstr "Sito creato con successo"
+
+#: src/modules/Files/views/SitesView.vue:489
+msgid "Site updated successfully"
+msgstr "Sito aggiornato con successo"
+
+#: src/modules/Files/views/SitesView.vue:499
+msgid "Error updating site"
+msgstr "Errore durante l'aggiornamento del sito"
+
+#: src/modules/Files/views/SitesView.vue:511
+msgid "Delete site"
+msgstr "Cancella sito"
+
+#: src/modules/Files/views/SitesView.vue:516
+msgid "Site deleted"
+msgstr "Sito cancellato"
+
+#: src/modules/Files/views/SitesView.vue:521
+msgid "Error deleting site"
+msgstr "Errore durante l'eliminazione del sito"
+
+#: src/modules/Files/views/SitesView.vue:585
+msgid "Displaying duplicates"
+msgstr "Visualizzazione dei duplicati"
+
+#: src/modules/Files/views/SitesView.vue:585
+msgid "sites"
+msgstr "siti"
+
+#: src/modules/Files/views/SitesView.vue:596
+msgid "No duplicates found"
+msgstr "Nessun duplicato trovato"
+
+#: src/modules/Files/views/SitesView.vue:607
+msgid "Delete all duplicate sites? This action cannot be undone."
+msgstr ""
+"Vuoi eliminare tutti i siti duplicati? Questa azione non può essere "
+"annullata."
+
+#: src/modules/Files/views/SitesView.vue:614
+msgid "Duplicates removed successfully"
+msgstr "Duplicati rimossi con successo"
+
+#: src/modules/Files/views/SitesView.vue:620
+msgid "Error removing duplicates"
+msgstr "Errore durante la rimozione dei duplicati"
+
+#: src/modules/Routing/components/AirspaceRouteDialog.vue:15
+msgid "Classes"
+msgstr "Classi"
+
+#: src/modules/Routing/components/AirspaceRouteDialog.vue:36
+msgid "Types"
+msgstr "Tipi"
+
+#: src/modules/Routing/components/AirspaceRouteDialog.vue:38
+msgid "Prohibited"
+msgstr "Proibita"
+
+#: src/modules/Routing/components/AirspaceRouteDialog.vue:40
+msgid "Restricted"
+msgstr "Limitata"
+
+#: src/modules/Routing/components/AirspaceRouteDialog.vue:42
+msgid "Danger"
+msgstr "Pericolo"
+
+#: src/modules/Routing/components/AirspaceRouteDialog.vue:52
+msgid "Gliding"
+msgstr "Gliding"
+
+#: src/modules/Routing/components/AirspaceRouteDialog.vue:61
+msgid "Floor limit"
+msgstr "Limite di terra"
+
+#: src/modules/Routing/components/AirspaceRouteDialog.vue:74
+msgid "Radius"
+msgstr "Raggio"
+
+#: src/modules/Routing/views/AirspacesView.vue:14
+#: src/modules/Routing/views/WaypointView.vue:15
+msgid "Select a file"
+msgstr "Seleziona il file"
+
+#: src/modules/Routing/views/AirspacesView.vue:57
+msgid "Zone selection"
+msgstr "Totali per la selezione"
+
+#: src/modules/Routing/views/AirspacesView.vue:62
+msgid "Cancel selection"
+msgstr "Totali per la selezione"
+
+#: src/modules/Routing/views/AirspacesView.vue:80
+msgid "Open Air format"
+msgstr "Formato Open Air"
+
+#: src/modules/Routing/views/AirspacesView.vue:83
+msgid "GPX Format"
+msgstr "Esportazione GPX"
+
+#: src/modules/Routing/views/AirspacesView.vue:98
+msgid "No airspace file loaded"
+msgstr "Nessun file di spazio aereo caricato"
+
+#: src/modules/Routing/views/AirspacesView.vue:371
+msgid "No airspace found"
+msgstr "Nessuno spazio aereo trovato"
+
+#: src/modules/Routing/views/AirspacesView.vue:387
+msgid "Bazile file loaded successfully"
+msgstr "File Bazile caricato correttamente"
+
+#: src/modules/Routing/views/AirspacesView.vue:389
+msgid "Error downloading Bazile file"
+msgstr "Errore durante il download del file Bazile"
+
+#: src/modules/Routing/views/AirspacesView.vue:393
+msgid "Error"
+msgstr "Errore"
+
+#: src/modules/Routing/views/AirspacesView.vue:416
+msgid "No valid airspaces found in file"
+msgstr "Nessuno spazio aereo valido trovato nel file"
+
+#: src/modules/Routing/views/AirspacesView.vue:736
+msgid "No airspaces selected"
+msgstr "Nessuno spazio aereo selezionato"
+
+#: src/modules/Routing/views/AirspacesView.vue:817
+msgid "Click and drag to draw a selection rectangle"
+msgstr "Fare clic e trascinare per disegnare un rettangolo di selezione"
+
+#: src/modules/Routing/views/AirspacesView.vue:879
+msgid "Selection too small, please draw a larger rectangle"
+msgstr "Selezione troppo piccola, disegna un rettangolo più grande"
+
+#: src/modules/Routing/views/AirspacesView.vue:909
+msgid "Selection cancelled"
+msgstr "Selezione annullata"
+
+#: src/modules/Routing/views/AirspacesView.vue:956
+msgid "No airspaces in selection area"
+msgstr "Nessuno spazio aereo nell'area di selezione"
+
+#: src/modules/Routing/views/AirspacesView.vue:992
+msgid "Selection cancelled, airspaces restored"
+msgstr "Selezione annullata, spazi aerei ripristinati"
+
+#: src/modules/Routing/views/WaypointView.vue:21
+#: src/modules/Routing/views/WaypointView.vue:331
+msgid "New set"
+msgstr "Nuovo set"
+
+#: src/modules/Routing/views/WaypointView.vue:68
+msgid "New waypoint"
+msgstr "Nuovo waypoint"
+
+#: src/modules/Routing/views/WaypointView.vue:68
+msgid "Edit waypoint"
+msgstr "Modifica waypoint"
+
+#: src/modules/Routing/views/WaypointView.vue:75
+msgid "Standard"
+msgstr "Standard"
+
+#: src/modules/Routing/views/WaypointView.vue:85
+msgid "Short name"
+msgstr "Nome breve"
+
+#: src/modules/Routing/views/WaypointView.vue:107
+msgid "Click on map to set position"
+msgstr "Clicca sulla mappa per impostare la posizione"
+
+#: src/modules/Routing/views/WaypointView.vue:132
+msgid "New"
+msgstr "Nuovo"
+
+#: src/modules/Routing/views/WaypointView.vue:165
+msgid "Center on map"
+msgstr "Centra sulla mappa"
+
+#: src/modules/Routing/views/WaypointView.vue:308
+msgid "Error reading file"
+msgstr "Errore durante la lettura del file"
+
+#: src/modules/Routing/views/WaypointView.vue:326
+msgid "No waypoints found"
+msgstr "Nessun waypoint trovato"
+
+#: src/modules/Routing/views/WaypointView.vue:373
+msgid "Short"
+msgstr "Breve"
+
+#: src/modules/Routing/views/WaypointView.vue:375
+msgid "Lat"
+msgstr "Latitudine"
+
+#: src/modules/Routing/views/WaypointView.vue:376
+msgid "Lon"
+msgstr "Longitudine"
+
+#: src/modules/Routing/views/WaypointView.vue:520
+msgid "Waypoint added"
+msgstr "Waypoint aggiunto"
+
+#: src/modules/Routing/views/WaypointView.vue:536
+msgid "Waypoint updated"
+msgstr "Waypoint aggiornato"
+
+#: src/modules/Routing/views/WaypointView.vue:549
+msgid "Waypoint deleted"
+msgstr "Waypoint cancellato"
+
+#: src/modules/Routing/views/WaypointView.vue:594
+msgid "No waypoints selected for export"
+msgstr "Nessun waypoint selezionato per l'esportazione"
+
+#: src/modules/Routing/views/WaypointView.vue:602
+msgid "Export successful"
+msgstr "Esportazione riuscita"
+
+#: src/modules/Routing/views/WaypointView.vue:604
+#: src/modules/Routing/views/XcnavView.vue:1887
+msgid "Export failed"
+msgstr "Esportazione fallita"
+
+#: src/modules/Routing/views/XcnavView.vue:14
+msgid "Route"
+msgstr "Strada"
+
+#: src/modules/Routing/views/XcnavView.vue:18
+msgid "Track"
+msgstr "Traccia"
+
+#: src/modules/Routing/views/XcnavView.vue:40
+msgid "Total distance"
+msgstr "Distanza totale"
+
+#: src/modules/Routing/views/XcnavView.vue:53
+msgid "Speed"
+msgstr "Velocità"
+
+#: src/modules/Routing/views/XcnavView.vue:85
+msgid "Points"
+msgstr "Punti"
+
+#: src/modules/Routing/views/XcnavView.vue:98
+msgid "Draw a route"
+msgstr "Disegna un percorso"
+
+#: src/modules/Routing/views/XcnavView.vue:106
+msgid "Add marker"
+msgstr "Aggiungi marcatore"
+
+#: src/modules/Routing/views/XcnavView.vue:115
+msgid "Clear route"
+msgstr "Percorso libero"
+
+#: src/modules/Routing/views/XcnavView.vue:122
+#: src/modules/Routing/views/XcnavView.vue:157
+msgid "Save route"
+msgstr "Salva percorso"
+
+#: src/modules/Routing/views/XcnavView.vue:131
+msgid "Measure"
+msgstr "Misura"
+
+#: src/modules/Routing/views/XcnavView.vue:138
+msgid "Center on route"
+msgstr "Centro sul percorso"
+
+#: src/modules/Routing/views/XcnavView.vue:161
+msgid "Export format"
+msgstr "Formato di esportazione"
+
+#: src/modules/Routing/views/XcnavView.vue:162
+#: src/modules/Routing/views/XcnavView.vue:165
+msgid "Include markers"
+msgstr "Includi marcatori"
+
+#: src/modules/Routing/views/XcnavView.vue:166
+msgid "not supported"
+msgstr "non supportato"
+
+#: src/modules/Routing/views/XcnavView.vue:263
+#: src/modules/Routing/views/XcnavView.vue:325
+#: src/modules/Routing/views/XcnavView.vue:838
+#: src/modules/Routing/views/XcnavView.vue:1203
+#: src/modules/Routing/views/XcnavView.vue:1226
+#: src/modules/Routing/views/XcnavView.vue:1232
+#: src/modules/Routing/views/XcnavView.vue:1897
+msgid "Open distance"
+msgstr "Distanza aperta"
+
+#: src/modules/Routing/views/XcnavView.vue:362
+msgid "Tracks"
+msgstr "Tracce"
+
+#: src/modules/Routing/views/XcnavView.vue:394
+msgid "Click on map to add route points. Press Escape to finish."
+msgstr ""
+"Clicca sulla mappa per aggiungere punti del percorso. Premi Esc per "
+"terminare."
+
+#: src/modules/Routing/views/XcnavView.vue:570
+msgid "Continue drawing from last point"
+msgstr "Continua a disegnare dall'ultimo punto"
+
+#: src/modules/Routing/views/XcnavView.vue:583
+msgid "Point"
+msgstr "Punto"
+
+#: src/modules/Routing/views/XcnavView.vue:586
+msgid "Drag to move"
+msgstr "Trascina per spostare"
+
+#: src/modules/Routing/views/XcnavView.vue:588
+msgid "Click to delete"
+msgstr "Clicca per cancellare"
+
+#: src/modules/Routing/views/XcnavView.vue:591
+msgid "Ctrl/Cmd+click to continue"
+msgstr "Ctrl/Cmd+clic per continuare"
+
+#: src/modules/Routing/views/XcnavView.vue:693
+msgid "Point inserted"
+msgstr "Punto inserito"
+
+#: src/modules/Routing/views/XcnavView.vue:696
+msgid "Click or drag to insert point"
+msgstr "Fare clic o trascinare per inserire il punto"
+
+#: src/modules/Routing/views/XcnavView.vue:741
+msgid "Cannot delete: minimum 2 points required"
+msgstr "Impossibile eliminare: sono richiesti almeno 2 punti"
+
+#: src/modules/Routing/views/XcnavView.vue:745
+msgid "Cannot delete the start point"
+msgstr "Impossibile eliminare il punto di partenza"
+
+#: src/modules/Routing/views/XcnavView.vue:752
+msgid "Point deleted"
+msgstr "Punto cancellato"
+
+#: src/modules/Routing/views/XcnavView.vue:877
+msgid "Route cleared"
+msgstr "Percorso liberato"
+
+#: src/modules/Routing/views/XcnavView.vue:897
+msgid "Click on map to add a marker"
+msgstr "Clicca sulla mappa per aggiungere un marcatore"
+
+#: src/modules/Routing/views/XcnavView.vue:930
+msgid "Marker added"
+msgstr "Marcatore aggiunto"
+
+#: src/modules/Routing/views/XcnavView.vue:960
+msgid "Click to add points, double-click to finish"
+msgstr "Fare clic per aggiungere punti, fare doppio clic per terminare"
+
+#: src/modules/Routing/views/XcnavView.vue:1544
+msgid "Route loaded"
+msgstr "Percorso caricato"
+
+#: src/modules/Routing/views/XcnavView.vue:1546
+msgid "markers"
+msgstr "marcatori"
+
+#: src/modules/Routing/views/XcnavView.vue:1550
+msgid "No route found in file"
+msgstr "Nessun percorso trovato nel file"
+
+#: src/modules/Routing/views/XcnavView.vue:1554
+msgid "Error loading route"
+msgstr "Errore durante il caricamento del percorso"
+
+#: src/modules/Routing/views/XcnavView.vue:1580
+msgid "No valid track data found"
+msgstr "Nessun dato di traccia valido trovato"
+
+#: src/modules/Routing/views/XcnavView.vue:1585
+msgid "GPX track loaded"
+msgstr "Traccia GPX caricata"
+
+#: src/modules/Routing/views/XcnavView.vue:1591
+msgid "Error loading track"
+msgstr "Errore durante il caricamento della traccia"
+
+#: src/modules/Routing/views/XcnavView.vue:1795
+msgid "No airspaces to display"
+msgstr "Nessuno spazio aereo da visualizzare"
+
+#: src/modules/Routing/views/XcnavView.vue:1851
+msgid "Route must have at least 2 points"
+msgstr "Il percorso deve avere almeno 2 punti"
+
+#: src/modules/Routing/views/XcnavView.vue:1884
+msgid "Route exported successfully"
+msgstr "Percorso esportato con successo"
+
+#: src/modules/Settings/views/SettingsView.vue:10
+msgid "Configure your preferences"
+msgstr "Configura le tue preferenze"
+
+#: src/modules/Settings/views/SettingsView.vue:18
+msgid "Startup"
+msgstr "Avvio"
+
+#: src/modules/Settings/views/SettingsView.vue:34
+msgid "Pilot name"
+msgstr "Nome pilota"
+
+#: src/modules/Settings/views/SettingsView.vue:42
+msgid "Glider name"
+msgstr "Nome vela"
+
+#: src/modules/Settings/views/SettingsView.vue:50
+msgid "Default map layer"
+msgstr "Livello mappa predefinito"
+
+#: src/modules/Settings/views/SettingsView.vue:57
+msgid "League"
+msgstr "Lega"
+
+#: src/modules/Settings/views/SettingsView.vue:64
+msgid "Identifier"
+msgstr "Identificatore"
+
+#: src/modules/Settings/views/SettingsView.vue:71
+msgid "Password"
+msgstr "Password"
+
+#: src/modules/Settings/views/SettingsView.vue:137
+msgid "Home"
+msgstr "Home"
+
+#: src/modules/Settings/views/SettingsView.vue:177
+msgid "Settings saved successfully"
+msgstr "Impostazioni salvate correttamente"
+
+#: src/modules/Settings/views/SettingsView.vue:180
+#: src/modules/Settings/views/SettingsView.vue:184
+msgid "Error saving settings"
+msgstr "Errore durante il salvataggio delle impostazioni"
+
+#: src/modules/Settings/views/SettingsView.vue:197
+msgid "Settings restored"
+msgstr "Impostazioni ripristinate"
+
+#: src/modules/Settings/views/SupportView.vue:11
+msgid "Contact"
+msgstr "Contatto"
+
+#: src/modules/Settings/views/SupportView.vue:12
+msgid "Need help"
+msgstr "Hai bisogno di aiuto?"
+
+#: src/modules/Settings/views/SupportView.vue:12
+msgid "Have a question or suggestion"
+msgstr "Hai una domanda o un suggerimento?"
+
+#: src/modules/Settings/views/SupportView.vue:13
+msgid "Contact the Logfly support our online form"
+msgstr "Contatta il supporto Logfly tramite il nostro modulo online"
+
+#: src/modules/Settings/views/SupportView.vue:18
+msgid "Open Contact Form"
+msgstr "Apri il modulo di contatto"
+
+#: src/modules/Settings/views/SupportView.vue:27
+msgid "Bug reports"
+msgstr "Segnalazioni di bug"
+
+#: src/modules/Settings/views/SupportView.vue:36
+msgid "Languages"
+msgstr "Linguaggio"
+
+#: src/modules/Settings/views/SupportView.vue:37
+msgid "French"
+msgstr "Francese"
+
+#: src/modules/Settings/views/SupportView.vue:37
+msgid "English"
+msgstr "Inglese"
+
+#: src/modules/Settings/views/TranslationView.vue:8
+#: src/modules/Settings/views/TranslationView.vue:72
+msgid "Translation Editor"
+msgstr "Editor di traduzione"
+
+#: src/modules/Settings/views/TranslationView.vue:22
+msgid "Continue a translation"
+msgstr "Continua una traduzione"
+
+#: src/modules/Settings/views/TranslationView.vue:45
+msgid "New translation"
+msgstr "Nuova traduzione"
+
+#: src/modules/Settings/views/TranslationView.vue:48
+msgid "Select a language"
+msgstr "Seleziona linguaggio"
+
+#: src/modules/Settings/views/TranslationView.vue:59
+msgid "Load from file"
+msgstr "Carica da file"
+
+#: src/modules/Settings/views/TranslationView.vue:75
+msgid "Loading translations"
+msgstr "Caricamento delle traduzioni"
+
+#: src/modules/Settings/views/TranslationView.vue:87
+msgid "Already translated"
+msgstr "Già tradotto"
+
+#: src/modules/Settings/views/TranslationView.vue:97
+msgid "Change"
+msgstr "Modificare"
+
+#: src/modules/Settings/views/TranslationView.vue:106
+msgid "Untranslated"
+msgstr "Non tradotto"
+
+#: src/modules/Settings/views/TranslationView.vue:153
+msgid "Download"
+msgstr "Download"
+
+#: src/modules/Settings/views/TranslationView.vue:157
+msgid "Save to server"
+msgstr "Salva sul server"
+
+#: src/modules/Settings/views/TranslationView.vue:426
+msgid "Firebase not configured. Using local mode only."
+msgstr "Firebase non configurato. Utilizzo solo della modalità locale."
+
+#: src/modules/Settings/views/TranslationView.vue:445
+msgid "Could not connect to server"
+msgstr "Impossibile connettersi al server"
+
+#: src/modules/Settings/views/TranslationView.vue:648
+msgid "Translation saved successfully!"
+msgstr "Traduzione salvata con successo!"
+
+#: src/modules/Settings/views/TranslationView.vue:653
+msgid "Error saving translation"
+msgstr "Errore durante il salvataggio della traduzione"
+
+#: src/modules/Stat/views/AnnualSummary.vue:21
+#: src/modules/Stat/views/AnnualSummary.vue:90
+#: src/modules/Stat/views/AnnualSummary.vue:496
+msgid "Hours"
+msgstr "Ore"
+
+#: src/modules/Stat/views/AnnualSummary.vue:29
+#: src/modules/Stat/views/AnnualSummary.vue:104
+#: src/modules/Stat/views/AnnualSummary.vue:136
+#: src/modules/Stat/views/GlobalSummary.vue:75
+msgid "Gliders"
+msgstr "Vele"
+
+#: src/modules/Stat/views/AnnualSummary.vue:50
+msgid "Reference"
+msgstr "Riferimento"
+
+#: src/modules/Stat/views/AnnualSummary.vue:57
+msgid "Months"
+msgstr "Mesi"
+
+#: src/modules/Stat/views/AnnualSummary.vue:93
+msgid "Compare"
+msgstr "Confrontare"
+
+#: src/modules/Stat/views/AnnualSummary.vue:117
+msgid "Fl."
+msgstr "Vl."
+
+#: src/modules/Stat/views/AnnualSummary.vue:472
+msgid "Flight time comparison"
+msgstr "Confronto dei tempi di volo"
+
+#: src/modules/Stat/views/AnnualSummary.vue:472
+msgid "Flight comparison"
+msgstr "Confronto voli"
+
+#: src/modules/Stat/views/GlobalSummary.vue:12
+msgid "Yearly chart"
+msgstr "Grafico annuale"
+
+#: src/modules/Stat/views/GlobalSummary.vue:16
+msgid "Monthly chart"
+msgstr "Grafico mensile"
+
+#: src/modules/Stat/views/GlobalSummary.vue:20
+msgid "Gliders chart"
+msgstr "Tabella vele"
+
+#: src/modules/Stat/views/GlobalSummary.vue:24
+msgid "Sites chart"
+msgstr "Grafico dei siti"
+
+#: src/modules/Stat/views/GlobalSummary.vue:44
+msgid "YEARS"
+msgstr "ANNI"
+
+#: src/modules/Stat/views/GlobalSummary.vue:45
+msgid "MONTHES"
+msgstr "MESI"
+
+#: src/modules/Stat/views/GlobalSummary.vue:64
+#: src/modules/Stat/views/GlobalSummary.vue:65
+msgid "year"
+msgstr "anno"
+
+#: src/modules/Stat/views/GlobalSummary.vue:85
+msgid "Select a chart type to display statistics"
+msgstr "Seleziona un tipo di grafico per visualizzare le statistiche"
+
+#: src/modules/Tracks/js/device-descriptions.js:9
+msgid "Click Select and from the USB drives"
+msgstr "Fare clic su Seleziona e dalle unità USB"
+
+#: src/modules/Tracks/js/device-descriptions.js:10
+msgid "select the one containing"
+msgstr "seleziona quello contenente"
+
+#: src/modules/Tracks/js/device-descriptions.js:11
+msgid "Validate and click Import"
+msgstr "Convalida e fai clic su Importa"
+
+#: src/modules/Tracks/js/device-descriptions.js:13
+msgid "The browser cannot read this type of GPS directly"
+msgstr "Il browser non può leggere direttamente questo tipo di GPS"
+
+#: src/modules/Tracks/js/device-descriptions.js:14
+msgid "There are two solutions"
+msgstr "Ci sono due soluzioni"
+
+#: src/modules/Tracks/js/device-descriptions.js:15
+msgid ""
+"- Install the LogflyGPS import software. It will update the logbook directly"
+msgstr ""
+"- Installa il software di importazione LogflyGPS. Aggiornerà direttamente il "
+"registro"
+
+#: src/modules/Tracks/js/device-descriptions.js:16
+msgid "- use the manufacturer software to download the flight logs"
+msgstr ""
+"- utilizzare il software del produttore per scaricare i registri di volo"
+
+#: src/modules/Tracks/js/device-descriptions.js:17
+msgid "then import the downloaded files with the \"Import from Folder\" option"
+msgstr ""
+"quindi importare i file scaricati con l'opzione \"Importa da cartella\""
+
+#: src/modules/Tracks/js/device-descriptions.js:21
+msgid "Plug in the XCTracer and briefly press the button"
+msgstr "Collegare l'XCTracer e premere brevemente il pulsante"
+
+#: src/modules/Tracks/js/device-descriptions.js:24
+msgid "a XC**.txt file and files in igc format"
+msgstr "un file XC**.txt e file in formato igc"
+
+#: src/modules/Tracks/js/device-descriptions.js:28
+msgid "Plug in the Skytraax 2"
+msgstr "Collega Skytraax 2"
+
+#: src/modules/Tracks/js/device-descriptions.js:31
+#: src/modules/Tracks/js/device-descriptions.js:38
+#: src/modules/Tracks/js/device-descriptions.js:67
+msgid "a 'flights' folder and a 'waypoints' folder"
+msgstr "una cartella \"voli\" e una cartella \"waypoint\""
+
+#: src/modules/Tracks/js/device-descriptions.js:35
+msgid "Plug in the Skytraax 3/4/5"
+msgstr "Collega Skytraax 3/4/5"
+
+#: src/modules/Tracks/js/device-descriptions.js:42
+msgid "Using SysPC Tools may be an option"
+msgstr "L'utilizzo di SysPC Tools potrebbe essere un'opzione"
+
+#: src/modules/Tracks/js/device-descriptions.js:43
+msgid "Plug in the NavXL, select mass storage"
+msgstr "Collega il NavXL, seleziona l'archiviazione di massa"
+
+#: src/modules/Tracks/js/device-descriptions.js:46
+msgid "an 'IGC' folder"
+msgstr "una cartella 'IGC'"
+
+#: src/modules/Tracks/js/device-descriptions.js:50
+msgid "Plug in the Oudie"
+msgstr "Collega l'Oudie"
+
+#: src/modules/Tracks/js/device-descriptions.js:53
+msgid "a 'Flights' folder, a 'Waypoints' folder"
+msgstr "una cartella 'Voli', una cartella 'Waypoint'"
+
+#: src/modules/Tracks/js/device-descriptions.js:57
+msgid "Plug in the CPilot"
+msgstr "Collega il CPilot"
+
+#: src/modules/Tracks/js/device-descriptions.js:60
+msgid "a 'tracks' folder, a 'display' folder"
+msgstr "una cartella 'tracce', una cartella 'visualizzazione'"
+
+#: src/modules/Tracks/js/device-descriptions.js:64
+msgid "Plug in the Element"
+msgstr "Collega l'elemento"
+
+#: src/modules/Tracks/js/device-descriptions.js:71
+msgid "Plug in the Connect"
+msgstr "Collega Connect"
+
+#: src/modules/Tracks/js/device-descriptions.js:74
+msgid "a flights folder and a waypoints folder"
+msgstr "una cartella dei voli e una cartella dei waypoint"
+
+#: src/modules/Tracks/js/device-descriptions.js:78
+msgid "Plug in the Reversale"
+msgstr "Collega l'inversione"
+
+#: src/modules/Tracks/js/device-descriptions.js:81
+msgid "a 'LOG' folder and a 'PARAM.VGP' file"
+msgstr "una cartella 'LOG' e un file 'PARAM.VGP'"
+
+#: src/modules/Tracks/js/device-descriptions.js:85
+msgid "Plug in the Skydrop"
+msgstr "Collega Skydrop"
+
+#: src/modules/Tracks/js/device-descriptions.js:88
+msgid "a 'LOGS' folder and a 'AIR' folder"
+msgstr "una cartella 'LOGS' e una cartella 'AIR'"
+
+#: src/modules/Tracks/js/device-descriptions.js:92
+msgid "Plug in the Varduino"
+msgstr "Collega il Varduino"
+
+#: src/modules/Tracks/js/device-descriptions.js:95
+msgid "a 'igc' folder and an 'audio' folder"
+msgstr "una cartella 'igc' e una cartella 'audio'"
+
+#: src/modules/Tracks/js/device-descriptions.js:99
+msgid "Plug in the Flynet"
+msgstr "Collega Flynet"
+
+#: src/modules/Tracks/js/device-descriptions.js:102
+msgid "a CONFIG.TXT file and files in igc format"
+msgstr "un file CONFIG.TXT e file in formato igc"
+
+#: src/modules/Tracks/js/device-descriptions.js:106
+msgid "Plug in the Sensbox"
+msgstr "Collega il Sensbox"
+
+#: src/modules/Tracks/js/device-descriptions.js:109
+msgid "a 'tracks' folder and a 'system' folder"
+msgstr "una cartella \"tracce\" e una cartella \"sistema\""
+
+#: src/modules/Tracks/js/device-descriptions.js:117
+#: src/modules/Tracks/views/ImportView.vue:48
+#: src/modules/Tracks/views/ImportView.vue:283
+#: src/modules/Tracks/views/ImportView.vue:383
+msgid "Folder"
+msgstr "Cartella"
+
+#: src/modules/Tracks/js/device-descriptions.js:118
+msgid "Select a folder containing track files (IGC or GPX)"
+msgstr "Seleziona una cartella contenente i file traccia (IGC o GPX)"
+
+#: src/modules/Tracks/js/device-descriptions.js:122
+msgid "Select the folder defined by Sys PC Tools"
+msgstr "Selezionare la cartella definita da Sys PC Tools"
+
+#: src/modules/Tracks/js/device-descriptions.js:123
+msgid ""
+"By default, Sys-PC-Tool create a folder in user.home directory called "
+"\"parapente\""
+msgstr ""
+"Per impostazione predefinita, Sys-PC-Tool crea una cartella nella directory "
+"user.home chiamata \"parapente\""
+
+#: src/modules/Tracks/js/device-descriptions.js:126
+msgid "Create a manual flight entry without an associated track file."
+msgstr "Crea una voce di volo manuale senza un file di traccia associato."
+
+#: src/modules/Tracks/views/ExternalView.vue:13
+msgid "Analyze a track file without importing it into your logbook"
+msgstr "Analizza un file di traccia senza importarlo nel tuo diario di bordo"
+
+#: src/modules/Tracks/views/ExternalView.vue:18
+msgid "Drag and drop your file here"
+msgstr "Trascina e rilascia il tuo file qui"
+
+#: src/modules/Tracks/views/ExternalView.vue:18
+msgid "or click to select"
+msgstr "oppure clicca per selezionare"
+
+#: src/modules/Tracks/views/ExternalView.vue:24
+msgid "Analyse of"
+msgstr "Analisi di"
+
+#: src/modules/Tracks/views/ExternalView.vue:29
+msgid "Decoding in progress"
+msgstr "Decodifica in corso"
+
+#: src/modules/Tracks/views/ExternalView.vue:87
+msgid "GPX or IGC format only"
+msgstr "Solo formato GPX o IGC"
+
+#: src/modules/Tracks/views/ExternalView.vue:96
+msgid "GPX decoding error"
+msgstr "Errore di decodifica GPX"
+
+#: src/modules/Tracks/views/ExternalView.vue:103
+msgid "GPX to IGC conversion failed"
+msgstr "Conversione da GPX a IGC non riuscita"
+
+#: src/modules/Tracks/views/ExternalView.vue:133
+msgid "Decoding problem in track file"
+msgstr "Problema di decodifica nel file della traccia"
+
+#: src/modules/Tracks/views/ImportView.vue:15
+msgid "USB GPS"
+msgstr "USB GPS"
+
+#: src/modules/Tracks/views/ImportView.vue:31
+msgid "Serial GPS"
+msgstr "Seriale GPS"
+
+#: src/modules/Tracks/views/ImportView.vue:91
+msgid "tracks decoded"
+msgstr "tracce decodificate"
+
+#: src/modules/Tracks/views/ImportView.vue:93
+msgid "Display all tracks"
+msgstr ""
+
+#: src/modules/Tracks/views/ImportView.vue:97
+msgid "Unselect"
+msgstr "Deselezionare"
+
+#: src/modules/Tracks/views/ImportView.vue:149
+msgid "Already in the logbook"
+msgstr "Già nel diario di volo"
+
+#: src/modules/Tracks/views/ImportView.vue:152
+msgid "Invalid"
+msgstr "Non valido"
+
+#: src/modules/Tracks/views/ImportView.vue:190
+msgid "Select"
+msgstr "Seleziona"
+
+#: src/modules/Tracks/views/ImportView.vue:218
+msgid "Scanning"
+msgstr "Scansione"
+
+#: src/modules/Tracks/views/ImportView.vue:381
+msgid "Not yet available"
+msgstr "Non ancora disponibile"
+
+#: src/modules/Tracks/views/ImportView.vue:385
+msgid "Select a folder and choose track files (IGC or GPX)"
+msgstr ""
+
+#: src/modules/Tracks/views/ImportView.vue:421
+msgid "Error while selecting the folder"
+msgstr "Errore durante la selezione della cartella"
+
+#: src/modules/Tracks/views/ImportView.vue:458
+msgid "files selected"
+msgstr ""
+
+#: src/modules/Tracks/views/ImportView.vue:468
+msgid "No directory selected"
+msgstr "Nessuna directory selezionata"
+
+#: src/modules/Tracks/views/ImportView.vue:506
+msgid "No tracks in this folder"
+msgstr "Nessuna traccia in questa cartella"
+
+#: src/modules/Tracks/views/ImportView.vue:525
+msgid "Error during scanning"
+msgstr "Errore durante la scansione"
+
+#: src/modules/Tracks/views/ImportView.vue:549
+#: src/modules/Tracks/views/ImportView.vue:566
+msgid "To rename"
+msgstr "Da rinominare"
+
+#: src/modules/Tracks/views/ImportView.vue:597
+msgid "tracks imported"
+msgstr "tracce importate"
+
+#: src/modules/Tracks/views/ImportView.vue:619
+msgid "Flight saved"
+msgstr "Volo salvato"
+
+#: src/modules/Tracks/views/LogbookView.vue:27
+msgid "Advanced Search"
+msgstr "Ricerca avanzata"
+
+#: src/modules/Tracks/views/LogbookView.vue:30
+msgid "Filter by tag"
+msgstr "Filtra per tag"
+
+#: src/modules/Tracks/views/LogbookView.vue:53
+msgid "Unfilter"
+msgstr "Non filtrare"
+
+#: src/modules/Tracks/views/LogbookView.vue:70
+#: src/modules/Tracks/views/LogbookView.vue:141
+msgid "Tag"
+msgstr "Tag"
+
+#: src/modules/Tracks/views/LogbookView.vue:78
+msgid "Merge"
+msgstr "Unisci"
+
+#: src/modules/Tracks/views/LogbookView.vue:136
+msgid "Analyze"
+msgstr "Analisi"
+
+#: src/modules/Tracks/views/LogbookView.vue:147
+msgid "Hike"
+msgstr ""
+
+#: src/modules/Tracks/views/LogbookView.vue:158
 msgid "Glider flight time"
 msgstr "Tempo di volo con la vela"
 
+#: src/modules/Tracks/views/LogbookView.vue:198
 msgid "Select a flight to view track"
 msgstr "Seleziona un volo per visualizzarne la traccia"
 
+#: src/modules/Tracks/views/LogbookView.vue:401
 msgid "All flights"
 msgstr "Tutti i voli"
 
+#: src/modules/Tracks/views/LogbookView.vue:565
 msgid "flights found"
 msgstr "voli trovati"
 
+#: src/modules/Tracks/views/LogbookView.vue:568
 msgid "No flights match the search criteria"
 msgstr "Nessun volo corrisponde ai criteri di ricerca"
 
+#: src/modules/Tracks/views/LogbookView.vue:602
 msgid "Select at least 2 flights to merge"
 msgstr "Seleziona almeno 2 voli da unire"
 
+#: src/modules/Tracks/views/LogbookView.vue:613
 msgid "Error reading flights from database"
 msgstr "Errore durante la lettura dei voli dal database"
 
+#: src/modules/Tracks/views/LogbookView.vue:627
 msgid "Could not retrieve all selected flights"
 msgstr "Impossibile recuperare tutti i voli selezionati"
 
+#: src/modules/Tracks/views/LogbookView.vue:636
 msgid "Flights must be on the same day to merge"
 msgstr "I voli devono essere nello stesso giorno per essere uniti"
 
+#: src/modules/Tracks/views/LogbookView.vue:647
 msgid "All selected flights must have a valid IGC track"
 msgstr "Tutti i voli selezionati devono avere una traccia IGC valida"
 
+#: src/modules/Tracks/views/LogbookView.vue:664
 msgid "merged flights"
 msgstr "voli uniti"
 
+#: src/modules/Tracks/views/LogbookView.vue:699
 msgid "Flights merged successfully"
 msgstr "Voli uniti con successo"
 
+#: src/modules/Tracks/views/LogbookView.vue:710
 msgid "An error occurred while merging flights"
 msgstr "Si è verificato un errore durante l'unione dei voli"
 
+#: src/modules/Tracks/views/LogbookView.vue:720
 msgid "No glider associated with this flight"
 msgstr ""
 
+#: src/modules/Tracks/views/LogbookView.vue:737
+#: src/modules/Tracks/views/LogbookView.vue:740
 msgid "No flights counted for this glider"
 msgstr ""
 
+#: src/modules/Tracks/views/LogbookView.vue:846
 msgid "Photo saved"
 msgstr "Foto salvata"
 
+#: src/modules/Tracks/views/LogbookView.vue:857
 msgid "Photo deleted"
 msgstr "Fot cancellata"
 
+#: src/modules/Tracks/views/LogbookView.vue:895
+#, fuzzy
+msgid "Hike associated successfully"
+msgstr "Sito creato con successo"
+
+#: src/modules/Tracks/views/LogbookView.vue:921
+msgid "Hike removed"
+msgstr ""
+
+#: src/modules/Tracks/views/LogbookView.vue:989
+#: src/modules/Tracks/views/LogbookView.vue:1014
 msgid "No IGC data for this flight"
 msgstr "Nessun dato IGC per questo volo"
 
+#: src/modules/Tracks/views/LogbookView.vue:1020
 msgid "Could not decode IGC data"
 msgstr "Impossibile decodificare i dati IGC"
 
+#: src/modules/Tracks/views/LogbookView.vue:1038
 msgid "Are you sure you want to delete this flight?"
 msgstr "Sei sicuro di voler eliminare questo volo?"
 
+#, fuzzy
+#~ msgid "Click map to set starting point"
+#~ msgstr "Clicca sulla mappa per impostare la posizione"
+
+#, fuzzy
+#~ msgid "Click map to set end point"
+#~ msgstr "Clicca sulla mappa per impostare la posizione"
+
+#, fuzzy
+#~ msgid "Unsupported format (use IGC or GPX)"
+#~ msgstr "Formato traccia non supportato"

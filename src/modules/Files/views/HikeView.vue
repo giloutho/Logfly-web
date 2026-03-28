@@ -28,7 +28,7 @@
             <v-alert v-if="showEmptyAlert" type="info" variant="tonal" density="compact" closable
                 @click:close="showEmptyAlert = false" class="mb-2">
                 <template v-slot:title>{{ $gettext('No hike recorded') }}</template>
-                {{ $gettext('Would you like to add a new hike?') }}
+                {{ $gettext('Would you like to add a new hike') }}?
                 <template v-slot:append>
                     <v-btn color="primary" variant="flat" size="small" class="ml-2"
                         @click="showEmptyAlert = false; openNewHikeDialog()">
@@ -148,11 +148,11 @@
                                 <div class="utilities-btn-row">
                                     <v-btn color="secondary" density="compact" class="mr-3" disabled>
                                         <v-icon start>mdi-file-export</v-icon>
-                                        {{ $gettext('Export') }}
+                                        {{ $gettext('Export IGC') }}
                                     </v-btn>
                                     <v-btn color="secondary" density="compact" class="mr-3" disabled>
                                         <v-icon start>mdi-share-variant</v-icon>
-                                        {{ $gettext('Share') }}
+                                        {{ $gettext('Export GPX') }}
                                     </v-btn>
                                 </div>
                             </v-card-text>
