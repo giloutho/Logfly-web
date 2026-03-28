@@ -383,11 +383,11 @@ msgstr "Punteggio"
 msgid "Cut"
 msgstr "Taglio"
 
-#: src/components/FullMapView.vue:306
+#: src/components/FullMapView.vue:309
 msgid "Select the start and end points of the section"
 msgstr ""
 
-#: src/components/FullMapView.vue:307
+#: src/components/FullMapView.vue:310
 msgid "to be retained by clicking on the elevation chart"
 msgstr ""
 
@@ -723,49 +723,54 @@ msgstr "Nuova foto"
 msgid "Replace photo"
 msgstr "Sostituisci foto"
 
-#: src/components/MapLeaflet.vue:254 src/components/TraceInfoDialog.vue:188
+#: src/components/MapLeaflet.vue:255 src/components/TraceInfoDialog.vue:188
 #: src/components/TraceInfoPanel.vue:151
 #: src/modules/Routing/views/XcnavView.vue:363
 msgid "Thermals"
 msgstr "Termiche"
 
-#: src/components/MapLeaflet.vue:292 src/components/TraceInfoDialog.vue:198
+#: src/components/MapLeaflet.vue:293 src/components/TraceInfoDialog.vue:198
 #: src/components/TraceInfoPanel.vue:160
 msgid "Glides"
 msgstr "Planate"
 
-#: src/components/MapLeaflet.vue:336
+#: src/components/MapLeaflet.vue:337
 msgid "Class"
 msgstr "Classe"
 
-#: src/components/MapLeaflet.vue:337
+#: src/components/MapLeaflet.vue:338
 #: src/modules/Routing/views/AirspacesView.vue:42
 msgid "Floor"
 msgstr "Piano"
 
-#: src/components/MapLeaflet.vue:338
+#: src/components/MapLeaflet.vue:339
 msgid "Ceiling"
 msgstr "Soffitto"
 
-#: src/components/MapLeaflet.vue:374
+#: src/components/MapLeaflet.vue:375
 msgid "Checking"
 msgstr "Verifica"
 
-#: src/components/MapLeaflet.vue:480
+#: src/components/MapLeaflet.vue:481
 msgid "Airspaces involved"
 msgstr "Spazi aerei coinvolti"
 
-#: src/components/MapLeaflet.vue:499
+#: src/components/MapLeaflet.vue:500
 msgid "violation(s)"
 msgstr "violazione/i"
 
-#: src/components/MapLeaflet.vue:501
+#: src/components/MapLeaflet.vue:502
 msgid "No violations in the selected airspace file"
 msgstr "Nessuna violazione nel file dello spazio aereo selezionato"
 
-#: src/components/MapLeaflet.vue:509
+#: src/components/MapLeaflet.vue:510
 msgid "Click on an airspace to display the description"
 msgstr "Fare clic su uno spazio aereo per visualizzare la descrizione"
+
+#: src/components/MapLeaflet.vue:603
+#: src/modules/Tracks/views/LogbookView.vue:147
+msgid "Hike"
+msgstr ""
 
 #: src/components/NoTrackDialog.vue:7
 #: src/modules/Tracks/js/device-descriptions.js:126
@@ -2535,10 +2540,6 @@ msgstr "Unisci"
 msgid "Analyze"
 msgstr "Analisi"
 
-#: src/modules/Tracks/views/LogbookView.vue:147
-msgid "Hike"
-msgstr ""
-
 #: src/modules/Tracks/views/LogbookView.vue:158
 msgid "Glider flight time"
 msgstr "Tempo di volo con la vela"
@@ -2613,20 +2614,20 @@ msgstr "Fot cancellata"
 msgid "Hike associated successfully"
 msgstr "Sito creato con successo"
 
-#: src/modules/Tracks/views/LogbookView.vue:921
+#: src/modules/Tracks/views/LogbookView.vue:927
 msgid "Hike removed"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:989
-#: src/modules/Tracks/views/LogbookView.vue:1014
+#: src/modules/Tracks/views/LogbookView.vue:1001
+#: src/modules/Tracks/views/LogbookView.vue:1026
 msgid "No IGC data for this flight"
 msgstr "Nessun dato IGC per questo volo"
 
-#: src/modules/Tracks/views/LogbookView.vue:1020
+#: src/modules/Tracks/views/LogbookView.vue:1032
 msgid "Could not decode IGC data"
 msgstr "Impossibile decodificare i dati IGC"
 
-#: src/modules/Tracks/views/LogbookView.vue:1038
+#: src/modules/Tracks/views/LogbookView.vue:1050
 msgid "Are you sure you want to delete this flight?"
 msgstr "Sei sicuro di voler eliminare questo volo?"
 
