@@ -97,11 +97,14 @@
                     </v-col>
                 </v-row>
 
-                <!-- Row 8: Photo checkbox -->
+                <!-- Row 8: Checkboxes -->
                 <v-row dense class="mb-2">
-                    <v-col cols="12">
+                    <v-col cols="6">
                         <v-checkbox v-model="form.hasPhoto" :label="$gettext('Has photo')" hide-details
                             density="compact" />
+                    </v-col>
+                    <v-col cols="6">
+                        <v-checkbox v-model="form.hasHike" :label="$gettext('Hike')" hide-details density="compact" />
                     </v-col>
                 </v-row>
 
@@ -160,7 +163,8 @@ const form = reactive({
     site: '',
     country: '',
     comment: '',
-    hasPhoto: false
+    hasPhoto: false,
+    hasHike: false
 });
 
 // Sync dialog visibility
@@ -225,9 +229,13 @@ function buildSqlCriteria() {
         conditions.push(`V_Commentaire LIKE '%${escaped}%'`);
     }
 
-    // Photo filter
+    // Photo and Hike filters
     if (form.hasPhoto) {
         conditions.push(`V_Photos IS NOT NULL AND V_Photos != ''`);
+    }
+
+    if (form.hasHike) {
+        conditions.push(`V_R_ID IS NOT NULL AND V_R_ID != ''`);
     }
 
     return conditions;
@@ -264,6 +272,7 @@ function resetForm() {
     form.country = '';
     form.comment = '';
     form.hasPhoto = false;
+    form.hasHike = false;
     statusMessage.value = '';
 }
 
