@@ -168,6 +168,9 @@ async function loadGroundAltitudes() {
 function onMapReady(mapInstance) {
     // Load extra layers if data available
     loadAnalysisLayers()
+    if (props.flightData?.hikeData && mapLeaflet.value) {
+        mapLeaflet.value.displayHike(props.flightData.hikeData)
+    }
 }
 
 function openChrono() {

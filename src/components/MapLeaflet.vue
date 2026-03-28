@@ -40,6 +40,7 @@ let startMarker = null
 let endMarker = null
 let scoreLayer = null
 let measureControl = null
+let hikeLayer = null
 
 // Shared Canvas Renderer with padding to prevent clipping
 const mainCanvas = L.canvas({ padding: 0.5 })
@@ -566,7 +567,44 @@ function displayLanding() {
     }
 }
 
+function displayHike(hikeData) {
+    if (!map || !hikeData) return
 
+    if (hikeLayer) {
+        map.removeLayer(hikeLayer)
+        if (layerControl) {
+            layerControl.removeLayer(hikeLayer)
+        }
+        hikeLayer = null
+    }
+
+    if (hikeData.type === 'track' && hikeData.geoJson) {
+        hikeLayer = L.geoJSON(hikeData.geoJson, {
+            renderer: mainCanvas,
+            style: {
+                color: '#2e7d32', // green-darken-3
+                weight: 4,
+                opacity: 0.8,
+                dashArray: '5,5'
+            }
+        })
+    } else if (hikeData.type === 'points' && hikeData.start) {
+        const group = L.layerGroup()
+        L.marker(hikeData.start, { icon: startIcon }).addTo(group)
+        if (hikeData.end) {
+            L.marker(hikeData.end, { icon: endIcon }).addTo(group)
+        }
+        hikeLayer = group
+    }
+
+    if (hikeLayer) {
+        hikeLayer.addTo(map)
+        if (layerControl) {
+            const layerName = $gettext('Hike')
+            layerControl.addOverlay(hikeLayer, layerName)
+        }
+    }
+}
 
 defineExpose({
     setHoverPoint,
@@ -579,6 +617,7 @@ defineExpose({
     displayTakeOff,
     displayLanding,
     displayScoringResult,
+    displayHike,
     map
 })
 

@@ -895,6 +895,12 @@ function onHikePickerSaved({ randoId, randoNom, randoDeniv, sDuree, duree }) {
     snackbarMessage.value = $gettext('Hike associated successfully');
     snackbar.value = true;
     emit('db-updated');
+
+    // If the currently displayed flight is the one being modified, reload its hike data
+    if (dataFlight.value && dataFlight.value.dbId === flight.V_ID) {
+      dataFlight.value.vRId = randoId;
+      loadHikeData();
+    }
   }
 }
 
@@ -921,6 +927,12 @@ function onHikePickerRemoved() {
     snackbarMessage.value = $gettext('Hike removed');
     snackbar.value = true;
     emit('db-updated');
+
+    // If the currently displayed flight is the one being modified, clear its hike data
+    if (dataFlight.value && dataFlight.value.dbId === flight.V_ID) {
+      dataFlight.value.vRId = null;
+      dataFlight.value.hikeData = null;
+    }
   }
 }
 
@@ -1221,7 +1233,7 @@ function onOpenAnalyze() {
 // Logic to load IGC from DB
 async function readIgcFromDb(flightId) {
   if (!databaseStore.hasOpenDatabase) return;
-  const reqSQL = `SELECT V_IGC, strftime('%d-%m-%Y',V_date) AS Day, V_Site, V_Engin, V_Commentaire, V_sDuree, CASE WHEN (V_Photos IS NOT NULL AND V_Photos !='') THEN 1 ELSE 0 END as HasPhoto, V_Tag FROM Vol WHERE V_ID = ${flightId}`;
+  const reqSQL = `SELECT V_IGC, strftime('%d-%m-%Y',V_date) AS Day, V_Site, V_Engin, V_Commentaire, V_sDuree, CASE WHEN (V_Photos IS NOT NULL AND V_Photos !='') THEN 1 ELSE 0 END as HasPhoto, V_Tag, V_R_ID FROM Vol WHERE V_ID = ${flightId}`;
   const result = databaseStore.query(reqSQL);
 
   if (result.success && result.data && result.data[0]) {
@@ -1251,10 +1263,14 @@ async function readIgcFromDb(flightId) {
           duration: result.data[0].values[0][5],
           hasPhoto: result.data[0].values[0][6] === 1,
           tag: result.data[0].values[0][7],
+          vRId: result.data[0].values[0][8],
           anaTrack: analyzeIgc.anaTrack,
           decodedIgc: decodedTrack.value,
-          rawIgc: strIgc
+          rawIgc: strIgc,
+          hikeData: null
         }
+        // Fetch hike data if associated
+        await loadHikeData();
       }
     }
   } else {
@@ -1297,6 +1313,37 @@ async function mapWithoutIgc(flightId) {
     await nextTick();
     if (littleMapRef.value && littleMapRef.value.displayTakeoffOnly) {
       littleMapRef.value.displayTakeoffOnly(lat, lon, site, alt);
+    }
+  }
+}
+
+async function loadHikeData() {
+  if (!dataFlight.value) return;
+  dataFlight.value.hikeData = null; // reset
+
+  if (dataFlight.value.vRId) {
+    const hikeReq = `SELECT R_Track, R_Lat_Depart, R_Long_Depart, R_Lat_Fin, R_Long_Fin, R_Nom FROM Rando WHERE R_ID = ${dataFlight.value.vRId}`;
+    const hikeRes = databaseStore.query(hikeReq);
+    if (hikeRes.success && hikeRes.data && hikeRes.data[0] && hikeRes.data[0].values[0]) {
+      const hRow = hikeRes.data[0].values[0];
+      const rTrack = hRow[0];
+      if (rTrack) {
+        const decodedHike = await igcDecoding(rTrack);
+        if (decodedHike.success) {
+          dataFlight.value.hikeData = {
+            type: 'track',
+            name: hRow[5],
+            geoJson: decodedHike.data.GeoJSON
+          };
+        }
+      } else if (hRow[1] && hRow[2]) { // Lat_Depart and Long_Depart
+        dataFlight.value.hikeData = {
+          type: 'points',
+          name: hRow[5],
+          start: [hRow[1], hRow[2]],
+          end: (hRow[3] && hRow[4]) ? [hRow[3], hRow[4]] : null
+        };
+      }
     }
   }
 }
