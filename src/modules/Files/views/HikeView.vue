@@ -146,11 +146,13 @@
                         <v-window-item value="utilities">
                             <v-card-text>
                                 <div class="utilities-btn-row">
-                                    <v-btn color="secondary" density="compact" class="mr-3" disabled>
+                                    <v-btn color="secondary" density="compact" class="mr-3"
+                                        :disabled="!selectedHike?.R_Track" @click="exportIgc">
                                         <v-icon start>mdi-file-export</v-icon>
                                         {{ $gettext('Export IGC') }}
                                     </v-btn>
-                                    <v-btn color="secondary" density="compact" class="mr-3" disabled>
+                                    <v-btn color="secondary" density="compact" class="mr-3"
+                                        :disabled="!selectedHike?.R_Track" @click="exportGpx">
                                         <v-icon start>mdi-share-variant</v-icon>
                                         {{ $gettext('Export GPX') }}
                                     </v-btn>
@@ -182,6 +184,7 @@ import LittleMapView from '@/components/LittleMapView.vue';
 import HikeForm from '@/components/HikeForm.vue';
 import { useDatabaseStore } from '@/stores/database';
 import { igcDecoding } from '@/js/igc/igc-decoder.js';
+import { igcToGpx } from '@/js/igc/igc-to-gpx.js';
 
 const databaseStore = useDatabaseStore();
 const { $gettext } = useGettext();
@@ -506,6 +509,59 @@ function onValidateComment() {
 }
 
 /**
+ * Export IGC
+ */
+function exportIgc() {
+    if (!selectedHike.value || !selectedHike.value.R_Track) {
+        snackbarMessage.value = $gettext('No IGC data for this hike');
+        snackbar.value = true;
+        return;
+    }
+    const igcData = selectedHike.value.R_Track;
+    const name = selectedHike.value.R_Nom || 'Hike';
+    const blob = new Blob([igcData], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${name}.igc`.replace(/[^a-zA-Z0-9._-]/g, '_');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+/**
+ * Export GPX
+ */
+async function exportGpx() {
+    if (!selectedHike.value || !selectedHike.value.R_Track) {
+        snackbarMessage.value = $gettext('No IGC data for this hike');
+        snackbar.value = true;
+        return;
+    }
+    const igcData = selectedHike.value.R_Track;
+    const name = selectedHike.value.R_Nom || 'Hike';
+
+    const decoded = await igcDecoding(igcData);
+    if (!decoded.success || !decoded.data.fixes) {
+        snackbarMessage.value = $gettext('Could not decode IGC data');
+        snackbar.value = true;
+        return;
+    }
+
+    const gpxContent = igcToGpx(decoded.data);
+    const blob = new Blob([gpxContent], { type: 'application/gpx+xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${name}.gpx`.replace(/[^a-zA-Z0-9._-]/g, '_');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+/**
  * Escape single quotes for SQL
  */
 function escStr(str) {
@@ -561,6 +617,7 @@ function escStr(str) {
     justify-content: center;
     box-sizing: border-box;
     padding: 10px 20px;
+    flex-shrink: 0;
 }
 
 .search-field {
@@ -569,7 +626,8 @@ function escStr(str) {
 
 .table-block {
     width: 100%;
-    flex: 1 1 auto;
+    flex: 1 1 0;
+    min-height: 0;
     background: #f0f0f0;
     border: 2px solid #333;
     border-radius: 10px;
@@ -631,6 +689,7 @@ function escStr(str) {
 .bottom-block {
     width: 100%;
     height: 39%;
+    flex-shrink: 0;
     border: 2px solid #333;
     border-radius: 10px;
     box-sizing: border-box;
