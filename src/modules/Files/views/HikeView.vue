@@ -156,6 +156,28 @@
                                         <v-icon start>mdi-share-variant</v-icon>
                                         {{ $gettext('Export GPX') }}
                                     </v-btn>
+                                    <!-- UPDATE DATABASE 
+                                        Ajouté pour achever la conversion fusion de deux carnets : randos et vols
+                                        Pour chaque enregistrement de la table Rando, décodage la trace Igc
+                                            - mise à jour R_Deniv
+                                            - mise à jour R_Duree
+                                            - mise à jour R_sDuree
+                                            - mise à jour 	"R_Lat_Depart"	
+                                            - mise à jour 	"R_Long_Depart"	
+                                            - mise à jour "R_Lat_Fin"	
+                                            - mise à jour "R_Long_Fin"
+                                            - update de l'enregistrement 
+                                            - rechercher tous les enregistrements de la table Vol comportant un champ Vol.V_R_ID égal au Rando.R_ID de l'enregistrement qui vient d'être modifié. Pour chacun d'eux 
+                                                - mise à jour V_R_Deniv"	avec Rando.R_deniv
+                                                - mise à jour	V_R_sDuree avec Rando.R_sDuree
+                                                - mise à jour	V_R_Duree avec Rando.R_Duree
+                                                - update de l'enregistrement 
+
+                                        <v-btn color="warning" density="compact" @click="updateDatabase">
+                                            <v-icon start>mdi-database-refresh</v-icon>
+                                            Update
+                                        </v-btn>
+                                    -->
                                 </div>
                             </v-card-text>
                         </v-window-item>
@@ -559,6 +581,101 @@ async function exportGpx() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+}
+
+/**
+ * Update database with IGC data for all hikes
+ */
+async function updateDatabase() {
+    if (!databaseStore.hasOpenDatabase) {
+        snackbarMessage.value = $gettext('Database not open');
+        snackbar.value = true;
+        return;
+    }
+
+    try {
+        snackbarMessage.value = $gettext('Database update started...');
+        snackbar.value = true;
+
+        const sqlRando = "SELECT R_ID, R_Track FROM Rando WHERE R_Track IS NOT NULL";
+        const resultRando = databaseStore.query(sqlRando);
+
+        if (resultRando.success && resultRando.data && resultRando.data[0] && resultRando.data[0].values.length > 0) {
+            const columns = resultRando.data[0].columns;
+            const values = resultRando.data[0].values;
+
+            let updatedCount = 0;
+
+            // Iterate over all hikes
+            for (const row of values) {
+                const hike = {};
+                columns.forEach((col, idx) => { hike[col] = row[idx]; });
+
+                if (hike.R_Track) {
+                    const decodedResult = await igcDecoding(hike.R_Track);
+
+                    if (decodedResult.success && decodedResult.data) {
+                        const decoded = decodedResult.data;
+                        const fixes = decoded.fixes;
+
+                        if (fixes && fixes.length >= 2) {
+                            const latDepart = parseFloat(fixes[0].latitude).toFixed(5);
+                            const longDepart = parseFloat(fixes[0].longitude).toFixed(5);
+                            const latFin = parseFloat(fixes[fixes.length - 1].latitude).toFixed(5);
+                            const longFin = parseFloat(fixes[fixes.length - 1].longitude).toFixed(5);
+
+                            const totalSecs = decoded.stat.duration || 0;
+                            const hours = Math.floor(totalSecs / 3600);
+                            const minutes = Math.floor((totalSecs % 3600) / 60);
+                            const sDuree = `${hours}h${String(minutes).padStart(2, '0')}mn`;
+
+                            const maxAlt = decoded.stat.maxalt?.gps || 0;
+                            const minAlt = decoded.stat.minialt?.gps || 0;
+                            const deniv = Math.max(0, Math.round(maxAlt - minAlt));
+
+                            // 1. Update Rando
+                            const updateRandoSql = `UPDATE Rando SET 
+                                R_Deniv = ${deniv},
+                                R_Duree = ${totalSecs},
+                                R_sDuree = '${escStr(sDuree)}',
+                                R_Lat_Depart = ${latDepart},
+                                R_Long_Depart = ${longDepart},
+                                R_Lat_Fin = ${latFin},
+                                R_Long_Fin = ${longFin}
+                                WHERE R_ID = ${hike.R_ID}`;
+
+                            const resRandoUpdate = databaseStore.update(updateRandoSql);
+
+                            if (resRandoUpdate.success) {
+                                updatedCount++;
+                                // 2. Update Vol
+                                const updateVolSql = `UPDATE Vol SET 
+                                    V_R_Deniv = ${deniv},
+                                    V_R_Duree = ${totalSecs},
+                                    V_R_sDuree = '${escStr(sDuree)}'
+                                    WHERE V_R_ID = ${hike.R_ID}`;
+                                databaseStore.update(updateVolSql);
+                            }
+                        }
+                    }
+                }
+            }
+
+            snackbarMessage.value = `${$gettext('Database updated.')} (${updatedCount} hikes)`;
+            snackbar.value = true;
+
+            // Reload hikes and emit event to update map/list
+            loadHikes();
+            emit('dbUpdated');
+        } else {
+            snackbarMessage.value = $gettext('No hikes with track found to update');
+            snackbar.value = true;
+        }
+    } catch (err) {
+        console.error('Error updating database:', err);
+        snackbarMessage.value = $gettext('Error updating database');
+        snackbar.value = true;
+    }
 }
 
 /**
