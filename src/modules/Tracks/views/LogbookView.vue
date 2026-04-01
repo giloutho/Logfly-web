@@ -823,6 +823,7 @@ function onTagsUpdated() {
 
 // Opens LogbookPhoto dialog (from context menu "Photo" option) - add/manage/remove
 async function openPhotoDialog(item) {
+  onFlightSelect(item);
   selectedItems.value = [item.V_ID];
   let currentPhotoUrl = null;
   if (item.Photo === 'Yes') {
@@ -861,6 +862,7 @@ function onPhotoDialogDelete() {
 
 // --- HikePicker handlers ---
 function openHikePickerForFlight(item) {
+  onFlightSelect(item);
   hikePickerFlight.value = item;
   showHikePickerDialog.value = true;
 }
@@ -1054,6 +1056,7 @@ function confirmDelete(item) {
 
 // Renamed internal function to avoid conflict
 async function openPhotoViewer(item) {
+  onFlightSelect(item);
   if (!databaseStore.hasOpenDatabase) return;
 
   const reqSQL = `SELECT V_Photos FROM Vol WHERE V_ID = ${item.V_ID}`;
