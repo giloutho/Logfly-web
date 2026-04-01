@@ -22,6 +22,16 @@
             <router-view @db-updated="onDbUpdated" />
         </v-main>
         <OpenLogbook @db-opened="onDbOpened" @file-handle="onFileHandle" @close="onCloseLogbook" />
+
+        <!-- Translation check snackbar -->
+        <v-snackbar v-model="showTranslationWarning" color="error" :timeout="10000" location="top right">
+            {{ translationWarningMessage }}
+            <template v-slot:actions>
+                <v-btn variant="text" @click="showTranslationWarning = false">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </template>
+        </v-snackbar>
     </v-app>
 </template>
 
@@ -33,14 +43,20 @@ import { storeToRefs } from 'pinia';
 import { useDatabaseStore } from '@/stores/database';
 import { useRouter } from 'vue-router';
 import { saveDatabase } from '@/js/database/sql-manager.js';
+import { checkFirebaseConnection, getAvailableTranslations } from '@/js/firebase/translations-service.js';
+import { useGettext } from 'vue3-gettext';
 
 const appVersion = '7.0.4'; // À actualiser à chaque build pour production
 const databaseStore = useDatabaseStore();
+const gettext = useGettext();
 // Utilisez storeToRefs pour garder la réactivité sur isDirty
 const { isDirty } = storeToRefs(databaseStore);
 const router = useRouter();
 const dbPath = computed(() => databaseStore.dbName || '');
 const fileHandle = ref(null); // Stocke le handle du fichier pour la sauvegarde
+
+const showTranslationWarning = ref(false);
+const translationWarningMessage = ref('');
 
 function onDbUpdated() {
     isDirty.value = true;
@@ -60,7 +76,31 @@ function handleBeforeUnload(event) {
 // Ajouter l'écouteur au montage du composant
 onMounted(() => {
     window.addEventListener('beforeunload', handleBeforeUnload);
+    checkTranslationStatus();
 });
+
+async function checkTranslationStatus() {
+    try {
+        const isConnected = await checkFirebaseConnection();
+        if (!isConnected) return;
+        
+        const langCode = gettext.current;
+        if (langCode === 'en') return; // Default language, no translation needed
+        
+        const serverTranslations = await getAvailableTranslations();
+        const currentLangTranslation = serverTranslations.find(t => t.lang === langCode);
+        
+        if (currentLangTranslation) {
+            if (currentLangTranslation.progress < 100) {
+                const missing = 100 - currentLangTranslation.progress;
+                translationWarningMessage.value = `${missing}% of the phrases remain to be translated`;
+                showTranslationWarning.value = true;
+            }
+        }
+    } catch (err) {
+        console.warn('Translation check failed:', err);
+    }
+}
 
 // Retirer l'écouteur au démontage du composant
 onBeforeUnmount(() => {
