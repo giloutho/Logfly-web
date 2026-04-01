@@ -260,8 +260,8 @@
     <!-- HikePicker Dialog -->
     <HikePickerDialog v-model="showHikePickerDialog" :flightId="hikePickerFlight?.V_ID"
       :currentRandoId="hikePickerFlight?.V_R_ID" :currentRandoNom="hikePickerFlight?.V_R_Nom || ''"
-      :currentRandosDuree="hikePickerFlight?.V_R_sDuree || ''" @saved="onHikePickerSaved" @removed="onHikePickerRemoved"
-      @cancel="showHikePickerDialog = false" />
+      :currentRandosDuree="hikePickerFlight?.V_R_sDuree || ''" :currentRandoDeniv="hikePickerFlight?.V_R_Deniv || 0"
+      @saved="onHikePickerSaved" @removed="onHikePickerRemoved" @cancel="showHikePickerDialog = false" />
 
   </v-layout>
 </template>

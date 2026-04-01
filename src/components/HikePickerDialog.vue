@@ -24,6 +24,7 @@
                     <v-alert v-if="currentRandoId" type="success" variant="tonal" density="compact" class="mb-3">
                         <strong>{{ $gettext('Current hike') }}:</strong> {{ currentRandoNom }}
                         <span v-if="currentRandosDuree"> — {{ currentRandosDuree }}</span>
+                        <span v-if="currentRandoDeniv"> +{{ currentRandoDeniv }}m</span>
                     </v-alert>
 
                     <!-- Hike list -->
@@ -52,6 +53,9 @@
                         </div>
                         <div class="text-caption text-grey mt-1">
                             {{ $gettext('Reference duration') }}: {{ selectedHikeRef?.R_sDuree || '-' }}
+                            <template v-if="selectedHikeRef?.R_Deniv">
+                                — {{ $gettext('Elevation gain') }}: {{ selectedHikeRef.R_Deniv }}m
+                            </template>
                         </div>
                     </div>
 
@@ -94,7 +98,8 @@ const props = defineProps({
     // Current hike association on this flight (for edit mode)
     currentRandoId: { type: Number, default: null },
     currentRandoNom: { type: String, default: '' },
-    currentRandosDuree: { type: String, default: '' }
+    currentRandosDuree: { type: String, default: '' },
+    currentRandoDeniv: { type: [Number, String], default: 0 }
 });
 
 const emit = defineEmits(['update:modelValue', 'saved', 'removed', 'cancel']);

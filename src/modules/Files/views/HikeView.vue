@@ -172,12 +172,13 @@
                                                 - mise à jour	V_R_sDuree avec Rando.R_sDuree
                                                 - mise à jour	V_R_Duree avec Rando.R_Duree
                                                 - update de l'enregistrement 
+                         
+                                    <v-btn color="warning" density="compact" @click="updateDatabase">
+                                        <v-icon start>mdi-database-refresh</v-icon>
+                                        Update
+                                    </v-btn>
+                                -->
 
-                                        <v-btn color="warning" density="compact" @click="updateDatabase">
-                                            <v-icon start>mdi-database-refresh</v-icon>
-                                            Update
-                                        </v-btn>
-                                    -->
                                 </div>
                             </v-card-text>
                         </v-window-item>
