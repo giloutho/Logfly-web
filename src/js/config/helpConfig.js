@@ -23,7 +23,8 @@ const HELP_MAP = {
     'xcnav-view': 'xcnav',
 
     // Sites & Equipment
-    'sites-view': 'sites',
+    'sites-view': 'sites/site',
+    'hike-view': 'sites/rando',
     'equip-base': 'equip',
 
     // Utilities
