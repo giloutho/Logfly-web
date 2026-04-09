@@ -37,8 +37,7 @@
       <!-- Sites table -->
       <div class="table-block">
         <v-data-table v-model="selectedItems" :headers="headers" :items="filteredSites" :search="search"
-          item-value="S_ID" density="compact" class="sites-table" v-model:page="page"
-          v-model:items-per-page="itemsPerPage">
+          item-value="S_ID" density="compact" class="sites-table" :items-per-page="-1">
           <template v-slot:item="{ item, props }">
             <tr v-bind="props" :class="{
               'selected-row': selectedItems.includes(item.S_ID),
@@ -56,24 +55,7 @@
               <td class="col-pays">{{ item.S_Pays }}</td>
             </tr>
           </template>
-          <template v-slot:bottom>
-            <div class="custom-pagination">
-              <v-btn icon variant="text" size="small" @click="page = 1" :disabled="page <= 1">
-                <v-icon>mdi-chevron-double-left</v-icon>
-              </v-btn>
-              <v-btn icon variant="text" size="small" @click="page = Math.max(1, page - 1)" :disabled="page <= 1">
-                <v-icon>mdi-chevron-left</v-icon>
-              </v-btn>
-              <span class="mx-2 text-caption">Page {{ page }} / {{ pageCount }}</span>
-              <v-btn icon variant="text" size="small" @click="page = Math.min(pageCount, page + 1)"
-                :disabled="page >= pageCount">
-                <v-icon>mdi-chevron-right</v-icon>
-              </v-btn>
-              <v-btn icon variant="text" size="small" @click="page = pageCount" :disabled="page >= pageCount">
-                <v-icon>mdi-chevron-double-right</v-icon>
-              </v-btn>
-            </div>
-          </template>
+          <template v-slot:bottom />
         </v-data-table>
       </div>
 
@@ -221,8 +203,6 @@ const sites = ref([]);
 const selectedItems = ref([]);
 const selectedSite = ref(null);
 const search = ref('');
-const page = ref(1);
-const itemsPerPage = ref(8);
 const tab = ref('about');
 const commentText = ref('');
 const littleMapRef = ref(null);
@@ -270,10 +250,6 @@ const filteredSites = computed(() => {
   }
 
   return result;
-});
-
-const pageCount = computed(() => {
-  return Math.ceil(filteredSites.value.length / itemsPerPage.value);
 });
 
 // Lifecycle
@@ -749,13 +725,7 @@ function onCleanDuplicates() {
   font-weight: 600;
 }
 
-.custom-pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8px;
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
-}
+
 
 .bottom-block {
   width: 100%;

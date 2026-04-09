@@ -33,7 +33,7 @@
         <!-- Section 2: Table (only if records exist) -->
         <div v-if="equipRecords.length > 0" class="table-section">
             <v-data-table :headers="headers" :items="filteredRecords" :search="search" item-value="M_ID"
-                density="compact" class="equip-table" v-model:page="page" v-model:items-per-page="itemsPerPage">
+                density="compact" class="equip-table" :items-per-page="-1">
                 <template v-slot:headers="{ columns }">
                     <tr>
                         <th v-for="column in columns" :key="column.key" class="table-header">
@@ -59,25 +59,7 @@
                         </td>
                     </tr>
                 </template>
-                <template v-slot:bottom>
-                    <div class="custom-pagination">
-                        <v-btn icon variant="text" size="small" @click="page = 1" :disabled="page <= 1">
-                            <v-icon>mdi-chevron-double-left</v-icon>
-                        </v-btn>
-                        <v-btn icon variant="text" size="small" @click="page = Math.max(1, page - 1)"
-                            :disabled="page <= 1">
-                            <v-icon>mdi-chevron-left</v-icon>
-                        </v-btn>
-                        <span class="mx-2 text-caption">Page {{ page }} / {{ pageCount }}</span>
-                        <v-btn icon variant="text" size="small" @click="page = Math.min(pageCount, page + 1)"
-                            :disabled="page >= pageCount">
-                            <v-icon>mdi-chevron-right</v-icon>
-                        </v-btn>
-                        <v-btn icon variant="text" size="small" @click="page = pageCount" :disabled="page >= pageCount">
-                            <v-icon>mdi-chevron-double-right</v-icon>
-                        </v-btn>
-                    </div>
-                </template>
+                <template v-slot:bottom />
             </v-data-table>
         </div>
 
@@ -181,8 +163,6 @@ const emit = defineEmits(['dbUpdated']);
 // State
 const equipRecords = ref([]);
 const search = ref('');
-const page = ref(1);
-const itemsPerPage = ref(10);
 const snackbar = ref(false);
 const snackbarMessage = ref('');
 
@@ -237,9 +217,7 @@ const filteredRecords = computed(() => {
     });
 });
 
-const pageCount = computed(() => {
-    return Math.max(1, Math.ceil(filteredRecords.value.length / itemsPerPage.value));
-});
+
 
 // Lifecycle
 onMounted(() => {
@@ -585,13 +563,7 @@ function onValidate() {
     text-align: center;
 }
 
-.custom-pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 8px;
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
-}
+
 
 .input-section {
     flex-shrink: 0;
