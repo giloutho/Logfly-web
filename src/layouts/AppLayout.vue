@@ -14,6 +14,13 @@
     overflow-x: hidden;
     overflow-y: auto;
 }
+
+/* Ensure Vuetify's inner v-main wrapper scrolls on mobile */
+@media (max-width: 1200px) {
+    .app-container {
+        overflow-y: auto;
+    }
+}
 </style>
 <template>
     <v-app class="app-container">

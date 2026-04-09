@@ -287,12 +287,12 @@ function setChart(chart) {
 <style scoped>
 .global-summary-card {
   width: 100%;
-  height: calc(100vh - 120px);
+  min-height: calc(100vh - 120px);
   display: flex;
   flex-direction: column;
   padding: 16px;
   gap: 16px;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 /* Header menu */
@@ -300,22 +300,23 @@ function setChart(chart) {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding: 12px 24px;
+  gap: 8px;
+  padding: 10px 16px;
   background: #f5f5f5;
   border-radius: 8px;
   flex-shrink: 0;
+  flex-wrap: wrap;
 }
 
 .year-select {
-  min-width: 100px;
+  min-width: 90px;
   max-width: 120px;
 }
 
 /* Chart section */
 .chart-section {
   flex: 1;
-  min-height: 0;
+  min-height: 300px;
   display: flex;
   flex-direction: column;
 }
@@ -332,12 +333,13 @@ function setChart(chart) {
 /* Info cards section */
 .info-cards-section {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   flex-shrink: 0;
+  flex-wrap: wrap;
 }
 
 .info-card {
-  flex: 1;
+  flex: 1 1 200px;
   padding: 16px;
   color: white;
 }
@@ -398,19 +400,33 @@ function setChart(chart) {
   font-size: 1.1rem;
 }
 
-/* Responsive */
-@media (max-width: 1000px) {
-  .header-menu {
-    flex-wrap: wrap;
+/* Responsive – small phone */
+@media (max-width: 600px) {
+  .global-summary-card {
+    padding: 10px;
+    gap: 10px;
   }
 
-  .info-cards-section {
-    flex-wrap: wrap;
+  .header-menu {
+    justify-content: flex-start;
+    gap: 6px;
+    padding: 8px 10px;
+  }
+
+  .chart-section {
+    min-height: 250px;
   }
 
   .info-card {
-    flex: 1 1 45%;
-    min-width: 200px;
+    flex: 1 1 100%;
+  }
+
+  .info-line-1 {
+    font-size: 1.1rem;
+  }
+
+  .info-line-2 {
+    font-size: 0.85rem;
   }
 }
 </style>

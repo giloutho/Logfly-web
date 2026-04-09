@@ -549,27 +549,28 @@ async function setRightMode(mode) {
 <style scoped>
 .annual-card {
   width: 100%;
-  height: calc(100vh - 120px);
+  min-height: calc(100vh - 120px);
   display: flex;
   flex-direction: column;
   padding: 16px;
   gap: 16px;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 /* Summary cards row */
 .summary-cards {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   flex-shrink: 0;
+  flex-wrap: wrap;
 }
 
 .summary-card {
-  flex: 1;
-  padding: 16px;
+  flex: 1 1 120px;
+  padding: 12px 16px;
   position: relative;
   overflow: hidden;
-  min-height: 100px;
+  min-height: 90px;
 }
 
 .flights-card {
@@ -605,23 +606,27 @@ async function setRightMode(mode) {
 
 .card-icon {
   position: absolute;
-  right: 16px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
   opacity: 0.3;
-  width: 128px;
-  height: 128px;
+  width: 80px;
+  height: 80px;
 }
 
 .card-title {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   font-weight: 600;
   margin-bottom: 4px;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .card-value {
-  font-size: 2.2rem;
+  font-size: 1.8rem;
   font-weight: bold;
 }
 
@@ -632,10 +637,9 @@ async function setRightMode(mode) {
 }
 
 .card-year {
-  font-size: 1.75rem;
+  font-size: 1.2rem;
   font-weight: bold;
   opacity: 0.7;
-  margin-left: 20px;
 }
 
 /* Main content row */
@@ -772,17 +776,90 @@ async function setRightMode(mode) {
   color: #666;
 }
 
-/* Responsive */
+/* Responsive – tablet & phone (stacked layout with reordering) */
 @media (max-width: 1200px) {
+  /* Let the card expand freely so the parent v-main can scroll */
+  .annual-card {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
   .main-content {
     flex-direction: column;
+    flex-wrap: wrap; /* needed for 'order' to take effect in column direction */
+    min-height: 0;
+    flex: none;
   }
+
+  /* Reorder: chart (2nd in DOM) → first; monthly table (1st) → second; right panel (3rd) → third */
+  .center-panel { order: 1; }
+  .left-panel   { order: 2; }
+  .right-panel  { order: 3; }
 
   .left-panel,
   .center-panel,
   .right-panel {
     flex: none;
     width: 100%;
+  }
+
+  .panel-card {
+    height: auto;
+    overflow: visible;
+  }
+
+  .chart-container {
+    min-height: 280px;
+  }
+
+  .monthly-table {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .right-table-container {
+    min-height: 100px;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+}
+
+/* Responsive – small phone */
+@media (max-width: 600px) {
+  .annual-card {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .summary-cards {
+    gap: 8px;
+  }
+
+  .summary-card {
+    flex: 1 1 calc(50% - 8px);
+    min-height: 75px;
+    padding: 10px 12px;
+  }
+
+  .card-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .card-value {
+    font-size: 1.4rem;
+  }
+
+  .chart-container {
+    min-height: 220px;
+    padding: 8px;
+  }
+
+  .chart-footer {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px;
   }
 }
 </style>
