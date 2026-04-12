@@ -1,4 +1,8 @@
 import './assets/main.css'
+import { registerSW } from 'virtual:pwa-register'
+
+// Enregistrement automatique du Service Worker pour la PWA
+registerSW({ immediate: true })
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

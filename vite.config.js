@@ -4,6 +4,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import vuetify from 'vite-plugin-vuetify'; // ⬅️ Le plugin pour le tree-shaking
+import { VitePWA } from 'vite-plugin-pwa'; // ⬅️ Plugin PWA
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -30,6 +31,42 @@ export default defineConfig({
       // Configuration pour s'assurer que le tree-shaking est optimal
       autoImport: true, // Importer automatiquement les composants utilisés
       styles: true,
+    }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      injectRegister: 'auto',
+      includeAssets: ['favicon.ico', 'pwa-192x192.png', 'pwa-512x512.png', 'maskable-icon.png'],
+      manifest: {
+        name: 'Logfly',
+        short_name: 'Logfly',
+        description: 'Logiciel de gestion de carnet de vol pour le parapente',
+        theme_color: '#1976D2',
+        background_color: '#ffffff',
+        display: 'standalone',
+        icons: [
+          {
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
+          },
+          {
+            src: 'maskable-icon.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable'
+          }
+        ]
+      },
+      workbox: {
+        // Increase limit from 2MB to 5MB for the vendor chunk
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,wasm}']
+      }
     }),
   ],
   build: {
