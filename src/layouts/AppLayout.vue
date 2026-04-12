@@ -23,6 +23,7 @@
         height: auto;
         min-height: 100vh;
     }
+
     .content-area {
         overflow-x: auto;
         overflow-y: visible;
@@ -60,7 +61,7 @@ import { saveDatabase } from '@/js/database/sql-manager.js';
 import { checkFirebaseConnection, getAvailableTranslations } from '@/js/firebase/translations-service.js';
 import { useGettext } from 'vue3-gettext';
 
-const appVersion = '7.0.5'; // À actualiser à chaque build pour production
+const appVersion = '7.0.6'; // À actualiser à chaque build pour production
 const databaseStore = useDatabaseStore();
 const gettext = useGettext();
 // Utilisez storeToRefs pour garder la réactivité sur isDirty
@@ -97,13 +98,13 @@ async function checkTranslationStatus() {
     try {
         const isConnected = await checkFirebaseConnection();
         if (!isConnected) return;
-        
+
         const langCode = gettext.current;
         if (langCode === 'en') return; // Default language, no translation needed
-        
+
         const serverTranslations = await getAvailableTranslations();
         const currentLangTranslation = serverTranslations.find(t => t.lang === langCode);
-        
+
         if (currentLangTranslation) {
             if (currentLangTranslation.progress < 100) {
                 const missing = 100 - currentLangTranslation.progress;
