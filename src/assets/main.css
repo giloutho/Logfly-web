@@ -6,6 +6,12 @@ body {
   padding: 0;
   overflow: hidden;
   height: 100%;
+  /* Lignes ajoutées pour navigateurs mobiles (souvent Safari ou Chrome iOS) 
+   * qui nécessitent que l'on déclare explicitement que le conteneur est scrollable */
+  overflow-y: auto !important;
+  height: auto !important;
+  -webkit-overflow-scrolling: touch;
+  /* Pour un scroll fluide sur iOS */
 }
 
 #app {

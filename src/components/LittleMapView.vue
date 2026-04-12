@@ -485,7 +485,7 @@ onBeforeUnmount(() => {
 .map-overlay-bottomright {
   position: absolute;
   right: 10px;
-  bottom: 10px;
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
   z-index: 1000;
   display: flex;
   align-items: center;

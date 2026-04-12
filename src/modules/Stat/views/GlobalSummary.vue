@@ -287,12 +287,20 @@ function setChart(chart) {
 <style scoped>
 .global-summary-card {
   width: 100%;
-  min-height: calc(100vh - 120px);
+  height: calc(100vh - 100px); /* Using exact height forces the flex chart to fit the screen */
   display: flex;
   flex-direction: column;
   padding: 16px;
   gap: 16px;
-  overflow-y: auto;
+  overflow-y: hidden; /* Desktop shouldn't scroll if we fit perfectly */
+}
+
+/* Ensure mobile naturally scrolls since it can't fit in 100vh */
+@media (max-width: 900px) {
+  .global-summary-card {
+    height: auto;
+    overflow-y: visible;
+  }
 }
 
 /* Header menu */

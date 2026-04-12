@@ -1412,8 +1412,17 @@ function onNoTrackFlightSaved() {
 
 <style scoped>
 .logbook-layout {
-  height: 100%;
+  /* Prevent the map from overflowing the screen on mobile browser (Safari bottom bar) */
+  height: calc(100vh - 64px); /* Desktop default navbar height */
   overflow: hidden;
+}
+
+@media (max-width: 1200px) {
+  .logbook-layout {
+    /* dvh (dynamic viewport height) fixes Safari/Chrome iOS toolbar overlaps */
+    /* 56px is the typical v-app-bar height on mobile Vuetify */
+    height: calc(100dvh - 56px) !important;
+  }
 }
 
 .map-main {

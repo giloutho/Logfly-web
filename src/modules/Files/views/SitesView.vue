@@ -11,12 +11,7 @@
   <OpenLogbook :show="true" />
 
   <div v-if="databaseStore.hasOpenDatabase" class="sites-layout">
-    <!-- Left panel: Map -->
-    <div class="left-panel">
-      <LittleMapView ref="littleMapRef" :hideOverlay="true" :zoomLevel="14" />
-    </div>
-
-    <!-- Right panel: Filter, Search, Table, Details -->
+    <!-- Right panel first in DOM so it appears first on mobile (CSS order puts it on right on desktop) -->
     <div class="right-panel">
       <!-- Filter bar -->
       <div class="filter-block">
@@ -173,10 +168,17 @@
       </div>
     </div>
 
+    <!-- Left panel: Map (after right-panel in DOM; CSS order puts it visually on the left on desktop) -->
+    <div class="left-panel">
+      <LittleMapView ref="littleMapRef" :hideOverlay="true" :zoomLevel="14" />
+    </div>
+
     <!-- Site Form Dialog -->
     <SiteFormDialog v-model="showSiteDialog" :site="siteFormData" @submit="handleSiteSubmit"
       @cancel="handleSiteCancel" />
   </div>
+
+
 </template>
 
 <script setup>
@@ -612,14 +614,22 @@ function onCleanDuplicates() {
   box-sizing: border-box;
 }
 
-.left-panel,
+/* On desktop: right-panel is first in DOM but displayed second (map left, list right) */
 .right-panel {
+  order: 2;
   width: 50%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-right: 70px;
+  gap: 10px;
   box-sizing: border-box;
 }
 
 .left-panel {
+  order: 1;
+  width: 50%;
+  height: 100%;
   background: #f0f0f0;
   border: 2px solid #333;
   border-radius: 10px;
@@ -627,13 +637,7 @@ function onCleanDuplicates() {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-}
-
-.right-panel {
-  display: flex;
-  flex-direction: column;
-  padding-right: 70px;
-  gap: 10px;
+  box-sizing: border-box;
 }
 
 .filter-block {
@@ -647,6 +651,7 @@ function onCleanDuplicates() {
   justify-content: center;
   box-sizing: border-box;
   padding: 4px 20px;
+  flex-shrink: 0;
 }
 
 .top-block {
@@ -660,6 +665,7 @@ function onCleanDuplicates() {
   justify-content: center;
   box-sizing: border-box;
   padding: 10px 20px;
+  flex-shrink: 0;
 }
 
 .search-field {
@@ -724,8 +730,6 @@ function onCleanDuplicates() {
   color: #fbb104 !important;
   font-weight: 600;
 }
-
-
 
 .bottom-block {
   width: 100%;
@@ -803,22 +807,55 @@ function onCleanDuplicates() {
 }
 
 @media (max-width: 900px) {
+  /* Full page scroll on mobile — the AppLayout handles overflow-y:auto */
   .sites-layout {
     flex-direction: column;
     height: auto;
-    padding: 2vw 1vw;
+    min-height: 0;
+    overflow: visible;
+    padding: 8px;
+    gap: 8px;
   }
 
-  .left-panel,
+  /* List panel: full width, no fixed height */
   .right-panel {
+    order: 1;
     width: 100%;
     height: auto;
-    margin-bottom: 2vw;
+    padding-right: 0;
+    gap: 8px;
   }
 
-  .right-panel {
-    gap: 2vw;
-    padding-right: 0;
+  /* Map panel: full width, fixed height so Leaflet renders */
+  .left-panel {
+    order: 2;
+    width: 100%;
+    height: 260px;
+    flex-shrink: 0;
+  }
+
+  /* Remove % heights that only work inside a fixed-height parent */
+  .filter-block,
+  .top-block {
+    height: auto;
+  }
+
+  /* Table: show all rows, page scroll handles it */
+  .table-block {
+    height: auto;
+    overflow: visible;
+  }
+
+  /* Details panel: horizontal scroll for the info rows */
+  .bottom-block {
+    height: auto;
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+
+  .details-card {
+    height: auto;
+    min-width: 480px;
   }
 }
 </style>

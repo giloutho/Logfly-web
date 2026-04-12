@@ -213,6 +213,9 @@
         <v-list-item :to="{ name: 'sites-view' }" @click="drawer = false">
           <v-list-item-title>{{ $gettext('Sites') }}</v-list-item-title>
         </v-list-item>
+        <v-list-item :to="{ name: 'hike-view' }" @click="drawer = false">
+          <v-list-item-title>{{ $gettext('Hikes') }}</v-list-item-title>
+        </v-list-item>
       </v-list-group>
 
       <!-- Equipment -->

@@ -871,4 +871,12 @@ function escStr(str) {
     color: #999;
     font-style: italic;
 }
+
+@media (max-width: 900px) {
+    /* Allow horizontal scroll so the right panel (cut off on small screens) is reachable */
+    .hikes-layout {
+        overflow-x: auto;
+        min-width: 700px; /* prevent content from collapsing below readable width */
+    }
+}
 </style>

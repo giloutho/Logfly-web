@@ -15,10 +15,17 @@
     overflow-y: auto;
 }
 
-/* Ensure Vuetify's inner v-main wrapper scrolls on mobile */
+/* Ensure scroll works on mobile for pages that expand beyond viewport */
 @media (max-width: 1200px) {
     .app-container {
+        overflow-x: auto;
         overflow-y: auto;
+        height: auto;
+        min-height: 100vh;
+    }
+    .content-area {
+        overflow-x: auto;
+        overflow-y: visible;
     }
 }
 </style>
