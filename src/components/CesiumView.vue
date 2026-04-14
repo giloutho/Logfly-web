@@ -54,7 +54,7 @@ async function initCesium() {
 
     // Initialize viewer
     viewer = new Cesium.Viewer(cesiumContainer.value, {
-        terrainProvider: Cesium.createWorldTerrain(),
+        terrainProvider: await Cesium.createWorldTerrainAsync(),
         animation: false,
         timeline: false,
         baseLayerPicker: true,

@@ -240,7 +240,7 @@ export class IGCDecoder {
             const totalDuration = (this.fixes[this.fixes.length - 1].timestamp - this.fixes[0].timestamp) / 1000
             const avgDt = totalDuration / (this.fixes.length - 1)
             const dynamicWindowSize = Math.max(1, Math.round((10 / avgDt - 1) / 2))
-            console.log('igc-decoder : dynamicWindowSize : ' + dynamicWindowSize + ' totalDuration : ' + totalDuration + ' avgDt : ' + avgDt)
+            //console.log('igc-decoder : dynamicWindowSize : ' + dynamicWindowSize + ' totalDuration : ' + totalDuration + ' avgDt : ' + avgDt)
             //  const smoothOffset = 10             (Valeur L6)
             const smoothed = smooth(rawspeed, dynamicWindowSize)
             // const varioSmoothOffset = 10         (Valeur L6)
@@ -266,8 +266,8 @@ export class IGCDecoder {
                 if (rawvario[i] < minRawVario) minRawVario = rawvario[i]
                 if (sinkSmoothed[i] < minVarioSmoothed) minVarioSmoothed = sinkSmoothed[i]
             }
-            console.log('this.params.length : ' + this.params.length + ' smoothed.length : ' + smoothed.length + ' varioSmoothed.length : ' + varioSmoothed.length + ' sinkSmoothed.length : ' + sinkSmoothed.length)
-            console.log('maxsmoothed : ' + maxSmoothed + ' maxRawSpeed : ' + maxRawSpeed + ' minVarioSmoothed : ' + minVarioSmoothed + ' minRawVario : ' + minRawVario)
+            // console.log('this.params.length : ' + this.params.length + ' smoothed.length : ' + smoothed.length + ' varioSmoothed.length : ' + varioSmoothed.length + ' sinkSmoothed.length : ' + sinkSmoothed.length)
+            // console.log('maxsmoothed : ' + maxSmoothed + ' maxRawSpeed : ' + maxRawSpeed + ' minVarioSmoothed : ' + minVarioSmoothed + ' minRawVario : ' + minRawVario)
             this.speed = smoothed
             this.vz = varioSmoothed
             this.stat.maxclimb = maxVarioSmoothed.toFixed(2)
