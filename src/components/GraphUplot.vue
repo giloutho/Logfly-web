@@ -6,6 +6,7 @@
 import { ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import uPlot from 'uplot'
 import 'uplot/dist/uPlot.min.css'
+import smooth from 'array-smooth'
 
 const props = defineProps({
     fixes: {
@@ -38,7 +39,15 @@ const props = defineProps({
     },
     offsetUTC: {
         type: Number,
-        default: 0  // Offset in minutes from UTC (positive = east of UTC, negative = west)
+        default: 0
+    },
+    speeds: {
+        type: Array,
+        default: null
+    },
+    varios: {
+        type: Array,
+        default: null
     }
 })
 
@@ -97,40 +106,70 @@ function createChart() {
     const fixes = props.fixes
     const timestamps = []
     const altitudes = []
-    const speeds = []
-    const varios = []
     const ground = []
-
     const startTime = fixes[0].timestamp / 1000
 
-    for (let i = 0; i < fixes.length; i++) {
-        timestamps.push((fixes[i].timestamp / 1000) - startTime)
-        altitudes.push(fixes[i].gpsAltitude || 0)
+    // Data for cursor and smoothing
+    let smoothedVarios = []
+    let smoothedSpeeds = []
 
-        if (props.groundAltitudes && props.groundAltitudes[i] != null) {
-            ground.push(props.groundAltitudes[i])
-        } else {
-            ground.push(null)
-        }
+    if (props.speeds && props.varios) {
+        // Use pre-calculated data from decoder
+        smoothedSpeeds = props.speeds
+        smoothedVarios = props.varios
 
-        if (i > 0) {
-            const dt = (fixes[i].timestamp - fixes[i - 1].timestamp) / 1000
-            if (dt > 0) {
-                const dz = (fixes[i].gpsAltitude || 0) - (fixes[i - 1].gpsAltitude || 0)
-                varios.push(dz / dt)
-                const dx = Math.sqrt(
-                    Math.pow(fixes[i].latitude - fixes[i - 1].latitude, 2) +
-                    Math.pow(fixes[i].longitude - fixes[i - 1].longitude, 2)
-                ) * 111000
-                speeds.push((dx / dt) * 3.6)
+        // Still need to populate altitudes, ground and timestamps
+        for (let i = 0; i < fixes.length; i++) {
+            timestamps.push((fixes[i].timestamp / 1000) - startTime)
+            altitudes.push(fixes[i].gpsAltitude || 0)
+            if (props.groundAltitudes && props.groundAltitudes[i] != null) {
+                ground.push(props.groundAltitudes[i])
             } else {
-                varios.push(0)
-                speeds.push(0)
+                ground.push(null)
             }
-        } else {
-            varios.push(0)
-            speeds.push(0)
         }
+    } else {
+        // Fallback: internal calculation and smoothing
+        const internalSpeeds = []
+        const internalVarios = []
+
+        for (let i = 0; i < fixes.length; i++) {
+            timestamps.push((fixes[i].timestamp / 1000) - startTime)
+            altitudes.push(fixes[i].gpsAltitude || 0)
+
+            if (props.groundAltitudes && props.groundAltitudes[i] != null) {
+                ground.push(props.groundAltitudes[i])
+            } else {
+                ground.push(null)
+            }
+
+            if (i > 0) {
+                const dt = (fixes[i].timestamp - fixes[i - 1].timestamp) / 1000
+                if (dt > 0) {
+                    const dz = (fixes[i].gpsAltitude || 0) - (fixes[i - 1].gpsAltitude || 0)
+                    internalVarios.push(dz / dt)
+                    const dx = Math.sqrt(
+                        Math.pow(fixes[i].latitude - fixes[i - 1].latitude, 2) +
+                        Math.pow(fixes[i].longitude - fixes[i - 1].longitude, 2)
+                    ) * 111000
+                    internalSpeeds.push((dx / dt) * 3.6)
+                } else {
+                    internalVarios.push(0)
+                    internalSpeeds.push(0)
+                }
+            } else {
+                internalVarios.push(0)
+                internalSpeeds.push(0)
+            }
+        }
+
+        // Calculate dynamic window size to achieve ~10 seconds smoothing regardless of sampling rate
+        const totalDuration = (fixes[fixes.length - 1].timestamp - fixes[0].timestamp) / 1000
+        const avgDt = totalDuration / (fixes.length - 1)
+        const dynamicWindowSize = Math.max(1, Math.round((10 / avgDt - 1) / 2))
+
+        smoothedVarios = smooth(internalVarios, dynamicWindowSize)
+        smoothedSpeeds = smooth(internalSpeeds, dynamicWindowSize)
     }
 
     // Store timestamps at module level for draw hook access during redraw
@@ -282,8 +321,8 @@ function createChart() {
                 index: idx,
                 timestamp: fixes[idx].timestamp,
                 altitude: altitudes[idx],
-                vario: varios[idx],
-                speed: speeds[idx],
+                vario: smoothedVarios[idx],
+                speed: smoothedSpeeds[idx],
                 lat: fixes[idx].latitude,
                 lon: fixes[idx].longitude
             })

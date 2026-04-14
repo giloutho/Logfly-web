@@ -35,6 +35,7 @@
             <div class="graph-section">
                 <GraphUplot v-if="flightData?.decodedIgc?.fixes && flightData.decodedIgc.fixes.length > 0"
                     :fixes="flightData?.decodedIgc?.fixes" :groundAltitudes="groundAltitudes" :height="150"
+                    :speeds="flightData?.decodedIgc?.speed" :varios="flightData?.decodedIgc?.vz"
                     :cuttingMode="isCutting" :cutStart="cutStartIndex" :cutEnd="cutEndIndex"
                     :offsetUTC="flightData?.decodedIgc?.info?.offsetUTC || 0" @cursor-changed="onGraphCursorChanged"
                     @click-graph="onGraphClick" />

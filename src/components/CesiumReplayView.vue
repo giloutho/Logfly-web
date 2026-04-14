@@ -66,6 +66,7 @@
                 <!-- Graph section -->
                 <div class="graph-section">
                     <GraphUplot v-if="fixes && fixes.length > 0" :fixes="fixes" :groundAltitudes="groundAltitudes"
+                        :speeds="props.flightData?.decodedIgc?.speed" :varios="props.flightData?.decodedIgc?.vz"
                         :height="150" :currentIndex="currentFixIndex"
                         :offsetUTC="flightData?.decodedIgc?.info?.offsetUTC || 0" @cursor-changed="onGraphCursorChanged"
                         @click-graph="onGraphClick" />
@@ -397,21 +398,9 @@ function updateHoverInfo(idx) {
         hground = (altitude - groundAltitudes.value[idx]).toFixed(0);
     }
 
-    // Calculate vario and speed
-    let vario = 0;
-    let speed = 0;
-    if (idx > 0) {
-        const prevFix = fixes.value[idx - 1];
-        const dt = (fix.timestamp - prevFix.timestamp) / 1000;
-        if (dt > 0) {
-            vario = ((fix.gpsAltitude || 0) - (prevFix.gpsAltitude || 0)) / dt;
-            const dx = Math.sqrt(
-                Math.pow((fix.latitude - prevFix.latitude) * 111000, 2) +
-                Math.pow((fix.longitude - prevFix.longitude) * 111000 * Math.cos(fix.latitude * Math.PI / 180), 2)
-            );
-            speed = (dx / dt) * 3.6;
-        }
-    }
+    // Use pre-calculated smoothed values from decoder
+    const vario = props.flightData?.decodedIgc?.vz?.[idx] || 0;
+    const speed = props.flightData?.decodedIgc?.speed?.[idx] || 0;
 
     hoverInfo.value = `
         <span style="color:#1a6dcc;font-weight:bold;">🕒 ${new Date(fix.timestamp).toLocaleTimeString()}</span>
