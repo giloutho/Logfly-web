@@ -8,6 +8,8 @@ const BASE_URL = "https://logfly.org/logflydoc/";
 const HELP_MAP = {
     // Home page
     'home': 'start',
+    // Install page
+    'install': 'pwa',
     // Flights & Tracks
     'logbook-view': 'tracks/logbook',
     'import-gps': 'tracks/import',

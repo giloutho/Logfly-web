@@ -225,6 +225,105 @@ msgstr "Oder neuer Gleitschirm"
 msgid "Enter new glider name"
 msgstr "Einen neuen Gleitschirm eingeben"
 
+msgid "Edit hike"
+msgstr "Hike bearbeiten"
+
+msgid "New hike"
+msgstr "Neuer Hike"
+
+msgid "GPS track (IGC or GPX)"
+msgstr "GPS Track"
+
+msgid "No file selected"
+msgstr "Keine Datei Ausgwählt"
+
+msgid "Import"
+msgstr "Importieren"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Start"
+msgstr "Start"
+
+msgid "End"
+msgstr "Ende"
+
+msgid "Elevation gain"
+msgstr ""
+
+msgid "Duration"
+msgstr "Dauer"
+
+msgid "Starting coordinates"
+msgstr ""
+
+msgid "Latitude"
+msgstr "Breitengrad"
+
+msgid "Longitude"
+msgstr "Längengrad"
+
+msgid "Click on map to set start point"
+msgstr "In Karte Clicken für Startpunkt"
+
+msgid "End coordinates"
+msgstr ""
+
+msgid "Click on map to set end point"
+msgstr "In Karte Clicken für Endpunkt"
+
+msgid "If no GPS track, enter start and end coordinates by clicking on the map"
+msgstr ""
+
+msgid "Reading file"
+msgstr ""
+
+msgid "Unsupported track format"
+msgstr "Trackformat nicht unterstützt"
+
+msgid "IGC decoding error"
+msgstr "IGC Datei fehlerhaft"
+
+msgid "points"
+msgstr "Punkte"
+
+msgid "IGC read error"
+msgstr "IGC Fehler"
+
+msgid "GPX parsing error"
+msgstr "GPX Fehler"
+
+msgid "GPX→IGC conversion error"
+msgstr "GPS lässt sich nicht in IGC umwandeln"
+
+msgid "GPX read error"
+msgstr "GPX Datei lässt sich nicht lessen"
+
+msgid "Name must not be null"
+msgstr "Name darf nicht leer sein"
+
+msgid "Track loaded"
+msgstr "Track geladen"
+
+msgid "Associate a hike"
+msgstr ""
+
+msgid "Current hike"
+msgstr ""
+
+msgid "Today's duration"
+msgstr ""
+
+msgid "Reference duration"
+msgstr ""
+
+msgid "Create a new hike"
+msgstr ""
+
+msgid "Remove hike"
+msgstr ""
+
 msgid "Zoom in"
 msgstr "Vergrössern"
 
@@ -257,9 +356,6 @@ msgstr "Fluggebiet"
 
 msgid "Pilot"
 msgstr "Pilot*in"
-
-msgid "Duration"
-msgstr "Dauer"
 
 msgid "Max GPS alt"
 msgstr "Max GPS-Höhe"
@@ -338,6 +434,9 @@ msgstr "Keine Verletzungen in der ausgewählten Luftraumdatei"
 
 msgid "Click on an airspace to display the description"
 msgstr "Klicke auf einen Luftraum, um die Beschreibung anzuzeigen"
+
+msgid "Hike"
+msgstr "Wandernung"
 
 msgid "Flight without GPS track"
 msgstr "Flug ohne GPS-Track"
@@ -501,9 +600,6 @@ msgstr "Fluggebiet bearbeiten"
 msgid "New site"
 msgstr "Neues Fluggebiet"
 
-msgid "Name"
-msgstr "Name"
-
 msgid "Orientation"
 msgstr "Ausrichtung"
 
@@ -513,17 +609,8 @@ msgstr "PLZ"
 msgid "City"
 msgstr "Stadt"
 
-msgid "Latitude"
-msgstr "Breitengrad"
-
-msgid "Longitude"
-msgstr "Längengrad"
-
 msgid "Move marker to change coordinates"
 msgstr "Marker bewegen um die Koordinaten zu ändern"
-
-msgid "Name must not be null"
-msgstr "Name darf nicht leer sein"
 
 msgid "Latitude must not be null"
 msgstr "Breitengrad darf nicht leer sein"
@@ -541,7 +628,7 @@ msgid "No tag selected"
 msgstr "Kein Schlagwort ausgewählt"
 
 msgid "No tags checked, continue?"
-msgstr ""
+msgstr "Keine Tags geprüft, fortfahren"
 
 msgid "Ok"
 msgstr "Ok"
@@ -576,9 +663,6 @@ msgstr "Flüge & Tracks"
 msgid "Logbook"
 msgstr "Flugbuch"
 
-msgid "Import"
-msgstr "Importieren"
-
 msgid "Statistics"
 msgstr "Statistiken"
 
@@ -597,8 +681,14 @@ msgstr "Wegpunkte"
 msgid "XC Nav"
 msgstr "XC Nav"
 
+msgid "Sites & Hikes"
+msgstr "Startplatz & Wanderung"
+
 msgid "Sites"
 msgstr "Fluggebiete"
+
+msgid "Hikes"
+msgstr "Wanderungen"
 
 msgid "Equipment"
 msgstr "Ausrüstung"
@@ -849,6 +939,51 @@ msgstr "Eintrag erzeugt"
 msgid "Error saving record"
 msgstr "Fehler beim Speichern des Eintrags"
 
+msgid "No hike recorded"
+msgstr ""
+
+msgid "Would you like to add a new hike"
+msgstr ""
+
+msgid "Hike details"
+msgstr ""
+
+msgid "Export IGC"
+msgstr "IGC exportieren"
+
+msgid "Export GPX"
+msgstr "GPX exportieren"
+
+msgid "Select a hike to display details"
+msgstr ""
+
+msgid "Elev. (m)"
+msgstr ""
+
+msgid "Hike created successfully"
+msgstr ""
+
+msgid "Error creating hike"
+msgstr ""
+
+msgid "Hike updated successfully"
+msgstr ""
+
+msgid "Error updating hike"
+msgstr ""
+
+msgid "Hike deleted"
+msgstr ""
+
+msgid "Error deleting hike"
+msgstr ""
+
+msgid "Comment saved"
+msgstr "Kommentar gespeichert"
+
+msgid "Comment deleted"
+msgstr "Kommentar gelöscht"
+
 msgid "Not defined"
 msgstr "Nicht bestimmt"
 
@@ -890,12 +1025,6 @@ msgstr "Fluggebiet gelöscht"
 
 msgid "Error deleting site"
 msgstr "Fehler beim Löschen des Fluggebiets"
-
-msgid "Comment saved"
-msgstr "Kommentar gespeichert"
-
-msgid "Comment deleted"
-msgstr "Kommentar gelöscht"
 
 msgid "Displaying duplicates"
 msgstr "Duplikate anzeigen"
@@ -1101,12 +1230,6 @@ msgstr "Klick auf die Karte um Routenpunkte hinzuzufügen. Mit Escape beenden"
 msgid "Continue drawing from last point"
 msgstr "Zeichnen vom letzten Punkt fortsetzen"
 
-msgid "Start"
-msgstr "Start"
-
-msgid "End"
-msgstr "Ende"
-
 msgid "Point"
 msgstr "Punkt"
 
@@ -1149,9 +1272,6 @@ msgstr "Punkte mit Klick hinzufügen, Doppelklick zum Beenden"
 msgid "Route loaded"
 msgstr "Route geladen"
 
-msgid "points"
-msgstr "Punkte"
-
 msgid "markers"
 msgstr "Marker"
 
@@ -1166,9 +1286,6 @@ msgstr "Kein gültiger Track gefunden"
 
 msgid "GPX track loaded"
 msgstr "GPX Track geladen"
-
-msgid "Unsupported track format"
-msgstr "Trackformat nicht unterstützt"
 
 msgid "Error loading track"
 msgstr "Fehler beim Laden des Tracks"
@@ -1489,7 +1606,7 @@ msgid "tracks decoded"
 msgstr "Tracks dekodiert"
 
 msgid "Display all tracks"
-msgstr ""
+msgstr "Alle Flüge anzeigen"
 
 msgid "Unselect"
 msgstr "Abwählen"
@@ -1510,13 +1627,13 @@ msgid "Not yet available"
 msgstr "Noch nicht verfügbar"
 
 msgid "Select a folder and choose track files (IGC or GPX)"
-msgstr ""
+msgstr "Ordner Auswählen (IGC oder GPX)"
 
 msgid "Error while selecting the folder"
 msgstr "Fehler bei der Ordnerauswahl"
 
 msgid "files selected"
-msgstr ""
+msgstr "Datei Auswählen"
 
 msgid "No directory selected"
 msgstr "Kein Ordner ausgewählt"
@@ -1553,12 +1670,6 @@ msgstr "Zusammenführen"
 
 msgid "Analyze"
 msgstr "Analysieren"
-
-msgid "Export IGC"
-msgstr "IGC exportieren"
-
-msgid "Export GPX"
-msgstr "GPX exportieren"
 
 msgid "Glider flight time"
 msgstr "Gleitschirm"
@@ -1610,6 +1721,12 @@ msgstr "Foto gespeichert"
 
 msgid "Photo deleted"
 msgstr "Foto gelöscht"
+
+msgid "Hike associated successfully"
+msgstr ""
+
+msgid "Hike removed"
+msgstr ""
 
 msgid "No IGC data for this flight"
 msgstr "Keine IGC-Daten für diesen Flug"

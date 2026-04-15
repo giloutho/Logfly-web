@@ -12,7 +12,7 @@
 
                 <!-- Classes -->
                 <div class="filter-group mb-3">
-                    <div class="filter-label">Classes</div>
+                    <div class="filter-label">{{ $gettext('Classes') }}</div>
                     <div class="d-flex flex-wrap gap-2">
                         <v-checkbox v-model="filters.classes" label="A" value="A" density="compact" hide-details
                             class="mr-4"></v-checkbox>
@@ -33,7 +33,7 @@
 
                 <!-- Types -->
                 <div class="filter-group mb-3">
-                    <div class="filter-label">Types</div>
+                    <div class="filter-label">{{ $gettext('Types') }}</div>
                     <div class="d-flex flex-wrap gap-2">
                         <v-checkbox v-model="filters.types" label="Prohibited" value="Prohibited" density="compact"
                             hide-details class="mr-4"></v-checkbox>
@@ -58,7 +58,7 @@
 
                 <!-- Floor Limit -->
                 <div class="filter-group mb-3">
-                    <div class="filter-label">Limite plancher</div>
+                    <div class="filter-label">{{ $gettext('Floor limit') }}</div>
                     <v-radio-group v-model="filters.floor" inline density="compact" hide-details>
                         <v-radio label="500m" value="500" class="mr-4"></v-radio>
                         <v-radio label="1000m" value="1000" class="mr-4"></v-radio>
@@ -71,7 +71,7 @@
 
                 <!-- Radius -->
                 <div class="filter-group mb-4">
-                    <div class="filter-label">Radius</div>
+                    <div class="filter-label">{{ $gettext('Radius') }}</div>
                     <v-radio-group v-model="filters.radius" inline density="compact" hide-details>
                         <v-radio label="50km" value="50" class="mr-3"></v-radio>
                         <v-radio label="100km" value="100" class="mr-3"></v-radio>

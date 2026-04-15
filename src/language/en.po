@@ -11,6 +11,25 @@ msgstr ""
 msgid "Display airspaces"
 msgstr ""
 
+#: src/components/AirspaceDialog.vue:15
+#: src/modules/Routing/components/AirspaceRouteDialog.vue:15
+msgid "Classes"
+msgstr ""
+
+#: src/components/AirspaceDialog.vue:36
+#: src/modules/Routing/components/AirspaceRouteDialog.vue:36
+msgid "Types"
+msgstr ""
+
+#: src/components/AirspaceDialog.vue:61
+msgid "Floor below"
+msgstr ""
+
+#: src/components/AirspaceDialog.vue:74
+#: src/modules/Routing/components/AirspaceRouteDialog.vue:74
+msgid "Radius"
+msgstr ""
+
 #: src/components/AirspaceDialog.vue:89
 #: src/components/charts/GlidersChart.vue:14
 #: src/components/charts/MonthlyChart.vue:24
@@ -64,11 +83,11 @@ msgstr ""
 #: src/components/ChangeSiteDialog.vue:31
 #: src/components/ChooseSiteDialog.vue:41 src/components/CommentDialog.vue:13
 #: src/components/FullMapView.vue:11 src/components/GliderDialog.vue:18
-#: src/components/HikeForm.vue:128 src/components/HikePickerDialog.vue:73
+#: src/components/HikeForm.vue:128 src/components/HikePickerDialog.vue:77
 #: src/components/LogbookPhoto.vue:41 src/components/NoTrackDialog.vue:86
-#: src/components/OpenLogbook.vue:65 src/components/SearchFlightsDialog.vue:121
+#: src/components/OpenLogbook.vue:65 src/components/SearchFlightsDialog.vue:124
 #: src/components/SiteForm.vue:141 src/components/TagDialog.vue:35
-#: src/components/TagDialog.vue:47 src/modules/Equip/views/EquipView.vue:155
+#: src/components/TagDialog.vue:47 src/modules/Equip/views/EquipView.vue:137
 #: src/modules/Routing/views/WaypointView.vue:113
 #: src/modules/Routing/views/XcnavView.vue:173
 #: src/modules/Settings/views/TranslationView.vue:67
@@ -78,12 +97,12 @@ msgstr ""
 
 #: src/components/ChangeSiteDialog.vue:32
 #: src/components/ChooseSiteDialog.vue:42 src/components/GliderDialog.vue:19
-#: src/components/HikeForm.vue:131 src/components/HikePickerDialog.vue:75
+#: src/components/HikeForm.vue:131 src/components/HikePickerDialog.vue:79
 #: src/components/LogbookDetails.vue:120 src/components/LogbookPhoto.vue:48
 #: src/components/NoTrackDialog.vue:89 src/components/SiteForm.vue:146
-#: src/components/TagDialog.vue:37 src/modules/Equip/views/EquipView.vue:160
+#: src/components/TagDialog.vue:37 src/modules/Equip/views/EquipView.vue:142
 #: src/modules/Files/views/HikeView.vue:139
-#: src/modules/Files/views/SitesView.vue:157
+#: src/modules/Files/views/SitesView.vue:134
 #: src/modules/Routing/views/WaypointView.vue:116
 msgid "OK"
 msgstr ""
@@ -106,7 +125,7 @@ msgstr ""
 #: src/components/charts/GlidersChart.vue:11
 #: src/components/charts/MonthlyChart.vue:21
 #: src/components/charts/SitesChart.vue:11
-#: src/modules/Files/views/SitesView.vue:24
+#: src/modules/Files/views/SitesView.vue:19
 #: src/modules/Routing/views/WaypointView.vue:128
 msgid "All"
 msgstr ""
@@ -223,7 +242,7 @@ msgstr ""
 
 #: src/components/charts/SitesChart.vue:161
 #: src/components/charts/YearlyChart.vue:163
-#: src/modules/Equip/views/EquipView.vue:447
+#: src/modules/Equip/views/EquipView.vue:425
 #: src/modules/Tracks/views/LogbookView.vue:50
 #: src/modules/Tracks/views/LogbookView.vue:61
 msgid "flights"
@@ -238,7 +257,7 @@ msgstr ""
 #: src/components/LogbookDetails.vue:66 src/components/NoTrackDialog.vue:56
 #: src/components/NoTrackDialog.vue:62 src/components/SiteForm.vue:16
 #: src/components/TraceInfoDialog.vue:125 src/components/TraceInfoPanel.vue:90
-#: src/modules/Files/views/SitesView.vue:25
+#: src/modules/Files/views/SitesView.vue:20
 #: src/modules/Routing/views/WaypointView.vue:76
 msgid "Take off"
 msgstr ""
@@ -268,7 +287,7 @@ msgid "Elapsed"
 msgstr ""
 
 #: src/components/ChronoView.vue:20 src/components/SiteForm.vue:40
-#: src/modules/Files/views/SitesView.vue:244
+#: src/modules/Files/views/SitesView.vue:226
 msgid "Alt"
 msgstr ""
 
@@ -291,7 +310,7 @@ msgstr ""
 #: src/components/ChronoView.vue:102 src/components/LogbookDetails.vue:69
 #: src/components/SiteForm.vue:17 src/components/TraceInfoDialog.vue:129
 #: src/components/TraceInfoPanel.vue:94
-#: src/modules/Files/views/SitesView.vue:26
+#: src/modules/Files/views/SitesView.vue:21
 #: src/modules/Routing/views/WaypointView.vue:77
 msgid "Landing"
 msgstr ""
@@ -299,10 +318,10 @@ msgstr ""
 #: src/components/CommentDialog.vue:4 src/components/LogbookDetails.vue:29
 #: src/components/NoTrackDialog.vue:70
 #: src/components/SearchFlightsDialog.vue:94 src/components/SiteForm.vue:131
-#: src/modules/Equip/views/EquipView.vue:146
-#: src/modules/Equip/views/EquipView.vue:225
+#: src/modules/Equip/views/EquipView.vue:128
+#: src/modules/Equip/views/EquipView.vue:205
 #: src/modules/Files/views/HikeView.vue:83
-#: src/modules/Files/views/SitesView.vue:99
+#: src/modules/Files/views/SitesView.vue:76
 #: src/modules/Tracks/views/LogbookView.vue:145
 msgid "Comment"
 msgstr ""
@@ -314,8 +333,8 @@ msgstr ""
 #: src/components/CommentDialog.vue:14 src/components/LogbookDetails.vue:218
 #: src/components/LogbookPhoto.vue:44 src/modules/Files/views/HikeView.vue:118
 #: src/modules/Files/views/HikeView.vue:136
-#: src/modules/Files/views/SitesView.vue:138
-#: src/modules/Files/views/SitesView.vue:155
+#: src/modules/Files/views/SitesView.vue:115
+#: src/modules/Files/views/SitesView.vue:132
 #: src/modules/Routing/views/WaypointView.vue:168
 #: src/modules/Routing/views/XcnavView.vue:916
 #: src/modules/Tracks/views/LogbookView.vue:169
@@ -323,7 +342,7 @@ msgid "Delete"
 msgstr ""
 
 #: src/components/CommentDialog.vue:16 src/components/TheNavbar.vue:152
-#: src/components/TheNavbar.vue:267
+#: src/components/TheNavbar.vue:270
 #: src/modules/Routing/views/AirspacesView.vue:75
 #: src/modules/Routing/views/WaypointView.vue:40
 #: src/modules/Routing/views/XcnavView.vue:174
@@ -362,14 +381,14 @@ msgid "Charts"
 msgstr ""
 
 #: src/components/FullmapTrack.vue:8 src/components/LogbookDetails.vue:38
-#: src/modules/Files/views/SitesView.vue:176
+#: src/modules/Files/views/SitesView.vue:153
 #: src/modules/Routing/views/AirspacesView.vue:75
 #: src/modules/Routing/views/WaypointView.vue:40
 msgid "Export"
 msgstr ""
 
 #: src/components/FullMapView.vue:8 src/components/TheNavbar.vue:64
-#: src/components/TheNavbar.vue:201 src/components/TheWelcome.vue:126
+#: src/components/TheNavbar.vue:201 src/components/TheWelcome.vue:143
 #: src/modules/Routing/views/XcnavView.vue:22
 #: src/modules/Routing/views/XcnavView.vue:364
 msgid "Airspaces"
@@ -383,11 +402,11 @@ msgstr ""
 msgid "Cut"
 msgstr ""
 
-#: src/components/FullMapView.vue:309
+#: src/components/FullMapView.vue:310
 msgid "Select the start and end points of the section"
 msgstr ""
 
-#: src/components/FullMapView.vue:310
+#: src/components/FullMapView.vue:311
 msgid "to be retained by clicking on the elevation chart"
 msgstr ""
 
@@ -405,7 +424,7 @@ msgstr ""
 #: src/components/NoTrackDialog.vue:41
 #: src/components/SearchFlightsDialog.vue:67
 #: src/components/TraceInfoDialog.vue:122 src/components/TraceInfoPanel.vue:87
-#: src/modules/Equip/views/EquipView.vue:107
+#: src/modules/Equip/views/EquipView.vue:89
 #: src/modules/Stat/views/AnnualSummary.vue:116
 msgid "Glider"
 msgstr ""
@@ -435,7 +454,7 @@ msgid "No file selected"
 msgstr ""
 
 #: src/components/HikeForm.vue:23 src/components/TheNavbar.vue:27
-#: src/modules/Files/views/SitesView.vue:180
+#: src/modules/Files/views/SitesView.vue:157
 #: src/modules/Settings/views/SettingsView.vue:139
 #: src/modules/Tracks/views/ImportView.vue:103
 #: src/modules/Tracks/views/ImportView.vue:218
@@ -444,26 +463,27 @@ msgstr ""
 
 #: src/components/HikeForm.vue:37 src/components/SiteForm.vue:25
 #: src/modules/Files/views/HikeView.vue:97
-#: src/modules/Files/views/HikeView.vue:211
-#: src/modules/Files/views/SitesView.vue:241
+#: src/modules/Files/views/HikeView.vue:237
+#: src/modules/Files/views/SitesView.vue:223
 #: src/modules/Routing/views/WaypointView.vue:81
 msgid "Name"
 msgstr ""
 
 #: src/components/HikeForm.vue:46 src/modules/Files/views/HikeView.vue:99
-#: src/modules/Files/views/HikeView.vue:212
+#: src/modules/Files/views/HikeView.vue:238
 #: src/modules/Routing/views/XcnavView.vue:581
 #: src/modules/Settings/views/TranslationView.vue:52
 msgid "Start"
 msgstr ""
 
 #: src/components/HikeForm.vue:55 src/modules/Files/views/HikeView.vue:101
-#: src/modules/Files/views/HikeView.vue:213
+#: src/modules/Files/views/HikeView.vue:239
 #: src/modules/Routing/views/XcnavView.vue:582
 msgid "End"
 msgstr ""
 
-#: src/components/HikeForm.vue:64 src/modules/Files/views/HikeView.vue:105
+#: src/components/HikeForm.vue:64 src/components/HikePickerDialog.vue:57
+#: src/modules/Files/views/HikeView.vue:105
 msgid "Elevation gain"
 msgstr ""
 
@@ -471,7 +491,7 @@ msgstr ""
 #: src/components/NoTrackDialog.vue:28 src/components/TraceInfoDialog.vue:133
 #: src/components/TraceInfoPanel.vue:98 src/js/leaflet/map-utils.js:20
 #: src/js/leaflet/map-utils.js:47 src/modules/Files/views/HikeView.vue:107
-#: src/modules/Files/views/HikeView.vue:215
+#: src/modules/Files/views/HikeView.vue:241
 #: src/modules/Routing/views/XcnavView.vue:47
 #: src/modules/Stat/views/AnnualSummary.vue:59
 #: src/modules/Stat/views/AnnualSummary.vue:118
@@ -561,19 +581,19 @@ msgstr ""
 msgid "Current hike"
 msgstr ""
 
-#: src/components/HikePickerDialog.vue:46
+#: src/components/HikePickerDialog.vue:47
 msgid "Today's duration"
 msgstr ""
 
-#: src/components/HikePickerDialog.vue:54
+#: src/components/HikePickerDialog.vue:55
 msgid "Reference duration"
 msgstr ""
 
-#: src/components/HikePickerDialog.vue:61
+#: src/components/HikePickerDialog.vue:65
 msgid "Create a new hike"
 msgstr ""
 
-#: src/components/HikePickerDialog.vue:70
+#: src/components/HikePickerDialog.vue:74
 msgid "Remove hike"
 msgstr ""
 
@@ -602,13 +622,13 @@ msgid "Flight Details"
 msgstr ""
 
 #: src/components/LogbookDetails.vue:25 src/modules/Files/views/HikeView.vue:79
-#: src/modules/Files/views/SitesView.vue:95
+#: src/modules/Files/views/SitesView.vue:72
 msgid "About"
 msgstr ""
 
 #: src/components/LogbookDetails.vue:33
 #: src/modules/Files/views/HikeView.vue:122
-#: src/modules/Files/views/SitesView.vue:142
+#: src/modules/Files/views/SitesView.vue:119
 msgid "Modify"
 msgstr ""
 
@@ -619,7 +639,7 @@ msgstr ""
 #: src/components/LogbookDetails.vue:55
 #: src/components/SearchFlightsDialog.vue:76
 #: src/components/TraceInfoDialog.vue:118 src/components/TraceInfoPanel.vue:83
-#: src/modules/Files/views/SitesView.vue:114
+#: src/modules/Files/views/SitesView.vue:91
 #: src/modules/Stat/views/AnnualSummary.vue:116
 msgid "Site"
 msgstr ""
@@ -646,7 +666,7 @@ msgstr ""
 
 #: src/components/LogbookDetails.vue:116
 #: src/modules/Files/views/HikeView.vue:132
-#: src/modules/Files/views/SitesView.vue:152
+#: src/modules/Files/views/SitesView.vue:129
 msgid "Add a comment"
 msgstr ""
 
@@ -657,7 +677,7 @@ msgid "Edit"
 msgstr ""
 
 #: src/components/LogbookDetails.vue:220
-#: src/modules/Files/views/SitesView.vue:168
+#: src/modules/Files/views/SitesView.vue:145
 #: src/modules/Tracks/views/LogbookView.vue:165
 msgid "Duplicate"
 msgstr ""
@@ -747,7 +767,7 @@ msgstr ""
 msgid "Click on an airspace to display the description"
 msgstr ""
 
-#: src/components/MapLeaflet.vue:603
+#: src/components/MapLeaflet.vue:603 src/components/SearchFlightsDialog.vue:107
 #: src/modules/Tracks/views/LogbookView.vue:147
 msgid "Hike"
 msgstr ""
@@ -760,8 +780,8 @@ msgstr ""
 
 #: src/components/NoTrackDialog.vue:14 src/components/TraceInfoDialog.vue:117
 #: src/components/TraceInfoPanel.vue:82
-#: src/modules/Equip/views/EquipView.vue:95
-#: src/modules/Equip/views/EquipView.vue:222
+#: src/modules/Equip/views/EquipView.vue:77
+#: src/modules/Equip/views/EquipView.vue:202
 msgid "Date"
 msgstr ""
 
@@ -786,7 +806,7 @@ msgid "Define the used glider"
 msgstr ""
 
 #: src/components/NoTrackDialog.vue:335
-#: src/modules/Files/views/SitesView.vue:464
+#: src/modules/Files/views/SitesView.vue:442
 msgid "Error creating site"
 msgstr ""
 
@@ -949,8 +969,8 @@ msgid "Search in site name"
 msgstr ""
 
 #: src/components/SearchFlightsDialog.vue:85 src/components/SiteForm.vue:64
-#: src/modules/Files/views/SitesView.vue:118
-#: src/modules/Files/views/SitesView.vue:245
+#: src/modules/Files/views/SitesView.vue:95
+#: src/modules/Files/views/SitesView.vue:227
 msgid "Country"
 msgstr ""
 
@@ -966,24 +986,24 @@ msgstr ""
 msgid "Has photo"
 msgstr ""
 
-#: src/components/SearchFlightsDialog.vue:117
+#: src/components/SearchFlightsDialog.vue:120
 #: src/modules/Routing/views/AirspacesView.vue:69
 #: src/modules/Routing/views/WaypointView.vue:52
 #: src/modules/Settings/views/SettingsView.vue:86
 msgid "Reset"
 msgstr ""
 
-#: src/components/SearchFlightsDialog.vue:125
+#: src/components/SearchFlightsDialog.vue:128
 #: src/modules/Equip/views/EquipView.vue:26
 #: src/modules/Files/views/HikeView.vue:23
-#: src/modules/Files/views/SitesView.vue:33
+#: src/modules/Files/views/SitesView.vue:28
 #: src/modules/Routing/views/AirspacesView.vue:32
 #: src/modules/Settings/views/TranslationView.vue:84
 #: src/modules/Tracks/views/LogbookView.vue:24
 msgid "Search"
 msgstr ""
 
-#: src/components/SearchFlightsDialog.vue:240
+#: src/components/SearchFlightsDialog.vue:248
 msgid "Please enter at least one search criterion"
 msgstr ""
 
@@ -995,7 +1015,7 @@ msgstr ""
 msgid "New site"
 msgstr ""
 
-#: src/components/SiteForm.vue:34 src/modules/Files/views/SitesView.vue:125
+#: src/components/SiteForm.vue:34 src/modules/Files/views/SitesView.vue:102
 msgid "Orientation"
 msgstr ""
 
@@ -1053,7 +1073,7 @@ msgid "To be saved"
 msgstr ""
 
 #: src/components/TheFooter.vue:33 src/components/TheNavbar.vue:152
-#: src/components/TheNavbar.vue:267
+#: src/components/TheNavbar.vue:270
 msgid "Saved"
 msgstr ""
 
@@ -1074,44 +1094,44 @@ msgid "Backup copy created"
 msgstr ""
 
 #: src/components/TheNavbar.vue:19 src/components/TheNavbar.vue:165
-#: src/components/TheWelcome.vue:81
+#: src/components/TheWelcome.vue:98
 msgid "Flights & Tracks"
 msgstr ""
 
 #: src/components/TheNavbar.vue:24 src/components/TheNavbar.vue:169
-#: src/components/TheWelcome.vue:83
+#: src/components/TheWelcome.vue:100
 #: src/modules/Settings/views/SettingsView.vue:138
 msgid "Logbook"
 msgstr ""
 
 #: src/components/TheNavbar.vue:38 src/components/TheNavbar.vue:182
-#: src/components/TheWelcome.vue:105
+#: src/components/TheWelcome.vue:122
 msgid "Statistics"
 msgstr ""
 
 #: src/components/TheNavbar.vue:44 src/components/TheNavbar.vue:185
-#: src/components/TheWelcome.vue:109
+#: src/components/TheWelcome.vue:126
 msgid "Annual summary"
 msgstr ""
 
 #: src/components/TheNavbar.vue:47 src/components/TheNavbar.vue:188
-#: src/components/TheWelcome.vue:112
+#: src/components/TheWelcome.vue:129
 msgid "Global summary"
 msgstr ""
 
 #: src/components/TheNavbar.vue:55 src/components/TheNavbar.vue:195
-#: src/components/TheWelcome.vue:120
+#: src/components/TheWelcome.vue:137
 msgid "Routing"
 msgstr ""
 
 #: src/components/TheNavbar.vue:61 src/components/TheNavbar.vue:198
-#: src/components/TheWelcome.vue:123
+#: src/components/TheWelcome.vue:140
 #: src/modules/Routing/views/XcnavView.vue:361
 msgid "Waypoints"
 msgstr ""
 
 #: src/components/TheNavbar.vue:67 src/components/TheNavbar.vue:204
-#: src/components/TheWelcome.vue:127
+#: src/components/TheWelcome.vue:144
 msgid "XC Nav"
 msgstr ""
 
@@ -1120,8 +1140,8 @@ msgid "Sites & Hikes"
 msgstr ""
 
 #: src/components/TheNavbar.vue:81 src/components/TheNavbar.vue:211
-#: src/components/TheNavbar.vue:214 src/components/TheWelcome.vue:136
-#: src/components/TheWelcome.vue:139
+#: src/components/TheNavbar.vue:214 src/components/TheWelcome.vue:153
+#: src/components/TheWelcome.vue:156
 #: src/modules/Stat/views/AnnualSummary.vue:37
 #: src/modules/Stat/views/AnnualSummary.vue:109
 #: src/modules/Stat/views/AnnualSummary.vue:136
@@ -1129,38 +1149,38 @@ msgstr ""
 msgid "Sites"
 msgstr ""
 
-#: src/components/TheNavbar.vue:84
+#: src/components/TheNavbar.vue:84 src/components/TheNavbar.vue:217
 msgid "Hikes"
 msgstr ""
 
-#: src/components/TheNavbar.vue:90 src/components/TheNavbar.vue:220
-#: src/components/TheWelcome.vue:150 src/components/TheWelcome.vue:154
+#: src/components/TheNavbar.vue:90 src/components/TheNavbar.vue:223
+#: src/components/TheWelcome.vue:167 src/components/TheWelcome.vue:171
 #: src/modules/Equip/views/EquipView.vue:18
-#: src/modules/Equip/views/EquipView.vue:99
-#: src/modules/Equip/views/EquipView.vue:223
+#: src/modules/Equip/views/EquipView.vue:81
+#: src/modules/Equip/views/EquipView.vue:203
 msgid "Equipment"
 msgstr ""
 
-#: src/components/TheNavbar.vue:96 src/components/TheNavbar.vue:226
-#: src/components/TheWelcome.vue:161 src/modules/Files/views/HikeView.vue:87
-#: src/modules/Files/views/SitesView.vue:103
+#: src/components/TheNavbar.vue:96 src/components/TheNavbar.vue:229
+#: src/components/TheWelcome.vue:178 src/modules/Files/views/HikeView.vue:87
+#: src/modules/Files/views/SitesView.vue:80
 msgid "Utilities"
 msgstr ""
 
-#: src/components/TheNavbar.vue:102 src/components/TheNavbar.vue:229
-#: src/components/TheWelcome.vue:164
+#: src/components/TheNavbar.vue:102 src/components/TheNavbar.vue:232
+#: src/components/TheWelcome.vue:181
 #: src/modules/Settings/views/SettingsView.vue:9
 msgid "Settings"
 msgstr ""
 
-#: src/components/TheNavbar.vue:105 src/components/TheNavbar.vue:232
-#: src/components/TheWelcome.vue:166
+#: src/components/TheNavbar.vue:105 src/components/TheNavbar.vue:235
+#: src/components/TheWelcome.vue:183
 #: src/modules/Settings/views/SupportView.vue:11
 msgid "Support"
 msgstr ""
 
-#: src/components/TheNavbar.vue:108 src/components/TheNavbar.vue:235
-#: src/components/TheWelcome.vue:168
+#: src/components/TheNavbar.vue:108 src/components/TheNavbar.vue:238
+#: src/components/TheWelcome.vue:185
 msgid "Translation"
 msgstr ""
 
@@ -1184,79 +1204,87 @@ msgstr ""
 msgid "Import tracks"
 msgstr ""
 
-#: src/components/TheNavbar.vue:244
+#: src/components/TheNavbar.vue:247
 #: src/modules/Settings/views/SettingsView.vue:26
 msgid "Language"
 msgstr ""
 
-#: src/components/TheWelcome.vue:83
+#: src/components/TheWelcome.vue:100
 msgid "Access your logbook"
 msgstr ""
 
-#: src/components/TheWelcome.vue:85
+#: src/components/TheWelcome.vue:102
 msgid "Import new flights with or without GPS tracks"
 msgstr ""
 
-#: src/components/TheWelcome.vue:87
+#: src/components/TheWelcome.vue:104
 msgid "Import flights"
 msgstr ""
 
-#: src/components/TheWelcome.vue:89
+#: src/components/TheWelcome.vue:106
 msgid "Review external GPS tracks"
 msgstr ""
 
-#: src/components/TheWelcome.vue:90
+#: src/components/TheWelcome.vue:107
 msgid "External GPS track"
 msgstr ""
 
-#: src/components/TheWelcome.vue:94
+#: src/components/TheWelcome.vue:111
 msgid ""
 "View the demo GPS track, a classic return trip Grand Bornand Semnoz Grand "
 "Bornand"
 msgstr ""
 
-#: src/components/TheWelcome.vue:107
+#: src/components/TheWelcome.vue:124
 msgid "Consult the annual summary of your flights"
 msgstr ""
 
-#: src/components/TheWelcome.vue:110
+#: src/components/TheWelcome.vue:127
 msgid "Obtain global statistics of your logbook"
 msgstr ""
 
-#: src/components/TheWelcome.vue:122
+#: src/components/TheWelcome.vue:139
 msgid "Manage your waypoints"
 msgstr ""
 
-#: src/components/TheWelcome.vue:125
+#: src/components/TheWelcome.vue:142
 msgid "Visualize and edit airspaces"
 msgstr ""
 
-#: src/components/TheWelcome.vue:127
+#: src/components/TheWelcome.vue:144
 msgid "Program XC flights"
 msgstr ""
 
-#: src/components/TheWelcome.vue:138
+#: src/components/TheWelcome.vue:155
 msgid "Manage the sites file of your logbook"
 msgstr ""
 
-#: src/components/TheWelcome.vue:142
+#: src/components/TheWelcome.vue:159
 msgid "Consult the Paragliding Earth database"
 msgstr ""
 
-#: src/components/TheWelcome.vue:152
+#: src/components/TheWelcome.vue:169
 msgid "Manage your equipment : purchase, revision..."
 msgstr ""
 
-#: src/components/TheWelcome.vue:163
+#: src/components/TheWelcome.vue:180
 msgid "Manage app preferences"
 msgstr ""
 
-#: src/components/TheWelcome.vue:165
+#: src/components/TheWelcome.vue:182
 msgid "Access support"
 msgstr ""
 
-#: src/components/TheWelcome.vue:167
+#: src/components/TheWelcome.vue:184
 msgid "Help translate Logfly"
+msgstr ""
+
+#: src/components/TheWelcome.vue:193
+msgid "Consult the help"
+msgstr ""
+
+#: src/components/TheWelcome.vue:194
+msgid "Install Logfly as an application"
 msgstr ""
 
 #: src/components/TraceInfoDialog.vue:126
@@ -1373,117 +1401,117 @@ msgstr ""
 #: src/modules/Equip/views/EquipView.vue:24
 #: src/modules/Files/views/HikeView.vue:36
 #: src/modules/Files/views/HikeView.vue:114
-#: src/modules/Files/views/SitesView.vue:134
+#: src/modules/Files/views/SitesView.vue:111
 msgid "Add"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:89
+#: src/modules/Equip/views/EquipView.vue:71
 msgid "Edit record"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:89
+#: src/modules/Equip/views/EquipView.vue:71
 msgid "New record"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:101
+#: src/modules/Equip/views/EquipView.vue:83
 msgid "Click on Glider button or Other button"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:112
+#: src/modules/Equip/views/EquipView.vue:94
 #: src/modules/Routing/components/AirspaceRouteDialog.vue:54
 msgid "Other"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:117
+#: src/modules/Equip/views/EquipView.vue:99
 msgid "Select a glider"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:123
+#: src/modules/Equip/views/EquipView.vue:105
 msgid "Enter equipment"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:130
+#: src/modules/Equip/views/EquipView.vue:112
 msgid "Clear"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:138
-#: src/modules/Equip/views/EquipView.vue:224
+#: src/modules/Equip/views/EquipView.vue:120
+#: src/modules/Equip/views/EquipView.vue:204
 msgid "Operation"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:142
+#: src/modules/Equip/views/EquipView.vue:124
 msgid "Price"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:210
+#: src/modules/Equip/views/EquipView.vue:190
 msgid "You can record all operations"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:211
+#: src/modules/Equip/views/EquipView.vue:191
 msgid "purchase"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:212
+#: src/modules/Equip/views/EquipView.vue:192
 msgid "sale"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:213
+#: src/modules/Equip/views/EquipView.vue:193
 msgid "overhaul"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:214
+#: src/modules/Equip/views/EquipView.vue:194
 msgid "emergency folding"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:215
+#: src/modules/Equip/views/EquipView.vue:195
 msgid "chocking"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:216
+#: src/modules/Equip/views/EquipView.vue:196
 msgid "etc"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:406
+#: src/modules/Equip/views/EquipView.vue:384
 msgid "Are you sure you want to delete this record?"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:411
+#: src/modules/Equip/views/EquipView.vue:389
 msgid "Record deleted"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:416
+#: src/modules/Equip/views/EquipView.vue:394
 msgid "Error deleting record"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:447
+#: src/modules/Equip/views/EquipView.vue:425
 msgid "registered"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:447
+#: src/modules/Equip/views/EquipView.vue:425
 msgid "for"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:473
+#: src/modules/Equip/views/EquipView.vue:451
 msgid "Date is required"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:478
+#: src/modules/Equip/views/EquipView.vue:456
 msgid "Equipment is required"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:483
+#: src/modules/Equip/views/EquipView.vue:461
 msgid "Operation is required"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:506
+#: src/modules/Equip/views/EquipView.vue:484
 msgid "Record updated"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:506
+#: src/modules/Equip/views/EquipView.vue:484
 msgid "Record created"
 msgstr ""
 
-#: src/modules/Equip/views/EquipView.vue:513
+#: src/modules/Equip/views/EquipView.vue:491
 msgid "Error saving record"
 msgstr ""
 
@@ -1499,147 +1527,169 @@ msgstr ""
 msgid "Hike details"
 msgstr ""
 
-#: src/modules/Files/views/HikeView.vue:151
+#: src/modules/Files/views/HikeView.vue:152
 #: src/modules/Tracks/views/LogbookView.vue:154
 msgid "Export IGC"
 msgstr ""
 
-#: src/modules/Files/views/HikeView.vue:155
+#: src/modules/Files/views/HikeView.vue:157
 #: src/modules/Tracks/views/LogbookView.vue:156
 msgid "Export GPX"
 msgstr ""
 
-#: src/modules/Files/views/HikeView.vue:164
+#: src/modules/Files/views/HikeView.vue:189
 msgid "Select a hike to display details"
 msgstr ""
 
-#: src/modules/Files/views/HikeView.vue:214
+#: src/modules/Files/views/HikeView.vue:240
 msgid "Elev. (m)"
 msgstr ""
 
-#: src/modules/Files/views/HikeView.vue:420
+#: src/modules/Files/views/HikeView.vue:446
 msgid "Hike created successfully"
 msgstr ""
 
-#: src/modules/Files/views/HikeView.vue:425
+#: src/modules/Files/views/HikeView.vue:451
 msgid "Error creating hike"
 msgstr ""
 
-#: src/modules/Files/views/HikeView.vue:450
+#: src/modules/Files/views/HikeView.vue:476
 msgid "Hike updated successfully"
 msgstr ""
 
-#: src/modules/Files/views/HikeView.vue:457
+#: src/modules/Files/views/HikeView.vue:483
 msgid "Error updating hike"
 msgstr ""
 
-#: src/modules/Files/views/HikeView.vue:472
+#: src/modules/Files/views/HikeView.vue:498
 msgid "Hike deleted"
 msgstr ""
 
-#: src/modules/Files/views/HikeView.vue:477
+#: src/modules/Files/views/HikeView.vue:503
 msgid "Error deleting hike"
 msgstr ""
 
-#: src/modules/Files/views/HikeView.vue:502
-#: src/modules/Files/views/SitesView.vue:557
+#: src/modules/Files/views/HikeView.vue:528
+#: src/modules/Files/views/SitesView.vue:535
 msgid "Comment saved"
 msgstr ""
 
-#: src/modules/Files/views/HikeView.vue:502
-#: src/modules/Files/views/SitesView.vue:557
+#: src/modules/Files/views/HikeView.vue:528
+#: src/modules/Files/views/SitesView.vue:535
 msgid "Comment deleted"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:27
+#: src/modules/Files/views/HikeView.vue:539
+#: src/modules/Files/views/HikeView.vue:561
+msgid "No IGC data for this hike"
+msgstr ""
+
+#: src/modules/Files/views/HikeView.vue:570
+#: src/modules/Tracks/views/LogbookView.vue:1034
+msgid "Could not decode IGC data"
+msgstr ""
+
+#: src/modules/Files/views/HikeView.vue:592
+msgid "Database not open"
+msgstr ""
+
+#: src/modules/Files/views/HikeView.vue:598
+msgid "Database update started..."
+msgstr ""
+
+#: src/modules/Files/views/HikeView.vue:665
+msgid "Database updated."
+msgstr ""
+
+#: src/modules/Files/views/HikeView.vue:672
+msgid "No hikes with track found to update"
+msgstr ""
+
+#: src/modules/Files/views/HikeView.vue:677
+msgid "Error updating database"
+msgstr ""
+
+#: src/modules/Files/views/SitesView.vue:22
 msgid "Not defined"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:88
+#: src/modules/Files/views/SitesView.vue:65
 msgid "Site details"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:116
-#: src/modules/Files/views/SitesView.vue:242
+#: src/modules/Files/views/SitesView.vue:93
+#: src/modules/Files/views/SitesView.vue:224
 msgid "Locality"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:123
+#: src/modules/Files/views/SitesView.vue:100
 #: src/modules/Routing/views/WaypointView.vue:89
 #: src/modules/Routing/views/WaypointView.vue:374
 msgid "Altitude"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:127
+#: src/modules/Files/views/SitesView.vue:104
 msgid "Updated"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:172
+#: src/modules/Files/views/SitesView.vue:149
 msgid "Cleaning"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:189
+#: src/modules/Files/views/SitesView.vue:166
 msgid "Select a site to display details"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:243
+#: src/modules/Files/views/SitesView.vue:225
 msgid "ZIP"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:459
+#: src/modules/Files/views/SitesView.vue:437
 msgid "Site created successfully"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:489
+#: src/modules/Files/views/SitesView.vue:467
 msgid "Site updated successfully"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:499
+#: src/modules/Files/views/SitesView.vue:477
 msgid "Error updating site"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:511
+#: src/modules/Files/views/SitesView.vue:489
 msgid "Delete site"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:516
+#: src/modules/Files/views/SitesView.vue:494
 msgid "Site deleted"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:521
+#: src/modules/Files/views/SitesView.vue:499
 msgid "Error deleting site"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:585
+#: src/modules/Files/views/SitesView.vue:563
 msgid "Displaying duplicates"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:585
+#: src/modules/Files/views/SitesView.vue:563
 msgid "sites"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:596
+#: src/modules/Files/views/SitesView.vue:574
 msgid "No duplicates found"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:607
+#: src/modules/Files/views/SitesView.vue:585
 msgid "Delete all duplicate sites? This action cannot be undone."
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:614
+#: src/modules/Files/views/SitesView.vue:592
 msgid "Duplicates removed successfully"
 msgstr ""
 
-#: src/modules/Files/views/SitesView.vue:620
+#: src/modules/Files/views/SitesView.vue:598
 msgid "Error removing duplicates"
-msgstr ""
-
-#: src/modules/Routing/components/AirspaceRouteDialog.vue:15
-msgid "Classes"
-msgstr ""
-
-#: src/modules/Routing/components/AirspaceRouteDialog.vue:36
-msgid "Types"
 msgstr ""
 
 #: src/modules/Routing/components/AirspaceRouteDialog.vue:38
@@ -1660,10 +1710,6 @@ msgstr ""
 
 #: src/modules/Routing/components/AirspaceRouteDialog.vue:61
 msgid "Floor limit"
-msgstr ""
-
-#: src/modules/Routing/components/AirspaceRouteDialog.vue:74
-msgid "Radius"
 msgstr ""
 
 #: src/modules/Routing/views/AirspacesView.vue:14
@@ -2560,31 +2606,27 @@ msgstr ""
 msgid "No flights counted for this glider"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:846
+#: src/modules/Tracks/views/LogbookView.vue:847
 msgid "Photo saved"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:857
+#: src/modules/Tracks/views/LogbookView.vue:858
 msgid "Photo deleted"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:895
+#: src/modules/Tracks/views/LogbookView.vue:897
 msgid "Hike associated successfully"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:927
+#: src/modules/Tracks/views/LogbookView.vue:929
 msgid "Hike removed"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:1001
-#: src/modules/Tracks/views/LogbookView.vue:1026
+#: src/modules/Tracks/views/LogbookView.vue:1003
+#: src/modules/Tracks/views/LogbookView.vue:1028
 msgid "No IGC data for this flight"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:1032
-msgid "Could not decode IGC data"
-msgstr ""
-
-#: src/modules/Tracks/views/LogbookView.vue:1050
+#: src/modules/Tracks/views/LogbookView.vue:1052
 msgid "Are you sure you want to delete this flight?"
 msgstr ""

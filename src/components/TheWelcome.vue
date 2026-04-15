@@ -10,6 +10,13 @@ import EquipIcon from './icons/IconEquip.vue'
 import ExternalLayout from '@/components/ExternalLayout.vue'
 import { igcDecoding } from '@/js/igc/igc-decoder.js'
 import { IgcAnalyze } from '@/js/igc/igc-analyzer.js'
+import { getHelpUrl } from '@/js/config/helpConfig'
+import { useRoute } from 'vue-router'
+import { useGettext } from 'vue3-gettext'
+import IconDoc from './icons/IconDoc.vue'
+
+const route = useRoute()
+const gettext = useGettext()
 
 const openReadmeInEditor = () => fetch('/__open-in-editor?file=README.md')
 
@@ -61,6 +68,16 @@ function closeDemoTrack() {
   demoDecodedTrack.value = null
   demoAnalysisTrack.value = null
   demoRawContent.value = ''
+}
+
+function openHelp() {
+  const url = getHelpUrl(route.name, gettext.current)
+  window.open(url, '_blank')
+}
+
+function openHelpInstall() {
+  const url = getHelpUrl('install', gettext.current)
+  window.open(url, '_blank')
 }
 </script>
 
@@ -166,6 +183,15 @@ function closeDemoTrack() {
             $gettext('Support') }}</router-link></li>
           <li>{{ $gettext('Help translate Logfly') }}<router-link :to="{ name: 'translation-view' }">{{
             $gettext('Translation') }}</router-link></li>
+        </ul>
+      </WelcomeItem>
+      <WelcomeItem>
+        <template #icon>
+          <IconDoc />
+        </template>
+        <ul>
+          <li><a href="#" @click.prevent="openHelp">{{ $gettext('Consult the help') }}</a></li>
+          <li><a href="#" @click.prevent="openHelpInstall">{{ $gettext('Install Logfly as an application') }}</a></li>
         </ul>
       </WelcomeItem>
     </div>
