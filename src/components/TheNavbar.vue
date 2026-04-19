@@ -346,13 +346,19 @@ watch(() => databaseStore.isDirty, async (newValue) => {
 });
 
 async function runAutoSave() {
+  if (isSaving.value) return;
+  
   try {
     isSaving.value = true;
-    const data = await databaseStore.exportDatabase();
-    await logbookService.autoSave(data);
-    databaseStore.markAsSaved();
+    while (databaseStore.isDirty) {
+      databaseStore.markAsSaved();
+      const data = await databaseStore.exportDatabase();
+      await logbookService.autoSave(data);
+    }
   } catch (err) {
     console.error('Autosave failed:', err);
+    // On failure, we probably want to mark it dirty again so it can be retried
+    databaseStore.markAsDirty();
   } finally {
     isSaving.value = false;
   }

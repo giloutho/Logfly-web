@@ -61,7 +61,7 @@ import { saveDatabase } from '@/js/database/sql-manager.js';
 import { checkFirebaseConnection, getAvailableTranslations } from '@/js/firebase/translations-service.js';
 import { useGettext } from 'vue3-gettext';
 
-const appVersion = '7.0.6'; // À actualiser à chaque build pour production
+const appVersion = '7.0.7'; // À actualiser à chaque build pour production
 const databaseStore = useDatabaseStore();
 const gettext = useGettext();
 // Utilisez storeToRefs pour garder la réactivité sur isDirty
