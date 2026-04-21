@@ -1167,14 +1167,18 @@ function onFlightDelete(flightId) {
   if (index !== -1) {
     flights.value.splice(index, 1);
     if (flights.value.length > 0) {
-      // Stay on list, do not auto select next one to avoid jumping context
+      let nextIndex = index;
+      if (nextIndex >= flights.value.length) {
+        nextIndex = flights.value.length - 1;
+      }
+      const nextFlight = flights.value[nextIndex];
       selectedItems.value = [];
-      dataFlight.value = null;
-      decodedTrack.value = null;
+      onFlightSelect(nextFlight);
     } else {
       selectedItems.value = [];
       dataFlight.value = null;
       decodedTrack.value = null;
+      activeFlightId.value = null;
     }
   }
   snackbarMessage.value = 'Vol supprimé';
