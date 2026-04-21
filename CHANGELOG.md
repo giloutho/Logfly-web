@@ -4,7 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [7.0.6] - 
+## [7.0.7] - 2026-04-21
+
+### Fixed
+* Bug fixed for runAutosave process
+* loadGroundAltitudes for CesiumReplayView
+
+### Improved
+* Replacement after deletion of a flight
+
+## [7.0.6] - 2026-04-18
 
 ### Added
 * Logfly is now a PWA (Progressive Web App)

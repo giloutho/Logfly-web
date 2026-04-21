@@ -81,6 +81,7 @@ import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick, toRaw } fro
 import { useGettext } from "vue3-gettext";
 import GraphUplot from './GraphUplot.vue';
 import { igcToCzml, getFixIndexForTimestamp, julianDateToTimestamp } from '@/js/igc/igc-to-czml.js';
+import { getAltitudesForPoints } from '@/js/geo/elevation.js';
 
 const { $gettext } = useGettext();
 
@@ -286,9 +287,34 @@ function loadFlightAnimation() {
         console.error('Error loading CZML:', error);
     });
 
-    // Load ground altitudes if available in flightData
-    if (props.flightData?.anaTrack?.elevation) {
-        groundAltitudes.value = props.flightData.anaTrack.elevation;
+    // Load ground altitudes
+    loadGroundAltitudes();
+}
+
+async function loadGroundAltitudes() {
+    if (!props.flightData) return
+
+    // Check if we already have it in props
+    if (props.flightData.anaTrack?.elevation && props.flightData.anaTrack.elevation.length > 0) {
+        groundAltitudes.value = props.flightData.anaTrack.elevation
+        return
+    }
+
+    const fixes = props.flightData.decodedIgc?.fixes
+    if (!fixes) return
+
+    try {
+        const altitudes = await getAltitudesForPoints(fixes)
+        if (altitudes) {
+            groundAltitudes.value = altitudes
+            // console.log('Altitudes sol chargées')
+            // Optionnel : mettre à jour l'objet source si on veut le conserver pour cette session
+            if (props.flightData.anaTrack) {
+                props.flightData.anaTrack.elevation = altitudes
+            }
+        }
+    } catch (e) {
+        console.error("Erreur chargement altitudes sol", e)
     }
 }
 
