@@ -6,33 +6,20 @@
                 <v-toolbar-title>{{ $gettext('3D Flight Replay') }}</v-toolbar-title>
                 <v-spacer></v-spacer>
 
-                <!-- Playback controls -->
-                <div class="playback-controls">
-                    <v-btn icon size="small" @click="togglePlayback" :title="isPlaying ? 'Pause' : 'Play'">
-                        <v-icon>{{ isPlaying ? 'mdi-pause' : 'mdi-play' }}</v-icon>
-                    </v-btn>
-                    <v-btn icon size="small" @click="restartAnimation" title="Restart">
-                        <v-icon>mdi-restart</v-icon>
-                    </v-btn>
-                    <v-btn-toggle v-model="speedMultiplier" mandatory density="compact" class="speed-toggle">
-                        <v-btn :value="1" size="small">x1</v-btn>
-                        <v-btn :value="5" size="small">x5</v-btn>
-                        <v-btn :value="10" size="small">x10</v-btn>
-                        <v-btn :value="30" size="small">x30</v-btn>
-                    </v-btn-toggle>
-                </div>
+                <!-- Terrain toggle -->
+                <v-btn-toggle v-model="terrainProvider" mandatory density="compact" class="terrain-toggle">
+                    <v-btn value="arcgis" size="small" title="ArcGIS Terrain">ArcGIS Terrain</v-btn>
+                    <v-btn value="cesium" size="small" title="Cesium Terrain">Cesium Terrain</v-btn>
+                </v-btn-toggle>
 
                 <v-divider vertical class="mx-2"></v-divider>
 
                 <!-- Camera mode -->
                 <v-btn-toggle v-model="cameraMode" mandatory density="compact" class="camera-toggle">
-                    <v-btn value="side" size="small" title="Side view">
-                        <v-icon>mdi-eye-outline</v-icon>
-                    </v-btn>
-                    <v-btn value="follow" size="small" title="Follow view">
+                    <v-btn value="follow" size="small" :title="$gettext('Follow view')">
                         <v-icon>mdi-airplane</v-icon>
                     </v-btn>
-                    <v-btn value="free" size="small" title="Free camera">
+                    <v-btn value="free" size="small" :title="$gettext('Free camera')">
                         <v-icon>mdi-axis-arrow</v-icon>
                     </v-btn>
                 </v-btn-toggle>
@@ -57,6 +44,33 @@
                 <!-- Cesium container -->
                 <div ref="cesiumContainer" class="cesium-container"></div>
 
+                <!-- Custom replay bar -->
+                <div class="replay-bar">
+                    <v-btn icon size="small" variant="text" @click="togglePlayback"
+                        :title="isPlaying ? 'Pause' : 'Play'">
+                        <v-icon>{{ isPlaying ? 'mdi-pause' : 'mdi-play' }}</v-icon>
+                    </v-btn>
+                    <v-btn icon size="small" variant="text" @click="restartAnimation" title="Restart">
+                        <v-icon>mdi-restart</v-icon>
+                    </v-btn>
+
+                    <v-btn-toggle v-model="speedMultiplier" mandatory density="compact" class="speed-toggle">
+                        <v-btn :value="1" size="x-small">x1</v-btn>
+                        <v-btn :value="5" size="x-small">x5</v-btn>
+                        <v-btn :value="10" size="x-small">x10</v-btn>
+                        <v-btn :value="30" size="x-small">x30</v-btn>
+                    </v-btn-toggle>
+
+                    <span class="replay-time">{{ formatTime(sliderValue) }}</span>
+
+                    <v-slider v-model="sliderValue" :min="0" :max="sliderMax" :step="0.1" hide-details
+                        density="compact" class="replay-slider" @update:model-value="onSliderChange"
+                        @start="onSliderDragStart" @end="onSliderDragEnd"
+                        thumb-label="always" :thumb-label-formatter="formatTime" />
+
+                    <span class="replay-time replay-time--total">{{ formatTime(sliderMax) }}</span>
+                </div>
+
                 <!-- Graph info bar -->
                 <div class="graph-info">
                     <span v-if="hoverInfo" v-html="hoverInfo"></span>
@@ -77,7 +91,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick, toRaw } from 'vue';
+import { ref, computed, watch, onBeforeUnmount, nextTick, toRaw } from 'vue';
 import { useGettext } from "vue3-gettext";
 import GraphUplot from './GraphUplot.vue';
 import { igcToCzml, getFixIndexForTimestamp, julianDateToTimestamp } from '@/js/igc/igc-to-czml.js';
@@ -106,12 +120,23 @@ const dialog = computed({
 
 // Playback state
 const isPlaying = ref(false);
-const speedMultiplier = ref(30);  // Default to x30
-const cameraMode = ref('follow');  // Default to follow for free navigation
+const speedMultiplier = ref(10);  // Default to x10
+const cameraMode = ref('follow');  // Start tracked like double-click, with wide viewFrom
 const currentFixIndex = ref(0);
 const hoverInfo = ref('');
 const groundAltitudes = ref(null);
-const isFullView = ref(false);  // Start focused on takeoff
+const isFullView = ref(false);
+const terrainProvider = ref('arcgis');  // Default to ArcGIS Terrain
+
+// Custom slider state
+const sliderValue = ref(0);
+const sliderMax = ref(100);
+const isDraggingSlider = ref(false);
+const wasPlayingBeforeDrag = ref(false);
+
+// Store total duration in seconds for slider
+let totalDurationSeconds = 0;
+let paragliderEntity = null;  // Keep reference for follow mode
 
 // Extract fixes from flight data and sanitize them (strip Vue proxies / ensure numbers)
 const rawFixes = computed(() => props.flightData?.decodedIgc?.fixes || []);
@@ -147,10 +172,20 @@ const fixes = computed(() => {
 // Cesium Ion access token
 const CESIUM_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ZDdkZjczNS1jNTA2LTQzMmItYjBjYy0wYjFlOTc5NmU1MWQiLCJpZCI6MTAzNjg4LCJpYXQiOjE2NTk2Mzc5MjB9.QX13Kb7nisYi733uOKSEAbomggCjUF-9xv2l3efpmWs';
 
+// ArcGIS Terrain URL
+const ARCGIS_TERRAIN_URL = 'https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer';
+
+async function getTerrainProvider(type) {
+    const Cesium = window.Cesium;
+    if (type === 'arcgis') {
+        return await Cesium.ArcGISTiledElevationTerrainProvider.fromUrl(ARCGIS_TERRAIN_URL);
+    }
+    return await Cesium.createWorldTerrainAsync();
+}
+
 async function initCesium() {
     if (!cesiumContainer.value) return;
 
-    // Dynamically load Cesium if not already loaded
     if (!window.Cesium) {
         await loadCesiumScripts();
     }
@@ -158,24 +193,39 @@ async function initCesium() {
     const Cesium = window.Cesium;
     Cesium.Ion.defaultAccessToken = CESIUM_TOKEN;
 
-    // Initialize viewer with animation and timeline
+    // Initialize viewer WITHOUT built-in animation/timeline widgets
     viewer = new Cesium.Viewer(cesiumContainer.value, {
-        terrainProvider: await Cesium.createWorldTerrainAsync(),
-        animation: true,      // Show animation widget
-        timeline: true,       // Show timeline widget
-        baseLayerPicker: true,
+        terrainProvider: await getTerrainProvider(terrainProvider.value),
+        animation: false,       // Hide animation widget
+        timeline: false,        // Hide timeline widget
+        baseLayerPicker: false,
         geocoder: false,
-        homeButton: true,
-        sceneModePicker: true,
+        homeButton: false,
+        sceneModePicker: false,
         navigationHelpButton: false,
         fullscreenButton: false,
-        infoBox: false,       // Disable InfoBox to avoid sandbox error
-        shouldAnimate: false  // Start paused
+        infoBox: false,
+        selectionIndicator: false,
+        shouldAnimate: true     // Auto-start playback
     });
+
+    // --- Camera controls: left-drag to rotate/tilt, right-drag to zoom ---
+    const controller = viewer.scene.screenSpaceCameraController;
+    controller.tiltEventTypes = [
+        Cesium.CameraEventType.LEFT_DRAG,
+        Cesium.CameraEventType.PINCH,
+        { eventType: Cesium.CameraEventType.LEFT_DRAG, modifier: Cesium.KeyboardEventModifier.CTRL },
+        { eventType: Cesium.CameraEventType.RIGHT_DRAG, modifier: Cesium.KeyboardEventModifier.CTRL }
+    ];
+    controller.zoomEventTypes = [
+        Cesium.CameraEventType.RIGHT_DRAG,
+        Cesium.CameraEventType.WHEEL,
+        Cesium.CameraEventType.PINCH
+    ];
 
     // Load flight data if available
     if (fixes.value && fixes.value.length > 0) {
-        loadFlightAnimation();
+        await loadFlightAnimation();
     }
 
     // Setup clock tick listener for synchronization
@@ -205,7 +255,7 @@ function loadCesiumScripts() {
     });
 }
 
-function loadFlightAnimation() {
+async function loadFlightAnimation() {
     if (!viewer || !fixes.value || fixes.value.length === 0) return;
 
     const Cesium = window.Cesium;
@@ -213,7 +263,7 @@ function loadFlightAnimation() {
     // Convert IGC to CZML with paraglider icon
     const czml = igcToCzml(fixes.value, {
         name: 'Paragliding Flight',
-        trailColor: [245, 176, 39, 255],  // #F5B027 golden/orange
+        trailColor: [245, 176, 39, 255],
         trailWidth: 3,
         multiplier: speedMultiplier.value,
         billboardImage: '/paraglider-icon3.svg',
@@ -227,65 +277,60 @@ function loadFlightAnimation() {
 
     // Load CZML
     viewer.dataSources.removeAll();
-    viewer.entities.removeAll(); // Clear any previous static entities
+    viewer.entities.removeAll();
 
     const dataSource = new Cesium.CzmlDataSource();
-    dataSource.load(czml).then(() => {
-        viewer.dataSources.add(dataSource);
+    const loadedDataSource = await dataSource.load(czml);
+    viewer.dataSources.add(loadedDataSource);
 
-        // Ensure camera isn't locked by a previous lookAt
-        viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
+    // Ensure camera isn't locked by a previous lookAt
+    viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
 
-        // Apply the dataSource clock to the viewer (this has the correct times from CZML)
-        if (dataSource.clock) {
-            viewer.clock.startTime = dataSource.clock.startTime;
-            viewer.clock.stopTime = dataSource.clock.stopTime;
-            viewer.clock.clockRange = dataSource.clock.clockRange;
-            viewer.clock.multiplier = speedMultiplier.value;
-        }
+    // Apply the dataSource clock to the viewer
+    if (loadedDataSource.clock) {
+        viewer.clock.startTime = loadedDataSource.clock.startTime.clone();
+        viewer.clock.stopTime = loadedDataSource.clock.stopTime.clone();
+        viewer.clock.clockRange = loadedDataSource.clock.clockRange;
+        viewer.clock.multiplier = speedMultiplier.value;
+    }
 
-        // NOTE: We intentionally do NOT add a static polyline entity here.
-        // In production builds, polyline geometry creation can trigger a Cesium worker NaN error
-        // depending on the packed data passed to workers.
+    // Calculate total duration for slider
+    totalDurationSeconds = Cesium.JulianDate.secondsDifference(
+        viewer.clock.stopTime,
+        viewer.clock.startTime
+    );
+    sliderMax.value = totalDurationSeconds;
+    sliderValue.value = 0;
 
-        // Get the paraglider entity
-        const paraglider = dataSource.entities.getById('paraglider');
-        if (paraglider) {
-            // Don't auto-track entity - let user navigate freely
-            viewer.trackedEntity = undefined;
+    // Get the paraglider entity - fly to it first, then enable tracking
+    paragliderEntity = loadedDataSource.entities.getById('paraglider');
+    if (paragliderEntity) {
+        // Define the desired viewFrom offset (east, north, up) in meters
+        const viewFromOffset = new Cesium.Cartesian3(-1500, -2000, 200);
+        paragliderEntity.viewFrom = viewFromOffset;
 
-            // Initial camera: focus on takeoff (first valid fix)
-            const startFix = fixes.value[0];
-            if (startFix) {
-                const lon = Number(startFix.longitude);
-                const lat = Number(startFix.latitude);
-                const alt = Number(startFix.gpsAltitude ?? startFix.pressureAltitude ?? 0);
+        // First fly to the entity with a proper orientation (roll=0, horizon level)
+        await viewer.flyTo(paragliderEntity, {
+            duration: 1.5,
+            offset: new Cesium.HeadingPitchRange(
+                Cesium.Math.toRadians(45),   // heading: look from the side
+                Cesium.Math.toRadians(-30),  // pitch: gentle downward angle
+                4000                          // range: distance from entity
+            )
+        });
 
-                // Start in replay mode focused on takeoff
-                isFullView.value = false;
-                viewer.clock.currentTime = Cesium.JulianDate.clone(viewer.clock.startTime);
-                currentFixIndex.value = 0;
+        // Then enable tracking — camera smoothly transitions from current position
+        viewer.trackedEntity = paragliderEntity;
 
-                if (Number.isFinite(lon) && Number.isFinite(lat)) {
-                    const centerHeight = Number.isFinite(alt) ? Math.max(0, alt) : 0;
-                    const center = Cesium.Cartesian3.fromDegrees(lon, lat, centerHeight);
-                    const sphere = new Cesium.BoundingSphere(center, 1500);
+        // Reset to start
+        isFullView.value = false;
+        viewer.clock.currentTime = Cesium.JulianDate.clone(viewer.clock.startTime);
+        currentFixIndex.value = 0;
+    }
 
-                    // Larger range = less zoom (icon visible immediately)
-                    viewer.camera.flyToBoundingSphere(sphere, {
-                        duration: 1.2,
-                        offset: new Cesium.HeadingPitchRange(
-                            Cesium.Math.toRadians(0),
-                            Cesium.Math.toRadians(-45),
-                            9000
-                        )
-                    });
-                }
-            }
-        }
-    }).catch((error) => {
-        console.error('Error loading CZML:', error);
-    });
+    // Auto-start playback
+    viewer.clock.shouldAnimate = true;
+    isPlaying.value = true;
 
     // Load ground altitudes
     loadGroundAltitudes();
@@ -319,31 +364,12 @@ async function loadGroundAltitudes() {
 }
 
 function setupCameraMode(entity) {
-    if (!viewer || !entity) return;
+    if (!viewer) return;
 
-    const Cesium = window.Cesium;
-
-    switch (cameraMode.value) {
-        case 'side':
-            // Side view - offset to the side and slightly above
-            viewer.trackedEntity = entity;
-            viewer.trackedEntity = undefined;
-
-            // Use a custom camera update
-            if (clockTickListener) {
-                // Camera will be updated in onClockTick
-            }
-            break;
-
-        case 'follow':
-            // Standard follow mode
-            viewer.trackedEntity = entity;
-            break;
-
-        case 'free':
-            // Free camera - no tracking
-            viewer.trackedEntity = undefined;
-            break;
+    if (cameraMode.value === 'follow' && entity) {
+        viewer.trackedEntity = entity;
+    } else {
+        viewer.trackedEntity = undefined;
     }
 }
 
@@ -361,55 +387,54 @@ function onClockTick(clock) {
     // Update hover info
     updateHoverInfo(idx);
 
-    // Update camera for side view mode
-    if (cameraMode.value === 'side') {
-        updateSideViewCamera(idx);
+    // Update slider position (only if not being dragged)
+    if (!isDraggingSlider.value) {
+        const elapsed = Cesium.JulianDate.secondsDifference(currentTime, viewer.clock.startTime);
+        sliderValue.value = Math.max(0, Math.min(sliderMax.value, elapsed));
     }
 
     // Update playing state
     isPlaying.value = viewer.clock.shouldAnimate;
 }
 
-function updateSideViewCamera(idx) {
-    if (!viewer || idx < 0 || idx >= fixes.value.length) return;
+// --- Slider functions ---
 
-    const Cesium = window.Cesium;
-    const fix = fixes.value[idx];
-
-    // Calculate heading based on flight direction
-    let heading = 0;
-    if (idx > 0) {
-        const prevFix = fixes.value[idx - 1];
-        heading = Math.atan2(
-            fix.longitude - prevFix.longitude,
-            fix.latitude - prevFix.latitude
-        );
-    }
-
-    // Position camera to the side
-    const offset = 0.003; // ~300m offset
-    const cameraPosition = Cesium.Cartesian3.fromDegrees(
-        fix.longitude + Math.cos(heading + Math.PI / 2) * offset,
-        fix.latitude + Math.sin(heading + Math.PI / 2) * offset,
-        (fix.gpsAltitude || 1000) + 200
-    );
-
-    const targetPosition = Cesium.Cartesian3.fromDegrees(
-        fix.longitude,
-        fix.latitude,
-        fix.gpsAltitude || 1000
-    );
-
-    // Smooth camera movement
-    viewer.camera.lookAt(
-        targetPosition,
-        new Cesium.HeadingPitchRange(
-            heading + Math.PI / 2,
-            Cesium.Math.toRadians(-15),
-            1500
-        )
-    );
+function formatTime(seconds) {
+    if (!Number.isFinite(seconds) || seconds < 0) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
+
+function onSliderChange(val) {
+    if (!viewer || !isDraggingSlider.value) return;
+    const Cesium = window.Cesium;
+    const newTime = Cesium.JulianDate.addSeconds(
+        viewer.clock.startTime,
+        val,
+        new Cesium.JulianDate()
+    );
+    viewer.clock.currentTime = newTime;
+}
+
+function onSliderDragStart() {
+    isDraggingSlider.value = true;
+    wasPlayingBeforeDrag.value = isPlaying.value;
+    if (viewer) {
+        viewer.clock.shouldAnimate = false;
+        isPlaying.value = false;
+    }
+}
+
+function onSliderDragEnd() {
+    isDraggingSlider.value = false;
+    if (viewer && wasPlayingBeforeDrag.value) {
+        viewer.clock.shouldAnimate = true;
+        isPlaying.value = true;
+    }
+}
+
+// --- Playback controls ---
 
 function updateHoverInfo(idx) {
     if (idx < 0 || idx >= fixes.value.length) return;
@@ -446,14 +471,15 @@ function updateHoverInfo(idx) {
 function togglePlayback() {
     if (!viewer) return;
 
-    const Cesium = window.Cesium;
-
-    // If we're in full view mode and starting playback, switch to replay mode
-    if (isFullView.value && !viewer.clock.shouldAnimate) {
+    // If we're in full view mode, switch to replay mode first
+    if (isFullView.value) {
         isFullView.value = false;
-        // Reset to start
         viewer.clock.currentTime = viewer.clock.startTime;
         currentFixIndex.value = 0;
+        sliderValue.value = 0;
+
+        // Restore follow mode if active
+        setupCameraMode(paragliderEntity);
     }
 
     viewer.clock.shouldAnimate = !viewer.clock.shouldAnimate;
@@ -462,9 +488,9 @@ function togglePlayback() {
 
 function restartAnimation() {
     if (!viewer) return;
-    const Cesium = window.Cesium;
     viewer.clock.currentTime = viewer.clock.startTime;
     currentFixIndex.value = 0;
+    sliderValue.value = 0;
 }
 
 function toggleFullView() {
@@ -473,54 +499,45 @@ function toggleFullView() {
     const Cesium = window.Cesium;
     isFullView.value = !isFullView.value;
 
-    // Unlock camera first (in case it was locked by lookAt in side view mode)
+    // Unlock camera first
     viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
 
     if (isFullView.value) {
-        // Switch to full track view: pause animation and jump to end to show complete trail
+        // Pause and show complete track
         viewer.clock.shouldAnimate = false;
         isPlaying.value = false;
-
-        // Jump to end time - this will show the complete trail path
         viewer.clock.currentTime = viewer.clock.stopTime;
         currentFixIndex.value = fixes.value.length - 1;
+        sliderValue.value = sliderMax.value;
+        viewer.trackedEntity = undefined;
 
-        // Zoom out to see the entire track
-        const dataSource = viewer.dataSources.get(0);
-        if (dataSource) {
-            const paraglider = dataSource.entities.getById('paraglider');
-            if (paraglider) {
-                viewer.flyTo(paraglider, {
-                    duration: 1.0,
-                    offset: new Cesium.HeadingPitchRange(
-                        Cesium.Math.toRadians(0),
-                        Cesium.Math.toRadians(-60),
-                        15000  // Higher altitude to see full track
-                    )
-                });
-            }
-        }
+        // Zoom out to see entire track
+        zoomToFullTrack(Cesium);
     } else {
-        // Switch back to replay mode - restart from beginning
+        // Switch back to replay mode
         viewer.clock.currentTime = viewer.clock.startTime;
         currentFixIndex.value = 0;
+        sliderValue.value = 0;
 
-        // Fly closer to the animated entity
-        const dataSource = viewer.dataSources.get(0);
-        if (dataSource) {
-            const paraglider = dataSource.entities.getById('paraglider');
-            if (paraglider) {
-                viewer.flyTo(paraglider, {
-                    duration: 1.5,
-                    offset: new Cesium.HeadingPitchRange(
-                        Cesium.Math.toRadians(-90),
-                        Cesium.Math.toRadians(-30),
-                        5000
-                    )
-                });
-            }
-        }
+        // Restore follow mode if active
+        setupCameraMode(paragliderEntity);
+
+        viewer.clock.shouldAnimate = true;
+        isPlaying.value = true;
     }
+}
+
+function zoomToFullTrack(Cesium) {
+    if (!paragliderEntity) return;
+
+    viewer.flyTo(paragliderEntity, {
+        duration: 1.0,
+        offset: new Cesium.HeadingPitchRange(
+            Cesium.Math.toRadians(0),
+            Cesium.Math.toRadians(-60),
+            20000
+        )
+    });
 }
 
 function onGraphCursorChanged(data) {
@@ -568,37 +585,47 @@ watch(speedMultiplier, (newSpeed) => {
 });
 
 // Watch camera mode changes
-watch(cameraMode, () => {
-    if (viewer) {
-        const dataSource = viewer.dataSources.get(0);
-        if (dataSource) {
-            const paraglider = dataSource.entities.getById('paraglider');
-            setupCameraMode(paraglider);
-        }
+watch(cameraMode, (newMode) => {
+    if (!viewer) return;
+    if (newMode === 'follow' && paragliderEntity) {
+        viewer.trackedEntity = paragliderEntity;
+    } else {
+        viewer.trackedEntity = undefined;
+    }
+});
+
+// Watch terrain provider changes
+watch(terrainProvider, async (newTerrain) => {
+    if (!viewer) return;
+    const Cesium = window.Cesium;
+    try {
+        viewer.terrainProvider = await getTerrainProvider(newTerrain);
+    } catch (e) {
+        console.error('Error switching terrain provider:', e);
     }
 });
 
 watch(() => props.modelValue, async (val) => {
     if (val) {
         await nextTick();
-        // Short delay to ensure container is rendered
         setTimeout(() => {
             initCesium();
         }, 100);
     }
 });
 
-watch(() => props.flightData, () => {
+watch(() => props.flightData, async () => {
     if (viewer && fixes.value && fixes.value.length > 0) {
-        loadFlightAnimation();
+        await loadFlightAnimation();
     }
 }, { deep: true });
 
 function close() {
-    // Reset state for next open (start focused on takeoff)
     isFullView.value = false;
     currentFixIndex.value = 0;
     cameraMode.value = 'follow';
+    sliderValue.value = 0;
+    paragliderEntity = null;
     dialog.value = false;
     emit('close');
 }
@@ -622,12 +649,7 @@ onBeforeUnmount(() => {
     height: 100%;
 }
 
-.playback-controls {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
+.terrain-toggle,
 .speed-toggle,
 .camera-toggle {
     background: rgba(255, 255, 255, 0.1);
@@ -645,6 +667,50 @@ onBeforeUnmount(() => {
     flex: 1;
     width: 100%;
     min-height: 0;
+}
+
+/* Custom replay bar */
+.replay-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    background: #263238;
+    color: #fff;
+    flex-shrink: 0;
+    min-height: 44px;
+}
+
+.replay-bar .speed-toggle {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.replay-time {
+    font-variant-numeric: tabular-nums;
+    font-size: 0.85em;
+    color: #b0bec5;
+    min-width: 48px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.replay-time--total {
+    color: #78909c;
+}
+
+.replay-slider {
+    flex: 1;
+    margin: 0 4px;
+}
+
+.replay-slider :deep(.v-slider-thumb__label) {
+    background: #1976d2;
+    font-size: 0.75em;
+    min-width: 48px;
+}
+
+.replay-slider :deep(.v-slider-track__fill) {
+    background: #1976d2;
 }
 
 .graph-info {
@@ -668,5 +734,14 @@ onBeforeUnmount(() => {
     background: #fafafa;
     border-top: 1px solid #e0e0e0;
     flex-shrink: 0;
+}
+
+/* Hide Cesium branding/credits */
+:deep(.cesium-viewer .cesium-widget-credits) {
+    display: none !important;
+}
+
+:deep(.cesium-viewer-bottom) {
+    display: none !important;
 }
 </style>
