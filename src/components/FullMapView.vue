@@ -7,7 +7,7 @@
                 <v-btn class="toolbar-btn" @click="openChrono">{{ $gettext('Pathway') }}</v-btn>
                 <v-btn class="toolbar-btn" @click="airspaceDialog = true">{{ $gettext('Airspaces') }}</v-btn>
                 <v-btn class="toolbar-btn" @click="scoreDialog = true">{{ $gettext('Score') }}</v-btn>
-                <v-btn class="toolbar-btn" @click="$refs.fileInput.click()">{{ $gettext('Other track') }}</v-btn>
+                <v-btn class="toolbar-btn" @click="$refs.fileInput.click()">{{ $gettext('Track') }} +</v-btn>
                 <input type="file" ref="fileInput" accept=".igc" style="display: none" @change="onFileSelected" />
                 <v-btn class="toolbar-btn" :color="isCutting ? 'error' : ''" @click="toggleCutting">{{ isCutting ?
                     $gettext('Cancel') : $gettext('Cut') }}
@@ -201,7 +201,7 @@ async function onFileSelected(event) {
             if (mapLeaflet.value) {
                 mapLeaflet.value.displayOtherTrack(result.data.GeoJSON)
             }
-            
+
             // Analyze track
             try {
                 const anaResult = await IgcAnalyze(result.data.fixes)
@@ -211,7 +211,7 @@ async function onFileSelected(event) {
             } catch (err) {
                 console.error("Erreur lors de l'analyse de la seconde trace", err)
             }
-            
+
             // Calculate ground altitudes for the other track
             try {
                 const altitudes = await getAltitudesForPoints(result.data.fixes)
