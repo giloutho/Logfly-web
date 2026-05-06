@@ -7,6 +7,8 @@
                 <v-btn class="toolbar-btn" @click="openChrono">{{ $gettext('Pathway') }}</v-btn>
                 <v-btn class="toolbar-btn" @click="airspaceDialog = true">{{ $gettext('Airspaces') }}</v-btn>
                 <v-btn class="toolbar-btn" @click="scoreDialog = true">{{ $gettext('Score') }}</v-btn>
+                <v-btn class="toolbar-btn" @click="$refs.fileInput.click()">{{ $gettext('Other track') }}</v-btn>
+                <input type="file" ref="fileInput" accept=".igc" style="display: none" @change="onFileSelected" />
                 <v-btn class="toolbar-btn" :color="isCutting ? 'error' : ''" @click="toggleCutting">{{ isCutting ?
                     $gettext('Cancel') : $gettext('Cut') }}
                 </v-btn>
@@ -24,7 +26,7 @@
         <div class="content-wrapper">
             <div class="map-section">
                 <MapLeaflet ref="mapLeaflet" :geoJson="flightData?.decodedIgc?.GeoJSON"
-                    :fixes="flightData?.decodedIgc?.fixes" @map-ready="onMapReady" />
+                    :fixes="flightData?.decodedIgc?.fixes" @map-ready="onMapReady" @track-clicked="onTrackClicked" />
             </div>
 
             <div class="graph-info" id="graph-info" ref="graphInfo">
@@ -33,15 +35,15 @@
                 <span v-else>{{ $gettext('Hover over the graph to see details') }}</span>
             </div>
             <div class="graph-section">
-                <GraphUplot v-if="flightData?.decodedIgc?.fixes && flightData.decodedIgc.fixes.length > 0"
-                    :fixes="flightData?.decodedIgc?.fixes" :groundAltitudes="groundAltitudes" :height="150"
-                    :speeds="flightData?.decodedIgc?.speed" :varios="flightData?.decodedIgc?.vz"
+                <GraphUplot v-if="currentTrackData?.decodedIgc?.fixes && currentTrackData.decodedIgc.fixes.length > 0"
+                    :fixes="currentTrackData.decodedIgc.fixes" :groundAltitudes="currentGroundAltitudes" :height="150"
+                    :speeds="currentTrackData.decodedIgc.speed" :varios="currentTrackData.decodedIgc.vz"
                     :cuttingMode="isCutting" :cutStart="cutStartIndex" :cutEnd="cutEndIndex"
-                    :offsetUTC="flightData?.decodedIgc?.info?.offsetUTC || 0" @cursor-changed="onGraphCursorChanged"
+                    :offsetUTC="currentTrackData.decodedIgc.info?.offsetUTC || 0" @cursor-changed="onGraphCursorChanged"
                     @click-graph="onGraphClick" />
             </div>
-            <TraceInfoDialog v-model="infoDialog" :trackData="flightInfo" :anaResult="flightData?.anaTrack"
-                :decodedData="flightData?.decodedIgc" />
+            <TraceInfoDialog v-model="infoDialog" :trackData="flightInfo" :anaResult="currentTrackData?.anaTrack"
+                :decodedData="currentTrackData?.decodedIgc" />
             <ChronoView v-model="chronoDialog" :anaResult="flightData?.anaTrack" @jump-to="onChronoJump"
                 @jump-to-takeoff="onJumpTakeoff" @jump-to-landing="onJumpLanding" />
             <AirspaceDialog v-model="airspaceDialog" :decodedData="flightData?.decodedIgc"
@@ -77,6 +79,8 @@ import { igcScoring } from '@/js/igc/igc-scoring.js'
 import { getAltitudesForPoints } from '@/js/geo/elevation.js'
 import { encodeIGC } from '@/js/igc/igc-encoding.js'
 import { parseIGC } from '@/modules/Tracks/js/igc-parser.js'
+import { igcDecoding } from '@/js/igc/igc-decoder.js'
+import { IgcAnalyze } from '@/js/igc/igc-analyzer.js'
 import { useDatabaseStore } from '@/stores/database'
 
 const databaseStore = useDatabaseStore();
@@ -103,8 +107,13 @@ const progressMessage = ref('Airspaces checking in progress')
 const mapLeaflet = ref(null)
 const hoverInfo = ref('')
 const groundAltitudes = ref(null)
+const otherGroundAltitudes = ref(null)
 const currentScoreResult = ref(null)
 const currentLeague = ref('')
+
+const otherTrackData = ref(null)
+const activeTrack = ref('main')
+const fileInput = ref(null)
 
 const scores = [
     'FFVL',
@@ -116,12 +125,21 @@ const scores = [
     'XCLeague'
 ]
 
+const currentTrackData = computed(() => {
+    return activeTrack.value === 'main' ? props.flightData : otherTrackData.value
+})
+
+const currentGroundAltitudes = computed(() => {
+    return activeTrack.value === 'main' ? groundAltitudes.value : otherGroundAltitudes.value
+})
+
 const flightInfo = computed(() => {
-    if (!props.flightData) return {}
+    const data = currentTrackData.value
+    if (!data) return {}
     return {
-        date: props.flightData.day,
-        pilot: props.flightData.decodedIgc?.info?.pilot,
-        glider: props.flightData.glider
+        date: data.day || data.decodedIgc?.info?.date,
+        pilot: data.decodedIgc?.info?.pilot,
+        glider: data.glider || data.decodedIgc?.info?.gliderType
     }
 })
 
@@ -163,6 +181,57 @@ async function loadGroundAltitudes() {
     } catch (e) {
         console.error("Erreur chargement altitudes sol", e)
     }
+}
+
+async function onFileSelected(event) {
+    const file = event.target.files[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = async (e) => {
+        const text = e.target.result
+        const result = await igcDecoding(text)
+        if (result.success) {
+            otherTrackData.value = {
+                decodedIgc: result.data,
+                day: result.data.info.date,
+                glider: result.data.info.gliderType,
+                anaTrack: null
+            }
+            if (mapLeaflet.value) {
+                mapLeaflet.value.displayOtherTrack(result.data.GeoJSON)
+            }
+            
+            // Analyze track
+            try {
+                const anaResult = await IgcAnalyze(result.data.fixes)
+                if (anaResult.success) {
+                    otherTrackData.value.anaTrack = anaResult.anaTrack
+                }
+            } catch (err) {
+                console.error("Erreur lors de l'analyse de la seconde trace", err)
+            }
+            
+            // Calculate ground altitudes for the other track
+            try {
+                const altitudes = await getAltitudesForPoints(result.data.fixes)
+                if (altitudes) {
+                    otherGroundAltitudes.value = altitudes
+                }
+            } catch (err) {
+                console.error("Erreur chargement altitudes sol other track", err)
+            }
+        } else {
+            alert($gettext('Error parsing IGC file: ') + result.message)
+        }
+    }
+    reader.readAsText(file)
+    // reset input so the same file can be selected again
+    event.target.value = ''
+}
+
+function onTrackClicked(type) {
+    activeTrack.value = type
 }
 
 
@@ -268,9 +337,9 @@ function onGraphCursorChanged(data) {
     const index = data.index
     let groundAlt = 'N/A'
     let hground = 'N/A'
-    if (groundAltitudes.value && groundAltitudes.value[index] != null) {
-        groundAlt = groundAltitudes.value[index].toFixed(0)
-        hground = groundAltitudes.value[index] !== undefined && groundAltitudes.value[index] !== null ? (data.altitude - groundAltitudes.value[index]).toFixed(0) : 'N/A';
+    if (currentGroundAltitudes.value && currentGroundAltitudes.value[index] != null) {
+        groundAlt = currentGroundAltitudes.value[index].toFixed(0)
+        hground = currentGroundAltitudes.value[index] !== undefined && currentGroundAltitudes.value[index] !== null ? (data.altitude - currentGroundAltitudes.value[index]).toFixed(0) : 'N/A';
     }
 
     // Simple HTML formatting mimicking the reference

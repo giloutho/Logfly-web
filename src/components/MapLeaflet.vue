@@ -24,11 +24,12 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(['map-ready', 'hover-point'])
+const emit = defineEmits(['map-ready', 'hover-point', 'track-clicked'])
 
 // Map and Layer state
 let map = null
 let geoLayer = null
+let otherGeoLayer = null
 let hoverMarker = null
 let resizeObserver = null
 let layerControl = null
@@ -141,8 +142,15 @@ function displayGeoJson(geoJson) {
         renderer: mainCanvas,
         style: {
             color: '#0033ff',
-            weight: 3,
-            opacity: 0.8
+            weight: 5, // Default active weight
+            opacity: 1,
+            interactive: true
+        },
+        onEachFeature: (feature, layer) => {
+            layer.on('click', () => {
+                emit('track-clicked', 'main')
+                setActiveTrackStyle('main')
+            })
         }
     }).addTo(map)
 
@@ -162,6 +170,69 @@ function displayGeoJson(geoJson) {
                 startMarker = L.marker([startPoint[1], startPoint[0]], { icon: startIcon }).addTo(map)
                 endMarker = L.marker([endPoint[1], endPoint[0]], { icon: endIcon }).addTo(map)
             }
+        }
+    }
+}
+
+function displayOtherTrack(geoJson) {
+    if (otherGeoLayer) {
+        map.removeLayer(otherGeoLayer)
+        if (layerControl) {
+            layerControl.removeLayer(otherGeoLayer)
+        }
+        otherGeoLayer = null
+    }
+
+    if (!geoJson) return
+
+    otherGeoLayer = L.geoJSON(geoJson, {
+        renderer: mainCanvas,
+        style: {
+            color: 'red',
+            weight: 3,
+            opacity: 0.8,
+            interactive: true,
+            dashArray: '5,5'
+        },
+        onEachFeature: (feature, layer) => {
+            layer.on('click', () => {
+                emit('track-clicked', 'other')
+                setActiveTrackStyle('other')
+            })
+        }
+    }).addTo(map)
+
+    if (layerControl) {
+        layerControl.addOverlay(otherGeoLayer, $gettext('Other track'))
+    }
+    
+    // Fit bounds to show both
+    if (geoLayer) {
+        const bounds = L.latLngBounds(geoLayer.getBounds())
+        bounds.extend(otherGeoLayer.getBounds())
+        if (bounds.isValid()) {
+            map.fitBounds(bounds, { padding: [50, 50] })
+        }
+    }
+}
+
+function setActiveTrackStyle(type) {
+    if (geoLayer) {
+        geoLayer.setStyle({ 
+            weight: type === 'main' ? 5 : 3, 
+            opacity: type === 'main' ? 1 : 0.6 
+        })
+        if (type === 'main') {
+            geoLayer.bringToFront()
+        }
+    }
+    if (otherGeoLayer) {
+        otherGeoLayer.setStyle({ 
+            weight: type === 'other' ? 5 : 3, 
+            opacity: type === 'other' ? 1 : 0.6 
+        })
+        if (type === 'other') {
+            otherGeoLayer.bringToFront()
         }
     }
 }
@@ -618,6 +689,8 @@ defineExpose({
     displayLanding,
     displayScoringResult,
     displayHike,
+    displayOtherTrack,
+    setActiveTrackStyle,
     map
 })
 
