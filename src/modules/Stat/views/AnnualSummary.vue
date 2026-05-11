@@ -50,6 +50,8 @@
             <span class="panel-label">{{ $gettext('Reference') }}</span>
             <v-select v-model="refYear" :items="yearList" density="compact" variant="outlined" hide-details
               class="year-select" @update:model-value="onRefYearChange" />
+            <v-select v-model="prevYear" :items="yearList" density="compact" variant="outlined" hide-details
+              class="compare-select" :label="$gettext('Compare')" @update:model-value="onPrevYearChange" />
           </div>
           <v-table density="compact" class="monthly-table">
             <thead>
@@ -57,6 +59,8 @@
                 <th>{{ $gettext('Months') }}</th>
                 <th class="text-center">{{ $gettext('Flights') }}</th>
                 <th>{{ $gettext('Duration') }}</th>
+                <th class="text-center prev-col">{{ $gettext('Flights') }}</th>
+                <th class="prev-col">{{ $gettext('Duration') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -64,12 +68,17 @@
                 <td>{{ monthLabels[index] }}</td>
                 <td class="text-center">{{ month.flights || '' }}</td>
                 <td>{{ month.flights ? formatDuration(month.hours) : '' }}</td>
+                <td class="text-center prev-val">{{ month.prevFlights || '' }}</td>
+                <td class="prev-val">{{ month.prevFlights ? formatDuration(month.prevHours) : '' }}</td>
               </tr>
             </tbody>
           </v-table>
           <div class="panel-footer">
-            <span class="footer-left">{{ $gettext('Flights') }}: {{ totalFlights }}</span>
-            <span class="footer-right">{{ formatDuration(totalHours) }}</span>
+            <span class="footer-spacer"></span>
+            <span class="footer-flights">{{ totalFlights }}</span>
+            <span class="footer-duration">{{ formatDuration(totalHours) }}</span>
+            <span class="footer-flights prev-val">{{ totalPrevFlights }}</span>
+            <span class="footer-duration prev-val">{{ formatDuration(totalPrevHours) }}</span>
           </div>
         </v-card>
       </div>
@@ -202,6 +211,8 @@ const monthLabels = computed(() => [
 // Computed totals
 const totalFlights = computed(() => monthlyData.value.reduce((sum, m) => sum + (m.flights || 0), 0));
 const totalHours = computed(() => monthlyData.value.reduce((sum, m) => sum + (m.hours || 0), 0));
+const totalPrevFlights = computed(() => monthlyData.value.reduce((sum, m) => sum + (m.flights > 0 ? (m.prevFlights || 0) : 0), 0));
+const totalPrevHours = computed(() => monthlyData.value.reduce((sum, m) => sum + (m.flights > 0 ? (m.prevHours || 0) : 0), 0));
 
 onMounted(async () => {
   if (databaseStore.hasOpenDatabase) {
@@ -281,7 +292,9 @@ async function loadMonthlyData() {
 
     monthlyData.value.push({
       flights: refFlights,
-      hours: refHours
+      hours: refHours,
+      prevFlights: prevFlights,
+      prevHours: prevHours
     });
 
     chartData.value.refFlights.push(refFlights);
@@ -706,13 +719,39 @@ async function setRightMode(mode) {
 
 .panel-footer {
   display: flex;
-  justify-content: space-between;
-  padding: 8px 16px;
+  align-items: center;
+  padding: 4px 16px;
   background: #f5f5f5;
   border-top: 1px solid #e0e0e0;
-  font-weight: 900;
-  font-size: 1.1rem;
+  font-weight: 700;
+  font-size: 0.8rem;
   flex-shrink: 0;
+  gap: 0;
+}
+
+.footer-spacer {
+  flex: 0 0 18%;
+}
+
+.footer-flights {
+  flex: 0 0 15%;
+  text-align: center;
+  color: #333;
+}
+
+.footer-duration {
+  flex: 0 0 22.5%;
+  color: #333;
+}
+
+.prev-col {
+  font-style: italic;
+  color: #888;
+}
+
+.prev-val {
+  font-style: italic;
+  color: #999;
 }
 
 .footer-left {
