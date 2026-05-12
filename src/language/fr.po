@@ -1,18 +1,25 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Logfly\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: Français\n"
 "Language: fr\n"
-"MIME-Version: 1.0\n"
+"Language-Team: Français\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.6\n"
 
 msgid "Display airspaces"
 msgstr "Afficher les espaces aériens"
+
+msgid "Classes"
+msgstr "Classes"
+
+msgid "Types"
+msgstr "Types"
+
+msgid "Floor limit"
+msgstr "Limite plnacher"
+
+msgid "Radius"
+msgstr "Rayon"
 
 msgid "Display"
 msgstr "Afficher"
@@ -22,6 +29,12 @@ msgstr "Vérifier la trace"
 
 msgid "3D Flight Replay"
 msgstr "Replay du vol 3D"
+
+msgid "Follow view"
+msgstr "Mode suiveur"
+
+msgid "Free camera"
+msgstr "Calera libre"
 
 msgid "Hover over the graph to see details"
 msgstr "Survolez le graphique pour voir les détails"
@@ -206,8 +219,14 @@ msgstr "Espaces aériens"
 msgid "Score"
 msgstr "Score"
 
+msgid "Track"
+msgstr "Trace"
+
 msgid "Cut"
 msgstr "Couper"
+
+msgid "Error parsing IGC file: "
+msgstr "Erreur de décodage du fichier IGC"
 
 msgid "Select the start and end points of the section"
 msgstr "Sélectionnez les points de départ et d'arrivée de la section"
@@ -409,6 +428,9 @@ msgstr "Nouvelle photo"
 
 msgid "Replace photo"
 msgstr "Changer la photo"
+
+msgid "Other track"
+msgstr "Autre trace"
 
 msgid "Thermals"
 msgstr "Thermiques"
@@ -716,17 +738,47 @@ msgstr "Aide"
 msgid "Change language"
 msgstr "Changer la langue"
 
-msgid "Unsaved changes – click to save"
-msgstr "Changements non enregistrés - Cliquer pour sauvegarder"
-
-msgid "All changes saved"
-msgstr "Toutes les modifications ont été enregistrées"
-
 msgid "Import tracks"
 msgstr "Import traces"
 
 msgid "Language"
 msgstr "Langue"
+
+msgid "Download file"
+msgstr "Télécharger un fichier"
+
+msgid "Unsaved changes"
+msgstr "Modifications non enregistrées"
+
+msgid "All changes saved"
+msgstr "Toutes les modifications ont été enregistrées"
+
+msgid "Your browser does not support direct saving"
+msgstr "Sauvegarde directe impossible avec ce navigateur"
+
+msgid "The file will be downloaded to your Downloads folder"
+msgstr "Le fichier sera enregistré dans le dossier Téléchargements"
+
+msgid "You will need to move it to your logbook folder to replace the original file"
+msgstr "Il faudra le déplacer/remplacer dans le dossier du carnet"
+
+msgid "Continue"
+msgstr "Continuer"
+
+msgid "record the data"
+msgstr "Enregistrer les données"
+
+msgid "Save a copy"
+msgstr "Enregistrer une copie"
+
+msgid "No"
+msgstr "Non"
+
+msgid "Yes"
+msgstr "Oui"
+
+msgid "File downloaded to Downloads folder. Move it to your logbook folder to keep your changes."
+msgstr "Fichier enregistré dans Téléchargements. A déplacer dans le dossier carnet"
 
 msgid "Access your logbook"
 msgstr "Accédez à votre carnet de vol"
@@ -1076,12 +1128,6 @@ msgstr "Doublons supprimés"
 msgid "Error removing duplicates"
 msgstr "Erreur pendant la suppression des doublons"
 
-msgid "Classes"
-msgstr "Classes"
-
-msgid "Types"
-msgstr "Types"
-
 msgid "Prohibited"
 msgstr "Interdit"
 
@@ -1093,12 +1139,6 @@ msgstr "Danger"
 
 msgid "Gliding"
 msgstr "Vol libre"
-
-msgid "Floor limit"
-msgstr "Limite plancher"
-
-msgid "Radius"
-msgstr "Rayon"
 
 msgid "Select a file"
 msgstr "Choisir un fichier"
@@ -1210,9 +1250,6 @@ msgstr "Echec de l'exportation"
 
 msgid "Route"
 msgstr "Route"
-
-msgid "Track"
-msgstr "Trace"
 
 msgid "Total distance"
 msgstr "Distance totale"
@@ -1448,11 +1485,11 @@ msgstr "Voiles"
 msgid "Reference"
 msgstr "Référence"
 
-msgid "Months"
-msgstr "Mois"
-
 msgid "Compare"
 msgstr "Comparer"
+
+msgid "Months"
+msgstr "Mois"
 
 msgid "Fl."
 msgstr "Vl."
@@ -1765,3 +1802,4 @@ msgstr "Pas de trace IGC pour ce vol"
 
 msgid "Are you sure you want to delete this flight?"
 msgstr "Etes vous sûr de suppirmer ce vol ?"
+

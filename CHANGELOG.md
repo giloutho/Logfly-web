@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.0.8] - 2026-
+
+### Added
+* Option to add a second track on the fullscreen map
+
+### Improved
+* Replay 3D 
+* Annual summary previous year added in left panel
+
 ## [7.0.7] - 2026-04-21
 
 ### Fixed

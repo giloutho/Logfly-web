@@ -18,7 +18,8 @@ msgid "Types"
 msgstr ""
 
 #: src/components/AirspaceDialog.vue:61
-msgid "Floor below"
+#: src/modules/Routing/components/AirspaceRouteDialog.vue:61
+msgid "Floor limit"
 msgstr ""
 
 #: src/components/AirspaceDialog.vue:74
@@ -42,8 +43,16 @@ msgstr ""
 msgid "3D Flight Replay"
 msgstr ""
 
-#: src/components/CesiumReplayView.vue:63
-#: src/components/FullMapView.vue:33
+#: src/components/CesiumReplayView.vue:19
+msgid "Follow view"
+msgstr ""
+
+#: src/components/CesiumReplayView.vue:22
+msgid "Free camera"
+msgstr ""
+
+#: src/components/CesiumReplayView.vue:77
+#: src/components/FullMapView.vue:35
 msgid "Hover over the graph to see details"
 msgstr ""
 
@@ -82,7 +91,7 @@ msgstr ""
 #: src/components/ChangeSiteDialog.vue:31
 #: src/components/ChooseSiteDialog.vue:41
 #: src/components/CommentDialog.vue:13
-#: src/components/FullMapView.vue:11
+#: src/components/FullMapView.vue:13
 #: src/components/GliderDialog.vue:18
 #: src/components/HikeForm.vue:128
 #: src/components/HikePickerDialog.vue:77
@@ -111,6 +120,7 @@ msgstr ""
 #: src/components/NoTrackDialog.vue:89
 #: src/components/SiteForm.vue:146
 #: src/components/TagDialog.vue:37
+#: src/components/TheNavbar.vue:313
 #: src/modules/Equip/views/EquipView.vue:142
 #: src/modules/Files/views/HikeView.vue:139
 #: src/modules/Files/views/SitesView.vue:134
@@ -157,10 +167,10 @@ msgstr ""
 #: src/components/charts/GlidersChart.vue:161
 #: src/components/charts/YearlyChart.vue:130
 #: src/modules/Stat/views/AnnualSummary.vue:10
-#: src/modules/Stat/views/AnnualSummary.vue:58
-#: src/modules/Stat/views/AnnualSummary.vue:71
-#: src/modules/Stat/views/AnnualSummary.vue:86
-#: src/modules/Stat/views/AnnualSummary.vue:496
+#: src/modules/Stat/views/AnnualSummary.vue:60
+#: src/modules/Stat/views/AnnualSummary.vue:62
+#: src/modules/Stat/views/AnnualSummary.vue:95
+#: src/modules/Stat/views/AnnualSummary.vue:509
 #: src/modules/Stat/views/GlobalSummary.vue:55
 #: src/modules/Stat/views/GlobalSummary.vue:65
 #: src/modules/Tracks/views/LogbookView.vue:735
@@ -169,73 +179,73 @@ msgstr ""
 
 #: src/components/charts/MonthlyChart.vue:9
 #: src/components/charts/MonthlyChart.vue:69
-#: src/modules/Stat/views/AnnualSummary.vue:197
+#: src/modules/Stat/views/AnnualSummary.vue:206
 msgid "Jan"
 msgstr ""
 
 #: src/components/charts/MonthlyChart.vue:10
 #: src/components/charts/MonthlyChart.vue:69
-#: src/modules/Stat/views/AnnualSummary.vue:197
+#: src/modules/Stat/views/AnnualSummary.vue:206
 msgid "Feb"
 msgstr ""
 
 #: src/components/charts/MonthlyChart.vue:11
 #: src/components/charts/MonthlyChart.vue:69
-#: src/modules/Stat/views/AnnualSummary.vue:197
+#: src/modules/Stat/views/AnnualSummary.vue:206
 msgid "Mar"
 msgstr ""
 
 #: src/components/charts/MonthlyChart.vue:12
 #: src/components/charts/MonthlyChart.vue:69
-#: src/modules/Stat/views/AnnualSummary.vue:197
+#: src/modules/Stat/views/AnnualSummary.vue:206
 msgid "Apr"
 msgstr ""
 
 #: src/components/charts/MonthlyChart.vue:13
 #: src/components/charts/MonthlyChart.vue:70
-#: src/modules/Stat/views/AnnualSummary.vue:198
+#: src/modules/Stat/views/AnnualSummary.vue:207
 msgid "May"
 msgstr ""
 
 #: src/components/charts/MonthlyChart.vue:14
 #: src/components/charts/MonthlyChart.vue:70
-#: src/modules/Stat/views/AnnualSummary.vue:198
+#: src/modules/Stat/views/AnnualSummary.vue:207
 msgid "Jun"
 msgstr ""
 
 #: src/components/charts/MonthlyChart.vue:15
 #: src/components/charts/MonthlyChart.vue:70
-#: src/modules/Stat/views/AnnualSummary.vue:198
+#: src/modules/Stat/views/AnnualSummary.vue:207
 msgid "Jul"
 msgstr ""
 
 #: src/components/charts/MonthlyChart.vue:16
 #: src/components/charts/MonthlyChart.vue:70
-#: src/modules/Stat/views/AnnualSummary.vue:198
+#: src/modules/Stat/views/AnnualSummary.vue:207
 msgid "Aug"
 msgstr ""
 
 #: src/components/charts/MonthlyChart.vue:17
 #: src/components/charts/MonthlyChart.vue:71
-#: src/modules/Stat/views/AnnualSummary.vue:199
+#: src/modules/Stat/views/AnnualSummary.vue:208
 msgid "Sep"
 msgstr ""
 
 #: src/components/charts/MonthlyChart.vue:18
 #: src/components/charts/MonthlyChart.vue:71
-#: src/modules/Stat/views/AnnualSummary.vue:199
+#: src/modules/Stat/views/AnnualSummary.vue:208
 msgid "Oct"
 msgstr ""
 
 #: src/components/charts/MonthlyChart.vue:19
 #: src/components/charts/MonthlyChart.vue:71
-#: src/modules/Stat/views/AnnualSummary.vue:199
+#: src/modules/Stat/views/AnnualSummary.vue:208
 msgid "Nov"
 msgstr ""
 
 #: src/components/charts/MonthlyChart.vue:20
 #: src/components/charts/MonthlyChart.vue:71
-#: src/modules/Stat/views/AnnualSummary.vue:199
+#: src/modules/Stat/views/AnnualSummary.vue:208
 msgid "Dec"
 msgstr ""
 
@@ -366,8 +376,8 @@ msgid "Delete"
 msgstr ""
 
 #: src/components/CommentDialog.vue:16
-#: src/components/TheNavbar.vue:152
-#: src/components/TheNavbar.vue:270
+#: src/components/TheNavbar.vue:151
+#: src/components/TheNavbar.vue:269
 #: src/modules/Routing/views/AirspacesView.vue:75
 #: src/modules/Routing/views/WaypointView.vue:40
 #: src/modules/Routing/views/XcnavView.vue:174
@@ -391,7 +401,7 @@ msgstr ""
 
 #: src/components/ExternalLayout.vue:17
 #: src/components/TheNavbar.vue:30
-#: src/components/TheNavbar.vue:175
+#: src/components/TheNavbar.vue:174
 #: src/modules/Tracks/views/ExternalView.vue:12
 msgid "External track"
 msgstr ""
@@ -418,7 +428,7 @@ msgstr ""
 
 #: src/components/FullMapView.vue:8
 #: src/components/TheNavbar.vue:64
-#: src/components/TheNavbar.vue:201
+#: src/components/TheNavbar.vue:200
 #: src/components/TheWelcome.vue:143
 #: src/modules/Routing/views/XcnavView.vue:22
 #: src/modules/Routing/views/XcnavView.vue:364
@@ -430,15 +440,24 @@ msgstr ""
 msgid "Score"
 msgstr ""
 
-#: src/components/FullMapView.vue:11
+#: src/components/FullMapView.vue:10
+#: src/modules/Routing/views/XcnavView.vue:18
+msgid "Track"
+msgstr ""
+
+#: src/components/FullMapView.vue:13
 msgid "Cut"
 msgstr ""
 
-#: src/components/FullMapView.vue:310
+#: src/components/FullMapView.vue:225
+msgid "Error parsing IGC file: "
+msgstr ""
+
+#: src/components/FullMapView.vue:379
 msgid "Select the start and end points of the section"
 msgstr ""
 
-#: src/components/FullMapView.vue:311
+#: src/components/FullMapView.vue:380
 msgid "to be retained by clicking on the elevation chart"
 msgstr ""
 
@@ -460,7 +479,7 @@ msgstr ""
 #: src/components/TraceInfoDialog.vue:122
 #: src/components/TraceInfoPanel.vue:87
 #: src/modules/Equip/views/EquipView.vue:89
-#: src/modules/Stat/views/AnnualSummary.vue:116
+#: src/modules/Stat/views/AnnualSummary.vue:125
 msgid "Glider"
 msgstr ""
 
@@ -537,8 +556,9 @@ msgstr ""
 #: src/modules/Files/views/HikeView.vue:107
 #: src/modules/Files/views/HikeView.vue:241
 #: src/modules/Routing/views/XcnavView.vue:47
-#: src/modules/Stat/views/AnnualSummary.vue:59
-#: src/modules/Stat/views/AnnualSummary.vue:118
+#: src/modules/Stat/views/AnnualSummary.vue:61
+#: src/modules/Stat/views/AnnualSummary.vue:63
+#: src/modules/Stat/views/AnnualSummary.vue:127
 msgid "Duration"
 msgstr ""
 
@@ -695,7 +715,7 @@ msgstr ""
 #: src/components/TraceInfoDialog.vue:118
 #: src/components/TraceInfoPanel.vue:83
 #: src/modules/Files/views/SitesView.vue:91
-#: src/modules/Stat/views/AnnualSummary.vue:116
+#: src/modules/Stat/views/AnnualSummary.vue:125
 msgid "Site"
 msgstr ""
 
@@ -782,53 +802,57 @@ msgstr ""
 msgid "Replace photo"
 msgstr ""
 
-#: src/components/MapLeaflet.vue:255
+#: src/components/MapLeaflet.vue:206
+msgid "Other track"
+msgstr ""
+
+#: src/components/MapLeaflet.vue:326
 #: src/components/TraceInfoDialog.vue:188
 #: src/components/TraceInfoPanel.vue:151
 #: src/modules/Routing/views/XcnavView.vue:363
 msgid "Thermals"
 msgstr ""
 
-#: src/components/MapLeaflet.vue:293
+#: src/components/MapLeaflet.vue:364
 #: src/components/TraceInfoDialog.vue:198
 #: src/components/TraceInfoPanel.vue:160
 msgid "Glides"
 msgstr ""
 
-#: src/components/MapLeaflet.vue:337
+#: src/components/MapLeaflet.vue:408
 msgid "Class"
 msgstr ""
 
-#: src/components/MapLeaflet.vue:338
+#: src/components/MapLeaflet.vue:409
 #: src/modules/Routing/views/AirspacesView.vue:42
 msgid "Floor"
 msgstr ""
 
-#: src/components/MapLeaflet.vue:339
+#: src/components/MapLeaflet.vue:410
 msgid "Ceiling"
 msgstr ""
 
-#: src/components/MapLeaflet.vue:375
+#: src/components/MapLeaflet.vue:446
 msgid "Checking"
 msgstr ""
 
-#: src/components/MapLeaflet.vue:481
+#: src/components/MapLeaflet.vue:552
 msgid "Airspaces involved"
 msgstr ""
 
-#: src/components/MapLeaflet.vue:500
+#: src/components/MapLeaflet.vue:571
 msgid "violation(s)"
 msgstr ""
 
-#: src/components/MapLeaflet.vue:502
+#: src/components/MapLeaflet.vue:573
 msgid "No violations in the selected airspace file"
 msgstr ""
 
-#: src/components/MapLeaflet.vue:510
+#: src/components/MapLeaflet.vue:581
 msgid "Click on an airspace to display the description"
 msgstr ""
 
-#: src/components/MapLeaflet.vue:603
+#: src/components/MapLeaflet.vue:674
 #: src/components/SearchFlightsDialog.vue:107
 #: src/modules/Tracks/views/LogbookView.vue:147
 msgid "Hike"
@@ -1141,7 +1165,7 @@ msgid "Tag selection"
 msgstr ""
 
 #: src/components/TheFooter.vue:27
-#: src/modules/Stat/views/AnnualSummary.vue:149
+#: src/modules/Stat/views/AnnualSummary.vue:158
 #: src/modules/Stat/views/GlobalSummary.vue:93
 msgid "No logbook opened"
 msgstr ""
@@ -1151,8 +1175,8 @@ msgid "To be saved"
 msgstr ""
 
 #: src/components/TheFooter.vue:33
-#: src/components/TheNavbar.vue:152
-#: src/components/TheNavbar.vue:270
+#: src/components/TheNavbar.vue:151
+#: src/components/TheNavbar.vue:269
 msgid "Saved"
 msgstr ""
 
@@ -1173,51 +1197,51 @@ msgid "Backup copy created"
 msgstr ""
 
 #: src/components/TheNavbar.vue:19
-#: src/components/TheNavbar.vue:165
+#: src/components/TheNavbar.vue:164
 #: src/components/TheWelcome.vue:98
 msgid "Flights & Tracks"
 msgstr ""
 
 #: src/components/TheNavbar.vue:24
-#: src/components/TheNavbar.vue:169
+#: src/components/TheNavbar.vue:168
 #: src/components/TheWelcome.vue:100
 #: src/modules/Settings/views/SettingsView.vue:138
 msgid "Logbook"
 msgstr ""
 
 #: src/components/TheNavbar.vue:38
-#: src/components/TheNavbar.vue:182
+#: src/components/TheNavbar.vue:181
 #: src/components/TheWelcome.vue:122
 msgid "Statistics"
 msgstr ""
 
 #: src/components/TheNavbar.vue:44
-#: src/components/TheNavbar.vue:185
+#: src/components/TheNavbar.vue:184
 #: src/components/TheWelcome.vue:126
 msgid "Annual summary"
 msgstr ""
 
 #: src/components/TheNavbar.vue:47
-#: src/components/TheNavbar.vue:188
+#: src/components/TheNavbar.vue:187
 #: src/components/TheWelcome.vue:129
 msgid "Global summary"
 msgstr ""
 
 #: src/components/TheNavbar.vue:55
-#: src/components/TheNavbar.vue:195
+#: src/components/TheNavbar.vue:194
 #: src/components/TheWelcome.vue:137
 msgid "Routing"
 msgstr ""
 
 #: src/components/TheNavbar.vue:61
-#: src/components/TheNavbar.vue:198
+#: src/components/TheNavbar.vue:197
 #: src/components/TheWelcome.vue:140
 #: src/modules/Routing/views/XcnavView.vue:361
 msgid "Waypoints"
 msgstr ""
 
 #: src/components/TheNavbar.vue:67
-#: src/components/TheNavbar.vue:204
+#: src/components/TheNavbar.vue:203
 #: src/components/TheWelcome.vue:144
 msgid "XC Nav"
 msgstr ""
@@ -1227,24 +1251,24 @@ msgid "Sites & Hikes"
 msgstr ""
 
 #: src/components/TheNavbar.vue:81
-#: src/components/TheNavbar.vue:211
-#: src/components/TheNavbar.vue:214
+#: src/components/TheNavbar.vue:210
+#: src/components/TheNavbar.vue:213
 #: src/components/TheWelcome.vue:153
 #: src/components/TheWelcome.vue:156
 #: src/modules/Stat/views/AnnualSummary.vue:37
-#: src/modules/Stat/views/AnnualSummary.vue:109
-#: src/modules/Stat/views/AnnualSummary.vue:136
+#: src/modules/Stat/views/AnnualSummary.vue:118
+#: src/modules/Stat/views/AnnualSummary.vue:145
 #: src/modules/Stat/views/GlobalSummary.vue:76
 msgid "Sites"
 msgstr ""
 
 #: src/components/TheNavbar.vue:84
-#: src/components/TheNavbar.vue:217
+#: src/components/TheNavbar.vue:216
 msgid "Hikes"
 msgstr ""
 
 #: src/components/TheNavbar.vue:90
-#: src/components/TheNavbar.vue:223
+#: src/components/TheNavbar.vue:222
 #: src/components/TheWelcome.vue:167
 #: src/components/TheWelcome.vue:171
 #: src/modules/Equip/views/EquipView.vue:18
@@ -1254,7 +1278,7 @@ msgid "Equipment"
 msgstr ""
 
 #: src/components/TheNavbar.vue:96
-#: src/components/TheNavbar.vue:229
+#: src/components/TheNavbar.vue:228
 #: src/components/TheWelcome.vue:178
 #: src/modules/Files/views/HikeView.vue:87
 #: src/modules/Files/views/SitesView.vue:80
@@ -1262,21 +1286,21 @@ msgid "Utilities"
 msgstr ""
 
 #: src/components/TheNavbar.vue:102
-#: src/components/TheNavbar.vue:232
+#: src/components/TheNavbar.vue:231
 #: src/components/TheWelcome.vue:181
 #: src/modules/Settings/views/SettingsView.vue:9
 msgid "Settings"
 msgstr ""
 
 #: src/components/TheNavbar.vue:105
-#: src/components/TheNavbar.vue:235
+#: src/components/TheNavbar.vue:234
 #: src/components/TheWelcome.vue:183
 #: src/modules/Settings/views/SupportView.vue:11
 msgid "Support"
 msgstr ""
 
 #: src/components/TheNavbar.vue:108
-#: src/components/TheNavbar.vue:238
+#: src/components/TheNavbar.vue:237
 #: src/components/TheWelcome.vue:185
 msgid "Translation"
 msgstr ""
@@ -1289,21 +1313,61 @@ msgstr ""
 msgid "Change language"
 msgstr ""
 
-#: src/components/TheNavbar.vue:150
-msgid "Unsaved changes – click to save"
-msgstr ""
-
-#: src/components/TheNavbar.vue:150
-msgid "All changes saved"
-msgstr ""
-
-#: src/components/TheNavbar.vue:172
+#: src/components/TheNavbar.vue:171
 msgid "Import tracks"
 msgstr ""
 
-#: src/components/TheNavbar.vue:247
+#: src/components/TheNavbar.vue:246
 #: src/modules/Settings/views/SettingsView.vue:26
 msgid "Language"
+msgstr ""
+
+#: src/components/TheNavbar.vue:280
+msgid "Download file"
+msgstr ""
+
+#: src/components/TheNavbar.vue:283
+msgid "Unsaved changes"
+msgstr ""
+
+#: src/components/TheNavbar.vue:283
+msgid "All changes saved"
+msgstr ""
+
+#: src/components/TheNavbar.vue:289
+msgid "Your browser does not support direct saving"
+msgstr ""
+
+#: src/components/TheNavbar.vue:290
+msgid "The file will be downloaded to your Downloads folder"
+msgstr ""
+
+#: src/components/TheNavbar.vue:291
+msgid "You will need to move it to your logbook folder to replace the original file"
+msgstr ""
+
+#: src/components/TheNavbar.vue:293
+msgid "Continue"
+msgstr ""
+
+#: src/components/TheNavbar.vue:297
+msgid "record the data"
+msgstr ""
+
+#: src/components/TheNavbar.vue:298
+msgid "Save a copy"
+msgstr ""
+
+#: src/components/TheNavbar.vue:303
+msgid "No"
+msgstr ""
+
+#: src/components/TheNavbar.vue:304
+msgid "Yes"
+msgstr ""
+
+#: src/components/TheNavbar.vue:443
+msgid "File downloaded to Downloads folder. Move it to your logbook folder to keep your changes."
 msgstr ""
 
 #: src/components/TheWelcome.vue:100
@@ -1821,10 +1885,6 @@ msgstr ""
 msgid "Gliding"
 msgstr ""
 
-#: src/modules/Routing/components/AirspaceRouteDialog.vue:61
-msgid "Floor limit"
-msgstr ""
-
 #: src/modules/Routing/views/AirspacesView.vue:14
 #: src/modules/Routing/views/WaypointView.vue:15
 msgid "Select a file"
@@ -1974,10 +2034,6 @@ msgstr ""
 
 #: src/modules/Routing/views/XcnavView.vue:14
 msgid "Route"
-msgstr ""
-
-#: src/modules/Routing/views/XcnavView.vue:18
-msgid "Track"
 msgstr ""
 
 #: src/modules/Routing/views/XcnavView.vue:40
@@ -2291,14 +2347,14 @@ msgid "Error saving translation"
 msgstr ""
 
 #: src/modules/Stat/views/AnnualSummary.vue:21
-#: src/modules/Stat/views/AnnualSummary.vue:90
-#: src/modules/Stat/views/AnnualSummary.vue:496
+#: src/modules/Stat/views/AnnualSummary.vue:99
+#: src/modules/Stat/views/AnnualSummary.vue:509
 msgid "Hours"
 msgstr ""
 
 #: src/modules/Stat/views/AnnualSummary.vue:29
-#: src/modules/Stat/views/AnnualSummary.vue:104
-#: src/modules/Stat/views/AnnualSummary.vue:136
+#: src/modules/Stat/views/AnnualSummary.vue:113
+#: src/modules/Stat/views/AnnualSummary.vue:145
 #: src/modules/Stat/views/GlobalSummary.vue:75
 msgid "Gliders"
 msgstr ""
@@ -2307,23 +2363,24 @@ msgstr ""
 msgid "Reference"
 msgstr ""
 
-#: src/modules/Stat/views/AnnualSummary.vue:57
-msgid "Months"
-msgstr ""
-
-#: src/modules/Stat/views/AnnualSummary.vue:93
+#: src/modules/Stat/views/AnnualSummary.vue:54
+#: src/modules/Stat/views/AnnualSummary.vue:102
 msgid "Compare"
 msgstr ""
 
-#: src/modules/Stat/views/AnnualSummary.vue:117
+#: src/modules/Stat/views/AnnualSummary.vue:59
+msgid "Months"
+msgstr ""
+
+#: src/modules/Stat/views/AnnualSummary.vue:126
 msgid "Fl."
 msgstr ""
 
-#: src/modules/Stat/views/AnnualSummary.vue:472
+#: src/modules/Stat/views/AnnualSummary.vue:485
 msgid "Flight time comparison"
 msgstr ""
 
-#: src/modules/Stat/views/AnnualSummary.vue:472
+#: src/modules/Stat/views/AnnualSummary.vue:485
 msgid "Flight comparison"
 msgstr ""
 
