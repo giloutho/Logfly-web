@@ -146,8 +146,7 @@
         {{ databaseStore.dbName }}
       </v-chip>
       <v-btn v-if="databaseStore.hasOpenDatabase" :color="databaseStore.isDirty ? 'warning' : 'success'"
-        variant="elevated" size="small" class="ml-1 save-btn" :loading="isSaving" @click="handleSave"
-        :title="databaseStore.isDirty ? $gettext('Unsaved changes – click to save') : $gettext('All changes saved')">
+        variant="elevated" size="small" class="ml-1 save-btn" :loading="isSaving" @click="openSaveDialog">
         <v-icon start>{{ databaseStore.isDirty ? 'mdi-alert-outline' : 'mdi-check-bold' }}</v-icon>
         {{ databaseStore.isDirty ? $gettext('Save') : $gettext('Saved') }}
       </v-btn>
@@ -259,7 +258,7 @@
       </v-list-group>
 
       <!-- Save button in drawer -->
-      <v-list-item v-if="databaseStore.hasOpenDatabase" @click="handleSave(); drawer = false"
+      <v-list-item v-if="databaseStore.hasOpenDatabase" @click="drawer = false; openSaveDialog()"
         :base-color="databaseStore.isDirty ? 'warning' : 'success'">
         <template v-slot:prepend>
           <v-icon :color="databaseStore.isDirty ? 'warning' : 'success'">
@@ -272,6 +271,48 @@
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
+
+  <!-- Save confirmation dialog -->
+  <v-dialog v-model="showSaveDialog" max-width="550">
+    <v-card>
+      <v-card-title class="text-h6">
+        <template v-if="logbookService.isFallbackMode.value">
+          {{ $gettext('Download file') }}
+        </template>
+        <template v-else>
+          {{ databaseStore.isDirty ? $gettext('Unsaved changes') : $gettext('All changes saved') }}
+        </template>
+      </v-card-title>
+      <v-card-text class="text-body-1">
+        <template v-if="logbookService.isFallbackMode.value">
+          <v-alert type="warning" variant="tonal" density="compact" class="mb-3">
+            {{ $gettext('Your browser does not support direct saving') }}.
+            {{ $gettext('The file will be downloaded to your Downloads folder') }}.
+            {{ $gettext('You will need to move it to your logbook folder to replace the original file') }}.
+          </v-alert>
+          {{ $gettext('Continue') }} ?
+        </template>
+        <template v-else>
+          {{ databaseStore.isDirty
+            ? $gettext('record the data') + ' ?'
+            : $gettext('Save a copy') + ' ?' }}
+        </template>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn variant="text" @click="showSaveDialog = false">{{ $gettext('No') }}</v-btn>
+        <v-btn color="primary" variant="flat" @click="confirmSave">{{ $gettext('Yes') }}</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <!-- Post-download snackbar (fallback mode) -->
+  <v-snackbar v-model="showSnack" :timeout="8000" location="bottom" color="info" variant="tonal">
+    {{ snackText }}
+    <template v-slot:actions>
+      <v-btn variant="text" @click="showSnack = false">{{ $gettext('OK') }}</v-btn>
+    </template>
+  </v-snackbar>
 </template>
 
 <script setup>
@@ -337,6 +378,16 @@ onMounted(() => {
 const isSaving = ref(false);
 const showSnack = ref(false);
 const snackText = ref('');
+const showSaveDialog = ref(false);
+
+function openSaveDialog() {
+  showSaveDialog.value = true;
+}
+
+function confirmSave() {
+  showSaveDialog.value = false;
+  handleSave();
+}
 
 // Auto-save when isDirty changes
 watch(() => databaseStore.isDirty, async (newValue) => {
@@ -347,6 +398,13 @@ watch(() => databaseStore.isDirty, async (newValue) => {
 
 async function runAutoSave() {
   if (isSaving.value) return;
+
+  // In fallback mode (Safari – no File System Access API),
+  // auto-save is impossible. Let the DB stay dirty so the
+  // user is prompted to save manually via the download button.
+  if (logbookService.isFallbackMode.value) {
+    return;
+  }
   
   try {
     isSaving.value = true;
@@ -381,6 +439,9 @@ async function handleSave() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       databaseStore.markAsSaved();
+      // Notify user that the file was downloaded and needs to be moved
+      snackText.value = $gettext('File downloaded to Downloads folder. Move it to your logbook folder to keep your changes.');
+      showSnack.value = true;
     } catch (err) {
       console.error('Export failed:', err);
     } finally {
