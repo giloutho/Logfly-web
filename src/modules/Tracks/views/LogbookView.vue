@@ -77,6 +77,10 @@
               prepend-icon="mdi-call-merge" @click="mergeFlights" class="mr-2">
               {{ $gettext('Merge') }}
             </v-btn>
+            <v-btn v-if="selectedItems.length > 1" size="x-small" variant="outlined" color="white"
+              prepend-icon="mdi-folder-zip-outline" @click="exportBulkZip" class="mr-2">
+              {{ $gettext('Export ZIP') }}
+            </v-btn>
             <v-btn size="x-small" variant="outlined" icon="mdi-close" color="white" @click="clearSelection"></v-btn>
           </div>
         </div>
@@ -290,6 +294,7 @@ import { useDatabaseStore } from '@/stores/database';
 import { igcDecoding } from '@/js/igc/igc-decoder.js';
 import { IgcAnalyze } from '@/js/igc/igc-analyzer.js';
 import { mergeIgcTracks } from '@/js/igc/igc-merging.js';
+import JSZip from 'jszip';
 
 // Déclarer les événements que ce composant peut émettre
 const emit = defineEmits(['db-updated']);
@@ -989,6 +994,50 @@ function onChangeSiteDialogSave(site) {
   const flightId = changeSiteDialogData.value.flightId;
   const ids = flightId === 'bulk' ? selectedItems.value.join(',') : (flightId || dataFlight.value?.decodedIgc?.info?.id);
   onSiteUpdate({ ids: ids, site });
+}
+
+async function exportBulkZip() {
+  if (selectedItems.value.length === 0) return;
+  
+  const ids = selectedItems.value.join(',');
+  const reqSQL = `SELECT V_IGC, strftime('%Y-%m-%d-%H-%M', V_Date) as DateStr FROM Vol WHERE V_ID IN (${ids})`;
+  const result = databaseStore.query(reqSQL);
+
+  if (result.success && result.data && result.data[0]) {
+    const rows = result.data[0].values;
+    const zip = new JSZip();
+    let hasData = false;
+
+    rows.forEach(row => {
+      const igcData = row[0];
+      const dateStr = row[1];
+      if (igcData) {
+        zip.file(`${dateStr}.igc`, igcData);
+        hasData = true;
+      }
+    });
+
+    if (hasData) {
+      const blob = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `logfly_export_${new Date().toISOString().slice(0,10)}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      snackbarMessage.value = $gettext('ZIP export successful');
+      snackbar.value = true;
+    } else {
+      snackbarMessage.value = $gettext('No IGC data to export in the selected flights');
+      snackbar.value = true;
+    }
+  } else {
+    snackbarMessage.value = $gettext('Error reading flights from database');
+    snackbar.value = true;
+  }
 }
 
 async function exportIgc(item) {
