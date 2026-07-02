@@ -528,20 +528,20 @@ function parseCommand(cmd) {
  * Uses a Regular Expression to parse the components of a coordinate string, convert into double
  * and create a LatLng object that can be used in Google Maps.
  *
- * @param coordString for example "39:29.9 N 119:46.1W" or "39 : 29:9 N 119:46 :1W" for KRNO airport
+ * @param coordString for example "39:29.9 N 119:46.1W" (simple), "45:57:02 N 006:53:57 E" (seconds) or "45:57:02.8 N 006:53:57.0 E" (decimal seconds)
  * @return LatLng object
  */
 function parseCoordinateString(coord) {
     let lat = 0
     let lng = 0
-    // for coordinates like 45:57:02 N 006:53:57 E
-    let doubleRegexp = /([\d]+) *: *([\d]+) *[:] *([\d]+) *([NS]) *([\d]+) *: *([\d]+) *[:] *([\d]+) *([EW])/g
+    // for coordinates like 45:57:02 N 006:53:57 E or 45:57:02.8 N 006:53:57.0 E (decimal seconds)
+    let doubleRegexp = /([\d]+) *: *([\d]+) *[:] *([\d.]+) *([NS]) *([\d]+) *: *([\d]+) *[:] *([\d.]+) *([EW])/g
     let m = doubleRegexp.exec(coord)
     if (m != null && m.length == 9) {
-        //  we will get 8 matches: "45", "57", "2", "N" and "6", "53", "57", "E" starting at index 1
+        //  we will get 8 matches: "45", "57", "2.8", "N" and "6", "53", "57.0", "E" starting at index 1
         if (modeDebug) decodingReport += '     parseCoordinateString(' + coord + ') -> m1 :' + m[1] + '  m2 : ' + m[2] + '  m3 : ' + m[3] + ' m5 :' + m[5] + '  m6 : ' + m[6] + '  m7 : ' + m[7] + lineBreak
-        lat = parseFloat(m[1]) + parseFloat(m[2]) / 60. + parseFloat(m[3]) / 3600
-        lng = parseFloat(m[5]) + parseFloat(m[6]) / 60. + parseFloat(m[7]) / 3600
+        lat = parseFloat(m[1]) + parseFloat(m[2]) / 60. + Math.round(parseFloat(m[3])) / 3600
+        lng = parseFloat(m[5]) + parseFloat(m[6]) / 60. + Math.round(parseFloat(m[7])) / 3600
         if (m[4].toUpperCase() == "S") lat *= -1
         if (m[8].toUpperCase() == "W") lng *= -1
     } else {
