@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.0.9]
+
+### Added
+* Export IGC function for multiple selected flights
+
+### Improved
+* Decoding coordinates in OpenAir files
+
 ## [7.0.8] - 2026-05-12
 
 ### Added
