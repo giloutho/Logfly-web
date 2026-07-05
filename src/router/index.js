@@ -136,6 +136,13 @@ const routes = [
       },
     ],
   },
+
+  // 📄 Import / Export
+  {
+    path: '/import-export',
+    name: 'import-export',
+    component: () => import('../components/ImportExport.vue'),
+  },
 ];
 
 const router = createRouter({

@@ -25,7 +25,7 @@
       <div v-if="currentFileName" class="d-flex align-center mx-2 font-weight-bold text-primary">
         {{ currentFileName }}
         <v-chip size="small" class="ml-2" color="primary" variant="outlined">{{ visibleCount }} / {{ totalCount
-          }}</v-chip>
+        }}</v-chip>
       </div>
 
       <!-- Search Name -->
@@ -755,12 +755,15 @@ function exportGPX() {
       if (item.selected) {
         const gj = item.data.dbGeoJson;
         if (gj.geometry.type === 'Polygon') {
-          gpx += `\n<rte><name>${escapeXml(item.name)}</name>`;
+          gpx += `\n<trk>`;
+          gpx += `\n<name>${escapeXml(item.name)}</name>`;
+          gpx += `\n<trkseg>`;
           const coords = gj.geometry.coordinates[0];
           coords.forEach(pt => {
-            gpx += `\n<rtept lat="${pt[1]}" lon="${pt[0]}"></rtept>`;
+            gpx += `\n<trkpt lat="${pt[1]}" lon="${pt[0]}"></trkpt>`;
           });
-          gpx += `\n</rte>`;
+          gpx += `\n</trkseg>`;
+          gpx += `\n</trk>`;
         }
       }
     });

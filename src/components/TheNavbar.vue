@@ -107,6 +107,9 @@
           <v-list-item :to="{ name: 'translation-view' }">
             <v-list-item-title>{{ $gettext('Translation') }}</v-list-item-title>
           </v-list-item>
+          <v-list-item :to="{ name: 'import-export' }">
+            <v-list-item-title>{{ $gettext('Import / Export') }}</v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
 
@@ -235,6 +238,9 @@
         </v-list-item>
         <v-list-item :to="{ name: 'translation-view' }" @click="drawer = false">
           <v-list-item-title>{{ $gettext('Translation') }}</v-list-item-title>
+        </v-list-item>
+        <v-list-item :to="{ name: 'import-export' }" @click="drawer = false">
+          <v-list-item-title>{{ $gettext('Import / Export') }}</v-list-item-title>
         </v-list-item>
       </v-list-group>
 

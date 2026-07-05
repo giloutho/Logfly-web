@@ -243,22 +243,49 @@ function decodeOA(oaText, modeReport) {
  */
 function groupLines(lines) {
     let groups = []
-    let i = 0
+    let currentGroup = []
+    let hasAC = false
+    let hasAN = false
 
-    while (i < lines.length) {
-        let g = []
+    for (let i = 0; i < lines.length; i++) {
+        let line = lines[i]
+        let trimmed = line.trim()
 
-        // get ready for first group by ignoring repeating blank lines
-        while (i < lines.length && lines[i].trim() == '') {
-            i++
+        if (trimmed === '') {
+            continue
         }
 
-        while (i < lines.length && lines[i].trim() != '') {
-            // add all this to group g
-            g.push(lines[i++])
+        let upper = trimmed.toUpperCase()
+        let isAN = upper.startsWith('AN ') || upper === 'AN'
+        let isAC = upper.startsWith('AC ') || upper === 'AC'
+
+        let startNew = false
+        if (isAN && hasAN) {
+            startNew = true
+        } else if (isAC && hasAC) {
+            startNew = true
         }
 
-        groups.push(g)
+        if (startNew && currentGroup.length > 0) {
+            // Move trailing comments to the next group
+            let commentsToMove = []
+            while (currentGroup.length > 0 && currentGroup[currentGroup.length - 1].trim().startsWith('*')) {
+                commentsToMove.unshift(currentGroup.pop())
+            }
+
+            groups.push(currentGroup)
+            currentGroup = commentsToMove
+            hasAC = false
+            hasAN = false
+        }
+
+        currentGroup.push(line)
+        if (isAC) hasAC = true
+        if (isAN) hasAN = true
+    }
+
+    if (currentGroup.length > 0) {
+        groups.push(currentGroup)
     }
 
     return groups
