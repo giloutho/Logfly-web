@@ -126,7 +126,7 @@
               <!-- Airspace Item -->
               <div v-else class="list-item airspace-item" :class="{ 'item-selected': item.selected }"
                 @click="onItemClick(item)">
-                <v-checkbox v-model="item.selected" @click.stop="onItemToggle(item)" density="compact" hide-details
+                <v-checkbox v-model="item.selected" @update:model-value="onItemToggle(item)" @click.stop density="compact" hide-details
                   class="mr-2 flex-shrink-0"></v-checkbox>
                 <div class="class-badge small" :style="{ backgroundColor: getClassColor(item.class) }">
                   {{ item.class }}
