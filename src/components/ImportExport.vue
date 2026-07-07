@@ -135,6 +135,7 @@
 import { ref, computed } from 'vue'
 import { useGettext } from 'vue3-gettext'
 import { useDatabaseStore } from '@/stores/database'
+import JSZip from 'jszip'
 
 const { $gettext } = useGettext()
 const databaseStore = useDatabaseStore()
@@ -150,28 +151,6 @@ const showSnack = ref(false)
 const snackText = ref('')
 const snackColor = ref('success')
 
-// Tables de la base Logfly
-const TABLES = ['Vol', 'Site', 'Equip', 'Tag', 'Rando']
-
-// Colonnes contenant des données IGC/track
-const TRACK_COLUMNS = {
-  'Vol': 'V_IGC',
-  'Rando': 'R_Track'
-}
-
-/**
- * Récupère toutes les données d'une table
- */
-function getTableData(tableName) {
-  const result = databaseStore.query(`SELECT * FROM ${tableName}`)
-  if (!result.success || !result.data || result.data.length === 0) {
-    return { columns: [], rows: [] }
-  }
-  const columns = result.data[0].columns
-  const rows = result.data[0].values
-  return { columns, rows }
-}
-
 /**
  * Échappe une valeur pour CSV
  */
@@ -182,33 +161,6 @@ function escapeCsvValue(value) {
     return '"' + str.replace(/"/g, '""') + '"'
   }
   return str
-}
-
-/**
- * Convertit les données d'une table en CSV
- */
-function tableToCsv(tableName, excludeTrackColumns = false) {
-  const { columns, rows } = getTableData(tableName)
-  if (columns.length === 0) return ''
-
-  // Filtrer les colonnes si nécessaire
-  let filteredColumns = columns
-  if (excludeTrackColumns && TRACK_COLUMNS[tableName]) {
-    const trackCol = TRACK_COLUMNS[tableName]
-    filteredColumns = columns.filter(c => c !== trackCol)
-  }
-
-  // En-tête
-  const header = `# Table: ${tableName}\n`
-  const headerLine = filteredColumns.map(c => escapeCsvValue(c)).join(',') + '\n'
-
-  // Lignes de données
-  const dataLines = rows.map(row => {
-    const colIndices = filteredColumns.map(col => columns.indexOf(col))
-    return colIndices.map(i => escapeCsvValue(row[i])).join(',')
-  }).join('\n')
-
-  return header + headerLine + dataLines + '\n\n'
 }
 
 /**
@@ -258,13 +210,124 @@ async function exportCsv(excludeTracks) {
     progressMessage.value = $gettext('Exporting CSV') + ` (${label} IGC)...`
     showProgress.value = true
 
-    let csvContent = ''
-    for (const table of TABLES) {
-      const tableCsv = tableToCsv(table, excludeTracks)
-      if (tableCsv) {
-        csvContent += tableCsv
-      }
+    // 1. Exécuter l'instruction SQL pour obtenir les vols
+    const result = databaseStore.query("SELECT * FROM Vol ORDER BY V_Date DESC")
+    if (!result.success || !result.data || result.data.length === 0) {
+      showSnackColor('warning', $gettext('No data to export.'))
+      return
     }
+
+    const columns = result.data[0].columns
+    const rows = result.data[0].values
+
+    // 2. Charger les correspondances des étiquettes (tags)
+    const tagsMap = {}
+    const tagResult = databaseStore.query("SELECT Tag_ID, Tag_Label FROM Tag")
+    if (tagResult.success && tagResult.data && tagResult.data[0]) {
+      tagResult.data[0].values.forEach(r => {
+        tagsMap[r[0]] = r[1]
+      })
+    }
+
+    // 3. Définir les en-têtes
+    const headers = [
+      $gettext('Date'),
+      $gettext('Time'),
+      'UTC',
+      $gettext('Duration'),
+      $gettext('Site'),
+      $gettext('Country'),
+      $gettext('Alt'),
+      $gettext('Latitude'),
+      $gettext('Longitude'),
+      $gettext('Glider'),
+      $gettext('Comment'),
+      $gettext('Tag')
+    ]
+
+    // Formatter pour l'heure en format HH:MM:SS
+    const formatTime = (timeStr) => {
+      if (!timeStr) return '00:00:00'
+      const parts = timeStr.split(':')
+      const hh = parts[0] ? parts[0].padStart(2, '0') : '00'
+      const mm = parts[1] ? parts[1].padStart(2, '0') : '00'
+      const ss = parts[2] ? parts[2].padStart(2, '0') : '00'
+      return `${hh}:${mm}:${ss}`
+    }
+
+    // Initialisation du ZIP si excludeTracks est false
+    const zip = !excludeTracks ? new JSZip() : null
+    let hasIgcData = false
+
+    // 4. Générer le contenu CSV ligne par ligne
+    const csvLines = [headers.map(escapeCsvValue).join(',')]
+
+    rows.forEach(row => {
+      const obj = {}
+      columns.forEach((col, idx) => {
+        obj[col] = row[idx]
+      })
+
+      let dateVal = ''
+      let timeVal = ''
+      let igcFilename = ''
+      if (obj.V_Date) {
+        const parts = String(obj.V_Date).trim().split(/[\sT]+/)
+        if (parts[0]) dateVal = parts[0]
+        if (parts[1]) timeVal = formatTime(parts[1])
+
+        // Formatter le nom de fichier IGC (YYYY-MM-DD-HH-MM)
+        if (parts[0] && parts[1]) {
+          const timeParts = parts[1].split(':')
+          const hh = timeParts[0] ? timeParts[0].padStart(2, '0') : '00'
+          const mm = timeParts[1] ? timeParts[1].padStart(2, '0') : '00'
+          igcFilename = `${parts[0]}-${hh}-${mm}`
+        }
+      }
+
+      const utcVal = obj.UTC !== null && obj.UTC !== undefined ? obj.UTC : ''
+      const durationVal = obj.V_sDuree || ''
+      const siteVal = obj.V_Site || ''
+      const countryVal = obj.V_Pays || ''
+      const altVal = obj.V_AltDeco !== null && obj.V_AltDeco !== undefined ? obj.V_AltDeco : ''
+      const latVal = obj.V_LatDeco !== null && obj.V_LatDeco !== undefined ? obj.V_LatDeco : ''
+      const longVal = obj.V_LongDeco !== null && obj.V_LongDeco !== undefined ? obj.V_LongDeco : ''
+      const gliderVal = obj.V_Engin || ''
+      const commentVal = obj.V_Commentaire || ''
+      const tagVal = obj.V_Tag ? (tagsMap[obj.V_Tag] || obj.V_Tag) : ''
+
+      const rowValues = [
+        dateVal,
+        timeVal,
+        utcVal,
+        durationVal,
+        siteVal,
+        countryVal,
+        altVal,
+        latVal,
+        longVal,
+        gliderVal,
+        commentVal,
+        tagVal
+      ]
+
+      csvLines.push(rowValues.map(escapeCsvValue).join(','))
+
+      // Ajouter la trace IGC au ZIP si présente
+      if (!excludeTracks && obj.V_IGC) {
+        let name = igcFilename || 'trace'
+        let counter = 1
+        let finalName = `${name}.igc`
+        while (zip.file(finalName)) {
+          finalName = `${name}_${counter}.igc`
+          counter++
+        }
+        zip.file(finalName, obj.V_IGC)
+        hasIgcData = true
+      }
+    })
+
+    const csvContent = csvLines.join('\n')
 
     if (!csvContent) {
       showSnackColor('warning', $gettext('No data to export.'))
@@ -273,10 +336,27 @@ async function exportCsv(excludeTracks) {
 
     const suffix = excludeTracks ? '_no_igc' : '_with_igc'
     const baseName = (databaseStore.dbName || 'logfly').replace('.db', '')
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    
+    // Ajout du BOM UTF-8 (\ufeff) pour la compatibilité Excel des caractères accentués
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' })
     downloadBlob(blob, `${baseName}${suffix}.csv`)
 
-    showSnackColor('success', $gettext('CSV exported successfully!'))
+    // 5. Générer et télécharger le ZIP contenant les traces IGC si excludeTracks est false
+    if (!excludeTracks) {
+      if (hasIgcData) {
+        progressMessage.value = $gettext('Generating ZIP file...')
+        const zipBlob = await zip.generateAsync({ type: 'blob' })
+        downloadBlob(zipBlob, `${baseName}_igc.zip`)
+        showSnackColor('success', $gettext('CSV and ZIP exported successfully!'))
+      } else {
+        showSnackColor('success', $gettext('CSV exported successfully!'))
+        setTimeout(() => {
+          showSnackColor('info', $gettext('No IGC data to export in the flights.'))
+        }, 1500)
+      }
+    } else {
+      showSnackColor('success', $gettext('CSV exported successfully!'))
+    }
   } catch (err) {
     console.error('Export CSV failed:', err)
     showSnackColor('error', $gettext('Export failed: ') + err.message)
