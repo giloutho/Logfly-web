@@ -91,7 +91,8 @@
             <v-divider class="my-2"></v-divider>
 
             <!-- Import info -->
-            <v-alert type="info" variant="tonal" density="compact" class="mt-4" :text="$gettext('The CSV file must match the Logfly table structure (Vol, Site, Equip, Tag, Rando).')">
+            <v-alert type="info" variant="tonal" density="compact" class="mt-4"
+              :text="$gettext('The CSV file must match the Logfly table structure (Vol, Site, Equip, Tag, Rando).')">
             </v-alert>
           </v-card-text>
         </v-card>
@@ -99,13 +100,7 @@
     </v-row>
 
     <!-- Hidden file input for CSV import -->
-    <input
-      ref="csvInput"
-      type="file"
-      accept=".csv"
-      style="display: none"
-      @change="handleCsvFile"
-    />
+    <input ref="csvInput" type="file" accept=".csv" style="display: none" @change="handleCsvFile" />
 
     <!-- Progress dialog -->
     <v-dialog v-model="showProgress" persistent max-width="400">
@@ -336,7 +331,7 @@ async function exportCsv(excludeTracks) {
 
     const suffix = excludeTracks ? '_no_igc' : '_with_igc'
     const baseName = (databaseStore.dbName || 'logfly').replace('.db', '')
-    
+
     // Ajout du BOM UTF-8 (\ufeff) pour la compatibilité Excel des caractères accentués
     const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' })
     downloadBlob(blob, `${baseName}${suffix}.csv`)
@@ -374,58 +369,6 @@ function triggerCsvImport() {
     csvInput.value.value = ''
     csvInput.value.click()
   }
-}
-
-/**
- * Parse un fichier CSV
- */
-function parseCsv(text) {
-  const lines = text.split(/\r?\n/)
-  const tables = {}
-  let currentTable = null
-  let currentColumns = null
-  let currentRows = []
-
-  for (const line of lines) {
-    // Détecter l'en-tête de table
-    const tableMatch = line.match(/^# Table:\s*(\w+)/)
-    if (tableMatch) {
-      // Sauvegarder la table précédente
-      if (currentTable && currentColumns) {
-        tables[currentTable] = { columns: currentColumns, rows: currentRows }
-      }
-      currentTable = tableMatch[1]
-      currentColumns = null
-      currentRows = []
-      continue
-    }
-
-    if (!currentTable) continue
-
-    // Ligne vide = fin de table
-    if (line.trim() === '') {
-      if (currentColumns && currentRows.length > 0) {
-        tables[currentTable] = { columns: currentColumns, rows: currentRows }
-      }
-      continue
-    }
-
-    // Parser la ligne CSV
-    const values = parseCsvLine(line)
-
-    if (!currentColumns) {
-      currentColumns = values
-    } else if (values.length === currentColumns.length) {
-      currentRows.push(values)
-    }
-  }
-
-  // Dernière table
-  if (currentTable && currentColumns && currentRows.length > 0) {
-    tables[currentTable] = { columns: currentColumns, rows: currentRows }
-  }
-
-  return tables
 }
 
 /**
@@ -476,46 +419,165 @@ async function handleCsvFile(event) {
     progressMessage.value = $gettext('Importing CSV file...')
     showProgress.value = true
 
-    const text = await file.text()
-    const tables = parseCsv(text)
-
-    const tableNames = Object.keys(tables)
-    if (tableNames.length === 0) {
-      showSnackColor('error', $gettext('No valid table found in the CSV file.'))
-      return
+    let text = await file.text()
+    // Supprimer le BOM UTF-8 s'il est présent
+    if (text.startsWith('\ufeff')) {
+      text = text.substring(1)
     }
 
-    // Vérifier que les tables existent dans la base
-    for (const tableName of tableNames) {
-      const check = databaseStore.query(
-        `SELECT name FROM sqlite_master WHERE type='table' AND name='${tableName}'`
-      )
-      if (!check.success || check.data.length === 0) {
-        showSnackColor('error', `${$gettext('Table')} "${tableName}" ${$gettext('does not exist in the database.')}`)
-        return
-      }
-    }
+    const lines = text.split(/\r?\n/)
 
-    // Insérer les données
+    let headerIgnored = false
+    let totalProcessed = 0
     let totalInserted = 0
-    for (const [tableName, { columns, rows }] of Object.entries(tables)) {
-      progressMessage.value = `${$gettext('Importing')} ${tableName}...`
-      
-      const colStr = columns.join(', ')
-      const placeholders = columns.map(() => '?').join(', ')
-      const insertSql = `INSERT OR REPLACE INTO ${tableName} (${colStr}) VALUES (${placeholders})`
 
-      for (const row of rows) {
-        try {
-          databaseStore.update(insertSql, row)
-          totalInserted++
-        } catch (err) {
-          console.warn(`Failed to insert row in ${tableName}:`, err.message)
+    // Requête SQL d'insertion
+    const insertSql = `
+      INSERT INTO Vol (
+        V_Date, UTC, V_Duree, V_sDuree, V_Site, V_Pays, V_AltDeco, V_LatDeco, V_LongDeco, V_Engin, V_Commentaire
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `
+
+    // Formatter pour s'assurer que l'heure respecte le format HH:MM:SS
+    const formatTime = (timeStr) => {
+      if (!timeStr) return '12:00:00'
+      const parts = timeStr.split(':')
+      const hh = parts[0] ? parts[0].padStart(2, '0') : '12'
+      const mm = parts[1] ? parts[1].padStart(2, '0') : '00'
+      const ss = parts[2] ? parts[2].padStart(2, '0') : '00'
+      return `${hh}:${mm}:${ss}`
+    }
+
+    for (const line of lines) {
+      const trimmedLine = line.trim()
+      if (trimmedLine === '') continue
+
+      // Ignorer la ligne d'en-tête (première ligne non vide)
+      if (!headerIgnored) {
+        headerIgnored = true
+        continue
+      }
+
+      totalProcessed++
+
+      const values = parseCsvLine(trimmedLine)
+
+      // Un enregistrement valide doit comporter au moins 11 membres
+      if (values.length < 11) {
+        console.warn(`Line ${totalProcessed} ignored: contains fewer than 11 fields.`)
+        continue
+      }
+
+      // Champ 1 : Date (indispensable, format YYYY-MM-DD)
+      const rawDate = values[0].trim()
+      if (!rawDate || !/^\d{4}-\d{2}-\d{2}$/.test(rawDate)) {
+        console.warn(`Line ${totalProcessed} ignored: invalid or missing date "${rawDate}".`)
+        continue
+      }
+
+      // Champ 2 : Heure (format HH:MM:SS, par défaut 12:00:00)
+      const rawTime = values[1].trim()
+      let timeVal = '12:00:00'
+      if (rawTime !== '') {
+        const formatted = formatTime(rawTime)
+        if (/^\d{2}:\d{2}:\d{2}$/.test(formatted)) {
+          timeVal = formatted
         }
       }
+      const finalDateTime = `${rawDate} ${timeVal}`
+
+      // Champ 3 : Décalage UTC (entier en minutes, par défaut 0)
+      const rawUtc = values[2].trim()
+      const utcVal = rawUtc !== '' ? (parseInt(rawUtc, 10) || 0) : 0
+
+      // Champ 4 : Durée (indispensable, format HHhMMmn, e.g. 01h22mn)
+      const rawDuration = values[3].trim()
+      if (!rawDuration) {
+        console.warn(`Line ${totalProcessed} ignored: missing duration.`)
+        continue
+      }
+      const durationMatch = rawDuration.match(/^(\d+)h(\d+)mn$/)
+      if (!durationMatch) {
+        console.warn(`Line ${totalProcessed} ignored: invalid duration format "${rawDuration}".`)
+        continue
+      }
+      const parsedHours = parseInt(durationMatch[1], 10)
+      const parsedMinutes = parseInt(durationMatch[2], 10)
+      const secondsVal = (parsedHours * 3600) + (parsedMinutes * 60)
+
+      // Cadrage/Padding : ajouter les zéros manquants (e.g. 0h47mn -> 00h47mn, 1h2mn -> 01h02mn)
+      const paddedHours = String(parsedHours).padStart(2, '0')
+      const paddedMinutes = String(parsedMinutes).padStart(2, '0')
+      const durationVal = `${paddedHours}h${paddedMinutes}mn`
+
+      // Champ 5 : Site (en majuscules)
+      const siteVal = values[4] ? values[4].trim().toUpperCase() : ''
+
+      // Champ 6 : Pays (en majuscules, Null si non renseigné)
+      const rawCountry = values[5] ? values[5].trim() : ''
+      const countryVal = rawCountry !== '' ? rawCountry.toUpperCase() : null
+
+      // Champ 7 : Altitude (entier, sinon 0)
+      const rawAlt = values[6].trim()
+      let altVal = 0
+      if (rawAlt && /^-?\d+$/.test(rawAlt)) {
+        altVal = parseInt(rawAlt, 10)
+      }
+
+      // Champ 8 : Latitude (optionnel, réel entre -90 et +90, par défaut 0.0)
+      const rawLat = values[7].trim()
+      let latVal = 0.0
+      if (rawLat !== '') {
+        const parsedLat = parseFloat(rawLat)
+        if (!isNaN(parsedLat) && parsedLat >= -90 && parsedLat <= 90) {
+          latVal = parsedLat
+        }
+      }
+
+      // Champ 9 : Longitude (optionnel, réel entre -180 et +180, par défaut 0.0)
+      const rawLong = values[8].trim()
+      let longVal = 0.0
+      if (rawLong !== '') {
+        const parsedLong = parseFloat(rawLong)
+        if (!isNaN(parsedLong) && parsedLong >= -180 && parsedLong <= 180) {
+          longVal = parsedLong
+        }
+      }
+
+      // Champ 10 : Voile (en majuscules, par défaut 'Not defined' traduit)
+      const rawGlider = values[9] ? values[9].trim() : ''
+      const gliderVal = rawGlider !== '' ? rawGlider.toUpperCase() : $gettext('Not defined')
+
+      // Champ 11 : Commentaire (optionnel)
+      const commentVal = values[10] ? values[10].trim() : ''
+
+      try {
+        const insertParams = [
+          finalDateTime,
+          utcVal,
+          secondsVal,
+          durationVal,
+          siteVal,
+          countryVal,
+          altVal,
+          latVal,
+          longVal,
+          gliderVal,
+          commentVal
+        ]
+        const dbResult = databaseStore.update(insertSql, insertParams)
+        if (dbResult.success) {
+          totalInserted++
+        } else {
+          console.warn(`Failed to insert flight at line ${totalProcessed}: ${dbResult.message}`)
+        }
+      } catch (err) {
+        console.warn(`Database insert error at line ${totalProcessed}:`, err.message)
+      }
     }
 
-    showSnackColor('success', `${totalInserted} ${$gettext('rows imported successfully!')}`)
+    const msg = `${totalProcessed} ${$gettext('lines processed')}, ${totalInserted} ${$gettext('records imported successfully!')}`
+    showSnackColor('success', msg)
   } catch (err) {
     console.error('Import CSV failed:', err)
     showSnackColor('error', $gettext('Import failed: ') + err.message)
