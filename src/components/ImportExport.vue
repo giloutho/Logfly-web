@@ -22,10 +22,10 @@
                   <v-icon color="primary">mdi-database-export</v-icon>
                 </template>
                 <v-list-item-title class="font-weight-bold">
-                  {{ $gettext('Export database (SQL format)') }}
+                  {{ $gettext('Export database') }}
                 </v-list-item-title>
                 <v-list-item-subtitle>
-                  {{ $gettext('Full SQLite database file (.db)') }}
+                  {{ $gettext('Full SQLite database file') }}
                 </v-list-item-subtitle>
               </v-list-item>
 
@@ -164,17 +164,44 @@ function escapeCsvValue(value) {
 async function exportSql() {
   try {
     exporting.value = true
-    progressMessage.value = $gettext('Exporting database...')
+    progressMessage.value = $gettext('Exporting database' + '...')
     showProgress.value = true
+
+    // 1. Lire le dernier enregistrement de la table Vol et récupérer le champ V_Date
+    let dateName = ''
+    try {
+      const queryResult = databaseStore.query("SELECT V_Date FROM Vol ORDER BY V_Date DESC LIMIT 1")
+      if (queryResult.success && queryResult.data && queryResult.data[0] && queryResult.data[0].values && queryResult.data[0].values.length > 0) {
+        const rawDate = queryResult.data[0].values[0][0]
+        if (rawDate) {
+          // Extraire la date YYYY-MM-DD
+          const match = rawDate.match(/^\d{4}-\d{2}-\d{2}/)
+          if (match) {
+            dateName = match[0]
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Failed to query V_Date from Vol:', e)
+    }
+
+    // Si aucune date n'a pu être extraite, on utilise la date courante
+    if (!dateName) {
+      dateName = new Date().toISOString().split('T')[0]
+    }
+
+    // 2. Extraire le nom de base de la base de données et composer le nom personnalisé
+    const baseDbName = (databaseStore.dbName || 'logfly.db').replace(/\.db$/i, '')
+    const backupFileName = `${baseDbName}_${dateName}.db`
 
     const data = await databaseStore.exportDatabase()
     const blob = new Blob([data], { type: 'application/x-sqlite3' })
-    downloadBlob(blob, databaseStore.dbName || 'logfly.db')
+    downloadBlob(blob, backupFileName)
 
     showSnackColor('success', $gettext('Database exported successfully!'))
   } catch (err) {
     console.error('Export SQL failed:', err)
-    showSnackColor('error', $gettext('Export failed: ') + err.message)
+    showSnackColor('error', $gettext('Export failed') + ': ' + err.message)
   } finally {
     exporting.value = false
     showProgress.value = false
@@ -339,18 +366,18 @@ async function exportCsv(excludeTracks) {
     // 5. Générer et télécharger le ZIP contenant les traces IGC si excludeTracks est false
     if (!excludeTracks) {
       if (hasIgcData) {
-        progressMessage.value = $gettext('Generating ZIP file...')
+        progressMessage.value = $gettext('Generating ZIP file' + '...')
         const zipBlob = await zip.generateAsync({ type: 'blob' })
         downloadBlob(zipBlob, `${baseName}_igc.zip`)
-        showSnackColor('success', $gettext('CSV and ZIP exported successfully!'))
+        showSnackColor('success', $gettext('CSV and ZIP exported successfully'))
       } else {
-        showSnackColor('success', $gettext('CSV exported successfully!'))
+        showSnackColor('success', $gettext('CSV exported successfully'))
         setTimeout(() => {
-          showSnackColor('info', $gettext('No IGC data to export in the flights.'))
+          showSnackColor('info', $gettext('No IGC data to export in the flights'))
         }, 1500)
       }
     } else {
-      showSnackColor('success', $gettext('CSV exported successfully!'))
+      showSnackColor('success', $gettext('CSV exported successfully'))
     }
   } catch (err) {
     console.error('Export CSV failed:', err)
@@ -416,7 +443,7 @@ async function handleCsvFile(event) {
 
   try {
     importing.value = true
-    progressMessage.value = $gettext('Importing CSV file...')
+    progressMessage.value = $gettext('Importing CSV file' + '...')
     showProgress.value = true
 
     let text = await file.text()
@@ -486,6 +513,16 @@ async function handleCsvFile(event) {
       }
       const finalDateTime = `${rawDate} ${timeVal}`
 
+      // Vérification d'existence de l'enregistrement avec la même date et heure (finalDateTime) dans la table Vol
+      const checkResult = databaseStore.query(`SELECT COUNT(*) FROM Vol WHERE V_Date = '${finalDateTime}'`)
+      if (checkResult.success && checkResult.data && checkResult.data[0] && checkResult.data[0].values && checkResult.data[0].values.length > 0) {
+        const count = checkResult.data[0].values[0][0]
+        if (count > 0) {
+          console.warn(`Line ${totalProcessed} ignored: flight with date ${finalDateTime} already exists.`)
+          continue
+        }
+      }
+
       // Champ 3 : Décalage UTC (entier en minutes, par défaut 0)
       const rawUtc = values[2].trim()
       const utcVal = rawUtc !== '' ? (parseInt(rawUtc, 10) || 0) : 0
@@ -515,7 +552,7 @@ async function handleCsvFile(event) {
 
       // Champ 6 : Pays (en majuscules, Null si non renseigné)
       const rawCountry = values[5] ? values[5].trim() : ''
-      const countryVal = rawCountry !== '' ? rawCountry.toUpperCase() : null
+      let countryVal = rawCountry !== '' ? rawCountry.toUpperCase() : null
 
       // Champ 7 : Altitude (entier, sinon 0)
       const rawAlt = values[6].trim()
@@ -541,6 +578,36 @@ async function handleCsvFile(event) {
         const parsedLong = parseFloat(rawLong)
         if (!isNaN(parsedLong) && parsedLong >= -180 && parsedLong <= 180) {
           longVal = parsedLong
+        }
+      }
+
+      // Recherche dans la table Site pour enrichir/mettre à jour les informations du site
+      if (siteVal) {
+        const escapedSiteVal = siteVal.replace(/'/g, "''")
+        const siteQueryResult = databaseStore.query(`SELECT S_Pays, S_Alti, S_Latitude, S_Longitude FROM Site WHERE UPPER( RTRIM(S_Nom)) = '${escapedSiteVal}' LIMIT 1`)
+        if (siteQueryResult.success && siteQueryResult.data && siteQueryResult.data[0] && siteQueryResult.data[0].values && siteQueryResult.data[0].values.length > 0) {
+          const siteRow = siteQueryResult.data[0].values[0]
+          const sPays = siteRow[0]
+          const sAlti = siteRow[1]
+          const sLatitude = siteRow[2]
+          const sLongitude = siteRow[3]
+
+          if (sPays !== null && sPays !== undefined) {
+            const trimmedPays = String(sPays).trim()
+            countryVal = trimmedPays !== '' ? trimmedPays.toUpperCase() : null
+          }
+          if (sAlti !== null && sAlti !== undefined) {
+            const parsedAlti = parseInt(sAlti, 10)
+            altVal = !isNaN(parsedAlti) ? parsedAlti : 0
+          }
+          if (sLatitude !== null && sLatitude !== undefined) {
+            const parsedLat = parseFloat(sLatitude)
+            latVal = !isNaN(parsedLat) && parsedLat >= -90 && parsedLat <= 90 ? parsedLat : 0.0
+          }
+          if (sLongitude !== null && sLongitude !== undefined) {
+            const parsedLong = parseFloat(sLongitude)
+            longVal = !isNaN(parsedLong) && parsedLong >= -180 && parsedLong <= 180 ? parsedLong : 0.0
+          }
         }
       }
 
@@ -576,11 +643,11 @@ async function handleCsvFile(event) {
       }
     }
 
-    const msg = `${totalProcessed} ${$gettext('lines processed')}, ${totalInserted} ${$gettext('records imported successfully!')}`
+    const msg = `${totalProcessed} ${$gettext('lines processed')}, ${totalInserted} ${$gettext('records imported successfully')}`
     showSnackColor('success', msg)
   } catch (err) {
     console.error('Import CSV failed:', err)
-    showSnackColor('error', $gettext('Import failed: ') + err.message)
+    showSnackColor('error', $gettext('Import failed' + ': ' + err.message))
   } finally {
     importing.value = false
     showProgress.value = false
