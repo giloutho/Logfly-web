@@ -12,7 +12,7 @@
           </v-card-title>
           <v-card-text class="pa-4">
             <p class="text-body-1 mb-4">
-              {{ $gettext('Export your logbook data in different formats.') }}
+              {{ $gettext('Export your logbook data in different formats') }}
             </p>
 
             <v-list>
@@ -40,7 +40,7 @@
                   {{ $gettext('Export CSV with IGC tracks') }}
                 </v-list-item-title>
                 <v-list-item-subtitle>
-                  {{ $gettext('CSV files including IGC track data') }}
+                  {{ $gettext('CSV file and IGC track data in a zip file') }}
                 </v-list-item-subtitle>
               </v-list-item>
 
@@ -55,7 +55,7 @@
                   {{ $gettext('Export CSV without IGC tracks') }}
                 </v-list-item-title>
                 <v-list-item-subtitle>
-                  {{ $gettext('CSV files excluding IGC track data (lighter files)') }}
+                  {{ $gettext('CSV file excluding IGC track data') }}
                 </v-list-item-subtitle>
               </v-list-item>
             </v-list>
@@ -72,7 +72,7 @@
           </v-card-title>
           <v-card-text class="pa-4">
             <p class="text-body-1 mb-4">
-              {{ $gettext('Import data into your current logbook.') }}
+              {{ $gettext('Import data into your current logbook') }}
             </p>
 
             <!-- Import CSV -->
@@ -84,15 +84,16 @@
                 {{ $gettext('Import CSV file') }}
               </v-list-item-title>
               <v-list-item-subtitle>
-                {{ $gettext('Import flights from a CSV file into the current database') }}
+                {{ $gettext('Import flights with IGC tracks from a CSV file') }}
               </v-list-item-subtitle>
             </v-list-item>
 
             <v-divider class="my-2"></v-divider>
 
             <!-- Import info -->
-            <v-alert type="info" variant="tonal" density="compact" class="mt-4"
-              :text="$gettext('The CSV file must match the Logfly table structure (Vol, Site, Equip, Tag, Rando).')">
+            <v-alert type="info" variant="tonal" density="compact" class="mt-4">
+              {{ $gettext('See the documentation for details') }} <a :href="helpUrl" target="_blank" rel="noopener" class="font-weight-bold text-decoration-underline">{{
+                $gettext('here') }}</a>
             </v-alert>
           </v-card-text>
         </v-card>
@@ -131,9 +132,13 @@ import { ref, computed } from 'vue'
 import { useGettext } from 'vue3-gettext'
 import { useDatabaseStore } from '@/stores/database'
 import JSZip from 'jszip'
+import { getHelpUrl } from '@/js/config/helpConfig'
 
-const { $gettext } = useGettext()
+const gettext = useGettext()
+const { $gettext } = gettext
 const databaseStore = useDatabaseStore()
+
+const helpUrl = computed(() => getHelpUrl('import-export', gettext.current))
 
 const hasDb = computed(() => databaseStore.hasOpenDatabase)
 

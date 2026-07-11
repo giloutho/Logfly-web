@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 * Export IGC function for multiple selected flights
+* Importation and Updating flights from CSV file
 
 ### Improved
 * Decoding coordinates in OpenAir files

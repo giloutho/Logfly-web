@@ -33,6 +33,7 @@ const HELP_MAP = {
     'settings-view': 'support/settings',
     'support-view': 'support/contact',
     'translation-view': 'support/traduction',
+    'import-export': 'support/export',
 
     // Fallback
     'default': 'start'
