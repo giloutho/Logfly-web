@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Improved
 * Decoding coordinates in OpenAir files
-* GPX Export
+* Airspace GPX Export
 
 ## [7.0.8] - 2026-05-12
 
