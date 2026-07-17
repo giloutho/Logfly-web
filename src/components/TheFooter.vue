@@ -99,7 +99,7 @@ onMounted(() => {
  * On surveille isDirty directement depuis le store
  */
 watch(() => databaseStore.isDirty, async (newValue) => {
-  if (newValue === true && logbookService.isReady.value) {
+  if (newValue === true && (logbookService.isReady.value || databaseStore.isGoogleDrive)) {
     // Petit debounce naturel ou immédiat ?
     // Pour l'instant immédiat mais attention aux rafales
     await runAutoSave();
@@ -109,11 +109,13 @@ watch(() => databaseStore.isDirty, async (newValue) => {
 async function runAutoSave() {
   try {
     isSaving.value = true;
-    const data = await databaseStore.exportDatabase();
-    await logbookService.autoSave(data);
-
-    // Appelle l'action du store que nous venons d'ajouter
-    databaseStore.markAsSaved();
+    if (databaseStore.isGoogleDrive) {
+      await databaseStore.saveDatabaseToGDrive();
+    } else {
+      const data = await databaseStore.exportDatabase();
+      await logbookService.autoSave(data);
+      databaseStore.markAsSaved();
+    }
 
     snackText.value = $gettext('Auto-saved logbook');
     showSnack.value = true;
@@ -129,6 +131,22 @@ async function runAutoSave() {
  * Si l'utilisateur clique alors que c'est rouge ou s'il veut un backup
  */
 async function handleManualSave() {
+  if (databaseStore.isGoogleDrive) {
+    try {
+      isSaving.value = true;
+      await databaseStore.saveDatabaseToGDrive();
+      snackText.value = $gettext('Saved to Google Drive');
+      showSnack.value = true;
+    } catch (err) {
+      console.error("Save failed:", err);
+      snackText.value = $gettext('Error saving to Google Drive');
+      showSnack.value = true;
+    } finally {
+      isSaving.value = false;
+    }
+    return;
+  }
+
   await logbookService.reactivateAccess();
 
   // Mode Fallback : Téléchargement direct du fichier

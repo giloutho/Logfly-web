@@ -3,12 +3,15 @@ import { defineStore } from 'pinia'
 import { readSqliteFile, openDatabase, executeQuery, closeDatabase, insertIntoDatabase, updateDatabase, createNewDatabase, checkRandoTable, checkVolHikeColumns } from '@/js/database/sql-manager.js'
 
 export const useDatabaseStore = defineStore('database', () => {
-    // État
+        // État
     const db = ref(null)
     const isOpen = ref(false)
     const dbName = ref('')
     const error = ref('')
     const isDirty = ref(false)
+    const isGoogleDrive = ref(false)
+    const gdriveFileId = ref('')
+    const gdriveToken = ref('')
 
     // Getters
     const hasOpenDatabase = computed(() => isOpen.value && db.value !== null)
@@ -28,6 +31,10 @@ export const useDatabaseStore = defineStore('database', () => {
             error.value = ''
             markAsSaved() // Reset dirty state at start
             if (db.value) { closeDatabase(db.value) }
+
+            isGoogleDrive.value = false
+            gdriveFileId.value = ''
+            gdriveToken.value = ''
 
             const fileBuffer = await readSqliteFile(file)
             db.value = await openDatabase(fileBuffer)
@@ -116,11 +123,127 @@ export const useDatabaseStore = defineStore('database', () => {
         throw new Error("Base non initialisée")
     }
 
+    async function loadDatabaseFromGDrive(blob, fileId, fileName, token) {
+        try {
+            error.value = ''
+            markAsSaved()
+            if (db.value) { closeDatabase(db.value) }
+
+            isGoogleDrive.value = false
+            gdriveFileId.value = ''
+            gdriveToken.value = ''
+
+            let fileBuffer = await readSqliteFile(blob)
+            db.value = await openDatabase(fileBuffer)
+            fileBuffer = null // Free memory
+
+            const result = executeQuery(db.value, "SELECT name FROM sqlite_master WHERE type='table' AND name='Vol'")
+
+            if (result.success) {
+                if (result.data.length === 0) {
+                    closeDatabase(db.value)
+                    db.value = null
+                    throw new Error('The database does not contain a "Vol" table')
+                }
+
+                const resVolInfo = executeQuery(db.value, "PRAGMA table_info(Vol)")
+                if (resVolInfo.success && resVolInfo.data[0]) {
+                    const columns = resVolInfo.data[0].values.map(row => row[1])
+                    if (!columns.includes('V_Tag')) {
+                        console.log("Migration : Ajout de la colonne V_Tag à la table Vol")
+                        executeQuery(db.value, "ALTER TABLE Vol ADD COLUMN V_Tag INTEGER")
+                        markAsDirty()
+                    }
+                }
+
+                const resTag = executeQuery(db.value, "SELECT name FROM sqlite_master WHERE type='table' AND name='Tag'")
+                if (resTag.success && resTag.data.length === 0) {
+                    executeQuery(db.value, `CREATE TABLE Tag (Tag_ID INTEGER PRIMARY KEY, Tag_Label TEXT, Tag_Color TEXT)`)
+                    const defaults = [
+                        [1, 'Tag 1', '#F44336'],
+                        [2, 'Tag 2', '#FF9800'],
+                        [3, 'Tag 3', '#FFEB3B'],
+                        [4, 'Tag 4', '#4CAF50'],
+                        [5, 'Tag 5', '#2196F3']
+                    ]
+                    defaults.forEach(d => {
+                        executeQuery(db.value, `INSERT INTO Tag (Tag_ID, Tag_Label, Tag_Color) VALUES (${d[0]}, '${d[1]}', '${d[2]}')`)
+                    })
+                    markAsDirty()
+                }
+
+                const resEquip = executeQuery(db.value, "SELECT name FROM sqlite_master WHERE type='table' AND name='Equip'")
+                if (resEquip.success && resEquip.data.length === 0) {
+                    executeQuery(db.value, 'CREATE TABLE Equip (M_ID integer NOT NULL PRIMARY KEY, M_Date TimeStamp, M_Engin varchar(30), M_Event varchar(30), M_Price double, M_Comment Long Text)')
+                    markAsDirty()
+                }
+
+                const randoCreated = checkRandoTable(db.value)
+                if (randoCreated) {
+                    markAsDirty()
+                }
+
+                const hikeColAdded = checkVolHikeColumns(db.value)
+                if (hikeColAdded) {
+                    markAsDirty()
+                }
+
+                isOpen.value = true
+                dbName.value = fileName
+                
+                isGoogleDrive.value = true
+                gdriveFileId.value = fileId
+                gdriveToken.value = token
+
+                if (!isDirty.value) {
+                    markAsSaved()
+                }
+                return { success: true }
+            } else {
+                throw new Error(result.message || 'Error while executing the open request')
+            }
+        } catch (e) {
+            error.value = e.message || 'Error loading database'
+            isOpen.value = false
+            db.value = null
+            dbName.value = ''
+            isGoogleDrive.value = false
+            gdriveFileId.value = ''
+            gdriveToken.value = ''
+            markAsSaved()
+            return { success: false, error: error.value }
+        }
+    }
+
+    async function saveDatabaseToGDrive() {
+        if (!db.value) {
+            throw new Error("Base non initialisée")
+        }
+        if (!isGoogleDrive.value || !gdriveFileId.value || !gdriveToken.value) {
+            throw new Error("Non connecté à Google Drive ou fichier manquant")
+        }
+
+        try {
+            markAsSaved()
+            let data = db.value.export()
+            const gdriveService = await import('@/js/database/gdriveService')
+            await gdriveService.updateDriveFile(gdriveToken.value, gdriveFileId.value, data)
+            data = null // Free RAM
+        } catch (err) {
+            markAsDirty()
+            throw err
+        }
+    }
+
     async function createNewLogbook(name = 'newlogbook.db') {
         try {
             error.value = ''
             markAsSaved()
             if (db.value) { closeDatabase(db.value) }
+
+            isGoogleDrive.value = false
+            gdriveFileId.value = ''
+            gdriveToken.value = ''
 
             db.value = await createNewDatabase()
             isOpen.value = true
@@ -155,6 +278,9 @@ export const useDatabaseStore = defineStore('database', () => {
         isOpen.value = false
         dbName.value = ''
         error.value = ''
+        isGoogleDrive.value = false
+        gdriveFileId.value = ''
+        gdriveToken.value = ''
     }
 
     function clearError() {
@@ -186,12 +312,17 @@ export const useDatabaseStore = defineStore('database', () => {
         dbName,
         error,
         isDirty,
+        isGoogleDrive,
+        gdriveFileId,
+        gdriveToken,
         // Getters
         hasOpenDatabase,
         // Actions
         loadDatabase,
         createNewLogbook,
         exportDatabase,
+        loadDatabaseFromGDrive,
+        saveDatabaseToGDrive,
         closeDatabaseStore,
         markAsDirty,
         markAsSaved,

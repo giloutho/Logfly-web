@@ -397,7 +397,7 @@ function confirmSave() {
 
 // Auto-save when isDirty changes
 watch(() => databaseStore.isDirty, async (newValue) => {
-  if (newValue === true && logbookService.isReady.value) {
+  if (newValue === true && (logbookService.isReady.value || databaseStore.isGoogleDrive)) {
     await runAutoSave();
   }
 });
@@ -408,16 +408,20 @@ async function runAutoSave() {
   // In fallback mode (Safari – no File System Access API),
   // auto-save is impossible. Let the DB stay dirty so the
   // user is prompted to save manually via the download button.
-  if (logbookService.isFallbackMode.value) {
+  if (logbookService.isFallbackMode.value && !databaseStore.isGoogleDrive) {
     return;
   }
   
   try {
     isSaving.value = true;
     while (databaseStore.isDirty) {
-      databaseStore.markAsSaved();
-      const data = await databaseStore.exportDatabase();
-      await logbookService.autoSave(data);
+      if (databaseStore.isGoogleDrive) {
+        await databaseStore.saveDatabaseToGDrive();
+      } else {
+        databaseStore.markAsSaved();
+        const data = await databaseStore.exportDatabase();
+        await logbookService.autoSave(data);
+      }
     }
   } catch (err) {
     console.error('Autosave failed:', err);
@@ -429,6 +433,22 @@ async function runAutoSave() {
 }
 
 async function handleSave() {
+  if (databaseStore.isGoogleDrive) {
+    try {
+      isSaving.value = true;
+      await databaseStore.saveDatabaseToGDrive();
+      snackText.value = $gettext('Logbook saved to Google Drive');
+      showSnack.value = true;
+    } catch (err) {
+      console.error('Save failed:', err);
+      snackText.value = $gettext('Failed to save to Google Drive');
+      showSnack.value = true;
+    } finally {
+      isSaving.value = false;
+    }
+    return;
+  }
+
   await logbookService.reactivateAccess();
 
   if (logbookService.isFallbackMode.value) {

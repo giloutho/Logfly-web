@@ -55,6 +55,67 @@
           :disabled="loading || !newLogbookName">
           {{ $gettext('Create new logbook') }}
         </v-btn>
+
+        <v-divider class="my-6"></v-divider>
+
+        <!-- Google Drive Option -->
+        <h3 class="text-h6 text-info mb-4 font-weight-bold">
+          <v-icon start color="info">mdi-google-drive</v-icon>
+          {{ $gettext('Google Drive') }}
+        </h3>
+
+        <!-- Case 1: Not connected -->
+        <div v-if="!gdriveToken">
+          <v-btn block color="info" prepend-icon="mdi-google-drive" @click="handleGDriveConnect" :disabled="loading">
+            {{ $gettext('Connect to Google Drive') }}
+          </v-btn>
+        </div>
+
+        <!-- Case 2: Connected -->
+        <div v-else>
+          <div class="d-flex align-center justify-space-between mb-4">
+            <span class="text-subtitle-2 text-success">
+              <v-icon color="success" class="mr-1">mdi-check-circle</v-icon>
+              {{ $gettext('Connected') }}
+            </span>
+            <v-btn size="x-small" variant="text" color="error" @click="handleGDriveDisconnect">
+              {{ $gettext('Disconnect') }}
+            </v-btn>
+          </div>
+
+          <!-- List of detected files in GDrive -->
+          <div v-if="gdriveFiles.length > 0" class="mb-4">
+            <div class="text-caption mb-2">{{ $gettext('Google Drive Logbooks') }} :</div>
+            <v-select :items="gdriveFiles" item-title="name" :label="$gettext('Select a logbook')"
+              prepend-inner-icon="mdi-database" return-object variant="outlined"
+              @update:model-value="handleGDriveFileSelection"></v-select>
+          </div>
+          <div v-else class="text-caption text-grey mb-4">
+            {{ $gettext('No logbooks found on Google Drive. Create one below or upload an existing file.') }}
+          </div>
+
+          <!-- Reopen last GDrive file if any -->
+          <v-btn v-if="lastGDriveFileId && lastGDriveFileName" variant="text" block class="mb-4"
+            @click="handleGDriveReopenLastFile" :disabled="loading">
+            {{ $gettext('Reopen') }} {{ lastGDriveFileName }}
+          </v-btn>
+
+          <!-- Create new logbook on Google Drive -->
+          <v-text-field v-model="newGDriveLogbookName" :label="$gettext('Create new logbook on Google Drive')"
+            prepend-inner-icon="mdi-database-plus" variant="outlined" density="compact" class="mb-2" hide-details
+            placeholder="logfly.db"></v-text-field>
+          <v-btn block color="info" prepend-icon="mdi-plus-circle" @click="handleCreateGDriveLogbook"
+            :disabled="loading || !newGDriveLogbookName" class="mb-4">
+            {{ $gettext('Create new logbook') }}
+          </v-btn>
+
+          <!-- Upload local logbook to Google Drive -->
+          <v-btn block variant="outlined" color="info" prepend-icon="mdi-upload" @click="triggerGDriveUpload" :disabled="loading">
+            {{ $gettext('Upload a local file to Google Drive') }}
+          </v-btn>
+          <input ref="gdriveUploadInput" type="file" accept=".db,.sqlite" style="display: none"
+            @change="handleGDriveLocalUpload">
+        </div>
       </v-card-text>
 
       <v-divider></v-divider>
@@ -85,6 +146,7 @@ import { useDatabaseStore } from '@/stores/database'
 import { useRouter } from 'vue-router';
 // Importation de notre nouveau service
 import * as logbookService from '@/js/database/logbookService';
+import * as gdriveService from '@/js/database/gdriveService';
 
 const props = defineProps({
   show: {
@@ -108,6 +170,14 @@ const fileInput = ref(null);
 const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 const hasFileSystemApi = 'showDirectoryPicker' in window && !isMobile;
 
+// Google Drive refs
+const gdriveToken = ref(null);
+const gdriveFiles = ref([]);
+const newGDriveLogbookName = ref('');
+const gdriveUploadInput = ref(null);
+const lastGDriveFileId = ref(null);
+const lastGDriveFileName = ref(null);
+
 // La modale s'affiche si show est true ET que la base n'est pas ouverte
 const dialog = computed(() => props.show && !databaseStore.hasOpenDatabase);
 
@@ -121,6 +191,26 @@ const sortedAvailableFiles = computed(() => {
 onMounted(async () => {
   // Tente de restaurer les handles au montage (IndexedDB)
   await logbookService.initPersistence();
+
+  // Intercepter token du hash d'authentification
+  let token = null;
+  const oauthResponse = gdriveService.handleOAuthResponse();
+  if (oauthResponse) {
+    token = oauthResponse.token;
+    // Redirect back to the starting path if we landed on the root page
+    if (oauthResponse.redirectPath && oauthResponse.redirectPath !== window.location.pathname) {
+      router.push(oauthResponse.redirectPath);
+    }
+  } else {
+    token = gdriveService.getCachedToken();
+  }
+
+  if (token) {
+    gdriveToken.value = token;
+    lastGDriveFileId.value = localStorage.getItem('gdrive_last_file_id');
+    lastGDriveFileName.value = localStorage.getItem('gdrive_last_file_name');
+    await fetchGDriveFiles();
+  }
 });
 
 function closeDialog() {
@@ -303,6 +393,151 @@ async function reconnectLastFile() {
     if (isReady.value) {
       await handleFileSelection(currentFile.value);
     }
+  }
+}
+
+// Google Drive functions
+async function fetchGDriveFiles() {
+  if (!gdriveToken.value) return;
+  try {
+    gdriveFiles.value = await gdriveService.listDriveFiles(gdriveToken.value);
+  } catch (err) {
+    if (err.message === 'Unauthorized') {
+      handleGDriveDisconnect();
+      error.value = $gettext('Session expired. Please reconnect to Google Drive.');
+    } else {
+      error.value = err.message || $gettext('Failed to list files from Google Drive');
+    }
+  }
+}
+
+function handleGDriveConnect() {
+  // Save current route path to redirect back later after successful auth
+  sessionStorage.setItem('gdrive_redirect_path', window.location.pathname + window.location.search);
+  gdriveService.redirectToGoogleAuth();
+}
+
+function handleGDriveDisconnect() {
+  gdriveService.clearCachedToken();
+  gdriveToken.value = null;
+  gdriveFiles.value = [];
+  lastGDriveFileId.value = null;
+  lastGDriveFileName.value = null;
+  databaseStore.closeDatabaseStore();
+}
+
+async function handleGDriveFileSelection(driveFile) {
+  if (!driveFile) return;
+  try {
+    loading.value = true;
+    error.value = '';
+    
+    const fileId = driveFile.id;
+    const fileName = driveFile.name;
+    
+    const blob = await gdriveService.downloadDriveFile(gdriveToken.value, fileId);
+    const result = await databaseStore.loadDatabaseFromGDrive(blob, fileId, fileName, gdriveToken.value);
+    
+    if (result.success) {
+      localStorage.setItem('gdrive_last_file_id', fileId);
+      localStorage.setItem('gdrive_last_file_name', fileName);
+      emit('db-opened', fileName);
+    } else {
+      error.value = result.error || $gettext('Error reading the database');
+    }
+  } catch (err) {
+    error.value = err.message || $gettext('Error downloading from Google Drive');
+    console.error(err);
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function handleGDriveReopenLastFile() {
+  if (!lastGDriveFileId.value) return;
+  await handleGDriveFileSelection({ id: lastGDriveFileId.value, name: lastGDriveFileName.value });
+}
+
+async function handleCreateGDriveLogbook() {
+  error.value = '';
+  loading.value = true;
+  try {
+    let filename = newGDriveLogbookName.value.trim();
+    if (!filename) return;
+    if (!filename.endsWith('.db')) {
+      filename += '.db';
+    }
+
+    const result = await databaseStore.createNewLogbook(filename);
+    if (!result.success) {
+      error.value = result.error || $gettext('Error creating the logbook');
+      loading.value = false;
+      return;
+    }
+
+    let uint8Array = await databaseStore.exportDatabase();
+    const fileId = await gdriveService.createDriveFile(gdriveToken.value, filename);
+    await gdriveService.updateDriveFile(gdriveToken.value, fileId, uint8Array);
+    uint8Array = null; // Clean RAM
+
+    databaseStore.isGoogleDrive = true;
+    databaseStore.gdriveFileId = fileId;
+    databaseStore.gdriveToken = gdriveToken.value;
+
+    localStorage.setItem('gdrive_last_file_id', fileId);
+    localStorage.setItem('gdrive_last_file_name', filename);
+
+    emit('db-opened', filename);
+    newGDriveLogbookName.value = '';
+    router.push({ name: 'import' });
+  } catch (err) {
+    error.value = err.message || $gettext('Error creating logbook on Google Drive');
+    console.error(err);
+  } finally {
+    loading.value = false;
+  }
+}
+
+function triggerGDriveUpload() {
+  if (gdriveUploadInput.value) {
+    gdriveUploadInput.value.click();
+  }
+}
+
+async function handleGDriveLocalUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  error.value = '';
+  loading.value = true;
+  try {
+    const result = await databaseStore.loadDatabase(file);
+    if (!result.success) {
+      error.value = result.error || $gettext('Error reading local file');
+      loading.value = false;
+      return;
+    }
+
+    let uint8Array = await databaseStore.exportDatabase();
+    const fileId = await gdriveService.createDriveFile(gdriveToken.value, file.name);
+    await gdriveService.updateDriveFile(gdriveToken.value, fileId, uint8Array);
+    uint8Array = null; // Clean RAM
+
+    databaseStore.isGoogleDrive = true;
+    databaseStore.gdriveFileId = fileId;
+    databaseStore.gdriveToken = gdriveToken.value;
+
+    localStorage.setItem('gdrive_last_file_id', fileId);
+    localStorage.setItem('gdrive_last_file_name', file.name);
+
+    await fetchGDriveFiles();
+    emit('db-opened', file.name);
+  } catch (err) {
+    error.value = err.message || $gettext('Error uploading to Google Drive');
+    console.error(err);
+  } finally {
+    loading.value = false;
+    event.target.value = '';
   }
 }
 
