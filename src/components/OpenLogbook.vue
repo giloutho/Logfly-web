@@ -110,8 +110,9 @@
           </v-btn>
 
           <!-- Upload local logbook to Google Drive -->
-          <v-btn block variant="outlined" color="info" prepend-icon="mdi-upload" @click="triggerGDriveUpload" :disabled="loading">
-            {{ $gettext('Upload a local file to Google Drive') }}
+          <v-btn block variant="outlined" color="info" prepend-icon="mdi-upload" @click="triggerGDriveUpload"
+            :disabled="loading">
+            {{ $gettext('Upload your local logbook to Google Drive') }}
           </v-btn>
           <input ref="gdriveUploadInput" type="file" accept=".db,.sqlite" style="display: none"
             @change="handleGDriveLocalUpload">
@@ -431,13 +432,13 @@ async function handleGDriveFileSelection(driveFile) {
   try {
     loading.value = true;
     error.value = '';
-    
+
     const fileId = driveFile.id;
     const fileName = driveFile.name;
-    
+
     const blob = await gdriveService.downloadDriveFile(gdriveToken.value, fileId);
     const result = await databaseStore.loadDatabaseFromGDrive(blob, fileId, fileName, gdriveToken.value);
-    
+
     if (result.success) {
       localStorage.setItem('gdrive_last_file_id', fileId);
       localStorage.setItem('gdrive_last_file_name', fileName);

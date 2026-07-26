@@ -9,6 +9,18 @@ msgstr ""
 msgid "Display airspaces"
 msgstr "Visualizza spazi aerei"
 
+msgid "Classes"
+msgstr "Classi"
+
+msgid "Types"
+msgstr "Tipi"
+
+msgid "Floor limit"
+msgstr "Limite di terra"
+
+msgid "Radius"
+msgstr "Raggio"
+
 msgid "Display"
 msgstr "Visualizza"
 
@@ -17,6 +29,12 @@ msgstr "Controlla la traccia"
 
 msgid "3D Flight Replay"
 msgstr "Riproduzione del volo in 3D"
+
+msgid "Follow view"
+msgstr "Segui la vista"
+
+msgid "Free camera"
+msgstr "Free camera"
 
 msgid "Hover over the graph to see details"
 msgstr "Passa il mouse sul grafico per vedere i dettagli"
@@ -201,8 +219,14 @@ msgstr "Spazi aerei"
 msgid "Score"
 msgstr "Punteggio"
 
+msgid "Track"
+msgstr "Traccia"
+
 msgid "Cut"
 msgstr "Taglio"
+
+msgid "Error parsing IGC file: "
+msgstr "Errore durante l'analisi del file IGC:"
 
 msgid "Select the start and end points of the section"
 msgstr "Seleziona il punto iniziale e quello finale del tratto"
@@ -404,6 +428,9 @@ msgstr "Nuova foto"
 
 msgid "Replace photo"
 msgstr "Sostituisci foto"
+
+msgid "Other track"
+msgstr "Altra traccia"
 
 msgid "Thermals"
 msgstr "Termiche"
@@ -711,17 +738,47 @@ msgstr "Aiuto"
 msgid "Change language"
 msgstr "Cambia lingua"
 
-msgid "Unsaved changes – click to save"
-msgstr "Modifiche non salvate: fare clic per salvare"
-
-msgid "All changes saved"
-msgstr "Tutte le modifiche salvate"
-
 msgid "Import tracks"
 msgstr "Importa tracce"
 
 msgid "Language"
 msgstr "Lingua"
+
+msgid "Download file"
+msgstr "Scarica il file"
+
+msgid "Unsaved changes"
+msgstr "Modifiche non salvate"
+
+msgid "All changes saved"
+msgstr "Tutte le modifiche salvate"
+
+msgid "Your browser does not support direct saving"
+msgstr "Il tuo browser non supporta il salvataggio diretto"
+
+msgid "The file will be downloaded to your Downloads folder"
+msgstr "Il file verrà scaricato nella cartella Download."
+
+msgid "You will need to move it to your logbook folder to replace the original file"
+msgstr "Dovrai spostarlo nella cartella del registro per sostituire il file originale"
+
+msgid "Continue"
+msgstr "Continua"
+
+msgid "record the data"
+msgstr "registrare i dati"
+
+msgid "Save a copy"
+msgstr "Salva una copia"
+
+msgid "No"
+msgstr "No"
+
+msgid "Yes"
+msgstr "Si"
+
+msgid "File downloaded to Downloads folder. Move it to your logbook folder to keep your changes."
+msgstr "Il file è stato scaricato nella cartella Download. Spostalo nella cartella del tuo registro per salvare le modifiche."
 
 msgid "Access your logbook"
 msgstr "Accedi al tuo diario di volo"
@@ -1071,12 +1128,6 @@ msgstr "Duplicati rimossi con successo"
 msgid "Error removing duplicates"
 msgstr "Errore durante la rimozione dei duplicati"
 
-msgid "Classes"
-msgstr "Classi"
-
-msgid "Types"
-msgstr "Tipi"
-
 msgid "Prohibited"
 msgstr "Proibita"
 
@@ -1088,12 +1139,6 @@ msgstr "Pericolo"
 
 msgid "Gliding"
 msgstr "Gliding"
-
-msgid "Floor limit"
-msgstr "Limite di terra"
-
-msgid "Radius"
-msgstr "Raggio"
 
 msgid "Select a file"
 msgstr "Seleziona il file"
@@ -1205,9 +1250,6 @@ msgstr "Esportazione fallita"
 
 msgid "Route"
 msgstr "Strada"
-
-msgid "Track"
-msgstr "Traccia"
 
 msgid "Total distance"
 msgstr "Distanza totale"
@@ -1443,11 +1485,11 @@ msgstr "Vele"
 msgid "Reference"
 msgstr "Riferimento"
 
-msgid "Months"
-msgstr "Mesi"
-
 msgid "Compare"
 msgstr "Confrontare"
+
+msgid "Months"
+msgstr "Mesi"
 
 msgid "Fl."
 msgstr "Vl."

@@ -41,6 +41,38 @@
 
                     <v-divider v-if="incompleteTranslations.length > 0" class="mb-4"></v-divider>
 
+                    <!-- Validated translations (Protected 🔒) -->
+                    <div v-if="completedTranslations.length > 0" class="mb-4">
+                        <div class="text-subtitle-2 mb-2 d-flex align-center justify-space-between">
+                            <span>{{ $gettext('Validated translations') }}</span>
+                            <v-chip v-if="isAdmin" color="warning" size="x-small" variant="flat" prepend-icon="mdi-lock-open-variant">
+                                {{ $gettext('Admin Mode') }}
+                            </v-chip>
+                        </div>
+                        <v-list density="compact" class="translation-list">
+                            <v-list-item v-for="trans in completedTranslations" :key="trans.lang"
+                                @click="selectTranslation(trans)" class="translation-item">
+                                <template v-slot:prepend>
+                                    <span class="lang-flag mr-3">{{ getFlagEmoji(trans.lang) }}</span>
+                                </template>
+                                <v-list-item-title class="d-flex align-center">
+                                    {{ trans.label }}
+                                    <v-icon size="x-small" :color="isAdmin ? 'warning' : 'grey-darken-1'" class="ml-2">
+                                        {{ isAdmin ? 'mdi-lock-open-variant' : 'mdi-lock' }}
+                                    </v-icon>
+                                </v-list-item-title>
+                                <v-list-item-subtitle>
+                                    {{ trans.translated }} / {{ trans.total }} (100%)
+                                </v-list-item-subtitle>
+                                <template v-slot:append>
+                                    <v-icon color="success">mdi-check-circle</v-icon>
+                                </template>
+                            </v-list-item>
+                        </v-list>
+                    </div>
+
+                    <v-divider v-if="completedTranslations.length > 0" class="mb-4"></v-divider>
+
                     <!-- New translation -->
                     <div class="text-subtitle-2 mb-2">{{ $gettext('New translation') }}</div>
                     <div class="d-flex align-center gap-3">
@@ -65,6 +97,32 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn variant="text" @click="closeDialog">{{ $gettext('Cancel') }}</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <!-- Admin Password Dialog -->
+        <v-dialog v-model="showPasswordDialog" max-width="450">
+            <v-card>
+                <v-card-title class="text-h6 d-flex align-center">
+                    <v-icon color="warning" class="mr-2">mdi-lock-alert</v-icon>
+                    {{ $gettext('Administrator Password Required') }}
+                </v-card-title>
+                <v-card-text>
+                    <p class="text-body-2 mb-4">
+                        {{ $gettext('This translation is validated and protected. Enter the administrator password to unlock modifications.') }}
+                    </p>
+                    <v-alert v-if="passwordError" type="error" variant="tonal" density="compact" class="mb-4">
+                        {{ passwordError }}
+                    </v-alert>
+                    <v-text-field v-model="adminPasswordInput" :label="$gettext('Password')" type="password"
+                        prepend-inner-icon="mdi-key" variant="outlined" density="compact" hide-details="auto"
+                        autofocus @keyup.enter="confirmAdminPassword"></v-text-field>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn variant="text" @click="showPasswordDialog = false">{{ $gettext('Cancel') }}</v-btn>
+                    <v-btn color="warning" @click="confirmAdminPassword">{{ $gettext('Unlock') }}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -95,6 +153,18 @@
             <v-btn color="secondary" prepend-icon="mdi-swap-horizontal" @click="showSelectionDialog = true"
                 density="comfortable">
                 {{ $gettext('Change') }}
+            </v-btn>
+
+            <v-spacer></v-spacer>
+
+            <!-- Admin Mode Badge / Button -->
+            <v-chip v-if="isAdmin" color="warning" variant="flat" prepend-icon="mdi-lock-open-variant" closable
+                @click:close="lockAdmin" :title="$gettext('Lock Admin Mode')">
+                {{ $gettext('Admin Mode') }}
+            </v-chip>
+            <v-btn v-else icon variant="text" color="grey-darken-1" size="small" @click="promptAdminPasswordForSession"
+                :title="$gettext('Unlock Admin Mode')">
+                <v-icon>mdi-lock</v-icon>
             </v-btn>
         </div>
 
@@ -221,6 +291,13 @@ const saving = ref(false);
 const error = ref('');
 const search = ref('');
 const fileInput = ref(null);
+
+// Admin state
+const isAdmin = ref(false);
+const showPasswordDialog = ref(false);
+const adminPasswordInput = ref('');
+const passwordError = ref('');
+const pendingTargetLang = ref(null);
 
 // Dialog state
 const showSelectionDialog = ref(true);
@@ -656,6 +733,51 @@ async function saveToServer() {
     } finally {
         saving.value = false;
     }
+}
+
+function selectTranslation(trans) {
+    if (trans.progress >= 100 && !isAdmin.value) {
+        pendingTargetLang.value = trans.lang;
+        adminPasswordInput.value = '';
+        passwordError.value = '';
+        showPasswordDialog.value = true;
+    } else {
+        loadFromServer(trans.lang);
+    }
+}
+
+function promptAdminPasswordForSession() {
+    pendingTargetLang.value = null;
+    adminPasswordInput.value = '';
+    passwordError.value = '';
+    showPasswordDialog.value = true;
+}
+
+function confirmAdminPassword() {
+    const expectedPassword = import.meta.env.VITE_TRANSLATION_ADMIN_PASSWORD || 'logflyadmin';
+    if (adminPasswordInput.value === expectedPassword) {
+        isAdmin.value = true;
+        showPasswordDialog.value = false;
+        passwordError.value = '';
+        if (pendingTargetLang.value) {
+            const lang = pendingTargetLang.value;
+            pendingTargetLang.value = null;
+            loadFromServer(lang);
+        } else {
+            snackbarMessage.value = $gettext('Admin mode unlocked');
+            snackbarColor.value = 'success';
+            showSnackbar.value = true;
+        }
+    } else {
+        passwordError.value = $gettext('Incorrect password');
+    }
+}
+
+function lockAdmin() {
+    isAdmin.value = false;
+    snackbarMessage.value = $gettext('Admin mode locked');
+    snackbarColor.value = 'info';
+    showSnackbar.value = true;
 }
 
 onMounted(async () => {

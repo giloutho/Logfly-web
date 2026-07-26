@@ -9,6 +9,18 @@ msgstr ""
 msgid "Display airspaces"
 msgstr "Lufträume anzeigen"
 
+msgid "Classes"
+msgstr "Klassen"
+
+msgid "Types"
+msgstr "Typen"
+
+msgid "Floor limit"
+msgstr "Unteres Limit"
+
+msgid "Radius"
+msgstr "Radius"
+
 msgid "Display"
 msgstr "anzeigen"
 
@@ -17,6 +29,12 @@ msgstr "Track überprüfen"
 
 msgid "3D Flight Replay"
 msgstr "Flug in 3D abspielen"
+
+msgid "Follow view"
+msgstr ""
+
+msgid "Free camera"
+msgstr ""
 
 msgid "Hover over the graph to see details"
 msgstr "Für mehr Details mit der Maus über die Grafik gehen"
@@ -201,14 +219,20 @@ msgstr "Lufträume"
 msgid "Score"
 msgstr "Wertung"
 
+msgid "Track"
+msgstr "Track"
+
 msgid "Cut"
 msgstr "Ausschneiden"
 
+msgid "Error parsing IGC file: "
+msgstr "Fehler beieder IGC-Datei"
+
 msgid "Select the start and end points of the section"
-msgstr ""
+msgstr "Wählen Sie den Start- und Endpunkt des Abschnitts aus"
 
 msgid "to be retained by clicking on the elevation chart"
-msgstr ""
+msgstr "durch Anklicken der Höhenkarte beibehalten werden"
 
 msgid "Change glider"
 msgstr "Gleitschirm ändern"
@@ -250,13 +274,13 @@ msgid "End"
 msgstr "Ende"
 
 msgid "Elevation gain"
-msgstr ""
+msgstr "Höhengewinn"
 
 msgid "Duration"
 msgstr "Dauer"
 
 msgid "Starting coordinates"
-msgstr ""
+msgstr "Start Koordinaten"
 
 msgid "Latitude"
 msgstr "Breitengrad"
@@ -268,16 +292,16 @@ msgid "Click on map to set start point"
 msgstr "In Karte Clicken für Startpunkt"
 
 msgid "End coordinates"
-msgstr ""
+msgstr "Endkoordinaten"
 
 msgid "Click on map to set end point"
 msgstr "In Karte Clicken für Endpunkt"
 
 msgid "If no GPS track, enter start and end coordinates by clicking on the map"
-msgstr ""
+msgstr "Falls keine GPS-Aufzeichnung vorhanden ist, geben Sie Start- und Endkoordinaten durch Klicken auf die Karte ein"
 
 msgid "Reading file"
-msgstr ""
+msgstr "Datei wird gelesen"
 
 msgid "Unsupported track format"
 msgstr "Trackformat nicht unterstützt"
@@ -307,22 +331,22 @@ msgid "Track loaded"
 msgstr "Track geladen"
 
 msgid "Associate a hike"
-msgstr ""
+msgstr "Verbinden Sie eine Wanderung"
 
 msgid "Current hike"
-msgstr ""
+msgstr "Aktueller Anstieg"
 
 msgid "Today's duration"
-msgstr ""
+msgstr "Heutige Dauer"
 
 msgid "Reference duration"
-msgstr ""
+msgstr "Referenzdauer"
 
 msgid "Create a new hike"
-msgstr ""
+msgstr "Neue Wanderung erstellen"
 
 msgid "Remove hike"
-msgstr ""
+msgstr "Lösche Wanderung"
 
 msgid "Zoom in"
 msgstr "Vergrössern"
@@ -404,6 +428,9 @@ msgstr "Neues Foto"
 
 msgid "Replace photo"
 msgstr "Foto ersetzen"
+
+msgid "Other track"
+msgstr "Andere Track"
 
 msgid "Thermals"
 msgstr "Thermiken"
@@ -711,17 +738,47 @@ msgstr "Hilfe"
 msgid "Change language"
 msgstr "Sprache wählen"
 
-msgid "Unsaved changes – click to save"
-msgstr "Ungespeicherte Änderungen - zum Speichern klicken"
-
-msgid "All changes saved"
-msgstr "Alle Änderungen gespeichert"
-
 msgid "Import tracks"
 msgstr "Tracks importieren"
 
 msgid "Language"
 msgstr "Sprache"
+
+msgid "Download file"
+msgstr "Datei herunterladen"
+
+msgid "Unsaved changes"
+msgstr "Nicht gespeicherte Änderungen"
+
+msgid "All changes saved"
+msgstr "Alle Änderungen gespeichert"
+
+msgid "Your browser does not support direct saving"
+msgstr "Dein Browser unterstützt kein direktes Speichern"
+
+msgid "The file will be downloaded to your Downloads folder"
+msgstr "Diese Datei wird in deinem Download Ordner gespeichert"
+
+msgid "You will need to move it to your logbook folder to replace the original file"
+msgstr "Sie müssen die Datei in Ihren Logbuchordner verschieben, um die Originaldatei zu ersetzen"
+
+msgid "Continue"
+msgstr "Weiter"
+
+msgid "record the data"
+msgstr "Daten aufzeichnen"
+
+msgid "Save a copy"
+msgstr "Speichere eine Kopie"
+
+msgid "No"
+msgstr "Nein"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "File downloaded to Downloads folder. Move it to your logbook folder to keep your changes."
+msgstr "Die Datei wurde in den Download-Ordner heruntergeladen. Verschieben Sie sie in Ihren Logbuch-Ordner, um Ihre Änderungen zu speichern"
 
 msgid "Access your logbook"
 msgstr "Dein Flugbuch öffnen"
@@ -773,6 +830,12 @@ msgstr "Support aufrufen"
 
 msgid "Help translate Logfly"
 msgstr "Bei der Übersetzung von Logfly helfen"
+
+msgid "Consult the help"
+msgstr "Schauen Sie in der Hilfe nach"
+
+msgid "Install Logfly as an application"
+msgstr "Installieren Sie Logfly als Anwendung"
 
 msgid "GPS alt"
 msgstr "GPS-Höhe"
@@ -877,7 +940,7 @@ msgid "Enter equipment"
 msgstr "Ausrüstung eingeben"
 
 msgid "Clear"
-msgstr "Clear"
+msgstr "Klar"
 
 msgid "Operation"
 msgstr "Vorgang"
@@ -940,13 +1003,13 @@ msgid "Error saving record"
 msgstr "Fehler beim Speichern des Eintrags"
 
 msgid "No hike recorded"
-msgstr ""
+msgstr "Keine Wanderung aufgezeichnet"
 
 msgid "Would you like to add a new hike"
-msgstr ""
+msgstr "Möchten Sie eine neue Wanderung hinzufügen?"
 
 msgid "Hike details"
-msgstr ""
+msgstr "Wanderdetails"
 
 msgid "Export IGC"
 msgstr "IGC exportieren"
@@ -955,34 +1018,55 @@ msgid "Export GPX"
 msgstr "GPX exportieren"
 
 msgid "Select a hike to display details"
-msgstr ""
+msgstr "Wählen Sie eine Wanderung aus, um Details anzuzeigen"
 
 msgid "Elev. (m)"
-msgstr ""
+msgstr "Höhe (M)"
 
 msgid "Hike created successfully"
-msgstr ""
+msgstr "Wanderung erfolgreich erstellt"
 
 msgid "Error creating hike"
-msgstr ""
+msgstr "Fehler beim Erstellen der Wanderung"
 
 msgid "Hike updated successfully"
-msgstr ""
+msgstr "Wanderung erfolgreich aktualisiert"
 
 msgid "Error updating hike"
-msgstr ""
+msgstr "Fehler beim Aktualisieren Wanderung"
 
 msgid "Hike deleted"
-msgstr ""
+msgstr "Wanderung gelöscht"
 
 msgid "Error deleting hike"
-msgstr ""
+msgstr "Fehler beim Löschen der Wanderung"
 
 msgid "Comment saved"
 msgstr "Kommentar gespeichert"
 
 msgid "Comment deleted"
 msgstr "Kommentar gelöscht"
+
+msgid "No IGC data for this hike"
+msgstr "Für diese Wanderung liegen keine IGC-Daten vor"
+
+msgid "Could not decode IGC data"
+msgstr "IGC-Daten konnten nicht dekodiert werden"
+
+msgid "Database not open"
+msgstr "Datenbank nicht geöffnet"
+
+msgid "Database update started..."
+msgstr "Datenbankaktualisierung gestartet..."
+
+msgid "Database updated."
+msgstr "Datenbank aktualisiert"
+
+msgid "No hikes with track found to update"
+msgstr "Keine Wanderungen mit Track gefunden, die aktualisiert werden könnten"
+
+msgid "Error updating database"
+msgstr "Fehler beim Aktualisieren der Datenbank"
 
 msgid "Not defined"
 msgstr "Nicht bestimmt"
@@ -1044,12 +1128,6 @@ msgstr "Duplikate erfolgreich gelöscht"
 msgid "Error removing duplicates"
 msgstr "Fehler beim Löschen der Duplikate"
 
-msgid "Classes"
-msgstr "Klassen"
-
-msgid "Types"
-msgstr "Typen"
-
 msgid "Prohibited"
 msgstr "Verboten"
 
@@ -1061,12 +1139,6 @@ msgstr "Gefahr"
 
 msgid "Gliding"
 msgstr "Gleiten"
-
-msgid "Floor limit"
-msgstr "Unteres Limit"
-
-msgid "Radius"
-msgstr "Radius"
 
 msgid "Select a file"
 msgstr "Auswählen"
@@ -1178,9 +1250,6 @@ msgstr "Export fehlgeschlagen"
 
 msgid "Route"
 msgstr "Route"
-
-msgid "Track"
-msgstr "Track"
 
 msgid "Total distance"
 msgstr "Gesamtdistanz"
@@ -1416,11 +1485,11 @@ msgstr "Gleitschirme"
 msgid "Reference"
 msgstr "Referenz"
 
-msgid "Months"
-msgstr "Monate"
-
 msgid "Compare"
 msgstr "Vergleichen"
+
+msgid "Months"
+msgstr "Monate"
 
 msgid "Fl."
 msgstr "Fl."
@@ -1730,9 +1799,6 @@ msgstr ""
 
 msgid "No IGC data for this flight"
 msgstr "Keine IGC-Daten für diesen Flug"
-
-msgid "Could not decode IGC data"
-msgstr "IGC-Daten konnten nicht dekodiert werden"
 
 msgid "Are you sure you want to delete this flight?"
 msgstr "Soll dieser Flug wirklich gelöscht werden?"

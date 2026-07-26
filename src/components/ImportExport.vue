@@ -84,7 +84,7 @@
                 {{ $gettext('Import CSV file') }}
               </v-list-item-title>
               <v-list-item-subtitle>
-                {{ $gettext('Import flights with IGC tracks from a CSV file') }}
+                {{ $gettext('Import flights without tracks from a CSV file') }}
               </v-list-item-subtitle>
             </v-list-item>
 
@@ -92,8 +92,9 @@
 
             <!-- Import info -->
             <v-alert type="info" variant="tonal" density="compact" class="mt-4">
-              {{ $gettext('See the documentation for details') }} <a :href="helpUrl" target="_blank" rel="noopener" class="font-weight-bold text-decoration-underline">{{
-                $gettext('here') }}</a>
+              {{ $gettext('See the documentation for details') }} <a :href="helpUrl" target="_blank" rel="noopener"
+                class="font-weight-bold text-decoration-underline">{{
+                  $gettext('here') }}</a>
             </v-alert>
           </v-card-text>
         </v-card>

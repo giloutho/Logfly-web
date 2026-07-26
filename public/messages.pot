@@ -63,7 +63,7 @@ msgstr ""
 #: src/components/ChangeSiteDialog.vue:4
 #: src/components/LogbookDetails.vue:217
 #: src/modules/Tracks/views/LogbookView.vue:74
-#: src/modules/Tracks/views/LogbookView.vue:152
+#: src/modules/Tracks/views/LogbookView.vue:156
 msgid "Change site"
 msgstr ""
 
@@ -97,7 +97,7 @@ msgstr ""
 #: src/components/HikePickerDialog.vue:77
 #: src/components/LogbookPhoto.vue:41
 #: src/components/NoTrackDialog.vue:86
-#: src/components/OpenLogbook.vue:65
+#: src/components/OpenLogbook.vue:127
 #: src/components/SearchFlightsDialog.vue:124
 #: src/components/SiteForm.vue:141
 #: src/components/TagDialog.vue:35
@@ -105,7 +105,8 @@ msgstr ""
 #: src/modules/Equip/views/EquipView.vue:137
 #: src/modules/Routing/views/WaypointView.vue:113
 #: src/modules/Routing/views/XcnavView.vue:173
-#: src/modules/Settings/views/TranslationView.vue:67
+#: src/modules/Settings/views/TranslationView.vue:99
+#: src/modules/Settings/views/TranslationView.vue:124
 #: src/modules/Tracks/views/ImportView.vue:213
 msgid "Cancel"
 msgstr ""
@@ -115,12 +116,13 @@ msgstr ""
 #: src/components/GliderDialog.vue:19
 #: src/components/HikeForm.vue:131
 #: src/components/HikePickerDialog.vue:79
+#: src/components/ImportExport.vue:125
 #: src/components/LogbookDetails.vue:120
 #: src/components/LogbookPhoto.vue:48
 #: src/components/NoTrackDialog.vue:89
 #: src/components/SiteForm.vue:146
 #: src/components/TagDialog.vue:37
-#: src/components/TheNavbar.vue:313
+#: src/components/TheNavbar.vue:319
 #: src/modules/Equip/views/EquipView.vue:142
 #: src/modules/Files/views/HikeView.vue:139
 #: src/modules/Files/views/SitesView.vue:134
@@ -160,7 +162,7 @@ msgstr ""
 #: src/components/charts/MonthlyChart.vue:238
 #: src/components/charts/YearlyChart.vue:119
 #: src/components/charts/YearlyChart.vue:179
-#: src/modules/Tracks/views/LogbookView.vue:735
+#: src/modules/Tracks/views/LogbookView.vue:740
 msgid "Flight hours"
 msgstr ""
 
@@ -173,7 +175,7 @@ msgstr ""
 #: src/modules/Stat/views/AnnualSummary.vue:509
 #: src/modules/Stat/views/GlobalSummary.vue:55
 #: src/modules/Stat/views/GlobalSummary.vue:65
-#: src/modules/Tracks/views/LogbookView.vue:735
+#: src/modules/Tracks/views/LogbookView.vue:740
 msgid "Flights"
 msgstr ""
 
@@ -305,6 +307,7 @@ msgid "Pathway"
 msgstr ""
 
 #: src/components/ChronoView.vue:18
+#: src/components/ImportExport.vue:263
 msgid "Time"
 msgstr ""
 
@@ -313,6 +316,7 @@ msgid "Elapsed"
 msgstr ""
 
 #: src/components/ChronoView.vue:20
+#: src/components/ImportExport.vue:268
 #: src/components/SiteForm.vue:40
 #: src/modules/Files/views/SitesView.vue:226
 msgid "Alt"
@@ -346,6 +350,7 @@ msgid "Landing"
 msgstr ""
 
 #: src/components/CommentDialog.vue:4
+#: src/components/ImportExport.vue:272
 #: src/components/LogbookDetails.vue:29
 #: src/components/NoTrackDialog.vue:70
 #: src/components/SearchFlightsDialog.vue:94
@@ -354,7 +359,7 @@ msgstr ""
 #: src/modules/Equip/views/EquipView.vue:205
 #: src/modules/Files/views/HikeView.vue:83
 #: src/modules/Files/views/SitesView.vue:76
-#: src/modules/Tracks/views/LogbookView.vue:145
+#: src/modules/Tracks/views/LogbookView.vue:149
 msgid "Comment"
 msgstr ""
 
@@ -371,13 +376,13 @@ msgstr ""
 #: src/modules/Files/views/SitesView.vue:132
 #: src/modules/Routing/views/WaypointView.vue:168
 #: src/modules/Routing/views/XcnavView.vue:916
-#: src/modules/Tracks/views/LogbookView.vue:169
+#: src/modules/Tracks/views/LogbookView.vue:173
 msgid "Delete"
 msgstr ""
 
 #: src/components/CommentDialog.vue:16
-#: src/components/TheNavbar.vue:151
-#: src/components/TheNavbar.vue:269
+#: src/components/TheNavbar.vue:154
+#: src/components/TheNavbar.vue:275
 #: src/modules/Routing/views/AirspacesView.vue:75
 #: src/modules/Routing/views/WaypointView.vue:40
 #: src/modules/Routing/views/XcnavView.vue:174
@@ -401,7 +406,7 @@ msgstr ""
 
 #: src/components/ExternalLayout.vue:17
 #: src/components/TheNavbar.vue:30
-#: src/components/TheNavbar.vue:174
+#: src/components/TheNavbar.vue:177
 #: src/modules/Tracks/views/ExternalView.vue:12
 msgid "External track"
 msgstr ""
@@ -419,6 +424,7 @@ msgid "Charts"
 msgstr ""
 
 #: src/components/FullmapTrack.vue:8
+#: src/components/ImportExport.vue:11
 #: src/components/LogbookDetails.vue:38
 #: src/modules/Files/views/SitesView.vue:153
 #: src/modules/Routing/views/AirspacesView.vue:75
@@ -428,7 +434,7 @@ msgstr ""
 
 #: src/components/FullMapView.vue:8
 #: src/components/TheNavbar.vue:64
-#: src/components/TheNavbar.vue:200
+#: src/components/TheNavbar.vue:203
 #: src/components/TheWelcome.vue:143
 #: src/modules/Routing/views/XcnavView.vue:22
 #: src/modules/Routing/views/XcnavView.vue:364
@@ -464,7 +470,7 @@ msgstr ""
 #: src/components/GliderDialog.vue:4
 #: src/components/LogbookDetails.vue:216
 #: src/modules/Tracks/views/LogbookView.vue:66
-#: src/modules/Tracks/views/LogbookView.vue:150
+#: src/modules/Tracks/views/LogbookView.vue:154
 msgid "Change glider"
 msgstr ""
 
@@ -473,6 +479,7 @@ msgid "Choose an existing glider"
 msgstr ""
 
 #: src/components/GliderDialog.vue:8
+#: src/components/ImportExport.vue:271
 #: src/components/LogbookDetails.vue:57
 #: src/components/NoTrackDialog.vue:41
 #: src/components/SearchFlightsDialog.vue:67
@@ -508,6 +515,7 @@ msgid "No file selected"
 msgstr ""
 
 #: src/components/HikeForm.vue:23
+#: src/components/ImportExport.vue:71
 #: src/components/TheNavbar.vue:27
 #: src/modules/Files/views/SitesView.vue:157
 #: src/modules/Settings/views/SettingsView.vue:139
@@ -529,7 +537,7 @@ msgstr ""
 #: src/modules/Files/views/HikeView.vue:99
 #: src/modules/Files/views/HikeView.vue:238
 #: src/modules/Routing/views/XcnavView.vue:581
-#: src/modules/Settings/views/TranslationView.vue:52
+#: src/modules/Settings/views/TranslationView.vue:84
 msgid "Start"
 msgstr ""
 
@@ -547,6 +555,7 @@ msgid "Elevation gain"
 msgstr ""
 
 #: src/components/HikeForm.vue:72
+#: src/components/ImportExport.vue:265
 #: src/components/LogbookDetails.vue:72
 #: src/components/NoTrackDialog.vue:28
 #: src/components/TraceInfoDialog.vue:133
@@ -568,6 +577,7 @@ msgstr ""
 
 #: src/components/HikeForm.vue:89
 #: src/components/HikeForm.vue:110
+#: src/components/ImportExport.vue:269
 #: src/components/SiteForm.vue:77
 #: src/components/SiteForm.vue:96
 #: src/components/SiteForm.vue:115
@@ -577,6 +587,7 @@ msgstr ""
 
 #: src/components/HikeForm.vue:93
 #: src/components/HikeForm.vue:114
+#: src/components/ImportExport.vue:270
 #: src/components/SiteForm.vue:83
 #: src/components/SiteForm.vue:102
 #: src/components/SiteForm.vue:121
@@ -670,6 +681,166 @@ msgstr ""
 msgid "Remove hike"
 msgstr ""
 
+#: src/components/ImportExport.vue:3
+#: src/components/TheNavbar.vue:111
+#: src/components/TheNavbar.vue:243
+msgid "Import / Export"
+msgstr ""
+
+#: src/components/ImportExport.vue:15
+msgid "Export your logbook data in different formats"
+msgstr ""
+
+#: src/components/ImportExport.vue:25
+msgid "Export database"
+msgstr ""
+
+#: src/components/ImportExport.vue:28
+msgid "Full SQLite database file"
+msgstr ""
+
+#: src/components/ImportExport.vue:40
+msgid "Export CSV with IGC tracks"
+msgstr ""
+
+#: src/components/ImportExport.vue:43
+msgid "CSV file and IGC track data in a zip file"
+msgstr ""
+
+#: src/components/ImportExport.vue:55
+msgid "Export CSV without IGC tracks"
+msgstr ""
+
+#: src/components/ImportExport.vue:58
+msgid "CSV file excluding IGC track data"
+msgstr ""
+
+#: src/components/ImportExport.vue:75
+msgid "Import data into your current logbook"
+msgstr ""
+
+#: src/components/ImportExport.vue:84
+msgid "Import CSV file"
+msgstr ""
+
+#: src/components/ImportExport.vue:87
+msgid "Import flights without tracks from a CSV file"
+msgstr ""
+
+#: src/components/ImportExport.vue:95
+msgid "See the documentation for details"
+msgstr ""
+
+#: src/components/ImportExport.vue:97
+msgid "here"
+msgstr ""
+
+#: src/components/ImportExport.vue:173
+msgid "Exporting database"
+msgstr ""
+
+#: src/components/ImportExport.vue:207
+msgid "Database exported successfully!"
+msgstr ""
+
+#: src/components/ImportExport.vue:210
+#: src/modules/Routing/views/WaypointView.vue:604
+#: src/modules/Routing/views/XcnavView.vue:1887
+msgid "Export failed"
+msgstr ""
+
+#: src/components/ImportExport.vue:237
+msgid "without"
+msgstr ""
+
+#: src/components/ImportExport.vue:237
+msgid "with"
+msgstr ""
+
+#: src/components/ImportExport.vue:238
+msgid "Exporting CSV"
+msgstr ""
+
+#: src/components/ImportExport.vue:244
+#: src/components/ImportExport.vue:361
+msgid "No data to export."
+msgstr ""
+
+#: src/components/ImportExport.vue:262
+#: src/components/NoTrackDialog.vue:14
+#: src/components/TraceInfoDialog.vue:117
+#: src/components/TraceInfoPanel.vue:82
+#: src/modules/Equip/views/EquipView.vue:77
+#: src/modules/Equip/views/EquipView.vue:202
+msgid "Date"
+msgstr ""
+
+#: src/components/ImportExport.vue:266
+#: src/components/LogbookDetails.vue:55
+#: src/components/SearchFlightsDialog.vue:76
+#: src/components/TraceInfoDialog.vue:118
+#: src/components/TraceInfoPanel.vue:83
+#: src/modules/Files/views/SitesView.vue:91
+#: src/modules/Stat/views/AnnualSummary.vue:125
+msgid "Site"
+msgstr ""
+
+#: src/components/ImportExport.vue:267
+#: src/components/SearchFlightsDialog.vue:85
+#: src/components/SiteForm.vue:64
+#: src/modules/Files/views/SitesView.vue:95
+#: src/modules/Files/views/SitesView.vue:227
+msgid "Country"
+msgstr ""
+
+#: src/components/ImportExport.vue:273
+#: src/modules/Tracks/views/LogbookView.vue:70
+#: src/modules/Tracks/views/LogbookView.vue:145
+msgid "Tag"
+msgstr ""
+
+#: src/components/ImportExport.vue:375
+msgid "Generating ZIP file"
+msgstr ""
+
+#: src/components/ImportExport.vue:378
+msgid "CSV and ZIP exported successfully"
+msgstr ""
+
+#: src/components/ImportExport.vue:380
+#: src/components/ImportExport.vue:386
+msgid "CSV exported successfully"
+msgstr ""
+
+#: src/components/ImportExport.vue:382
+msgid "No IGC data to export in the flights"
+msgstr ""
+
+#: src/components/ImportExport.vue:390
+msgid "Export failed: "
+msgstr ""
+
+#: src/components/ImportExport.vue:452
+msgid "Importing CSV file"
+msgstr ""
+
+#: src/components/ImportExport.vue:622
+#: src/modules/Files/views/SitesView.vue:22
+msgid "Not defined"
+msgstr ""
+
+#: src/components/ImportExport.vue:652
+msgid "lines processed"
+msgstr ""
+
+#: src/components/ImportExport.vue:652
+msgid "records imported successfully"
+msgstr ""
+
+#: src/components/ImportExport.vue:656
+msgid "Import failed"
+msgstr ""
+
 #: src/components/LittleMapView.vue:14
 msgid "Zoom in"
 msgstr ""
@@ -710,15 +881,6 @@ msgstr ""
 msgid "More"
 msgstr ""
 
-#: src/components/LogbookDetails.vue:55
-#: src/components/SearchFlightsDialog.vue:76
-#: src/components/TraceInfoDialog.vue:118
-#: src/components/TraceInfoPanel.vue:83
-#: src/modules/Files/views/SitesView.vue:91
-#: src/modules/Stat/views/AnnualSummary.vue:125
-msgid "Site"
-msgstr ""
-
 #: src/components/LogbookDetails.vue:60
 #: src/components/TraceInfoDialog.vue:121
 #: src/components/TraceInfoPanel.vue:86
@@ -751,13 +913,13 @@ msgstr ""
 
 #: src/components/LogbookDetails.vue:219
 #: src/modules/Routing/views/WaypointView.vue:162
-#: src/modules/Tracks/views/LogbookView.vue:163
+#: src/modules/Tracks/views/LogbookView.vue:167
 msgid "Edit"
 msgstr ""
 
 #: src/components/LogbookDetails.vue:220
 #: src/modules/Files/views/SitesView.vue:145
-#: src/modules/Tracks/views/LogbookView.vue:165
+#: src/modules/Tracks/views/LogbookView.vue:169
 msgid "Duplicate"
 msgstr ""
 
@@ -778,7 +940,7 @@ msgid "Delete photo"
 msgstr ""
 
 #: src/components/LogbookPhoto.vue:5
-#: src/modules/Tracks/views/LogbookView.vue:143
+#: src/modules/Tracks/views/LogbookView.vue:147
 msgid "Photo"
 msgstr ""
 
@@ -854,7 +1016,7 @@ msgstr ""
 
 #: src/components/MapLeaflet.vue:674
 #: src/components/SearchFlightsDialog.vue:107
-#: src/modules/Tracks/views/LogbookView.vue:147
+#: src/modules/Tracks/views/LogbookView.vue:151
 msgid "Hike"
 msgstr ""
 
@@ -862,14 +1024,6 @@ msgstr ""
 #: src/modules/Tracks/js/device-descriptions.js:126
 #: src/modules/Tracks/views/ImportView.vue:73
 msgid "Flight without GPS track"
-msgstr ""
-
-#: src/components/NoTrackDialog.vue:14
-#: src/components/TraceInfoDialog.vue:117
-#: src/components/TraceInfoPanel.vue:82
-#: src/modules/Equip/views/EquipView.vue:77
-#: src/modules/Equip/views/EquipView.vue:202
-msgid "Date"
 msgstr ""
 
 #: src/components/NoTrackDialog.vue:19
@@ -940,6 +1094,7 @@ msgid "Open a .db file"
 msgstr ""
 
 #: src/components/OpenLogbook.vue:27
+#: src/components/OpenLogbook.vue:100
 #: src/modules/Tracks/views/ImportView.vue:62
 msgid "Reopen"
 msgstr ""
@@ -949,6 +1104,7 @@ msgid "Logbooks detected"
 msgstr ""
 
 #: src/components/OpenLogbook.vue:37
+#: src/components/OpenLogbook.vue:89
 msgid "Select a logbook"
 msgstr ""
 
@@ -961,10 +1117,43 @@ msgid "Enter a name and click the Create button"
 msgstr ""
 
 #: src/components/OpenLogbook.vue:56
+#: src/components/OpenLogbook.vue:109
 msgid "Create new logbook"
 msgstr ""
 
-#: src/components/OpenLogbook.vue:74
+#: src/components/OpenLogbook.vue:64
+msgid "Google Drive"
+msgstr ""
+
+#: src/components/OpenLogbook.vue:70
+msgid "Connect to Google Drive"
+msgstr ""
+
+#: src/components/OpenLogbook.vue:79
+msgid "Connected"
+msgstr ""
+
+#: src/components/OpenLogbook.vue:82
+msgid "Disconnect"
+msgstr ""
+
+#: src/components/OpenLogbook.vue:88
+msgid "Google Drive Logbooks"
+msgstr ""
+
+#: src/components/OpenLogbook.vue:94
+msgid "No logbooks found on Google Drive. Create one below or upload an existing file."
+msgstr ""
+
+#: src/components/OpenLogbook.vue:104
+msgid "Create new logbook on Google Drive"
+msgstr ""
+
+#: src/components/OpenLogbook.vue:115
+msgid "Upload your local logbook to Google Drive"
+msgstr ""
+
+#: src/components/OpenLogbook.vue:136
 #: src/components/ScoreDialog.vue:47
 #: src/components/TraceInfoDialog.vue:35
 #: src/modules/Routing/components/AirspaceRouteDialog.vue:103
@@ -977,31 +1166,60 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/components/OpenLogbook.vue:132
+#: src/components/OpenLogbook.vue:223
 msgid "In previous versions of Logfly"
 msgstr ""
 
-#: src/components/OpenLogbook.vue:134
+#: src/components/OpenLogbook.vue:225
 msgid "The default logbook was logfly.db"
 msgstr ""
 
-#: src/components/OpenLogbook.vue:158
-#: src/components/OpenLogbook.vue:209
+#: src/components/OpenLogbook.vue:249
+#: src/components/OpenLogbook.vue:300
+#: src/components/OpenLogbook.vue:474
 msgid "Error creating the logbook"
 msgstr ""
 
-#: src/components/OpenLogbook.vue:232
+#: src/components/OpenLogbook.vue:323
 msgid "No logbook found in this folder"
 msgstr ""
 
-#: src/components/OpenLogbook.vue:260
-#: src/components/OpenLogbook.vue:288
+#: src/components/OpenLogbook.vue:351
+#: src/components/OpenLogbook.vue:379
 msgid "Error reading the file"
+msgstr ""
+
+#: src/components/OpenLogbook.vue:408
+msgid "Session expired. Please reconnect to Google Drive."
+msgstr ""
+
+#: src/components/OpenLogbook.vue:410
+msgid "Failed to list files from Google Drive"
+msgstr ""
+
+#: src/components/OpenLogbook.vue:447
+msgid "Error reading the database"
+msgstr ""
+
+#: src/components/OpenLogbook.vue:450
+msgid "Error downloading from Google Drive"
+msgstr ""
+
+#: src/components/OpenLogbook.vue:495
+msgid "Error creating logbook on Google Drive"
+msgstr ""
+
+#: src/components/OpenLogbook.vue:517
+msgid "Error reading local file"
+msgstr ""
+
+#: src/components/OpenLogbook.vue:537
+msgid "Error uploading to Google Drive"
 msgstr ""
 
 #: src/components/ScoreDialog.vue:5
 #: src/modules/Routing/views/XcnavView.vue:62
-#: src/modules/Tracks/views/LogbookView.vue:138
+#: src/modules/Tracks/views/LogbookView.vue:142
 msgid "Scoring"
 msgstr ""
 
@@ -1067,13 +1285,6 @@ msgstr ""
 msgid "Search in site name"
 msgstr ""
 
-#: src/components/SearchFlightsDialog.vue:85
-#: src/components/SiteForm.vue:64
-#: src/modules/Files/views/SitesView.vue:95
-#: src/modules/Files/views/SitesView.vue:227
-msgid "Country"
-msgstr ""
-
 #: src/components/SearchFlightsDialog.vue:87
 msgid "Search in country"
 msgstr ""
@@ -1098,7 +1309,7 @@ msgstr ""
 #: src/modules/Files/views/HikeView.vue:23
 #: src/modules/Files/views/SitesView.vue:28
 #: src/modules/Routing/views/AirspacesView.vue:32
-#: src/modules/Settings/views/TranslationView.vue:84
+#: src/modules/Settings/views/TranslationView.vue:142
 #: src/modules/Tracks/views/LogbookView.vue:24
 msgid "Search"
 msgstr ""
@@ -1175,73 +1386,81 @@ msgid "To be saved"
 msgstr ""
 
 #: src/components/TheFooter.vue:33
-#: src/components/TheNavbar.vue:151
-#: src/components/TheNavbar.vue:269
+#: src/components/TheNavbar.vue:154
+#: src/components/TheNavbar.vue:275
 msgid "Saved"
 msgstr ""
 
-#: src/components/TheFooter.vue:118
+#: src/components/TheFooter.vue:120
 msgid "Auto-saved logbook"
 msgstr ""
 
-#: src/components/TheFooter.vue:153
+#: src/components/TheFooter.vue:138
+msgid "Saved to Google Drive"
+msgstr ""
+
+#: src/components/TheFooter.vue:142
+msgid "Error saving to Google Drive"
+msgstr ""
+
+#: src/components/TheFooter.vue:171
 msgid "File successfully downloaded"
 msgstr ""
 
-#: src/components/TheFooter.vue:157
+#: src/components/TheFooter.vue:175
 msgid "Error downloading file"
 msgstr ""
 
-#: src/components/TheFooter.vue:175
+#: src/components/TheFooter.vue:193
 msgid "Backup copy created"
 msgstr ""
 
 #: src/components/TheNavbar.vue:19
-#: src/components/TheNavbar.vue:164
+#: src/components/TheNavbar.vue:167
 #: src/components/TheWelcome.vue:98
 msgid "Flights & Tracks"
 msgstr ""
 
 #: src/components/TheNavbar.vue:24
-#: src/components/TheNavbar.vue:168
+#: src/components/TheNavbar.vue:171
 #: src/components/TheWelcome.vue:100
 #: src/modules/Settings/views/SettingsView.vue:138
 msgid "Logbook"
 msgstr ""
 
 #: src/components/TheNavbar.vue:38
-#: src/components/TheNavbar.vue:181
+#: src/components/TheNavbar.vue:184
 #: src/components/TheWelcome.vue:122
 msgid "Statistics"
 msgstr ""
 
 #: src/components/TheNavbar.vue:44
-#: src/components/TheNavbar.vue:184
+#: src/components/TheNavbar.vue:187
 #: src/components/TheWelcome.vue:126
 msgid "Annual summary"
 msgstr ""
 
 #: src/components/TheNavbar.vue:47
-#: src/components/TheNavbar.vue:187
+#: src/components/TheNavbar.vue:190
 #: src/components/TheWelcome.vue:129
 msgid "Global summary"
 msgstr ""
 
 #: src/components/TheNavbar.vue:55
-#: src/components/TheNavbar.vue:194
+#: src/components/TheNavbar.vue:197
 #: src/components/TheWelcome.vue:137
 msgid "Routing"
 msgstr ""
 
 #: src/components/TheNavbar.vue:61
-#: src/components/TheNavbar.vue:197
+#: src/components/TheNavbar.vue:200
 #: src/components/TheWelcome.vue:140
 #: src/modules/Routing/views/XcnavView.vue:361
 msgid "Waypoints"
 msgstr ""
 
 #: src/components/TheNavbar.vue:67
-#: src/components/TheNavbar.vue:203
+#: src/components/TheNavbar.vue:206
 #: src/components/TheWelcome.vue:144
 msgid "XC Nav"
 msgstr ""
@@ -1251,8 +1470,8 @@ msgid "Sites & Hikes"
 msgstr ""
 
 #: src/components/TheNavbar.vue:81
-#: src/components/TheNavbar.vue:210
 #: src/components/TheNavbar.vue:213
+#: src/components/TheNavbar.vue:216
 #: src/components/TheWelcome.vue:153
 #: src/components/TheWelcome.vue:156
 #: src/modules/Stat/views/AnnualSummary.vue:37
@@ -1263,12 +1482,12 @@ msgid "Sites"
 msgstr ""
 
 #: src/components/TheNavbar.vue:84
-#: src/components/TheNavbar.vue:216
+#: src/components/TheNavbar.vue:219
 msgid "Hikes"
 msgstr ""
 
 #: src/components/TheNavbar.vue:90
-#: src/components/TheNavbar.vue:222
+#: src/components/TheNavbar.vue:225
 #: src/components/TheWelcome.vue:167
 #: src/components/TheWelcome.vue:171
 #: src/modules/Equip/views/EquipView.vue:18
@@ -1278,7 +1497,7 @@ msgid "Equipment"
 msgstr ""
 
 #: src/components/TheNavbar.vue:96
-#: src/components/TheNavbar.vue:228
+#: src/components/TheNavbar.vue:231
 #: src/components/TheWelcome.vue:178
 #: src/modules/Files/views/HikeView.vue:87
 #: src/modules/Files/views/SitesView.vue:80
@@ -1286,87 +1505,95 @@ msgid "Utilities"
 msgstr ""
 
 #: src/components/TheNavbar.vue:102
-#: src/components/TheNavbar.vue:231
+#: src/components/TheNavbar.vue:234
 #: src/components/TheWelcome.vue:181
 #: src/modules/Settings/views/SettingsView.vue:9
 msgid "Settings"
 msgstr ""
 
 #: src/components/TheNavbar.vue:105
-#: src/components/TheNavbar.vue:234
+#: src/components/TheNavbar.vue:237
 #: src/components/TheWelcome.vue:183
 #: src/modules/Settings/views/SupportView.vue:11
 msgid "Support"
 msgstr ""
 
 #: src/components/TheNavbar.vue:108
-#: src/components/TheNavbar.vue:237
+#: src/components/TheNavbar.vue:240
 #: src/components/TheWelcome.vue:185
 msgid "Translation"
 msgstr ""
 
-#: src/components/TheNavbar.vue:117
+#: src/components/TheNavbar.vue:120
 msgid "Help"
 msgstr ""
 
-#: src/components/TheNavbar.vue:127
+#: src/components/TheNavbar.vue:130
 msgid "Change language"
 msgstr ""
 
-#: src/components/TheNavbar.vue:171
+#: src/components/TheNavbar.vue:174
 msgid "Import tracks"
 msgstr ""
 
-#: src/components/TheNavbar.vue:246
+#: src/components/TheNavbar.vue:252
 #: src/modules/Settings/views/SettingsView.vue:26
 msgid "Language"
 msgstr ""
 
-#: src/components/TheNavbar.vue:280
+#: src/components/TheNavbar.vue:286
 msgid "Download file"
 msgstr ""
 
-#: src/components/TheNavbar.vue:283
+#: src/components/TheNavbar.vue:289
 msgid "Unsaved changes"
 msgstr ""
 
-#: src/components/TheNavbar.vue:283
+#: src/components/TheNavbar.vue:289
 msgid "All changes saved"
 msgstr ""
 
-#: src/components/TheNavbar.vue:289
+#: src/components/TheNavbar.vue:295
 msgid "Your browser does not support direct saving"
 msgstr ""
 
-#: src/components/TheNavbar.vue:290
+#: src/components/TheNavbar.vue:296
 msgid "The file will be downloaded to your Downloads folder"
 msgstr ""
 
-#: src/components/TheNavbar.vue:291
+#: src/components/TheNavbar.vue:297
 msgid "You will need to move it to your logbook folder to replace the original file"
 msgstr ""
 
-#: src/components/TheNavbar.vue:293
+#: src/components/TheNavbar.vue:299
 msgid "Continue"
 msgstr ""
 
-#: src/components/TheNavbar.vue:297
+#: src/components/TheNavbar.vue:303
 msgid "record the data"
 msgstr ""
 
-#: src/components/TheNavbar.vue:298
+#: src/components/TheNavbar.vue:304
 msgid "Save a copy"
 msgstr ""
 
-#: src/components/TheNavbar.vue:303
+#: src/components/TheNavbar.vue:309
 msgid "No"
 msgstr ""
 
-#: src/components/TheNavbar.vue:304
+#: src/components/TheNavbar.vue:310
 msgid "Yes"
 msgstr ""
 
-#: src/components/TheNavbar.vue:443
+#: src/components/TheNavbar.vue:440
+msgid "Logbook saved to Google Drive"
+msgstr ""
+
+#: src/components/TheNavbar.vue:444
+msgid "Failed to save to Google Drive"
+msgstr ""
+
+#: src/components/TheNavbar.vue:469
 msgid "File downloaded to Downloads folder. Move it to your logbook folder to keep your changes."
 msgstr ""
 
@@ -1705,12 +1932,12 @@ msgid "Hike details"
 msgstr ""
 
 #: src/modules/Files/views/HikeView.vue:152
-#: src/modules/Tracks/views/LogbookView.vue:154
+#: src/modules/Tracks/views/LogbookView.vue:158
 msgid "Export IGC"
 msgstr ""
 
 #: src/modules/Files/views/HikeView.vue:157
-#: src/modules/Tracks/views/LogbookView.vue:156
+#: src/modules/Tracks/views/LogbookView.vue:160
 msgid "Export GPX"
 msgstr ""
 
@@ -1762,7 +1989,7 @@ msgid "No IGC data for this hike"
 msgstr ""
 
 #: src/modules/Files/views/HikeView.vue:570
-#: src/modules/Tracks/views/LogbookView.vue:1034
+#: src/modules/Tracks/views/LogbookView.vue:1083
 msgid "Could not decode IGC data"
 msgstr ""
 
@@ -1784,10 +2011,6 @@ msgstr ""
 
 #: src/modules/Files/views/HikeView.vue:677
 msgid "Error updating database"
-msgstr ""
-
-#: src/modules/Files/views/SitesView.vue:22
-msgid "Not defined"
 msgstr ""
 
 #: src/modules/Files/views/SitesView.vue:65
@@ -1934,23 +2157,23 @@ msgstr ""
 msgid "No airspaces selected"
 msgstr ""
 
-#: src/modules/Routing/views/AirspacesView.vue:817
+#: src/modules/Routing/views/AirspacesView.vue:820
 msgid "Click and drag to draw a selection rectangle"
 msgstr ""
 
-#: src/modules/Routing/views/AirspacesView.vue:879
+#: src/modules/Routing/views/AirspacesView.vue:882
 msgid "Selection too small, please draw a larger rectangle"
 msgstr ""
 
-#: src/modules/Routing/views/AirspacesView.vue:909
+#: src/modules/Routing/views/AirspacesView.vue:912
 msgid "Selection cancelled"
 msgstr ""
 
-#: src/modules/Routing/views/AirspacesView.vue:956
+#: src/modules/Routing/views/AirspacesView.vue:959
 msgid "No airspaces in selection area"
 msgstr ""
 
-#: src/modules/Routing/views/AirspacesView.vue:992
+#: src/modules/Routing/views/AirspacesView.vue:995
 msgid "Selection cancelled, airspaces restored"
 msgstr ""
 
@@ -2025,11 +2248,6 @@ msgstr ""
 
 #: src/modules/Routing/views/WaypointView.vue:602
 msgid "Export successful"
-msgstr ""
-
-#: src/modules/Routing/views/WaypointView.vue:604
-#: src/modules/Routing/views/XcnavView.vue:1887
-msgid "Export failed"
 msgstr ""
 
 #: src/modules/Routing/views/XcnavView.vue:14
@@ -2229,6 +2447,7 @@ msgid "Identifier"
 msgstr ""
 
 #: src/modules/Settings/views/SettingsView.vue:71
+#: src/modules/Settings/views/TranslationView.vue:118
 msgid "Password"
 msgstr ""
 
@@ -2286,7 +2505,7 @@ msgid "English"
 msgstr ""
 
 #: src/modules/Settings/views/TranslationView.vue:8
-#: src/modules/Settings/views/TranslationView.vue:72
+#: src/modules/Settings/views/TranslationView.vue:130
 msgid "Translation Editor"
 msgstr ""
 
@@ -2294,56 +2513,97 @@ msgstr ""
 msgid "Continue a translation"
 msgstr ""
 
-#: src/modules/Settings/views/TranslationView.vue:45
+#: src/modules/Settings/views/TranslationView.vue:47
+msgid "Validated translations"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:49
+#: src/modules/Settings/views/TranslationView.vue:163
+msgid "Admin Mode"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:77
 msgid "New translation"
 msgstr ""
 
-#: src/modules/Settings/views/TranslationView.vue:48
+#: src/modules/Settings/views/TranslationView.vue:80
 msgid "Select a language"
 msgstr ""
 
-#: src/modules/Settings/views/TranslationView.vue:59
+#: src/modules/Settings/views/TranslationView.vue:91
 msgid "Load from file"
 msgstr ""
 
-#: src/modules/Settings/views/TranslationView.vue:75
+#: src/modules/Settings/views/TranslationView.vue:109
+msgid "Administrator Password Required"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:113
+msgid "This translation is validated and protected. Enter the administrator password to unlock modifications."
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:125
+msgid "Unlock"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:133
 msgid "Loading translations"
 msgstr ""
 
-#: src/modules/Settings/views/TranslationView.vue:87
+#: src/modules/Settings/views/TranslationView.vue:145
 msgid "Already translated"
 msgstr ""
 
-#: src/modules/Settings/views/TranslationView.vue:97
+#: src/modules/Settings/views/TranslationView.vue:155
 msgid "Change"
 msgstr ""
 
-#: src/modules/Settings/views/TranslationView.vue:106
+#: src/modules/Settings/views/TranslationView.vue:162
+msgid "Lock Admin Mode"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:166
+msgid "Unlock Admin Mode"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:176
 msgid "Untranslated"
 msgstr ""
 
-#: src/modules/Settings/views/TranslationView.vue:153
+#: src/modules/Settings/views/TranslationView.vue:223
 msgid "Download"
 msgstr ""
 
-#: src/modules/Settings/views/TranslationView.vue:157
+#: src/modules/Settings/views/TranslationView.vue:227
 msgid "Save to server"
 msgstr ""
 
-#: src/modules/Settings/views/TranslationView.vue:426
+#: src/modules/Settings/views/TranslationView.vue:503
 msgid "Firebase not configured. Using local mode only."
 msgstr ""
 
-#: src/modules/Settings/views/TranslationView.vue:445
+#: src/modules/Settings/views/TranslationView.vue:522
 msgid "Could not connect to server"
 msgstr ""
 
-#: src/modules/Settings/views/TranslationView.vue:648
+#: src/modules/Settings/views/TranslationView.vue:725
 msgid "Translation saved successfully!"
 msgstr ""
 
-#: src/modules/Settings/views/TranslationView.vue:653
+#: src/modules/Settings/views/TranslationView.vue:730
 msgid "Error saving translation"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:767
+msgid "Admin mode unlocked"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:772
+msgid "Incorrect password"
+msgstr ""
+
+#: src/modules/Settings/views/TranslationView.vue:778
+msgid "Admin mode locked"
 msgstr ""
 
 #: src/modules/Stat/views/AnnualSummary.vue:21
@@ -2699,101 +2959,109 @@ msgstr ""
 msgid "Unfilter"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:70
-#: src/modules/Tracks/views/LogbookView.vue:141
-msgid "Tag"
-msgstr ""
-
 #: src/modules/Tracks/views/LogbookView.vue:78
 msgid "Merge"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:136
+#: src/modules/Tracks/views/LogbookView.vue:82
+msgid "Export ZIP"
+msgstr ""
+
+#: src/modules/Tracks/views/LogbookView.vue:140
 msgid "Analyze"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:158
+#: src/modules/Tracks/views/LogbookView.vue:162
 msgid "Glider flight time"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:198
+#: src/modules/Tracks/views/LogbookView.vue:202
 msgid "Select a flight to view track"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:401
+#: src/modules/Tracks/views/LogbookView.vue:406
 msgid "All flights"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:565
+#: src/modules/Tracks/views/LogbookView.vue:570
 msgid "flights found"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:568
+#: src/modules/Tracks/views/LogbookView.vue:573
 msgid "No flights match the search criteria"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:602
+#: src/modules/Tracks/views/LogbookView.vue:607
 msgid "Select at least 2 flights to merge"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:613
+#: src/modules/Tracks/views/LogbookView.vue:618
+#: src/modules/Tracks/views/LogbookView.vue:1038
 msgid "Error reading flights from database"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:627
+#: src/modules/Tracks/views/LogbookView.vue:632
 msgid "Could not retrieve all selected flights"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:636
+#: src/modules/Tracks/views/LogbookView.vue:641
 msgid "Flights must be on the same day to merge"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:647
+#: src/modules/Tracks/views/LogbookView.vue:652
 msgid "All selected flights must have a valid IGC track"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:664
+#: src/modules/Tracks/views/LogbookView.vue:669
 msgid "merged flights"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:699
+#: src/modules/Tracks/views/LogbookView.vue:704
 msgid "Flights merged successfully"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:710
+#: src/modules/Tracks/views/LogbookView.vue:715
 msgid "An error occurred while merging flights"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:720
+#: src/modules/Tracks/views/LogbookView.vue:725
 msgid "No glider associated with this flight"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:737
-#: src/modules/Tracks/views/LogbookView.vue:740
+#: src/modules/Tracks/views/LogbookView.vue:742
+#: src/modules/Tracks/views/LogbookView.vue:745
 msgid "No flights counted for this glider"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:847
+#: src/modules/Tracks/views/LogbookView.vue:852
 msgid "Photo saved"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:858
+#: src/modules/Tracks/views/LogbookView.vue:863
 msgid "Photo deleted"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:897
+#: src/modules/Tracks/views/LogbookView.vue:902
 msgid "Hike associated successfully"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:929
+#: src/modules/Tracks/views/LogbookView.vue:934
 msgid "Hike removed"
 msgstr ""
 
-#: src/modules/Tracks/views/LogbookView.vue:1003
-#: src/modules/Tracks/views/LogbookView.vue:1028
-msgid "No IGC data for this flight"
+#: src/modules/Tracks/views/LogbookView.vue:1031
+msgid "ZIP export successful"
+msgstr ""
+
+#: src/modules/Tracks/views/LogbookView.vue:1034
+msgid "No IGC data to export in the selected flights"
 msgstr ""
 
 #: src/modules/Tracks/views/LogbookView.vue:1052
+#: src/modules/Tracks/views/LogbookView.vue:1077
+msgid "No IGC data for this flight"
+msgstr ""
+
+#: src/modules/Tracks/views/LogbookView.vue:1101
 msgid "Are you sure you want to delete this flight?"
 msgstr ""

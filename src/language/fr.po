@@ -348,6 +348,108 @@ msgstr "Créer une nouvelle rando"
 msgid "Remove hike"
 msgstr "Supprimer la rando"
 
+msgid "Import / Export"
+msgstr "Import / Export"
+
+msgid "Export your logbook data in different formats"
+msgstr "Exporter le carnet dans différents formats"
+
+msgid "Export database"
+msgstr "Export base de données"
+
+msgid "Full SQLite database file"
+msgstr "Fichier complet de la base de données SQLite"
+
+msgid "Export CSV with IGC tracks"
+msgstr "Export CSV avec traces IGC"
+
+msgid "CSV file and IGC track data in a zip file"
+msgstr "Fichier CSV et traces IGC dans un fichier zip"
+
+msgid "Export CSV without IGC tracks"
+msgstr "Export CSV sans traces IGC"
+
+msgid "CSV file excluding IGC track data"
+msgstr "Fichier CSV sans les traces IGC"
+
+msgid "Import data into your current logbook"
+msgstr "Importeer les données dans le carnet"
+
+msgid "Import CSV file"
+msgstr "Importer un fichier CSV"
+
+msgid "Import flights without tracks from a CSV file"
+msgstr "Importer les vols sans traces GPS avec un fichier CSV"
+
+msgid "See the documentation for details"
+msgstr "Pour plus de détails, consultez la documentation"
+
+msgid "here"
+msgstr "ici"
+
+msgid "Exporting database"
+msgstr "Export de la base de données"
+
+msgid "Database exported successfully!"
+msgstr "La base de données a été exportée avec succès !"
+
+msgid "Export failed"
+msgstr "Echec de l'exportation"
+
+msgid "without"
+msgstr "sans"
+
+msgid "with"
+msgstr "avec"
+
+msgid "Exporting CSV"
+msgstr "Export CSV"
+
+msgid "No data to export."
+msgstr "Pas de données à exporter"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Site"
+msgstr "Site"
+
+msgid "Country"
+msgstr "Pays"
+
+msgid "Tag"
+msgstr "Tag"
+
+msgid "Generating ZIP file"
+msgstr "Génération du fichier ZIP"
+
+msgid "CSV and ZIP exported successfully"
+msgstr "CSV et ZIP exportés avec succès"
+
+msgid "CSV exported successfully"
+msgstr "CSV exporté avec succès"
+
+msgid "No IGC data to export in the flights"
+msgstr "Pas de traces IGC à exporter"
+
+msgid "Export failed: "
+msgstr "Echec exportation"
+
+msgid "Importing CSV file"
+msgstr "Import fichier CSV"
+
+msgid "Not defined"
+msgstr "Non défini"
+
+msgid "lines processed"
+msgstr "lignes traitées"
+
+msgid "records imported successfully"
+msgstr "enregistrements importés avec succès"
+
+msgid "Import failed"
+msgstr "Echec importation"
+
 msgid "Zoom in"
 msgstr "Zoom in"
 
@@ -374,9 +476,6 @@ msgstr "Modifier"
 
 msgid "More"
 msgstr "Plus"
-
-msgid "Site"
-msgstr "Site"
 
 msgid "Pilot"
 msgstr "Pilote"
@@ -468,9 +567,6 @@ msgstr "Randonnées"
 msgid "Flight without GPS track"
 msgstr "Vol sans trace GPS"
 
-msgid "Date"
-msgstr "Date"
-
 msgid "Take-off time"
 msgstr "Heure Déco"
 
@@ -534,6 +630,30 @@ msgstr "Saisir un nom et cliquer sur Créer"
 msgid "Create new logbook"
 msgstr "Créer un nouveau carnet"
 
+msgid "Google Drive"
+msgstr "Google Drive"
+
+msgid "Connect to Google Drive"
+msgstr "Se connecter à Google Drive"
+
+msgid "Connected"
+msgstr "Connecté"
+
+msgid "Disconnect"
+msgstr "Déconnecté"
+
+msgid "Google Drive Logbooks"
+msgstr "Carnets sur Google Drive"
+
+msgid "No logbooks found on Google Drive. Create one below or upload an existing file."
+msgstr "Aucun carnet trouvé sur Google Drive. Créez-en un ci-dessous ou importez un fichier existant."
+
+msgid "Create new logbook on Google Drive"
+msgstr "Créer un nouveau carnet sur Google Drive"
+
+msgid "Upload your local logbook to Google Drive"
+msgstr "Transférer votre carnet sur Google Drive"
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -551,6 +671,27 @@ msgstr "Pas de carnets dans ce dossier"
 
 msgid "Error reading the file"
 msgstr "Erreur de lecture fichier"
+
+msgid "Session expired. Please reconnect to Google Drive."
+msgstr "Session expirée. Veuillez vous reconnecter à Google Drive."
+
+msgid "Failed to list files from Google Drive"
+msgstr "Impossible de lister les fichiers depuis Google Drive"
+
+msgid "Error reading the database"
+msgstr "Erreur lecture sur la base de données"
+
+msgid "Error downloading from Google Drive"
+msgstr "Erreur téléchargement depuis Google Drive"
+
+msgid "Error creating logbook on Google Drive"
+msgstr "Erreur de création du carnet sur Google Drive"
+
+msgid "Error reading local file"
+msgstr "Erreur de lecture sur le fichier local"
+
+msgid "Error uploading to Google Drive"
+msgstr "Erreur de téléchargement sur Google Drive"
 
 msgid "Scoring"
 msgstr "Score"
@@ -599,9 +740,6 @@ msgstr "Rechercher avec le nom de la voile"
 
 msgid "Search in site name"
 msgstr "Recherche avec le nom du site"
-
-msgid "Country"
-msgstr "Pays"
 
 msgid "Search in country"
 msgstr "Recherche avec le nom du pays"
@@ -674,6 +812,12 @@ msgstr "Enregistré"
 
 msgid "Auto-saved logbook"
 msgstr "Carnet auto-enregistré"
+
+msgid "Saved to Google Drive"
+msgstr "Enregistré sur Google Drive"
+
+msgid "Error saving to Google Drive"
+msgstr "Erreur de sauvegarde sur Google Drive"
 
 msgid "File successfully downloaded"
 msgstr "Fichier téléchargé"
@@ -776,6 +920,12 @@ msgstr "Non"
 
 msgid "Yes"
 msgstr "Oui"
+
+msgid "Logbook saved to Google Drive"
+msgstr "Carnet enregistré sur Google drive"
+
+msgid "Failed to save to Google Drive"
+msgstr "Echec enregistrement sur Google Drive"
 
 msgid "File downloaded to Downloads folder. Move it to your logbook folder to keep your changes."
 msgstr "Fichier enregistré dans Téléchargements. A déplacer dans le dossier carnet"
@@ -1068,9 +1218,6 @@ msgstr "Aucune randonnée avec itinéraire à mettre à jour"
 msgid "Error updating database"
 msgstr "Erreur pendant la mise à jour de la base de données"
 
-msgid "Not defined"
-msgstr "Non défini"
-
 msgid "Site details"
 msgstr "Détails du site"
 
@@ -1244,9 +1391,6 @@ msgstr "Aucun waypoint sélectionné pour l'exportation"
 
 msgid "Export successful"
 msgstr "Export réussi"
-
-msgid "Export failed"
-msgstr "Echec de l'exportation"
 
 msgid "Route"
 msgstr "Route"
@@ -1437,6 +1581,12 @@ msgstr "Editeur de traduction"
 msgid "Continue a translation"
 msgstr "Continuer une traduction"
 
+msgid "Validated translations"
+msgstr "Traductions validées"
+
+msgid "Admin Mode"
+msgstr "Mode admin"
+
 msgid "New translation"
 msgstr "Nouvelle traduction"
 
@@ -1446,6 +1596,15 @@ msgstr "Choisir une langue"
 msgid "Load from file"
 msgstr "Charger un fichier"
 
+msgid "Administrator Password Required"
+msgstr "Pass administrateur requis"
+
+msgid "This translation is validated and protected. Enter the administrator password to unlock modifications."
+msgstr "Cette traduction est validée. Entrer le pass administrateur pour effectuer des modifications"
+
+msgid "Unlock"
+msgstr "Déverrouillé"
+
 msgid "Loading translations"
 msgstr "Chargement des traductions"
 
@@ -1454,6 +1613,12 @@ msgstr "Déjà traduit"
 
 msgid "Change"
 msgstr "Changer"
+
+msgid "Lock Admin Mode"
+msgstr "Verrouiller le mode administrateur"
+
+msgid "Unlock Admin Mode"
+msgstr "Déverrouiller le mode administrateur"
 
 msgid "Untranslated"
 msgstr "Non traduit"
@@ -1475,6 +1640,15 @@ msgstr "Traduction enregistrée"
 
 msgid "Error saving translation"
 msgstr "Erreur sauvegarde traduction"
+
+msgid "Admin mode unlocked"
+msgstr "Mode admin déverrouillé"
+
+msgid "Incorrect password"
+msgstr "Pass incorrrect"
+
+msgid "Admin mode locked"
+msgstr "Mode admin verrouillé"
 
 msgid "Hours"
 msgstr "Heures"
@@ -1731,11 +1905,11 @@ msgstr "Filtrer par tag"
 msgid "Unfilter"
 msgstr "Non filtré"
 
-msgid "Tag"
-msgstr "Tag"
-
 msgid "Merge"
 msgstr "Fusion"
+
+msgid "Export ZIP"
+msgstr "Export ZIP"
 
 msgid "Analyze"
 msgstr "Analyse"
@@ -1796,6 +1970,12 @@ msgstr "Randonnée associée"
 
 msgid "Hike removed"
 msgstr "Randonnée supprimée"
+
+msgid "ZIP export successful"
+msgstr "Exportation ZIP réussie"
+
+msgid "No IGC data to export in the selected flights"
+msgstr "Pas de traces IGC sur les vols sélectionnés"
 
 msgid "No IGC data for this flight"
 msgstr "Pas de trace IGC pour ce vol"
