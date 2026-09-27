@@ -186,7 +186,7 @@ function parseBLine(line) {
     const RE_B = /^B(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})(\d{3})([NS])(\d{3})(\d{2})(\d{3})([EW])([AV])(-\d{4}|\d{5})(-\d{4}|\d{5})/;
     let match = line.match(RE_B);
     if (!match) {
-        throw new Error(`Invalid B record at line ${this.lineNumber}: ${line}`);
+        throw new Error(`Invalid B record: ${line}`);
     }
     let time = `${match[1]}:${match[2]}:${match[3]}`;
     let latitude = parseLatitude(match[4], match[5], match[6], match[7]);
