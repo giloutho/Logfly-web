@@ -15,18 +15,34 @@ export function encodeIGC(fixes, originalHeaders = {}) {
 
         // Lat DDMMmmmN/S
         const lat = Math.abs(fix.latitude);
-        const latDeg = Math.floor(lat);
-        const latMin = (lat - latDeg) * 60;
-        const latMinInt = Math.floor(latMin);
-        const latMinDec = Math.round((latMin - latMinInt) * 1000);
+        let latDeg = Math.floor(lat);
+        let latMin = (lat - latDeg) * 60;
+        let latMinInt = Math.floor(latMin);
+        let latMinDec = Math.round((latMin - latMinInt) * 1000);
+        if (latMinDec >= 1000) {
+            latMinInt += 1;
+            latMinDec -= 1000;
+        }
+        if (latMinInt >= 60) {
+            latDeg += 1;
+            latMinInt -= 60;
+        }
         const latStr = String(latDeg).padStart(2, '0') + String(latMinInt).padStart(2, '0') + String(latMinDec).padStart(3, '0') + (fix.latitude >= 0 ? 'N' : 'S');
 
         // Lon DDDMMmmmE/W
         const lon = Math.abs(fix.longitude);
-        const lonDeg = Math.floor(lon);
-        const lonMin = (lon - lonDeg) * 60;
-        const lonMinInt = Math.floor(lonMin);
-        const lonMinDec = Math.round((lonMin - lonMinInt) * 1000);
+        let lonDeg = Math.floor(lon);
+        let lonMin = (lon - lonDeg) * 60;
+        let lonMinInt = Math.floor(lonMin);
+        let lonMinDec = Math.round((lonMin - lonMinInt) * 1000);
+        if (lonMinDec >= 1000) {
+            lonMinInt += 1;
+            lonMinDec -= 1000;
+        }
+        if (lonMinInt >= 60) {
+            lonDeg += 1;
+            lonMinInt -= 60;
+        }
         const lonStr = String(lonDeg).padStart(3, '0') + String(lonMinInt).padStart(2, '0') + String(lonMinDec).padStart(3, '0') + (fix.longitude >= 0 ? 'E' : 'W');
 
         // Alt A PPPPP
